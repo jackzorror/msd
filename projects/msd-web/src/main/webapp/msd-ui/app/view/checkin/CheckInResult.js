@@ -4,7 +4,11 @@ Ext.define('MSD.view.checkin.CheckInResult' ,{
     xtype : 'checkinresult',
     studentstore : null,
     msdclass: null,
-    
+
+ 	initComponent: function(){
+        this.addEvents('checkinstudent');
+    },
+        
     listeners: {
         'render': function() {
             console.log(" in checkinresult render() ... ");

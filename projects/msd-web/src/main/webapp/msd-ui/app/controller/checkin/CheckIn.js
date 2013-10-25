@@ -10,8 +10,12 @@ Ext.define('MSD.controller.checkin.CheckIn' ,{
                 click: this.onCheckInSearchClick
             },
             'checkinresult ':{
+            	checkinstudent:this.onCheckInStudent
             }
         });
+    },
+    onCheckInStudent: function(sdata, cdata) {
+    	console.log(' in controller check in student ... ');
     },
     onCheckInSearchClick: function( cmp, e, eOpts ) {
     	var container = Ext.ComponentQuery.query('functionpanel')[0];
@@ -56,32 +60,6 @@ Ext.define('MSD.controller.checkin.CheckIn' ,{
     			checkinresult.resetstudentstore(this.studentstore, this.msdclass);
     		}
    			checkinresult.show();
-
-/*			
-			var gird = Ext.create('Ext.grid.Panel', {
-			    renderTo: Ext.getBody(),
-			    store: this.studentstore,
-			    width: 400,
-			    height: 200,
-			    title: 'Application Users',
-			    columns: [
-			        {
-			            text: 'Name',
-            			width: 100,
-			            sortable: false,
-            			hideable: false,
-			            dataIndex: 'name'
-			        },
-			        {
-            			text: 'ID',
-			            width: 150,
-			            dataIndex: 'id',
-            			hidden: true
-			        }
-			    ]
-			});			
-			container.add(gird);
-*/
 		}
     }
     
