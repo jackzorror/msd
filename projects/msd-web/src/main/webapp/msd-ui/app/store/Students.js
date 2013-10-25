@@ -3,7 +3,7 @@ Ext.define('MSD.store.Students', {
     	
     model: 'MSD.model.Student',
 
-    autoLoad: true,
+    autoLoad: false,
 
     proxy: {
     	type:'rest',

@@ -5,10 +5,6 @@ Ext.define('MSD.view.checkin.CheckInResult' ,{
     studentstore : null,
     msdclass: null,
 
- 	initComponent: function(){
-        this.addEvents('checkinstudent');
-    },
-        
     listeners: {
         'render': function() {
             console.log(" in checkinresult render() ... ");
@@ -35,14 +31,14 @@ Ext.define('MSD.view.checkin.CheckInResult' ,{
 			    ],
 			});
 			gird.msdclass = this.msdclass;
-			gird.addListener('select',this.checkinstudent,this);
+			gird.addListener('select',this.firecheckinstudent,this);
 			this.add(gird);
         },
         'show':function() {
         	console.log(" in checkinresult show() ... ");
         }
     },
-    checkinstudent:function(record, index, eOpts) {
+    firecheckinstudent:function(record, index, eOpts) {
    		console.log( ' pick up item : ' + index.data.name + ' class : ' + this.msdclass.name);
     	this.fireEvent('checkinstudent', index.data, this.msdclass);
     },

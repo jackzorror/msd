@@ -1,8 +1,9 @@
 Ext.define('MSD.controller.ButtonPanel' ,{
     extend: 'Ext.app.Controller',
 
-    views: [
-    	'MSD.view.FunctionPanel'
+    refs: [
+    	{ ref: 'functionpanelview', selector: 'functionpanel' },
+    	{ ref: 'checkinsearchview', selector: 'checkinsearch' }
     ],
 
     init: function() {
@@ -20,23 +21,23 @@ Ext.define('MSD.controller.ButtonPanel' ,{
     },
     onShowClassClick: function( cmp, e, eOpts ) {
     	console.log(' click button showclass ... ');
-    	var fpanel = Ext.ComponentQuery.query('functionpanel')[0];
+    	var fpanel = this.getFunctionpanelview();
     	if (fpanel.items.length > 0) {
     		fpanel.removeAll();
     	}
     },
     onShowStudentClick: function( cmp, e, eOpts ) {
     	console.log(' click button showstudent ... ');
-    	var fpanel = Ext.ComponentQuery.query('functionpanel')[0];
+    	var fpanel = this.getFunctionpanelview();
     	if (fpanel.items.length > 0) {
     		fpanel.removeAll();
     	}
     },
     onShowCheckInClick: function( cmp, e, eOpts ) {
     	console.log(' click button showcheckin ... ');
-    	var fpanel = Ext.ComponentQuery.query('functionpanel')[0];
+    	var fpanel = this.getFunctionpanelview();
     	if (null != fpanel) {
-    		var checkinsearch = Ext.ComponentQuery.query('checkinsearch')[0];
+    		var checkinsearch = this.getCheckinsearchview();
     		if (null == checkinsearch) {
     			if (fpanel.items.length > 0) {
     				fpanel.removeAll();

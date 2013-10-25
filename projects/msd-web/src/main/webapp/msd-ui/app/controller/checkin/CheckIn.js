@@ -1,16 +1,24 @@
 Ext.define('MSD.controller.checkin.CheckIn' ,{
     extend: 'Ext.app.Controller',
 
-	studentstore:null,
 	msdclass:null,
+	
+	stores: ["Students"],
+	
+	refs:[
+    	{ ref : 'functionpanelview', selector: 'functionpanel' },
+		{ ref : 'checkinsearchview', selector: 'checkinsearch' },
+		{ ref : 'checkinresultview', selector: 'checkinresult' }
+	],
+	
 	
     init: function() {
         this.control({
             'checkinsearch button[name=search]': {
                 click: this.onCheckInSearchClick
             },
-            'checkinresult ':{
-            	checkinstudent:this.onCheckInStudent
+            'checkinresult' : {
+            	'checkinstudent':this.onCheckInStudent
             }
         });
     },
@@ -18,7 +26,7 @@ Ext.define('MSD.controller.checkin.CheckIn' ,{
     	console.log(' in controller check in student ... ');
     },
     onCheckInSearchClick: function( cmp, e, eOpts ) {
-    	var container = Ext.ComponentQuery.query('functionpanel')[0];
+    	var container = this.getFunctionpanelview();
     	if (null != container) {
     		console.log("Got functionpanel ... ");
 
@@ -29,13 +37,13 @@ Ext.define('MSD.controller.checkin.CheckIn' ,{
     			if (null == checkinclasscombo.getValue()) {
     				alert(" Please select one class from the list");
     			} else {
-    				var sstore = Ext.create('MSD.store.Students');
-    				sstore.getProxy().extraParams.msdclassid=checkinclasscombo.getValue();
-    				sstore.load({
+			        var store = this.getStore("Students");
+    				store.getProxy().extraParams.msdclassid=checkinclasscombo.getValue();
+        			store.load({
 						callback: this.afterLoadStudentStore,
 						scope:this
-    				});
-    				this.studentstore = sstore;
+        			});
+
     				this.msdclass = checkinclasscombo.valueModels[0].data;
     			}
 			}
@@ -46,18 +54,18 @@ Ext.define('MSD.controller.checkin.CheckIn' ,{
     },
     afterLoadStudentStore: function() {
     	console.log(" load student store");
-    	var container = Ext.ComponentQuery.query('functionpanel')[0];
+    	var container = this.getFunctionpanelview();
 		if (null != container) {
 			console.log(" try to create grid ... ");
 
-    		var checkinresult = Ext.ComponentQuery.query('checkinresult')[0];
+    		var checkinresult = this.getCheckinresultview();
     		if (null == checkinresult) {
     			checkinresult = Ext.create('MSD.view.checkin.CheckInResult');
-    			checkinresult.setData(this.studentstore, this.msdclass);
+    			checkinresult.setData(this.getStore("Students"), this.msdclass);
     			
 	    		container.add(checkinresult);
     		} else {
-    			checkinresult.resetstudentstore(this.studentstore, this.msdclass);
+    			checkinresult.resetstudentstore(this.getStore("Students"), this.msdclass);
     		}
    			checkinresult.show();
 		}
