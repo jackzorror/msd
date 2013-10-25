@@ -2,7 +2,7 @@
 
 dirhome=$(pwd)
 
-. /Users/junzuo/Workspace/morningstardance/msdenv.sh
+. /Users/junzuo/Workspace/msd/msdenv.sh
 
 cd $APP_HOME/../scripts
 

@@ -5,7 +5,7 @@
 # Controls the Application Server
 #
 # description: Controls the Application Server
-# processname: morningstardance-service
+# processname: msd-service
 
 # JAVA_HOME is set in msdenv.sh, which should be called before this script
 if [ ! -d "$JAVA_HOME" ]; then

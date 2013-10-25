@@ -3,7 +3,7 @@
 export JAVA_HOME=$(/usr/libexec/java_home)
 echo JAVA_HOME="$JAVA_HOME"
 
-export PROJECT_ROOT="/Users/junzuo/Workspace/morningstardance"
+export PROJECT_ROOT="/Users/junzuo/Workspace/msd"
 echo PROJECT_ROOT= "$PROJECT_ROOT"
 
 export APP_HOME="$PROJECT_ROOT/app_home"

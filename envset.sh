@@ -1,7 +1,7 @@
 
 export JAVA_HOME=$(/usr/libexec/java_home)
 
-export PROJECT_ROOT="/Users/junzuo/Workspace/morningstardance"
+export PROJECT_ROOT="/Users/junzuo/Workspace/msd"
 
 export M2_HOME="$PROJECT_ROOT/apache-maven-3.0.5"
 
