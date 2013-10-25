@@ -1,0 +1,200 @@
+#!/bin/bash
+#
+#	/etc/rc.d/init.d/acccnw-service
+#
+# Controls the Application Server
+#
+# description: Controls the Application Server
+# processname: morningstardance-service
+
+# JAVA_HOME is set in msdenv.sh, which should be called before this script
+if [ ! -d "$JAVA_HOME" ]; then
+	echo ERROR: Directory not found for JAVA_HOME
+	echo JAVA_HOME should be correctly set in appenv.sh
+	exit 1
+fi
+# APP_HOME is set in msdenv.sh, which should be called before this script
+if [ ! -d "$APP_HOME" ]; then
+	echo ERROR: Directory not found for APP_HOME
+	echo APP_HOME should be correctly set in appenv.sh
+	exit 1
+fi
+
+# TOMCAT_HOME is set in msdenv.sh, which should be called before this script
+if [ ! -d "$TOMCAT_HOME" ]; then
+	echo ERROR: Directory not found for TOMCAT_HOME
+	echo APP_HOME should be correctly set in appenv.sh
+	exit 1
+fi
+
+# Source function library.
+#. /etc/rc.d/init.d/functions
+
+export PATH=$JAVA_HOME/bin:$PATH
+export SERVER_PID_FILE=server.pid
+export TERMINATION_FLAG_FILE=loop.termination
+
+DIR_HOME=`dirname $0`
+export DIR_HOME
+
+if [ ! -x $DIR_HOME/loop.sh ]; then
+    echo $DIR_HOME/loop.sh not found!
+    exit 0
+fi
+
+RETVAL=0
+cd $DIR_HOME/
+
+#
+# See how we were called.
+#
+
+start() {
+  # Check if the server is already running
+  if [ -f $SERVER_PID_FILE ]; then
+    echo $SERVER_PID_FILE exists. Please stop the server first!
+  else 
+    echo -n $"Starting MSD server ... "
+    ./loop.sh >> loop.log &
+    RETVAL=$?
+    while [ ! -e $SERVER_PID_FILE ] ; do
+      sleep 1;
+    done
+    echo $(cat $SERVER_PID_FILE) started
+  fi
+  return $RETVAL
+}
+
+forcestart() {
+  # Check if the server is already running
+  if [ -f $SERVER_PID_FILE ]; then
+     rm -f $SERVER_PID_FILE;
+  fi
+  start
+  return $RETVAL
+}
+
+# Send a signal to the server process (run.sh) and wait specified seconds
+
+KillAndWait() {
+
+  if [ $# -ne 2 ]
+  then
+    echo KillAndWait: insufficient arguments, use SIGNAL and SECONDS
+    exit 1
+  fi
+  echo Stopping UMS server: $SERVER_PID \(SIG${1}\)
+  kill -${1} $SERVER_PID
+  RETVAL=$?
+  if [ $RETVAL -ne 0 ]
+  then
+    echo WARNING: kill returned error : $RETVAL
+  fi
+
+  SleepCount=${2}
+  while [ `ps -p $SERVER_PID | wc -l` -gt 1 ] ; do
+    echo Waiting \($SleepCount seconds\) for process $SERVER_PID to exit
+    sleep 1;
+    SleepCount=`expr $SleepCount - 1`
+    if [ $SleepCount -eq 0 ]
+    then
+      break;
+    fi
+  done
+}
+
+stop() {
+
+# Define how many seconds to wait for server to stop
+  SecondsToStop=10
+
+# Obtain the servers (actually run.sh) PID from the file
+
+  if [ ! -e $SERVER_PID_FILE ]; then
+    echo Server pid file does not exist: $SERVER_PID_FILE 
+    return 0; 
+  else
+    echo Using server PID file: $SERVER_PID_FILE 
+  fi 
+
+# Tell loop.sh to not restart
+
+  touch $TERMINATION_FLAG_FILE
+  SERVER_PID=$(cat $SERVER_PID_FILE)
+
+# 1st try SIGHUP, wait SecondsToStop seconds for server to shutdown, then try SIGTERM.
+# If that doesn't work, use SIGKILL on the server process
+# This is needed because server's with low resources hang on shutdown,
+# but we want to give a clean shutdown a chance
+
+  KillAndWait HUP $SecondsToStop
+
+  if [ `ps -p $SERVER_PID | wc -l` -eq 1 ]
+  then
+    return $RETVAL
+  fi
+
+# SIGHUP did not work, try SIGTERM
+
+  KillAndWait TERM $SecondsToStop
+
+  if [ `ps -p $SERVER_PID | wc -l` -eq 1 ]
+  then
+    return $RETVAL
+  fi
+
+# if here, SIGHUP and SIGTERM failed.  Find the server and send it SIGKILL.
+
+  ServerPid=`ps --ppid $SERVER_PID  | tail -1 | awk '{print $1}'`
+  ServerCmd=`ps --ppid $SERVER_PID  | tail -1 | awk '{print $NF}'`
+
+  if [ "$ServerCmd" != "java" ]
+  then
+    echo ERROR: Could not find java process for run.sh, PID=${SERVER_PID}
+    return 1
+  fi
+
+  echo Killing Server - pid = $ServerPid
+  kill -KILL $ServerPid
+  sleep 1
+
+# now ensure run.sh is killed so that loop.sh will terminate
+
+  KillAndWait KILL $SecondsToStop
+    
+  if [ `ps -p $SERVER_PID | wc -l` -eq 1 ]
+  then
+    RETVAL=$?
+  fi
+  return $RETVAL
+}
+
+
+restart() {
+	stop
+	start
+}	
+
+case "$1" in
+start)
+	start
+	;;
+stop)
+	stop
+	;;
+restart)
+	restart
+	;;
+forcestart)
+	forcestart
+	;;
+status)
+	ps -ef | grep 'org\.apache\.catalina\.startup\.Bootstrap start' | awk '{print "acccnw-service (pid " $2 ") is running..."; found=1; exit 0} END {if (found==0) {print "acccnw-service is stopped";exit 3}}'
+	;;
+*)
+	echo $"Usage: $0 {start|stop|status|restart|forcestart}"
+	exit 1
+esac
+
+exit $RETVAL
+

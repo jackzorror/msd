@@ -1,0 +1,10 @@
+{
+    success: true,
+    users: [
+        {id: 1, name: 'Mahesh',    email: 'mh@polaris.com', age: '21', gender: 'Male',   occupation: 'Software Eng'},
+        {id: 2, name: 'Ritesh', email: 'rite@polaris.com', age: '25', gender: 'Male',  occupation: 'Architect'},
+        {id: 3, name: 'Aishwarya', email: 'aish@polaris.com', age: '27', gender: 'Female',  occupation: 'Artist'},
+        {id: 4, name: 'Surya', email: 'sur@polaris.com', age: '22', gender: 'Male',  occupation: 'Architect'},
+        {id: 5, name: 'Nagesh', email: 'nag@polaris.com', age: '35', gender: 'Male',  occupation: 'Architect'}
+    ]
+}

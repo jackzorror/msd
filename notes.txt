@@ -1,0 +1,18 @@
+Download:
+	apache-ant;
+	apache-maven;
+	apache-tomcat;
+	mysql;
+	mysql-workbench;
+
+create:
+	create working sub directory;
+	create env setup sh file;
+	using maven create sub-directories: msd-app, msd-domain, msd-mobile, msd-web;
+	create msd database;
+	create table: msd_user, msd_user_role, msd_student, msd_class, msd_class_schedular;
+
+config:
+	config tomcat server;
+
+

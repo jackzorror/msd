@@ -1,0 +1,11 @@
+#!/bin/sh
+
+dirhome=$(pwd)
+
+. /Users/junzuo/Workspace/morningstardance/msdenv.sh
+
+cd $APP_HOME/../scripts
+
+./app-service stop
+
+cd $dirhome
