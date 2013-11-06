@@ -48,14 +48,17 @@ public class MSDStudentController {
 		return dtos;
 	}
     
-    @RequestMapping(value="/studentcheckin/{msdstudentid}/{msdclassid}",method=RequestMethod.POST, headers="!X-Api-service-Version")
-    public @ResponseBody ResponseDto studentClassCheckInDfltVer(@RequestParam("msdstudentid") Long msdStudentId, @RequestParam("msdclassid") Long msdClassId, HttpServletResponse response) {
+    //@RequestMapping(value="/studentcheckin/{msdstudentid}/{msdclassid}",method=RequestMethod.POST, headers="!X-Api-service-Version")
+    //public @ResponseBody ResponseDto studentClassCheckInDfltVer(@RequestParam("msdstudentid") Long msdStudentId, @RequestParam("msdclassid") Long msdClassId, HttpServletResponse response) {
+    @RequestMapping(params={"msdstudentid","msdclassid"},method=RequestMethod.POST, headers="!X-Api-service-Version")
+    public @ResponseBody ResponseDto studentClassCheckInDfltVer(Long msdStudentId, Long msdClassId, HttpServletResponse response) {
     	return studentClassCheckInVer1(msdStudentId, msdClassId, response);
     	
     }
-    
-    @RequestMapping(value="/studentcheckin",method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
-    public @ResponseBody ResponseDto studentClassCheckInVer1(@RequestParam("msdstudentid") Long msdStudentId, @RequestParam("msdclassid") Long msdClassId, HttpServletResponse response) {
+	    
+	    //@RequestMapping(value="/studentcheckin",method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+	    @RequestMapping(params={"msdstudentid","msdclassid"},method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+    public @ResponseBody ResponseDto studentClassCheckInVer1(Long msdStudentId, Long msdClassId, HttpServletResponse response) {
 
     	MSDStudentCheckinDto dto = msdStudentFacade.studentClassCheckin(msdStudentId, msdClassId);
     	
