@@ -34,4 +34,17 @@ public class MSDStudentRepository extends MSDBaseRepository<MSDStudent> {
 		query.setParameter("msdClassID", msdClassId);
 		return(List<MSDStudent>)query.getResultList();
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<MSDStudent> getAllByClassIdForCheckin(Long msdClassId) {
+		Query query = this.getEntityManager().createNativeQuery(
+				"SELECT s.* FROM msd_student AS s JOIN  msd_student_class AS sc ON s.id = sc.msd_student_id " +
+				"WHERE sc.msd_class_id = :msdClassID " + 
+				"and s.id not in ( " +
+				"select msd_student_id from msd_student_checkin as sci where sci.msd_class_id = :msdClassID and " + 
+				"sci.checkin_time > DATE_SUB(now(), INTERVAL 30 minute) )",
+				MSDStudent.class);
+		query.setParameter("msdClassID", msdClassId);
+		return(List<MSDStudent>)query.getResultList();
+	}
 }

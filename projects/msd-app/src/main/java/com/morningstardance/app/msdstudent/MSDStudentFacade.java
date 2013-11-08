@@ -10,4 +10,6 @@ public interface MSDStudentFacade {
 
 	MSDStudentCheckinDto studentClassCheckin(Long msdStudentId, Long msdClassId);
 
+	List<MSDStudentDto> getAllStudentsByClassIdForCheckin(Long msdClassId);
+
 }

@@ -4,6 +4,6 @@ Ext.define('MSD.model.StudentCheckin', {
     	{ name: 'id', type: 'int' }
     	,{ name: 'studentId', type: 'int' }
     	,{ name: 'classId', type: 'int' }
-    	,{ name: 'checkinTime', type: 'date' }
+    	,{ name: 'checkInTime', type: 'date' }
     ],
 });

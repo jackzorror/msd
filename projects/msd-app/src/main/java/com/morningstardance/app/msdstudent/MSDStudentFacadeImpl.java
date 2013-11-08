@@ -70,4 +70,10 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 		return dto;
 	}
 
+	@Override
+	public List<MSDStudentDto> getAllStudentsByClassIdForCheckin(Long msdClassId) {
+		List<MSDStudent> msdStudents = msdStudentRepository.getAllByClassIdForCheckin(msdClassId);
+		return msdStudentAssembler.createDtoFromEntity(msdStudents);
+	}
+
 }

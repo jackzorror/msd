@@ -7,7 +7,7 @@ Ext.define('MSD.store.StudentCheckins', {
 
     proxy: {
     	type:'rest',
-    	url:'../msd-app/msdstudent',
+    	url:'../msd-app/msdstudent/studentcheckin',
   		headers:{
   			'Content-Type':'application/json',
    			'Accept':'application/json'

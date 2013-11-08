@@ -2,7 +2,7 @@ Ext.define('MSD.view.checkin.CheckInResult' ,{
     extend: 'Ext.container.Container',
     
     xtype : 'checkinresult',
-    studentstore : null,
+    studentcheckinstore : null,
     msdclass: null,
 
     listeners: {
@@ -11,7 +11,7 @@ Ext.define('MSD.view.checkin.CheckInResult' ,{
 			var gird = Ext.create('Ext.grid.Panel', {
 				msdclass:null,
 			    renderTo: Ext.getBody(),
-			    store: this.studentstore,
+			    store: this.studentcheckinstore,
 			    width: 400,
 			    height: 200,
 			    columns: [
@@ -42,14 +42,14 @@ Ext.define('MSD.view.checkin.CheckInResult' ,{
    		console.log( ' pick up item : ' + index.data.name + ' class : ' + this.msdclass.name);
     	this.fireEvent('checkinstudent', index.data, this.msdclass);
     },
-    resetstudentstore:function(sstore, mclass) {
-    	this.studentstore = sstore;
+    resetstudentcheckinstore:function(sstore, mclass) {
+    	this.studentcheckinstore = sstore;
     	this.msdclass = mclass;
     	
-    	this.items.items[0].bindStore(this.studentstore);
+    	this.items.items[0].bindStore(this.studentcheckinstore);
     },
     setData:function(sstore, mclass) {
-    	this.studentstore = sstore;
+    	this.studentcheckinstore = sstore;
     	this.msdclass = mclass;
     }
 });
