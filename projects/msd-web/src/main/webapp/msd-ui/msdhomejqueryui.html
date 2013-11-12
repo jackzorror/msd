@@ -39,11 +39,12 @@
 				}
 			});
 			
-			$(":button").on("click", function(event) {
-				console.log(" student check in ... ");
+			$(document).on('click', '#addstudentcheckinbutton_here :button', function() {
+				console.log(" click new button ... " + this.id);
 			});
+
 		});
-	
+
 		function getCheckInClassList() {
 			console.log('in getCheckInClassList ... ');
 			$.ajax({
@@ -75,10 +76,18 @@
 				url: "../msd-app/msdstudent",
 				data: { msdclassid: classid, type: 'checkin' },
 				success: function(data) {
-					console.log (" get check in student list ... " );
+					var tempdiv = document.getElementById("tempdiv");
+					if ( null != tempdiv ) {
+						tempdiv.remove();
+					}
+
+					tempdiv = $("<div id=tempdiv> </div>");
+					$("#addstudentcheckinbutton_here").append(tempdiv);
+
 					$.each(data, function (i, theItem) {
-					
-						$("#addstudentcheckinbutton_here").append($('<input/>').attr({ type: 'button', id:'btncheckin_' + theItem.id, value:theItem.name}));
+						var newbutton = $('<input/>').attr({ type: 'button', id:'btnnew_' + theItem.id, value:theItem.name});
+//						newbutton.prop("disabled", true);
+						$("#tempdiv").append(newbutton);
 					});
 				},
 				error: function(msg, url, line) {
