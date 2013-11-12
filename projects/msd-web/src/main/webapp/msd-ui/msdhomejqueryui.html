@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>First jQuery UI</title>
+	<link href="css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/jquery-ui-1.10.3.custom.js"></script>
+	<script>
+		$(function() {			
+		    $( "#tabs" ).tabs();
+    	});
+	</script>
+
+<style type=text/css>
+  li.ui-state-default {
+    font-size : 10px;
+  }
+  div.ui-tabs-panel {
+    font-size : 10px;
+    font-family : georgia;
+    font-style : italic;
+  }
+</style>
+
+  <style>
+  .custom-combobox {
+    position: relative;
+    display: inline-block;
+  }
+  .custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+    /* support: IE7 */
+    *height: 1.7em;
+    *top: 0.1em;
+  }
+  .custom-combobox-input {
+    margin: 0;
+    padding: 0.3em;
+  }
+  </style>
+  <script>
+  (function( $ ) {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            tooltipClass: "ui-state-highlight"
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .mousedown(function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .click(function() {
+            input.focus();
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+          return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.data( "ui-autocomplete" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+  })( jQuery );
+ 
+  $(function() {
+    $( "#combobox" ).combobox();
+  });
+  
+  $(document).ready(function(){
+	console.log('in ready ... ');
+	sendAjax();
+	});
+	
+function sendAjax() {
+	console.log('in sendAjax ... ');
+}	
+  </script>
+  </head>
+<body>
+
+<h1>Welcome to jQuery UI!</h1>
+<p align="center"><img align="middle" src="msd.jpg" alt="some_text"></p>
+
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">Nunc tincidunt</a></li>
+    <li><a href="#tabs-2">Proin dolor</a></li>
+    <li><a href="#tabs-3">Aenean lacinia</a></li>
+  </ul>
+  <div id="tabs-1">
+    <h2>Content heading 1</h2>
+<div class="ui-widget">
+  <label>Your preferred programming language: </label>
+  <select id="combobox">
+    <option value="">Select one...</option>
+    <option value="ActionScript">ActionScript</option>
+    <option value="AppleScript">AppleScript</option>
+    <option value="Asp">Asp</option>
+  </select>
+  </br>
+  <label>Please select class:</label>
+  <select id="theother">
+    <option value="">Select one...</option>
+    <option value="L1">L1</option>
+    <option value="L2">L2</option>
+    <option value="L3">L3</option>
+  </select>
+</div>  </div>
+  <div id="tabs-2">
+    <h2>Content heading 2</h2>
+    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+  </div>
+  <div id="tabs-3">
+    <h2>Content heading 3</h2>
+    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+  </div>
+</div>
+ 
+</body>
+</html>
