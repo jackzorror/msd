@@ -1,4 +1,4 @@
-package com.morningstardance.app.msdstudent;
+package com.morningstardance.app.msdstudentcheckin;
 
 import java.util.Date;
 
@@ -10,6 +10,8 @@ public class MSDStudentCheckinDto {
 	private int studentId;
 	private int classId;
 	private Date checkInTime;
+	private boolean isCheckedIn;
+	private String name;
 
 	public MSDStudentCheckinDto() {
 	}
@@ -19,6 +21,7 @@ public class MSDStudentCheckinDto {
 		this.classId = entity.getMsdClassId();
 		this.studentId = entity.getMsdStudentId();
 		this.checkInTime = entity.getCheckinTime();
+		this.isCheckedIn = false;
 	}
 
 	public int getId() {
@@ -44,6 +47,22 @@ public class MSDStudentCheckinDto {
 	}
 	public void setCheckInTime(Date checkInTime) {
 		this.checkInTime = checkInTime;
+	}
+
+	public boolean isCheckedIn() {
+		return isCheckedIn;
+	}
+
+	public void setCheckedIn(boolean isCheckedIn) {
+		this.isCheckedIn = isCheckedIn;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
