@@ -63,23 +63,44 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 		List<MSDStudent> msdstudents = msdStudentRepository.getAllByClassId(msdClassId);
 		List<MSDStudentCheckinDto> dtos = new ArrayList<MSDStudentCheckinDto>();
 		for (MSDStudent s : msdstudents) {
-			MSDStudentCheckinDto dto = null;
-			MsdStudentCheckin checkin = msdStudentCheckinRepository.findForCheckInByStudentIdAndClassId(msdClassId, s.getId());
-			if (null == checkin) {
-				dto = new MSDStudentCheckinDto();
-				dto.setId(0);
-				dto.setClassId(msdClassId.intValue());
-				dto.setStudentId(s.getId().intValue());
-				dto.setCheckedIn(false);
-				dto.setName(s.getFirstName() + " " + s.getLastName());
-			} else {
-				dto = new MSDStudentCheckinDto(checkin);
-				dto.setCheckedIn(true);
-				dto.setName(s.getFirstName() + " " + s.getLastName());
-			}
+			MSDStudentCheckinDto dto = this.getStudentCheckinDtoByClassIdAndStudent(msdClassId, s);
 			dtos.add(dto);
 		}
 		return dtos;
 	}
+	
 
+	@Override
+	public MSDStudentCheckinDto getStudentCheckinDtoByLastNameFirstName(Long msdClassId,
+			String lastname, String firstname) {
+		
+		MSDStudent s = msdStudentRepository.getByLastNameFirstName(lastname, firstname);
+		
+		if (null == s) 
+			return null;
+		else 
+			return this.getStudentCheckinDtoByClassIdAndStudent(msdClassId, s);
+	}
+
+	private MSDStudentCheckinDto getStudentCheckinDtoByClassIdAndStudent(Long msdClassId, MSDStudent s) {
+		
+		MsdStudentCheckin checkin = msdStudentCheckinRepository.findForCheckInByStudentIdAndClassId(msdClassId, s.getId());
+		
+		MSDStudentCheckinDto dto = null;
+		
+		if (null == checkin) {
+			dto = new MSDStudentCheckinDto();
+			dto.setId(0);
+			dto.setClassId(msdClassId.intValue());
+			dto.setStudentId(s.getId().intValue());
+			dto.setCheckedIn(false);
+			dto.setName(s.getFirstName() + " " + s.getLastName());
+		} else {
+			dto = new MSDStudentCheckinDto(checkin);
+			dto.setCheckedIn(true);
+			dto.setName(s.getFirstName() + " " + s.getLastName());
+		}
+		
+		return dto;
+	}
 }

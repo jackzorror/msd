@@ -47,4 +47,13 @@ public class MSDStudentRepository extends MSDBaseRepository<MSDStudent> {
 		query.setParameter("msdClassID", msdClassId);
 		return(List<MSDStudent>)query.getResultList();
 	}
+
+	public MSDStudent getByLastNameFirstName(String lastname, String firstname) {
+		Query query = this.getEntityManager().createNativeQuery(
+				"SELECT * FROM msd_student WHERE last_name = :lastname and first_name = :firstname",
+				MSDStudent.class);
+		query.setParameter("lastname", lastname);
+		query.setParameter("firstname", firstname);
+		return (MSDStudent)query.getSingleResult();
+	}
 }
