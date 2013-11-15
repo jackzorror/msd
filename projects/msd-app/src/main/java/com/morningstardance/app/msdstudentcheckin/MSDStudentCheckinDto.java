@@ -11,6 +11,7 @@ public class MSDStudentCheckinDto {
 	private int classId;
 	private Date checkInTime;
 	private boolean isCheckedIn;
+	private boolean inClass;
 	private String name;
 
 	public MSDStudentCheckinDto() {
@@ -63,6 +64,14 @@ public class MSDStudentCheckinDto {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isInClass() {
+		return inClass;
+	}
+
+	public void setInClass(boolean inClass) {
+		this.inClass = inClass;
 	}
 
 }

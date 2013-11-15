@@ -96,6 +96,12 @@
 				checkInStudent(this.id, checkinclasses.value);
 			});
 
+			$(document).on('click', '#nonclassstudentdiv :button', function() {
+				console.log(" click new button ... " + this.id);
+				var checkinclasses = document.getElementById("checkinClassCombobox");
+				checkInStudent(this.id, checkinclasses.value);
+			});
+
 		});
 		
 		function getNonClassStudentCheckInDto(lname, fname, cid) {
@@ -108,18 +114,27 @@
 				data: { msdclassid:cid, firstname: fname, lastname: lname, type: 'checkin' },
 				success: function(data) {
 					console.log(" get non class student for check in ");
-					var nonclassstudentdiv = document.getElementById("nonclassstudentdiv");
-					if (null != nonclassstudentdiv) {
-						nonclassstudentdiv.remove();
-					}
+					document.getElementById("fname").value = "";
+					document.getElementById("lname").value = "";
 					
-					nonclassstudentdiv = $("<div id=nonclassstudentdiv> </div>");
-					$("#addNonClassStudentCheckinButton_here").after(nonclassstudentdiv);
-					var newbutton = $('<input/>').attr({ type: 'button', id:'btnnonclasssnew_' + data.studentId, value:data.name});
-					if (data.checkedIn) {
-						newbutton.prop("disabled", true);
+					var nonclassstudentdiv = document.getElementById("nonclassstudentdiv");
+					if (null == nonclassstudentdiv) {
+						nonclassstudentdiv = $("<div id=nonclassstudentdiv> </div>");
+						$("#addNonClassStudentCheckinButton_here").after(nonclassstudentdiv);
 					}
-					$("#nonclassstudentdiv").append(newbutton);
+					var btnid="btnnew_" + data.studentId;
+					var newbutton = document.getElementById(btnid);
+
+					if (null == newbutton) {
+						newbutton = $('<input/>').attr({ type: 'button', id:'btnnew_' + data.studentId, value:data.name});
+						$("#nonclassstudentdiv").append(newbutton);
+					} 
+					if (data.checkedIn) {
+						alert("you already checked in");
+						newbutton.disabled=true;
+					} else {
+						newbutton.focus();
+					}
 				},
 				error: function(msg, url, line) {
 					alert('error to get non class student for check in ... ');

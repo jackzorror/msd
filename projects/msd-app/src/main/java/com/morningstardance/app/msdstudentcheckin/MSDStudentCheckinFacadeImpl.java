@@ -100,6 +100,7 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 			dto.setCheckedIn(true);
 			dto.setName(s.getFirstName() + " " + s.getLastName());
 		}
+		dto.setInClass(msdStudentRepository.isStudentRegisteToClass(s.getId(), msdClassId));
 		
 		return dto;
 	}

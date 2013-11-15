@@ -35,14 +35,14 @@ public class MSDStudentCheckinController {
     }
     
     @RequestMapping(params={"type=checkin", "msdclassid", "lastname", "firstname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
-    public @ResponseBody MSDStudentCheckinDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameDfltVer(Long msdclassid, String lastname, String firstname) {
-    	return getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(msdclassid, lastname, firstname);
+    public @ResponseBody MSDStudentCheckinDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameDfltVer(Long msdclassid, String lastname, String firstname, HttpServletResponse response) {
+    	return getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(msdclassid, lastname, firstname, response);
     }
     
     @RequestMapping(params={"type=checkin", "msdclassid", "lastname", "firstname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-    public @ResponseBody MSDStudentCheckinDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(Long msdclassid, String lastname, String firstname) {
+    public @ResponseBody MSDStudentCheckinDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(Long msdclassid, String lastname, String firstname, HttpServletResponse response) {
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.getStudentCheckinDtoByLastNameFirstName(msdclassid, lastname, firstname);
-		return dto;
+    	return dto;
 	}
     
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-service-Version")
