@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.morningstardance.app.msdclass.MSDClassDto;
 import com.morningstardance.app.msdclass.MSDClassFacade;
+import com.morningstardance.web.ResponseDto;
 
 @Controller
 @RequestMapping("/msdclass")
@@ -21,25 +22,27 @@ public class MSDClassController {
 		protected MSDClassFacade msdClassFacade;
 		
 		@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version")
-		public @ResponseBody List<MSDClassDto> getAllMSDClassDfltVer() {
+		public @ResponseBody ResponseDto getAllMSDClassDfltVer() {
 			return getAllMSDClassVer1();
 		}
 		
 		@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
-		private List<MSDClassDto> getAllMSDClassVer1() {
+		private ResponseDto getAllMSDClassVer1() {
 			List<MSDClassDto> dtos = msdClassFacade.getAllMSDClass();
-			dtos.size();
-			return dtos;
+	        ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY", null);
+			return responseDto;
 		}
 
 		@RequestMapping(value="/{msdClassId}", method=RequestMethod.GET, headers="!X-Api-service-Version")
-		public @ResponseBody MSDClassDto getMSDClassByIdDfltVer(@PathVariable("msdClassId") Long msdClassId) {
+		public @ResponseBody ResponseDto getMSDClassByIdDfltVer(@PathVariable("msdClassId") Long msdClassId) {
 			return getMSDClassByIdVer1(msdClassId);
 		}
 	
 		@RequestMapping(value="/{msdClassId}", method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
-		public @ResponseBody MSDClassDto getMSDClassByIdVer1(@PathVariable("msdClassId") Long msdClassId) {
-			return msdClassFacade.getMSDClassById(msdClassId);
+		public @ResponseBody ResponseDto getMSDClassByIdVer1(@PathVariable("msdClassId") Long msdClassId) {
+			MSDClassDto dto = msdClassFacade.getMSDClassById(msdClassId);
+	        ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT", dto.getId());
+			return responseDto;
 		}
 	
 }

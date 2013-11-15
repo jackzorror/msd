@@ -1,20 +1,14 @@
 package com.morningstardance.app.msdstudent;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinDto;
-import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDStudent;
-import com.morningstardance.domain.entity.MsdStudentCheckin;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
-import com.morningstardance.domain.msdstudentcheckin.MSDStudentCheckinRepository;
 
 @Service("msdStudentFacade")
 public class MSDStudentFacadeImpl implements MSDStudentFacade {
@@ -44,5 +38,11 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	public List<MSDStudentDto> getAllStudentsByClassIdForCheckin(Long msdClassId) {
 		List<MSDStudent> msdStudents = msdStudentRepository.getAllByClassIdForCheckin(msdClassId);
 		return msdStudentAssembler.createDtoFromEntity(msdStudents);
+	}
+
+	@Override
+	public MSDStudentDto getStudentByName(String firstname, String lastname) {
+		MSDStudent s = msdStudentRepository.getByLastNameFirstName(lastname, firstname);
+		return msdStudentAssembler.createDtoFromEntity(s);
 	}
 }

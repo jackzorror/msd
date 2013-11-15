@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.morningstardance.app.ResponseDto;
 import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinDto;
 import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinFacade;
+import com.morningstardance.web.ResponseDto;
 
 @Controller
 @RequestMapping("/msdstudentcheckin")
@@ -35,14 +36,26 @@ public class MSDStudentCheckinController {
     }
     
     @RequestMapping(params={"type=checkin", "msdclassid", "lastname", "firstname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
-    public @ResponseBody MSDStudentCheckinDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameDfltVer(Long msdclassid, String lastname, String firstname, HttpServletResponse response) {
-    	return getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(msdclassid, lastname, firstname, response);
+    public @ResponseBody ResponseDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameDfltVer(Long msdclassid, String lastname, String firstname) {
+    	return getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(msdclassid, lastname, firstname);
     }
     
     @RequestMapping(params={"type=checkin", "msdclassid", "lastname", "firstname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-    public @ResponseBody MSDStudentCheckinDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(Long msdclassid, String lastname, String firstname, HttpServletResponse response) {
+    public @ResponseBody ResponseDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(Long msdclassid, String lastname, String firstname) {
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.getStudentCheckinDtoByLastNameFirstName(msdclassid, lastname, firstname);
-    	return dto;
+        ResponseDto responseDto = new ResponseDto();
+    	if (null != dto) {
+            responseDto.setCode(302L);
+            JSONObject json = new JSONObject(dto);
+            responseDto.setResourceId(dto.getId());
+            responseDto.setResult(json.toString());
+            responseDto.setMessage("found");
+    	} else {
+            responseDto.setCode(404L);
+            responseDto.setMessage("not found");
+    	}
+
+        return responseDto;
 	}
     
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-service-Version")

@@ -84,12 +84,19 @@
 
 
 		<!-- Spring MVC JSON View handling -->
+		
+		<!--  Jackson lib  -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.7.8</version>
+			<version>1.9.13</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20131018</version>
+		</dependency>
 
 	</dependencies>
 

@@ -31,7 +31,7 @@ Ext.define('MSD.controller.checkin.CheckIn' ,{
         var writer = new Ext.data.Writer();
         
 		var checkindata = writer.getRecordData(checkin);
-		var checkinurl = '../msd-app/msdstudent/studentcheckin'; 
+		var checkinurl = '../msd-app/msdstudentcheckin'; 
 		
     	var checkinReq = Ext.Ajax.request({
     		scope: this,

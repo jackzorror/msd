@@ -9,4 +9,6 @@ public interface MSDStudentFacade {
 	List<MSDStudentDto> getAllStudentsByClassId(Long msdClassId);
 
 	List<MSDStudentDto> getAllStudentsByClassIdForCheckin(Long msdClassId);
+
+	MSDStudentDto getStudentByName(String firstname, String lastname);
 }
