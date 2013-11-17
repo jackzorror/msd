@@ -34,8 +34,8 @@
 			
 			$("#btnStudentSearch").click(function() {
 				console.log (" search student by name ... ");
-				var fname = document.getElementById("searchStudentFirstName").value;
-				var lname = document.getElementById("searchStudentLastName").value;
+				var fname = $.trim($("#searchStudentFirstName").val());
+				var lname = $.trim($("#searchStudentLastName").val());
 				if ((null == fname || fname.length == 0) ||
 				    (null == lname || lname.length == 0)) {
 				    alert("please input both last name and first name");
@@ -47,77 +47,60 @@
 			
 			$("#tabs").on( "tabsactivate", function( event, ui ) {
 				if (ui.newPanel.is("#tabs-CheckIn")) {
-					getCheckInClassList();
+					initCheckinTab();
 				}
 			});
-			
 			
 			$("#checkinClassCombobox").focus(function() {
 				previousclass = this.value;
 			}).change(function() {
-				if (this.value != "" ) {
-					document.getElementById("btnStudentCheckInSearch").disabled = false;
-					document.getElementById("btnNonClassStudentCheckInSearch").disabled = false;
+				if (this.value != "" && "default" != this.value) {
+					$("#btnStudentCheckInSearch").prop("disabled", false);
+					$("#btnNonClassStudentCheckInSearch").prop("disabled",false);
+					
 					if (this.value != previousclass) {
-						var tempdiv = document.getElementById("tempdiv");
-						if ( null != tempdiv ) {
-							tempdiv.remove();
-						}
-
-						var nonclassstudentdiv = document.getElementById("nonclassstudentdiv");
-						if (null != nonclassstudentdiv) {
-							nonclassstudentdiv.remove();
-						}
+						$("#tempdiv").empty();
+						$("#nonclassstudentdiv").empty();
 					}
 				} else {
-					document.getElementById("btnStudentCheckInSearch").disabled = true;
-					var tempdiv = document.getElementById("tempdiv");
-					if ( null != tempdiv ) {
-						tempdiv.remove();
-					}
+					$("#btnStudentCheckInSearch").prop("disabled", true);
+					$("#btnNonClassStudentCheckInSearch").prop("disabled", true);
 					
-					document.getElementById("btnNonClassStudentCheckInSearch").disabled = true;
-					var nonclassstudentdiv = document.getElementById("nonclassstudentdiv");
-					if (null != nonclassstudentdiv) {
-						nonclassstudentdiv.remove();
-					}
-					
+					$("#tempdiv").empty();
+					$("#nonclassstudentdiv").empty();
 				}
 			});
 
 			$("#btnStudentCheckInSearch").click(function() {
 				console.log(" search student for check in process .. ");
-				var checkinclasses = document.getElementById("checkinClassCombobox");
-				if (null == checkinclasses.value || checkinclasses.value.length == 0) {
+				var checkinclasses = $("#checkinClassCombobox").val();
+				if (null == checkinclasses || checkinclasses.length == 0) {
 					alert("please select one class from the list");
 				} else {
-					getStudentCheckInDtoList(checkinclasses.value);
+					getStudentCheckInDtoList(checkinclasses);
 				}
 			});
 			
 			$("#btnNonClassStudentCheckInSearch").click(function() {
 				console.log(" search non class student for check in process .. ");
-				var fname = document.getElementById("fname").value;
-				var lname = document.getElementById("lname").value;
+				var fname = $.trim($("#fname").val());
+				var lname = $.trim($("#lname").val());
 				if ((null == fname || fname.length == 0) ||
 				    (null == lname || lname.length == 0)) {
 				    alert("please input both last name and first name");
 				} else {
-					var checkinclasses = document.getElementById("checkinClassCombobox");
-					getNonClassStudentCheckInDto(lname, fname, checkinclasses.value);
+					getNonClassStudentCheckInDto(lname, fname, $("#checkinClassCombobox").val());
 				}
 			});
 			
 			$(document).on('click', '#tempdiv :button', function() {
 				console.log(" click new button ... " + this.id);
-				var checkinclasses = document.getElementById("checkinClassCombobox");
-				checkInStudent(this.id, checkinclasses.value);
+				checkInStudent(this.id, $("#checkinClassCombobox").val());
 			});
 
 			$(document).on('click', '#nonclassstudentdiv :button', function() {
 				console.log(" click new button ... " + this.id);
-				var checkinclasses = document.getElementById("checkinClassCombobox");
-				checkInStudent(this.id, checkinclasses.value);
+				checkInStudent(this.id, $("#checkinClassCombobox").val());
 			});
 
 		});
@@ -130,8 +113,17 @@
 				dataType: "json",
 				url: "../msd-app/msdstudent",
 				data: { firstname: fname, lastname: lname },
-				success: function(data) {
+				success: function(response) {
 					console.log(" get student ... ");
+					if (404 == response.code) {
+						alert(" Can't found student, Please check your input ... ");
+						$("#searchStudentFirstName").focus();
+					} else if (302 == response.code) {
+						var data = $.parseJSON(response.result);
+						
+					} else {
+						alert("error to find student ... ");
+					}
 				},
 				error: function(msg, url, line) {
 					alert('error to get student ... ');
@@ -152,30 +144,25 @@
 					console.log(" get non class student for check in ");
 					if (404 == response.code) {
 						alert(" Can't found student, Please check your input ... ");
-						document.getElementById("fname").focus();
+						$("#fname").focus();
 
 					} else if (302 == response.code) {
 						var data = $.parseJSON(response.result);
-						document.getElementById("fname").value = "";
-						document.getElementById("lname").value = "";
+						$("#fname").val("");
+						$("#lname").val("");
 					
-						var nonclassstudentdiv = document.getElementById("nonclassstudentdiv");
-						if (null == nonclassstudentdiv) {
-							nonclassstudentdiv = $("<div id=nonclassstudentdiv> </div>");
-							$("#addNonClassStudentCheckinButton_here").after(nonclassstudentdiv);
-						}
 						var btnid="btnnew_" + data.studentId;
 						var newbutton = document.getElementById(btnid);
 
 						if (null == newbutton) {
-							newbutton = $('<input/>').attr({ type: 'button', id:'btnnew_' + data.studentId, value:data.name});
+							newbutton = $('<input/>').attr({ type: 'button', id:btnid, value:data.name});
 							$("#nonclassstudentdiv").append(newbutton);
 						} 
 						if (data.checkedIn) {
 							alert("you already checked in");
-							newbutton.disabled=true;
+							$("#" + btnid).prop("disabled",true);
 						} else {
-							newbutton.focus();
+							$("#" + btnid).focus();
 						}
 					} else {
 						alert ('error to get non class student for check in ...');
@@ -200,10 +187,13 @@
 				data: JSON.stringify(scheckin),
 				contentType: "application/json",
 				processData:false,
-				success: function(data) {
-					var btn = document.getElementById(btnid);
-					if (null != btn) {
-						btn.disabled = true;
+				success: function(response) {
+					if (500 == response.code) {
+						alert("Internal Error, Please check service. ");
+					} else if (201 == response.code) {
+						$("#" + btnid).prop("disabled",true);
+					} else {
+						alert('error');
 					}
 				},
 				error: function(msg, url, line) {
@@ -220,22 +210,23 @@
 				dataType: "json",
 				url: "../msd-app/msdstudentcheckin",
 				data: { msdclassid: classid, type: 'checkin' },
-				success: function(data) {
-					var tempdiv = document.getElementById("tempdiv");
-					if ( null != tempdiv ) {
-						tempdiv.remove();
+				success: function(response) {
+					if (404 == response.code) {
+						alert(" Can't get student list for check in class : " + classid);
+					} else if (302 == response.code) {
+						var data = $.parseJSON(response.result);
+						$("#tempdiv").empty();
+
+						$.each(data, function (i, theItem) {
+							var newbutton = $('<input/>').attr({ type: 'button', id:'btnnew_' + theItem.studentId, value:theItem.name});
+							if (theItem.checkedIn) {
+								newbutton.prop("disabled", true);
+							}
+							$("#tempdiv").append(newbutton);
+						});
+					} else {
+						alert('error');
 					}
-
-					tempdiv = $("<div id=tempdiv> </div>");
-					$("#addStudentCheckinButton_here").after(tempdiv);
-
-					$.each(data, function (i, theItem) {
-						var newbutton = $('<input/>').attr({ type: 'button', id:'btnnew_' + theItem.studentId, value:theItem.name});
-						if (theItem.checkedIn) {
-							newbutton.prop("disabled", true);
-						}
-						$("#tempdiv").append(newbutton);
-					});
 				},
 				error: function(msg, url, line) {
 					alert('error');
@@ -255,12 +246,11 @@
 						alert(" Can't get class for check in process ... ");
 					} else if (302 == response.code) {
 						var data = $.parseJSON(response.result);
+
+						$('#checkinClassCombobox option[value!="default"]').remove();
+
 						$.each(data, function (i, theItem) {
-							var checkinclasses = document.getElementById("checkinClassCombobox");
-							var option = document.createElement("option");
-							option.text = theItem.name;
-							option.value = theItem.id;
-							checkinclasses.add(option, null);
+							$("#checkinClassCombobox").append($("<option></option>").attr("value",theItem.id).text(theItem.name));
 						});
 					} else {
 						alert('error');
@@ -272,12 +262,17 @@
 			});
 		};
 		
+		function initCheckinTab() {
+			getCheckInClassList();
+			$("#btnStudentCheckInSearch").prop("disabled", true);
+			$("#btnNonClassStudentCheckInSearch").prop("disabled", true);
+			$("#fname").val("");
+			$("#lname").val("");
+			$("#nonclassstudentdiv").empty();
+			$("#tempdiv").empty();
+		};
+		
 		function init() {
-			var checkinclasses = document.getElementById("checkinClassCombobox");
-			if (null == checkinclasses.value || checkinclasses.value.length == 0) {
-				document.getElementById("btnStudentCheckInSearch").disabled = true;
-				document.getElementById("btnNonClassStudentCheckInSearch").disabled = true;
-			}			
 		};
   	</script>
 </head>
@@ -319,10 +314,12 @@
   			
   			<label>Please select class:</label>
   			<select id="checkinClassCombobox">
-    			<option value="">Select one...</option>
+    			<option value="default">Select one...</option>
   			</select>
   			<input id="btnStudentCheckInSearch" type="button" value="search" />
-  			<div id="addStudentCheckinButton_here"></div>
+  			<div id="addStudentCheckinButton_here">
+  				<div id="tempdiv"></div>
+  			</div>
   			
   			<label>If student not register to above class, or this is a makeup class please input student name to check in.</label>
   			<br/>
@@ -331,7 +328,9 @@
   			<label>last name : </label>
   			<input type="text" id="lname" />
   			<input id="btnNonClassStudentCheckInSearch" type="button" value="search" />
-  			<div id="addNonClassStudentCheckinButton_here"></div>
+  			<div id="addNonClassStudentCheckinButton_here">
+  				<div id="nonclassstudentdiv"></div>
+  			</div>
   		</div>
   	</div>
 	</div>

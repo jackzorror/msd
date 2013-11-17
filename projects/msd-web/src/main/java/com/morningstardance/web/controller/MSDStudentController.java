@@ -44,7 +44,7 @@ public class MSDStudentController {
 	@RequestMapping(params={"firstname","lastname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
     public ResponseDto getStudentByNameVer1(String firstname,String lastname, HttpServletResponse response) {
 		MSDStudentDto dto = msdStudentFacade.getStudentByName(firstname, lastname);
-		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT", dto.getId());
+		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
 
@@ -56,7 +56,7 @@ public class MSDStudentController {
     @RequestMapping(params={"type=checkin", "msdclassid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto getAllStudentsByClassIdForCheckinVer1(Long msdClassId) {
     	List<MSDStudentDto> dtos = msdStudentFacade.getAllStudentsByClassIdForCheckin(msdClassId);
-    	ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY", null);
+    	ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
     	return responseDto;
 	}
 

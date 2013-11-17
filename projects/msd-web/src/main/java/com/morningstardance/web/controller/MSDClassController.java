@@ -29,7 +29,7 @@ public class MSDClassController {
 		@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
 		private ResponseDto getAllMSDClassVer1() {
 			List<MSDClassDto> dtos = msdClassFacade.getAllMSDClass();
-	        ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY", null);
+	        ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 			return responseDto;
 		}
 
@@ -41,7 +41,7 @@ public class MSDClassController {
 		@RequestMapping(value="/{msdClassId}", method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
 		public @ResponseBody ResponseDto getMSDClassByIdVer1(@PathVariable("msdClassId") Long msdClassId) {
 			MSDClassDto dto = msdClassFacade.getMSDClassById(msdClassId);
-	        ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT", dto.getId());
+	        ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 			return responseDto;
 		}
 	

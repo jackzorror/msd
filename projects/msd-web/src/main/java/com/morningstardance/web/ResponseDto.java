@@ -4,20 +4,19 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 
 public class ResponseDto {
 
 	private Long code;
-   	private Object resourceId;
    	private String message;
    	private Object result;
    	
    	public ResponseDto() {
    	}
    	
-   	public ResponseDto(Long code, Object resourceId, String message, Object result) {
+   	public ResponseDto(Long code, String message, Object result) {
    		this.code = code;
-   		this.resourceId = resourceId;
    		this.message = message;
    		this.result = result;
    	}
@@ -27,12 +26,6 @@ public class ResponseDto {
 	}
 	public void setCode(Long code) {
 		this.code = code;
-	}
-	public Object getResourceId() {
-		return resourceId;
-	}
-	public void setResourceId(Object resourceId) {
-		this.resourceId = resourceId;
 	}
 	public String getMessage() {
 		return message;
@@ -48,21 +41,23 @@ public class ResponseDto {
 	}
    	
    	@SuppressWarnings("rawtypes")
-	static public ResponseDto createResponseDto(Object object, String requestType, String resultType, Object id) {
+	static public ResponseDto createResponseDto(Object object, String requestType, String resultType) {
    		ResponseDto dto = new ResponseDto();
    		if ("GET".equals(requestType)) {
    			if (null != object) {
    				dto.setMessage("found");
-   				dto.setCode(302L);
+   				dto.setCode(new Long(HttpStatus.FOUND.value()));
    			} else {
    				dto.setMessage("not found");
-   				dto.setCode(404L);
+   				dto.setCode(new Long(HttpStatus.NOT_FOUND.value()));
    			}
    		} else if ("POST".equals(requestType)) {
    			if (null != object) {
-   				dto.setMessage("create");
+   				dto.setMessage("created");
+   				dto.setCode(new Long(HttpStatus.CREATED.value()));
    			} else {
-   				dto.setMessage("not create");
+   				dto.setMessage("not created");
+   				dto.setCode(new Long(HttpStatus.INTERNAL_SERVER_ERROR.value()));
    			}
    		} else if ("PUT".equals(requestType)) {
    			if (null != object) {
@@ -80,7 +75,7 @@ public class ResponseDto {
    		
    		if ("ARRAY".equals(resultType)) {
    			if (null != object && ((List)object).size() > 0) {
-   				JSONArray jsons = new JSONArray(object);
+   				JSONArray jsons = new JSONArray((List)object);
    				dto.setResult(jsons.toString());
    			}
    		} else if ("OBJECT".equals(resultType)) {
@@ -88,10 +83,6 @@ public class ResponseDto {
    				JSONObject json = new JSONObject(object);
    				dto.setResult(json.toString());
    			}
-   		}
-   		
-   		if (null != id) {
-   			dto.setResourceId(id);
    		}
    		
    		return dto;

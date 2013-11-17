@@ -21,6 +21,8 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 
 	@Override
 	public MSDStudentDto createDtoFromEntity(MSDStudent msdStudent) {
+		if (null == msdStudent) 
+			return null;
 		MSDStudentDto dto = new MSDStudentDto();
 		dto.setId(msdStudent.getId().intValue());
 		dto.setName(msdStudent.getFirstName() + " " + msdStudent.getLastName());

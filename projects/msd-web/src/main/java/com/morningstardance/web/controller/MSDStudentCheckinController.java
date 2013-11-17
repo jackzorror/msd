@@ -25,14 +25,15 @@ public class MSDStudentCheckinController {
 	protected MSDStudentCheckinFacade msdStudentCheckinFacade;
 
 	@RequestMapping(params={"type=checkin", "msdclassid"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
-    public @ResponseBody List<MSDStudentCheckinDto> getAllStudentCheckInDtoForCheckInByClassIDDfltVer(Long msdclassid) {
+    public @ResponseBody ResponseDto getAllStudentCheckInDtoForCheckInByClassIDDfltVer(Long msdclassid) {
     	return getAllStudentCheckInDtoForCheckInByClassIDVer1(msdclassid);
     }
     
     @RequestMapping(params={"type=checkin", "msdclassid"}, method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
-    public @ResponseBody List<MSDStudentCheckinDto> getAllStudentCheckInDtoForCheckInByClassIDVer1(Long msdclassid) {
+    public @ResponseBody ResponseDto getAllStudentCheckInDtoForCheckInByClassIDVer1(Long msdclassid) {
     	List<MSDStudentCheckinDto> dtos = msdStudentCheckinFacade.getAllStudentCheckinDtoForCheckInByClassId(msdclassid);
-    	return dtos;
+        ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+		return responseDto;
     }
     
     @RequestMapping(params={"type=checkin", "msdclassid", "lastname", "firstname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
@@ -43,19 +44,8 @@ public class MSDStudentCheckinController {
     @RequestMapping(params={"type=checkin", "msdclassid", "lastname", "firstname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
     public @ResponseBody ResponseDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(Long msdclassid, String lastname, String firstname) {
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.getStudentCheckinDtoByLastNameFirstName(msdclassid, lastname, firstname);
-        ResponseDto responseDto = new ResponseDto();
-    	if (null != dto) {
-            responseDto.setCode(302L);
-            JSONObject json = new JSONObject(dto);
-            responseDto.setResourceId(dto.getId());
-            responseDto.setResult(json.toString());
-            responseDto.setMessage("found");
-    	} else {
-            responseDto.setCode(404L);
-            responseDto.setMessage("not found");
-    	}
-
-        return responseDto;
+        ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
+		return responseDto;
 	}
     
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-service-Version")
@@ -70,19 +60,7 @@ public class MSDStudentCheckinController {
 		Long msdstudentid = new Long(studentCheckinDto.getStudentId());
 		Long msdclassid = new Long(studentCheckinDto.getClassId());
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(msdstudentid, msdclassid);
-    	
-        ResponseDto responseDto = new ResponseDto();
-    	if (null != dto) {
-    		response.setStatus(HttpStatus.CREATED.value());
-            responseDto.setCode(200L);
-            responseDto.setResourceId(dto.getId());
-            responseDto.setMessage("created");
-    	} else {
-    		response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            responseDto.setCode(500L);
-            responseDto.setMessage("error");
-    	}
-
-        return responseDto;
+        ResponseDto responseDto = ResponseDto.createResponseDto(dto, "POST", "OBJECT");
+		return responseDto;
     }
 }
