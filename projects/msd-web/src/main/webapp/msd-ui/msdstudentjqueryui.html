@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>First jQuery UI</title>
+	<link href="css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/jquery-ui-1.10.3.custom.js"></script>
+
+	<style type=text/css>
+		li.ui-state-default {
+    		font-size : 10px;
+  		}
+  		div.ui-tabs-panel {
+    		font-size : 10px;
+    		font-family : georgia;
+    		font-style : italic;
+  		}
+  	</style>
+
+	<script>
+  
+  		$(document).ready(function(){
+			console.log('in ready ... ');
+			
+			init();
+			
+			$("#btnStudentSearch").click(function() {
+				console.log (" search student by name ... ");
+				var fname = $.trim($("#searchStudentFirstName").val());
+				var lname = $.trim($("#searchStudentLastName").val());
+				if ((null == fname || fname.length == 0) ||
+				    (null == lname || lname.length == 0)) {
+				    alert("please input both last name and first name");
+				} else {
+					console.log (" call ajax to get student ... ");
+					getStudentByName(fname, lname);
+				}
+			});
+		});
+		
+		function getStudentByName(fname, lname) {
+			console.log(' get student by name ... ');
+			
+			$.ajax({
+				type: "GET",
+				dataType: "json",
+				url: "../msd-app/msdstudent",
+				data: { firstname: fname, lastname: lname },
+				success: function(response) {
+					console.log(" get student ... ");
+					if (404 == response.code) {
+						alert(" Can't found student, Please check your input ... ");
+						$("#searchStudentFirstName").focus();
+					} else if (302 == response.code) {
+						var data = $.parseJSON(response.result);
+						
+					} else {
+						alert("error to find student ... ");
+					}
+				},
+				error: function(msg, url, line) {
+					alert('error to get student ... ');
+				}
+			});
+		};
+		
+		function init() {
+		};
+  	</script>
+</head>
+<body>
+    	<h2>MSD Student function ... </h2>
+		<div class="ui-widget">
+			<div id="searchStudent">
+				<label>Please input student First Name and Last Name to Search</label>
+				<br />
+	  			<label>first name : </label>
+  				<input type="text" id="searchStudentFirstName" />
+  				<label>last name : </label>
+  				<input type="text" id="searchStudentLastName" />
+	  			<input id="btnStudentSearch" type="button" value="search" />
+			</div>
+			<div id="studentInformation">
+			</div>
+		</div>  
+</body>
+</html>
