@@ -22,4 +22,14 @@ public class MSDClassRepository extends MSDBaseRepository<MSDClass> {
 				MSDClass.class);
 		return (List<MSDClass>)query.getResultList();
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<MSDClass> getAllStudentRegisterClassByStudentId(Long msdstudentid) {
+		Query query = this.getEntityManager().createNativeQuery(
+				"SELECT mc.* FROM msd_class AS mc JOIN msd_student_class msc ON mc.id = msc.msd_class_id " +
+				"WHERE msc.msd_student_id = :msdstudentid",
+				MSDClass.class);
+		query.setParameter("msdstudentid", msdstudentid);
+		return (List<MSDClass>)query.getResultList();
+	}
 }

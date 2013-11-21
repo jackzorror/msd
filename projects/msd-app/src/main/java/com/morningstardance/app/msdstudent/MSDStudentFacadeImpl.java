@@ -6,6 +6,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.morningstardance.app.msdclass.MSDClassAssembler;
+import com.morningstardance.app.msdclass.MSDClassDto;
+import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDStudent;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
@@ -21,6 +24,9 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	
 	@Resource(name="msdClassRepository")
 	MSDClassRepository msdClassRepository;
+	
+	@Resource(name="msdClassAssembler")
+	MSDClassAssembler msdClassAssembler;
 	
 	@Override
 	public List<MSDStudentDto> getAllStudents() {
@@ -44,5 +50,25 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	public MSDStudentDto getStudentByName(String firstname, String lastname) {
 		MSDStudent s = msdStudentRepository.getByLastNameFirstName(lastname, firstname);
 		return msdStudentAssembler.createDtoFromEntity(s);
+	}
+
+	@Override
+	public List<MSDClassDto> getAllStudentRegisterClassByStudentId(Long msdstudentid) {
+		List<MSDClass> s = msdClassRepository.getAllStudentRegisterClassByStudentId(msdstudentid);
+		return msdClassAssembler.createDtoFromEntity(s);
+	}
+
+	@Override
+	public MSDStudentDetailDto getStudentDetailDtoById(Long msdstudentid) {
+		MSDStudent msdStudent = msdStudentRepository.findById(msdstudentid);
+		return msdStudentAssembler.createDetailDtoFromEntity(msdStudent);
+	}
+
+	@Override
+	public MSDStudentDetailDto updateStudentinformation(MSDStudentDetailDto studentDetailDto) {
+		if (studentDetailDto.getId() == 0) {
+			return null;
+		}
+		return null;
 	}
 }

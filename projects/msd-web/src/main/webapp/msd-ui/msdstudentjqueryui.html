@@ -5,6 +5,7 @@
 	<title>First jQuery UI</title>
 	<link href="css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
 	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/jquery.jqGrid.min.js"></script>
 	<script src="js/jquery-ui-1.10.3.custom.js"></script>
 
 	<style type=text/css>
@@ -37,6 +38,17 @@
 					getStudentByName(fname, lname);
 				}
 			});
+
+			$(document).on('click', '#btnedit', function() {
+				console.log(" edit student button click ... ");
+				$("#studentInformation :text").prop("disabled", false);
+			});
+			
+			$(document).on('click', '#btnsave', function() {
+				console.log(" save student button click ... ");
+				$("#studentInformation :text").prop("disabled", true);
+			});
+			
 		});
 		
 		function getStudentByName(fname, lname) {
@@ -54,7 +66,91 @@
 						$("#searchStudentFirstName").focus();
 					} else if (302 == response.code) {
 						var data = $.parseJSON(response.result);
-						
+						showStudentInformation(data);
+					} else {
+						alert("error to find student ... ");
+					}
+				},
+				error: function(msg, url, line) {
+					alert('error to get student ... ');
+				}
+			});
+		};
+
+		function showStudentInformation(data) {
+			$("#studentInformation").append("<br />");
+
+			$("#studentInformation").append("<h2> Student information </h2>");
+			
+			$("#studentInformation").append("<label>Student First Name : </label>");
+			var fname = $('<input/>').attr({ type: 'text', id:"txtfname", value:"first name"});
+			fname.prop("disabled",true);
+			$("#studentInformation").append(fname);
+			
+			$("#studentInformation").append("<label> Last Name : </label>");
+			var lname = $('<input/>').attr({ type: 'text', id:'txtlname', value:'last name'});
+			lname.prop("disabled",true);
+			$("#studentInformation").append(lname);
+			$("#studentInformation").append("<br />");
+			
+			$("#studentInformation").append("<label>        Email :</label>");
+			var email = $('<input/>').attr({ type: 'text', id:'txtemail', value:'Email@address.com'});
+			email.prop("disabled",true);
+			$("#studentInformation").append(email);
+			
+			$("#studentInformation").append("<br />");
+			$("#studentInformation").append("<br />");
+			$("#studentInformation").append("<br />");
+			
+			var editbutton = $('<input/>').attr({ type: 'button', id:"btnedit", value:"Edit"});
+			$("#studentInformation").append(editbutton);
+
+			var savebutton = $('<input/>').attr({ type: 'button', id:"btnsave", value:"Save"});
+			$("#studentInformation").append(savebutton);
+
+			$("#studentInformation").append("<br />");
+
+			$("#studentInformation").append("<h2> Student register class information </h2>");
+			
+			$("#studentInformation").append("<table id=divgrid></table>");
+			
+			getStudentRegisterClass(data);
+/*
+            $("#divgrid").jqGrid({
+                url: "../msd-app/msdstudent",
+                datatype: "json",
+                jsonReader: {type:"studentclass", id: data.id},
+                colNames:['ID','Class Name','Class Schedule'],
+                colModel:[
+                    {name:'id',index:'id', width:100},
+                    {name:'className',index:'className', width:100},
+                    {name:'classSchedule',index:'classSchedule', width:100}
+                ],
+                rowNum:20,
+//                rowList:[20,60,100],
+                height:460,
+                viewrecords: true,
+                caption: "Register Class :"
+            });
+*/
+		}
+		
+		getStudentRegisterClass(data) {
+			console.log(' get student register class ... ');
+			
+			$.ajax({
+				type: "GET",
+				dataType: "json",
+				url: "../msd-app/msdstudent",
+				data: { type: "registerclass", msdstudentid: data.id },
+				success: function(response) {
+					console.log(" get student register class ... ");
+					if (404 == response.code) {
+						alert(" Can't found student, Please check your input ... ");
+						$("#searchStudentFirstName").focus();
+					} else if (302 == response.code) {
+						var data = $.parseJSON(response.result);
+
 					} else {
 						alert("error to find student ... ");
 					}
@@ -81,8 +177,8 @@
   				<input type="text" id="searchStudentLastName" />
 	  			<input id="btnStudentSearch" type="button" value="search" />
 			</div>
-			<div id="studentInformation">
-			</div>
+			<div id="studentInformation"></div>
+			<div id="studentFunctionButton"></div>
 		</div>  
 </body>
 </html>

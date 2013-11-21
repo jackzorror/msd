@@ -2,6 +2,8 @@ package com.morningstardance.app.msdstudent;
 
 import java.util.List;
 
+import com.morningstardance.app.msdclass.MSDClassDto;
+
 public interface MSDStudentFacade {
 
 	List<MSDStudentDto> getAllStudents();
@@ -11,4 +13,10 @@ public interface MSDStudentFacade {
 	List<MSDStudentDto> getAllStudentsByClassIdForCheckin(Long msdClassId);
 
 	MSDStudentDto getStudentByName(String firstname, String lastname);
+
+	List<MSDClassDto> getAllStudentRegisterClassByStudentId(Long msdstudentid);
+
+	MSDStudentDetailDto getStudentDetailDtoById(Long msdstudentid);
+
+	MSDStudentDetailDto updateStudentinformation(MSDStudentDetailDto studentDetailDto);
 }

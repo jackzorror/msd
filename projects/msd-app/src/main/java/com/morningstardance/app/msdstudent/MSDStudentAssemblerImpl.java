@@ -29,4 +29,27 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 		return dto;
 	}
 
+	@Override
+	public MSDStudentDetailDto createDetailDtoFromEntity(MSDStudent msdStudent) {
+		if (null == msdStudent)
+			return null;
+		
+		MSDStudentDetailDto dto = new MSDStudentDetailDto();
+		dto.setId(msdStudent.getId().intValue());
+		dto.setLastName(msdStudent.getLastName());
+		dto.setFirstName(msdStudent.getFirstName());
+		
+		return dto;
+	}
+
+	@Override
+	public List<MSDStudentDetailDto> createDetailDtoFromEntity(
+			List<MSDStudent> msdStudents) {
+		List<MSDStudentDetailDto> dtos = new ArrayList<MSDStudentDetailDto>();
+		for (MSDStudent student : msdStudents) {
+			dtos.add(this.createDetailDtoFromEntity(student));
+		}
+		return dtos;
+	}
+
 }

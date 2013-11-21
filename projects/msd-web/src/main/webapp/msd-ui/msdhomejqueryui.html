@@ -42,6 +42,7 @@
 				    alert("please input both last name and first name");
 				} else {
 					console.log (" call ajax to get student ... ");
+					$("#studentInformation").empty();
 					getStudentByName(fname, lname);
 				}
 			});
@@ -178,23 +179,44 @@
 			
 			$("#studentInformation").append("<table id=divgrid></table>");
 
-            $("#divgrid").jqGrid({
-                url: "../msd-app/msdstudent",
-                datatype: "json",
-                jsonReader: {type:"studentclass", id: data.id},
-                colNames:['ID','Class Name','Class Schedule'],
-                colModel:[
-                    {name:'id',index:'id', width:100},
-                    {name:'className',index:'className', width:100},
-                    {name:'classSchedule',index:'classSchedule', width:100}
-                ],
-                rowNum:20,
-//                rowList:[20,60,100],
-                height:460,
-                viewrecords: true,
-                caption: "Register Class :"
-            });
-		}
+			getStudentRegisterClass(data);
+		};
+		
+		function getStudentRegisterClass(data) {
+			console.log(' get student register class ... ');
+			
+			$.ajax({
+				type: "GET",
+				dataType: "json",
+				url: "../msd-app/msdstudent",
+				data: { type: "registerclass", msdstudentid: data.id },
+				success: function(response) {
+					console.log(" get student register class ... ");
+					if (404 == response.code) {
+						alert(" Can't found student, Please check your input ... ");
+						$("#searchStudentFirstName").focus();
+					} else if (302 == response.code) {
+						var data = $.parseJSON(response.result);
+						var rowCount = data.length;
+			            var table = $('<table> <caption>Monthly savings</caption> </table>');
+            			for(i=0; i<rowCount; i++){
+			                var row = $('<tr></tr>');
+		                    var column1 = $('<td></td>').text(data[i].id);
+		                    var column2 = $('<td></td>').text(data[i].name);
+		                    table.append(row);
+        		            row.append(column1);
+        		            row.append(column2);
+		                }
+			            $('#studentInformation').append(table);
+					} else {
+						alert("error to find student ... ");
+					}
+				},
+				error: function(msg, url, line) {
+					alert('error to get student ... ');
+				}
+			});
+		};
 				
 		function getNonClassStudentCheckInDto(lname, fname, cid) {
 			console.log(' get non class checkin  student ... ');
