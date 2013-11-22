@@ -8,6 +8,8 @@ public interface MSDStudentAssembler {
 
 	MSDStudentDto createDtoFromEntity(MSDStudent msdStudent);
 	
+	MSDStudent createEntityFromDetailDto(MSDStudentDetailDto msdStudentDetailDto);
+	
 	List<MSDStudentDto> createDtoFromEntity(List<MSDStudent> msdStudents);
 	
 	MSDStudentDetailDto createDetailDtoFromEntity(MSDStudent msdStudent);

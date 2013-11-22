@@ -46,8 +46,8 @@ public class MSDStudentController {
 	}
 
 	@RequestMapping(params={"firstname","lastname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-    public ResponseDto getStudentByNameVer1(String firstname,String lastname, HttpServletResponse response) {
-		MSDStudentDto dto = msdStudentFacade.getStudentByName(firstname, lastname);
+    public @ResponseBody ResponseDto getStudentByNameVer1(String firstname,String lastname, HttpServletResponse response) {
+		MSDStudentDetailDto dto = msdStudentFacade.getStudentDetailDtoByName(firstname, lastname);
 		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
@@ -82,19 +82,19 @@ public class MSDStudentController {
 	}
 
     @RequestMapping(params={"type=studentdetail", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-	public ResponseDto getStudentDetailByStudentIdVer1(Long msdstudentid) {
+	public @ResponseBody ResponseDto getStudentDetailByStudentIdVer1(Long msdstudentid) {
 		MSDStudentDetailDto dto = msdStudentFacade.getStudentDetailDtoById(msdstudentid);
 		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
     
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version")
-    public ResponseDto updateStudentInformationDfltVer(@RequestBody MSDStudentDetailDto studentDetailDto) {
+    public @ResponseBody ResponseDto updateStudentInformationDfltVer(@RequestBody MSDStudentDetailDto studentDetailDto) {
 		return updateStudentInformationVer1(studentDetailDto);
     }
 
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
-	public ResponseDto updateStudentInformationVer1(MSDStudentDetailDto studentDetailDto) {
+	public @ResponseBody ResponseDto updateStudentInformationVer1(MSDStudentDetailDto studentDetailDto) {
 		MSDStudentDetailDto newDto = msdStudentFacade.updateStudentinformation(studentDetailDto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
 		return responseDto;

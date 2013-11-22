@@ -30,13 +30,19 @@
 			console.log('in ready ... ');
 			
 			var previousclass;
+			var currentStudent;
 
 			init();
+			
+			$("#btnaddstudent").click(function() {
+				console.log("click add student ... ");
+			});
 			
 			$("#btnStudentSearch").click(function() {
 				console.log (" search student by name ... ");
 				var fname = $.trim($("#searchStudentFirstName").val());
 				var lname = $.trim($("#searchStudentLastName").val());
+				$("#addStudent").empty();
 				if ((null == fname || fname.length == 0) ||
 				    (null == lname || lname.length == 0)) {
 				    alert("please input both last name and first name");
@@ -45,6 +51,13 @@
 					$("#studentInformation").empty();
 					getStudentByName(fname, lname);
 				}
+			});
+			
+			$("#btnStudentAdd").click(function() {
+				console.log(" add new student ");
+				$("#studentInformation").empty();
+				$("#addStudent").empty();
+				addNewStudent();
 			});
 			
 			$("#tabs").on( "tabsactivate", function( event, ui ) {
@@ -95,14 +108,26 @@
 				}
 			});
 			
+			$(document).on('click', '#btnaddstudent', addNewStudentInSystem);
+			
 			$(document).on('click', '#btnedit', function() {
 				console.log(" edit student button click ... ");
-				$("#studentInformation :text").prop("disabled", false);
+				if ("Edit" == $("#btnedit").val()) {
+					$("#studentInformation :text").prop("disabled", false);
+					$("#txtfname").focus();
+					$("#btnedit").val("Cancel");
+				} else if ("Cancel" == $("#btnedit").val()) {
+					console.log (" cancel edit student information ... ");
+					cancelUpdateStudentInformation();
+					$("#studentInformation :text").prop("disabled", true);
+					$("#btnedit").val("Edit");
+				}
 			});
 			
 			$(document).on('click', '#btnsave', function() {
 				console.log(" save student button click ... ");
 				$("#studentInformation :text").prop("disabled", true);
+				updateStudentInformation();
 			});
 			
 			$(document).on('click', '#tempdiv :button', function() {
@@ -115,6 +140,73 @@
 				checkInStudent(this.id, $("#checkinClassCombobox").val());
 			});
 		});
+		
+		function addNewStudentInSystem() {
+				console.log("click add student ... ");
+		};
+		
+		function addNewStudent() {
+			$("#addStudent").append("<br />");
+
+			$("#addStudent").append("<h2> Student information </h2>");
+			
+			$("#addStudent").append("<label>Student First Name : </label>");
+			var fname = $('<input/>').attr({ type: 'text', id:"txtaddfname"});
+			$("#addStudent").append(fname);
+			
+			$("#addStudent").append("<label> Last Name : </label>");
+			var lname = $('<input/>').attr({ type: 'text', id:'txtaddlname'});
+			$("#addStudent").append(lname);
+			$("#addStudent").append("<br />");
+			
+			$("#addStudent").append("<label>        Email :</label>");
+			var email = $('<input/>').attr({ type: 'text', id:'txtaddemail'});
+			$("#addStudent").append(email);
+			
+			$("#addStudent").append("<br />");
+			$("#addStudent").append("<br />");
+			
+			var savebutton = $('<input/>').attr({ type: 'button', id:"btnaddstudent", value:"Add"});
+			$("#addStudent").append(savebutton);
+
+		};
+		
+		function cancelUpdateStudentInformation() {
+			$("#txtfname").val(currentStudent.firstName);
+			$("#txtlname").val(currentStudent.lastName);
+			$("#txtemail").val("Email@address.com");
+		};
+		
+		function updateStudentInformation() {
+			console.log(' update student information ... ');
+			var fname = $("#txtfname").val();
+			var lname = $("#txtlname").val();
+			var student = { "id":currentStudent.id, "firstName":fname, "lastName":lname };	
+
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "../msd-app/msdstudent",
+				data: JSON.stringify(student),
+				contentType: "application/json",
+				processData:false,
+				success: function(response) {
+					if (500 == response.code) {
+						alert("Internal Error, Please check service. ");
+					} else if (201 == response.code) {
+						console.log(" update student successfully ... ");
+						currentStudent = $.parseJSON(response.result);
+						$("#searchStudentFirstName").val(currentStudent.firstName);
+						$("#searchStudentLastName").val(currentStudent.lastName);
+					} else {
+						alert('error');
+					}
+				},
+				error: function(msg, url, line) {
+					alert('error');
+				}
+			});
+		};
 		
 		function getStudentByName(fname, lname) {
 			console.log(' get student by name ... ');
@@ -130,6 +222,7 @@
 						alert(" Can't found student, Please check your input ... ");
 						$("#searchStudentFirstName").focus();
 					} else if (302 == response.code) {
+						currentStudent = $.parseJSON(response.result);
 						var data = $.parseJSON(response.result);
 						showStudentInformation(data);
 					} else {
@@ -148,12 +241,12 @@
 			$("#studentInformation").append("<h2> Student information </h2>");
 			
 			$("#studentInformation").append("<label>Student First Name : </label>");
-			var fname = $('<input/>').attr({ type: 'text', id:"txtfname", value:"first name"});
+			var fname = $('<input/>').attr({ type: 'text', id:"txtfname", value:data.firstName});
 			fname.prop("disabled",true);
 			$("#studentInformation").append(fname);
 			
 			$("#studentInformation").append("<label> Last Name : </label>");
-			var lname = $('<input/>').attr({ type: 'text', id:'txtlname', value:'last name'});
+			var lname = $('<input/>').attr({ type: 'text', id:'txtlname', value:data.lastName});
 			lname.prop("disabled",true);
 			$("#studentInformation").append(lname);
 			$("#studentInformation").append("<br />");
@@ -383,9 +476,11 @@
   				<label>last name : </label>
   				<input type="text" id="searchStudentLastName" />
 	  			<input id="btnStudentSearch" type="button" value="search" />
+	  			<Label> or to add new student </label>
+	  			<input id="btnStudentAdd" type="button" value="add" />
 			</div>
 			<div id="studentInformation"></div>
-			<div id="studentFunctionButton"></div>
+			<div id="addStudent"></div>
 		</div>  
 	</div>
   	<div id="tabs-Class">

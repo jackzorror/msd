@@ -12,7 +12,7 @@ public interface MSDStudentFacade {
 
 	List<MSDStudentDto> getAllStudentsByClassIdForCheckin(Long msdClassId);
 
-	MSDStudentDto getStudentByName(String firstname, String lastname);
+	MSDStudentDetailDto getStudentDetailDtoByName(String firstname, String lastname);
 
 	List<MSDClassDto> getAllStudentRegisterClassByStudentId(Long msdstudentid);
 

@@ -52,4 +52,15 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 		return dtos;
 	}
 
+	@Override
+	public MSDStudent createEntityFromDetailDto(
+			MSDStudentDetailDto msdStudentDetailDto) {
+		MSDStudent student = new MSDStudent();
+		student.setId(new Long(msdStudentDetailDto.getId()));
+		student.setFirstName(msdStudentDetailDto.getFirstName());
+		student.setLastName(msdStudentDetailDto.getLastName());
+		
+		return student;
+	}
+
 }
