@@ -7,6 +7,7 @@
 	<script src="js/jquery-1.9.1.js"></script>
 	<script src="js/jquery.jqGrid.min.js"></script>
 	<script src="js/jquery-ui-1.10.3.custom.js"></script>
+	<script src="js/msdclass/msdclassjqueryui.js"></script>
 	<script>
 		$(function() {			
 		    $( "#tabs" ).tabs();
@@ -63,8 +64,12 @@
 			$("#tabs").on( "tabsactivate", function( event, ui ) {
 				if (ui.newPanel.is("#tabs-CheckIn")) {
 					initCheckinTab();
+				} else if (ui.newPanel.is("#tabs-Class")) {
+					initClassTab();
 				}
 			});
+			
+			handleClassTabEvents();
 			
 			$("#checkinClassCombobox").focus(function() {
 				previousclass = this.value;
@@ -485,13 +490,12 @@
 	</div>
   	<div id="tabs-Class">
     	<h2>MSD Class function ... </h2>
-		<div class="ui-widget">
-			<h3> Under construct ... </h3>
+		<div id="msdclassdiv" class="ui-widget">
 		</div>  
   	</div>
   	<div id="tabs-CheckIn">
     	<h2>Student Class Check In</h2>
-    	<div class="ui-widget">
+    	<div id="msdcheckindiv" class="ui-widget">
   			
   			<label>Please select class:</label>
   			<select id="checkinClassCombobox">
@@ -512,6 +516,7 @@
   			<div id="addNonClassStudentCheckinButton_here">
   				<div id="nonclassstudentdiv"></div>
   			</div>
+
   		</div>
   	</div>
 	</div>
