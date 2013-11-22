@@ -8,6 +8,7 @@
 	<script src="js/jquery.jqGrid.min.js"></script>
 	<script src="js/jquery-ui-1.10.3.custom.js"></script>
 	<script src="js/msdclass/msdclassjqueryui.js"></script>
+	<script src="js/msdclass/msdcheckinjqueryui.js"></script>
 	<script>
 		$(function() {			
 		    $( "#tabs" ).tabs();
@@ -30,7 +31,6 @@
   		$(document).ready(function(){
 			console.log('in ready ... ');
 			
-			var previousclass;
 			var currentStudent;
 
 			init();
@@ -71,48 +71,6 @@
 			
 			handleClassTabEvents();
 			
-			$("#checkinClassCombobox").focus(function() {
-				previousclass = this.value;
-			}).change(function() {
-				if (this.value != "" && "default" != this.value) {
-					$("#btnStudentCheckInSearch").prop("disabled", false);
-					$("#btnNonClassStudentCheckInSearch").prop("disabled",false);
-					
-					if (this.value != previousclass) {
-						$("#tempdiv").empty();
-						$("#nonclassstudentdiv").empty();
-					}
-				} else {
-					$("#btnStudentCheckInSearch").prop("disabled", true);
-					$("#btnNonClassStudentCheckInSearch").prop("disabled", true);
-					
-					$("#tempdiv").empty();
-					$("#nonclassstudentdiv").empty();
-				}
-			});
-
-			$("#btnStudentCheckInSearch").click(function() {
-				console.log(" search student for check in process .. ");
-				var checkinclasses = $("#checkinClassCombobox").val();
-				if (null == checkinclasses || checkinclasses.length == 0) {
-					alert("please select one class from the list");
-				} else {
-					getStudentCheckInDtoList(checkinclasses);
-				}
-			});
-			
-			$("#btnNonClassStudentCheckInSearch").click(function() {
-				console.log(" search non class student for check in process .. ");
-				var fname = $.trim($("#fname").val());
-				var lname = $.trim($("#lname").val());
-				if ((null == fname || fname.length == 0) ||
-				    (null == lname || lname.length == 0)) {
-				    alert("please input both last name and first name");
-				} else {
-					getNonClassStudentCheckInDto(lname, fname, $("#checkinClassCombobox").val());
-				}
-			});
-			
 			$(document).on('click', '#btnaddstudent', addNewStudentInSystem);
 			
 			$(document).on('click', '#btnedit', function() {
@@ -135,15 +93,6 @@
 				updateStudentInformation();
 			});
 			
-			$(document).on('click', '#tempdiv :button', function() {
-				console.log(" click new button ... " + this.id);
-				checkInStudent(this.id, $("#checkinClassCombobox").val());
-			});
-
-			$(document).on('click', '#nonclassstudentdiv :button', function() {
-				console.log(" click new button ... " + this.id);
-				checkInStudent(this.id, $("#checkinClassCombobox").val());
-			});
 		});
 		
 		function addNewStudentInSystem() {
@@ -316,146 +265,7 @@
 			});
 		};
 				
-		function getNonClassStudentCheckInDto(lname, fname, cid) {
-			console.log(' get non class checkin  student ... ');
-			
-			$.ajax({
-				type: "GET",
-				dataType: "json",
-				url: "../msd-app/msdstudentcheckin",
-				data: { msdclassid:cid, firstname: fname, lastname: lname, type: 'checkin' },
-				success: function(response) {
-					console.log(" get non class student for check in ");
-					if (404 == response.code) {
-						alert(" Can't found student, Please check your input ... ");
-						$("#fname").focus();
 
-					} else if (302 == response.code) {
-						var data = $.parseJSON(response.result);
-						$("#fname").val("");
-						$("#lname").val("");
-					
-						var btnid="btnnew_" + data.studentId;
-						var newbutton = document.getElementById(btnid);
-
-						if (null == newbutton) {
-							newbutton = $('<input/>').attr({ type: 'button', id:btnid, value:data.name});
-							$("#nonclassstudentdiv").append(newbutton);
-						} 
-						if (data.checkedIn) {
-							alert("you already checked in");
-							$("#" + btnid).prop("disabled",true);
-						} else {
-							$("#" + btnid).focus();
-						}
-					} else {
-						alert ('error to get non class student for check in ...');
-					}
-				},
-				error: function(msg, url, line) {
-					alert('error to get non class student for check in ... ');
-				}
-			});
-		};
-		
-		function checkInStudent(btnid, cid) {
-			var sid = btnid.substring(7);
-			var checkintime = new Date();
-
-			var scheckin = { "checkInTime":checkintime, "classId":cid, "id":0, "studentId":sid };
-			
-			$.ajax({
-				type: "POST",
-				url: "../msd-app/msdstudentcheckin",
-				dataType: "json",
-				data: JSON.stringify(scheckin),
-				contentType: "application/json",
-				processData:false,
-				success: function(response) {
-					if (500 == response.code) {
-						alert("Internal Error, Please check service. ");
-					} else if (201 == response.code) {
-						$("#" + btnid).prop("disabled",true);
-					} else {
-						alert('error');
-					}
-				},
-				error: function(msg, url, line) {
-					alert('error');
-				}
-			});
-		};
-
-		function getStudentCheckInDtoList(classid) {
-			console.log("in getStudentCheckInDtoList ... ");
-						
-			$.ajax({
-				type: "GET",
-				dataType: "json",
-				url: "../msd-app/msdstudentcheckin",
-				data: { msdclassid: classid, type: 'checkin' },
-				success: function(response) {
-					if (404 == response.code) {
-						alert(" Can't get student list for check in class : " + classid);
-					} else if (302 == response.code) {
-						var data = $.parseJSON(response.result);
-						$("#tempdiv").empty();
-
-						$.each(data, function (i, theItem) {
-							var newbutton = $('<input/>').attr({ type: 'button', id:'btnnew_' + theItem.studentId, value:theItem.name});
-							if (theItem.checkedIn) {
-								newbutton.prop("disabled", true);
-							}
-							$("#tempdiv").append(newbutton);
-						});
-					} else {
-						alert('error');
-					}
-				},
-				error: function(msg, url, line) {
-					alert('error');
-				}
-			});
-		};
-
-		function getCheckInClassList() {
-			console.log('in getCheckInClassList ... ');
-			$.ajax({
-				type: "GET",
-				url: "../msd-app/msdclass",
-				dataType: "json",
-				contentType: "application/json",
-				success: function(response) {
-					if (404 == response.code) {
-						alert(" Can't get class for check in process ... ");
-					} else if (302 == response.code) {
-						var data = $.parseJSON(response.result);
-
-						$('#checkinClassCombobox option[value!="default"]').remove();
-
-						$.each(data, function (i, theItem) {
-							$("#checkinClassCombobox").append($("<option></option>").attr("value",theItem.id).text(theItem.name));
-						});
-					} else {
-						alert('error');
-					}
-				},
-				error: function(msg, url, line) {
-					alert('error');
-				}
-			});
-		};
-		
-		function initCheckinTab() {
-			getCheckInClassList();
-			$("#btnStudentCheckInSearch").prop("disabled", true);
-			$("#btnNonClassStudentCheckInSearch").prop("disabled", true);
-			$("#fname").val("");
-			$("#lname").val("");
-			$("#nonclassstudentdiv").empty();
-			$("#tempdiv").empty();
-		};
-		
 		function init() {
 		};
   	</script>
@@ -496,27 +306,6 @@
   	<div id="tabs-CheckIn">
     	<h2>Student Class Check In</h2>
     	<div id="msdcheckindiv" class="ui-widget">
-  			
-  			<label>Please select class:</label>
-  			<select id="checkinClassCombobox">
-    			<option value="default">Select one...</option>
-  			</select>
-  			<input id="btnStudentCheckInSearch" type="button" value="search" />
-  			<div id="addStudentCheckinButton_here">
-  				<div id="tempdiv"></div>
-  			</div>
-  			
-  			<label>If student not register to above class, or this is a makeup class please input student name to check in.</label>
-  			<br/>
-  			<label>first name : </label>
-  			<input type="text" id="fname" />
-  			<label>last name : </label>
-  			<input type="text" id="lname" />
-  			<input id="btnNonClassStudentCheckInSearch" type="button" value="search" />
-  			<div id="addNonClassStudentCheckinButton_here">
-  				<div id="nonclassstudentdiv"></div>
-  			</div>
-
   		</div>
   	</div>
 	</div>
