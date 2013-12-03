@@ -62,8 +62,10 @@ public class ResponseDto {
    		} else if ("PUT".equals(requestType)) {
    			if (null != object) {
    				dto.setMessage("update");
+   				dto.setCode(new Long(HttpStatus.FOUND.value()));
    			} else {
    				dto.setMessage("not update");
+   				dto.setCode(new Long(HttpStatus.INTERNAL_SERVER_ERROR.value()));
    			}
    		} else if ("DELETE".equals(requestType)) {
    			if (null != object) {

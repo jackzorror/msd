@@ -74,4 +74,17 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 		msdStudentRepository.save(student);
 		return msdStudentAssembler.createDetailDtoFromEntity(student);
 	}
+
+	@Override
+	public MSDStudentDetailDto addStudent(MSDStudentDetailDto studentDetailDto) {
+		MSDStudent student = msdStudentAssembler.createEntityFromDetailDto(studentDetailDto);
+		msdStudentRepository.save(student);
+		return msdStudentAssembler.createDetailDtoFromEntity(student);
+	}
+
+	@Override
+	public MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

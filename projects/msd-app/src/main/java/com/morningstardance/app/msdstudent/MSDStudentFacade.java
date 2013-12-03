@@ -19,4 +19,8 @@ public interface MSDStudentFacade {
 	MSDStudentDetailDto getStudentDetailDtoById(Long msdstudentid);
 
 	MSDStudentDetailDto updateStudentinformation(MSDStudentDetailDto studentDetailDto);
+
+	MSDStudentDetailDto addStudent(MSDStudentDetailDto studentDetailDto);
+
+	MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto);
 }

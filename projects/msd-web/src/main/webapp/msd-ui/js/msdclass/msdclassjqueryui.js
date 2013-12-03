@@ -7,6 +7,9 @@ function handleClassTabEvents() {
 
 function initClassTab() {
 	console.log(" init class tab from diff file ... ");
+	
+	$('#msdclassdiv').empty();
+	
 	var searchdiv=$('<div id="classSearch"></div>');
 	var infodiv=$('<div id="classinformation"></div>');
 	var adddiv=$('<div id="classAdd"></div>');

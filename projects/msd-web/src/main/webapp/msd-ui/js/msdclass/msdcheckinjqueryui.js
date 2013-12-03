@@ -1,4 +1,4 @@
-function handleClassTabEvents() {
+function handleCheckInTabEvents() {
 	console.log(" setup check in tab event handle ...");
 	
 	$(document).on('change', '#checkinClassCombobox', handleCheckinClasComboboxChange);

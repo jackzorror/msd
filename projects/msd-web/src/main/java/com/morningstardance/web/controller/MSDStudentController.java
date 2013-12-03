@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.morningstardance.app.msdclass.MSDClassDto;
+import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 import com.morningstardance.app.msdstudent.MSDStudentDetailDto;
 import com.morningstardance.app.msdstudent.MSDStudentDto;
 import com.morningstardance.app.msdstudent.MSDStudentFacade;
@@ -97,6 +98,30 @@ public class MSDStudentController {
 	public @ResponseBody ResponseDto updateStudentInformationVer1(MSDStudentDetailDto studentDetailDto) {
 		MSDStudentDetailDto newDto = msdStudentFacade.updateStudentinformation(studentDetailDto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
+		return responseDto;
+	}
+    
+    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto addStudentDfltVer(@RequestBody MSDStudentDetailDto studentDetailDto) {
+    	return addStudentVer1(studentDetailDto);
+    }
+
+    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
+	public@ResponseBody ResponseDto addStudentVer1(@RequestBody MSDStudentDetailDto studentDetailDto) {
+		MSDStudentDetailDto addedDto = msdStudentFacade.addStudent(studentDetailDto);
+		ResponseDto responseDto = ResponseDto.createResponseDto(addedDto, "PUT", "OBJECT");
+		return responseDto;
+	}
+    
+    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto studentRegisterClassDfltVer(@RequestBody MSDStudentClassDto studentClassDto) {
+    	return studentRegisterClassVer1(studentClassDto);
+    }
+
+    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto studentRegisterClassVer1(MSDStudentClassDto studentClassDto) {
+		MSDStudentClassDto newDto = msdStudentFacade.registerStudentToClass(studentClassDto);
+		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}
     
