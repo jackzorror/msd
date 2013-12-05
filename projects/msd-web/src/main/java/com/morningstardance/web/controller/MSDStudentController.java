@@ -28,14 +28,15 @@ public class MSDStudentController {
 	
 
 	@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version")
-	public @ResponseBody List<MSDStudentDto> getAllMSDStudentDfltVer() {
+	public @ResponseBody ResponseDto getAllMSDStudentDfltVer() {
 		return getAllMSDStudentVer1();
 	}
 
 	@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
-	public @ResponseBody List<MSDStudentDto> getAllMSDStudentVer1() {
+	public @ResponseBody ResponseDto getAllMSDStudentVer1() {
 		List<MSDStudentDto> dtos = msdStudentFacade.getAllStudents();
-		return dtos;
+    	ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+    	return responseDto;
 	}
 	
 	@RequestMapping(params={"firstname","lastname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
@@ -74,13 +75,13 @@ public class MSDStudentController {
 		return responseDto;
 	}
     
-	@RequestMapping(value="/nameautocomplete", params={"fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
-	public @ResponseBody ResponseDto getStudentUniqueNameDfltVer(String fieldname) {
-		return getStudentUniqueNameVer1(fieldname);
+	@RequestMapping(params={"type=nameautocomplete", "fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+	public @ResponseBody ResponseDto getAllStudentUniqueNameDfltVer(String fieldname) {
+		return getAllStudentUniqueNameVer1(fieldname);
 	}
 
-    @RequestMapping(value="/nameautocomplete", params={"fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto getStudentUniqueNameVer1(String fieldname) {
+    @RequestMapping(params={"type=nameautocomplete", "fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto getAllStudentUniqueNameVer1(String fieldname) {
 		List<String> names = msdStudentFacade.getAllStudentUniqueName(fieldname);
 		ResponseDto responseDto = ResponseDto.createResponseDto(names, "GET", "ARRAY");
 		return responseDto;

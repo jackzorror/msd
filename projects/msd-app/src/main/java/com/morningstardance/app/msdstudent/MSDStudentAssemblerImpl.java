@@ -25,7 +25,8 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 			return null;
 		MSDStudentDto dto = new MSDStudentDto();
 		dto.setId(msdStudent.getId().intValue());
-		dto.setName(msdStudent.getFirstName() + " " + msdStudent.getLastName());
+		dto.setFirstName(msdStudent.getFirstName());
+		dto.setLastName(msdStudent.getLastName());
 		return dto;
 	}
 
