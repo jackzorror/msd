@@ -44,7 +44,7 @@ public class ResponseDto {
 	static public ResponseDto createResponseDto(Object object, String requestType, String resultType) {
    		ResponseDto dto = new ResponseDto();
    		if ("GET".equals(requestType)) {
-   			if (null != object) {
+   			if (null != object && !("ARRAY" == resultType && ((List)object).size() == 0)) {
    				dto.setMessage("found");
    				dto.setCode(new Long(HttpStatus.FOUND.value()));
    			} else {

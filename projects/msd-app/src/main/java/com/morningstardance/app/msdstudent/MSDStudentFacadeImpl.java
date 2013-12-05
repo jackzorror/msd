@@ -10,23 +10,32 @@ import com.morningstardance.app.msdclass.MSDClassAssembler;
 import com.morningstardance.app.msdclass.MSDClassDto;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDStudent;
+import com.morningstardance.domain.entity.MSDStudentClass;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentClassJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentJPARepository;
 
 @Service("msdStudentFacade")
 public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	
 	@Resource(name="msdStudentRepository")
-	MSDStudentRepository msdStudentRepository;
+	private MSDStudentRepository msdStudentRepository;
 	
 	@Resource(name="msdStudentAssembler")
-	MSDStudentAssembler msdStudentAssembler;
+	private MSDStudentAssembler msdStudentAssembler;
 	
 	@Resource(name="msdClassRepository")
-	MSDClassRepository msdClassRepository;
+	private MSDClassRepository msdClassRepository;
 	
 	@Resource(name="msdClassAssembler")
-	MSDClassAssembler msdClassAssembler;
+	private MSDClassAssembler msdClassAssembler;
+	
+	@Resource
+	private MSDStudentClassJPARepository msdStudentClassJPARepository;
+	
+	@Resource
+	private MSDStudentJPARepository msdStudentJPARepository;
 	
 	@Override
 	public List<MSDStudentDto> getAllStudents() {
@@ -77,14 +86,41 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 
 	@Override
 	public MSDStudentDetailDto addStudent(MSDStudentDetailDto studentDetailDto) {
-		MSDStudent student = msdStudentAssembler.createEntityFromDetailDto(studentDetailDto);
-		msdStudentRepository.save(student);
+		MSDStudent student = msdStudentRepository.getByLastNameFirstName(studentDetailDto.getLastName(), studentDetailDto.getFirstName());
+		if (null == student) {
+			student = msdStudentAssembler.createEntityFromDetailDto(studentDetailDto);
+			student = msdStudentRepository.save(student);
+		}
 		return msdStudentAssembler.createDetailDtoFromEntity(student);
 	}
 
 	@Override
 	public MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto) {
-		// TODO Auto-generated method stub
+		MSDStudentClass studentClass = new MSDStudentClass();
+		studentClass.setMsdClassId(studentClassDto.getMsdClassId());
+		studentClass.setMsdStudentId(studentClassDto.getMsdStudentId());
+		MSDStudentClass entity = null;
+		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(studentClassDto.getMsdClassId(),	studentClassDto.getMsdStudentId());
+		if (null == entity) {
+			entity = msdStudentClassJPARepository.save(studentClass);
+		}
+		MSDStudentClassDto dto = new MSDStudentClassDto();
+		dto.setId(entity.getId().intValue());
+		dto.setMsdClassId(entity.getMsdClassId());
+		dto.setMsdStudentId(entity.getMsdStudentId());
+		return dto;
+	}
+
+	@Override
+	public List<String> getAllStudentUniqueName(String fieldname) {
+		if ("FIRSTNAME".equals(fieldname)) {
+			return msdStudentJPARepository.findUniqueFirstNames();
+		}
+		
+		if ("LASTNAME".equals(fieldname)) {
+			return msdStudentJPARepository.findUniqueLastNames();
+		}
+		
 		return null;
 	}
 }

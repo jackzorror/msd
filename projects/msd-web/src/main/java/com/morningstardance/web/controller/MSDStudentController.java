@@ -5,8 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +17,6 @@ import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 import com.morningstardance.app.msdstudent.MSDStudentDetailDto;
 import com.morningstardance.app.msdstudent.MSDStudentDto;
 import com.morningstardance.app.msdstudent.MSDStudentFacade;
-import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinDto;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -77,6 +74,18 @@ public class MSDStudentController {
 		return responseDto;
 	}
     
+	@RequestMapping(value="/nameautocomplete", params={"fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+	public @ResponseBody ResponseDto getStudentUniqueNameDfltVer(String fieldname) {
+		return getStudentUniqueNameVer1(fieldname);
+	}
+
+    @RequestMapping(value="/nameautocomplete", params={"fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto getStudentUniqueNameVer1(String fieldname) {
+		List<String> names = msdStudentFacade.getAllStudentUniqueName(fieldname);
+		ResponseDto responseDto = ResponseDto.createResponseDto(names, "GET", "ARRAY");
+		return responseDto;
+	}
+    
 	@RequestMapping(params={"type=studentdetail", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto getStudentDetailByStudentIdDfltVer(Long msdstudentid) {
 		return getStudentDetailByStudentIdVer1(msdstudentid);
@@ -113,16 +122,30 @@ public class MSDStudentController {
 		return responseDto;
 	}
     
-    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
+    @RequestMapping(value="/{msdstudentid}", method=RequestMethod.PUT, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto studentRegisterClassDfltVer(@RequestBody MSDStudentClassDto studentClassDto) {
     	return studentRegisterClassVer1(studentClassDto);
     }
 
-    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
+    @RequestMapping(value="/{msdstudentid}", method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentRegisterClassVer1(MSDStudentClassDto studentClassDto) {
 		MSDStudentClassDto newDto = msdStudentFacade.registerStudentToClass(studentClassDto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}
     
+    @RequestMapping(params={"msdclassid","msdstudentid"}, method=RequestMethod.PUT, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto studentRegisterClassDfltVer(Long msdclassid, Long msdstudentid) {
+    	return studentRegisterClassVer1(msdclassid, msdstudentid);
+    }
+
+    @RequestMapping(params={"msdclassid","msdstudentid"}, method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto studentRegisterClassVer1(Long msdclassid, Long msdstudentid) {
+    	MSDStudentClassDto studentClassDto = new MSDStudentClassDto();
+    	studentClassDto.setMsdClassId(msdclassid.intValue());
+    	studentClassDto.setMsdStudentId(msdstudentid.intValue());
+		MSDStudentClassDto newDto = msdStudentFacade.registerStudentToClass(studentClassDto);
+		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
+		return responseDto;
+	}
 }

@@ -80,6 +80,8 @@ function getStudentByName(fname, lname) {
 }
 
 function showStudentInformation(data) {
+	$('#studentInformation').empty();
+
 	$('#studentInformation').append("<br />");
 
 	$('#studentInformation').append("<h2> Student information </h2>");
@@ -132,12 +134,15 @@ function getStudentRegisterClass(data) {
 		success: function(response) {
 			console.log(" get student register class ... ");
 			if (404 == response.code) {
-				alert(" Can't found student, Please check your input ... ");
-				$("#txtStudentSearchFirstName").focus();
+				console.log(" There is no register class for this student ... ");
 			} else if (302 == response.code) {
 				var data = $.parseJSON(response.result);
 				var rowCount = data.length;
-	            var table = $('<table> <caption>Monthly savings</caption> </table>');
+				
+				if (null != $('#studentClassRegister')) {
+					$('#studentClassRegister').remove()
+				}
+	            var table = $('<table id="studentClassRegister"> <caption>Student Register Class information</caption> </table>');
        			for(i=0; i<rowCount; i++){
 	                var row = $('<tr></tr>');
                     var column1 = $('<td></td>').text(data[i].id);
@@ -224,6 +229,8 @@ function handleStudentAddClick() {
 	console.log(" add new student ");
 	$("#studentInformation").empty();
 	$("#addStudent").empty();
+	$('#txtStudentSearchFirstName').val("");
+	$('#txtStudentSearchLastName').val("");
 	showStudentAdd();
 }
 
@@ -287,8 +294,11 @@ function handleSaveAddStudentClick() {
 			} else if (302 == response.code) {
 				console.log(" add student successfully ... ");
 				data = $.parseJSON(response.result);
-				setCurretnStudent(data);
-				addClassRegister();
+				setCurrentStudent(data);
+				$("#addStudent").empty();
+				showStudentInformation(data);
+//				getStudentRegisterClass(data);
+//				addClassRegister();
 			} else {
 				alert('error');
 			}
@@ -351,7 +361,30 @@ function handleRegisterClassClick () {
 
 function registerStudentClass(registerclasses) {
 	var cstudent = getCurrentStudent();
-	var registerclass = {};
+	var scregister = {"id":0, "msdClassId":registerclasses, "msdStudentId":cstudent.id};
+	
+	$.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/msdstudent/" + cstudent.id,
+		data: JSON.stringify(scregister),
+		processData:false,
+		contentType: "application/json",
+		success: function(response) {
+			console.log(" get student ... ");
+			if (404 == response.code) {
+				alert(" Can't register class ... ");
+			} else if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				getStudentRegisterClass(cstudent);
+			} else {
+				alert("error to register student ... ");
+			}
+		},
+		error: function(msg, url, line) {
+			alert('error to register student ... ');
+		}
+	});
 };
 
 var currentStudent;

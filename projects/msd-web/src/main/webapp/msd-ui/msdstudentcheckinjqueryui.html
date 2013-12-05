@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>First jQuery UI</title>
+	<link href="css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/jquery.jqGrid.min.js"></script>
+	<script src="js/jquery-ui-1.10.3.custom.js"></script>
+	<script src="js/msdstudentcheckin/msdstudentcheckinjqueryui.js"></script>
+	<script>
+		$(function() {			
+		    $( "#tabs" ).tabs();
+    	});
+	</script>
+
+	<style type=text/css>
+		li.ui-state-default {
+    		font-size : 10px;
+  		}
+  		div.ui-tabs-panel {
+    		font-size : 10px;
+    		font-family : georgia;
+    		font-style : italic;
+  		}
+  	</style>
+
+	<script>
+  
+  		$(document).ready(function(){
+			init();
+			
+			$("#tabs").on( "tabsactivate", function( event, ui ) {
+				if (ui.newPanel.is("#tabs-StudentCheckIn")) {
+					initStudentCheckinTab();
+				}
+			});
+			
+			handleStudentCheckInTabEvents();
+		});
+		
+		function init() {
+			initStudentCheckinTab();
+		};
+  	</script>
+</head>
+<body>
+
+	<p align="center"><img align="middle" src="msd.jpg" alt="some_text"></p>
+
+	<div id="tabs">
+	<ul>
+	    <li><a href="#tabs-StudentCheckIn">Student CheckIn</a></li>
+	</ul>
+  	<div id="tabs-StudentCheckIn">
+    	<h2>Student Class Check In</h2>
+    	<div id="studentcheckindiv" class="ui-widget">
+  		</div>
+  	</div>
+	</div>
+
+</body>
+</html>

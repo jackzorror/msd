@@ -23,4 +23,6 @@ public interface MSDStudentFacade {
 	MSDStudentDetailDto addStudent(MSDStudentDetailDto studentDetailDto);
 
 	MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto);
+
+	List<String> getAllStudentUniqueName(String fieldname);
 }

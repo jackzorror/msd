@@ -52,7 +52,7 @@
 		<property name="dataSource" ref="msdDataSource" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="databasePlatform" value="org.hibernate.dialect.SQLServerDialect" />
+				<property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
 				<property name="generateDdl" ref="jpaVendorAdapterGenerateDDL" />
 				<property name="showSql" value="true"/>
 			</bean>

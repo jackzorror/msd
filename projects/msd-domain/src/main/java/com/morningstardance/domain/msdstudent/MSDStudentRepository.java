@@ -22,7 +22,7 @@ public class MSDStudentRepository extends MSDBaseRepository<MSDStudent> {
 	public List<MSDStudent> getAll() {
 		Query query = this.getEntityManager().createNativeQuery(
 				"SELECT * From msd_student", 
-				MSDClass.class);
+				MSDStudent.class);
 		return (List<MSDStudent>)query.getResultList();
 	}
 
