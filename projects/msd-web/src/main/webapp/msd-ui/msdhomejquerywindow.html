@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="keywords" content="jQuery Window, Window Widget, Window" />
+    <meta name="description" content="With jqxWindow, you can create create multiple windows and display them at the same time on your page." />
+    <title id='Description'>With jqxWindow, you can create create multiple windows and display them at the same time on your page.</title>
+    <link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+	<link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.energyblue.css" type="text/css" />
+    
+    <script type="text/javascript" src="jqwidgets/scripts/gettheme.js"></script>
+    <script type="text/javascript" src="jqwidgets/scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxwindow.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
+    
+    <style type="text/css">
+	.button .button-text { 
+    		font-size:60%;
+	    min-height: 13px;
+    	margin-left:5px;
+	}​	
+    </style>
+    
+    <script type="text/javascript" src="js/msdjqwindow/studentjqwindow.js"></script>
+    <script type="text/javascript">
+        function removeAll(collection) {
+            if (!collection) {
+                return;
+            }
+            var count = collection.length;
+            while (count) {
+                count -= 1;
+                collection[count].remove();
+            }
+        }
+        function addEventListeners(theme) {
+            addEventListeners.windowsCount = 1;
+            $('#showWindowButton').mousedown(function () {
+                var window = $.data(document.body, 'jqxwindows-list'),
+                    count = window.length;
+                while (count) {
+                    count -= 1;
+                    $(window[count]).jqxWindow('open');
+                }
+            });
+            $('#addWindowButton').mousedown(function () {
+                if (addEventListeners.windowsCount < 3) {
+                    $(document.body).append('<div id="newWindow' + addEventListeners.windowsCount + '"><div>Header ' + addEventListeners.windowsCount
+                                         + '</div><div>Content of window ' + addEventListeners.windowsCount + '</div></div>');
+                    var mainContainer = $('#mainContainer');
+                    $('#newWindow' + addEventListeners.windowsCount).jqxWindow({ height: 150, width: 300, theme: theme });
+                    addEventListeners.windowsCount += 1;
+                }
+            });
+			addStudentWindowEventListeners(theme);            
+        }
+        function createElements(theme) {
+            //Creating the new windows
+            var mainContainer = $('#mainContainer');
+            var offset = mainContainer.offset();
+
+//            $('#studentWindow').jqxWindow({ height: 'auto', width: 300, theme: theme, position: { x: offset.left + 50, y: offset.top + 50} });
+            //Removing all elements
+//            $('#teacherWindow').jqxWindow({ height: 'auto', width: 300, theme: theme, position: { x: offset.left + 100, y: offset.top + 100} });
+//            $('#classWindow').jqxWindow({ height: 'auto', width: 300, theme: theme, position: { x: offset.left + 150, y: offset.top + 150} });
+//            $('#checkinWindow').jqxWindow({ height: 'auto', width: 300, theme: theme, position: { x: offset.left + 200, y: offset.top + 200} });
+
+            $('#btnShowStudentWindow').jqxButton({ theme: theme, width: '100px'});
+            $('#btnShowTeacherWindow').jqxButton({ theme: theme, width: '100px'});
+            $('#btnShowClassWindow').jqxButton({ theme: theme, width: '100px'});
+            $('#btnShowCheckInWindow').jqxButton({ theme: theme, width: '100px'});
+            $('#showWindowButton').jqxButton({ theme: theme, width: '120px'});
+        }
+        
+        $(document).ready(function () {
+            var theme = $.data(document.body, 'theme', theme);
+            if (theme == undefined) theme = 'energyblue';
+
+            windowsCount = 1;
+            createElements(theme);
+            addEventListeners(theme);
+        });
+    </script>
+</head>
+<body class='default'>
+    <div style="width: 100%; height: 650px; border: 1px solid #ccc; margin-top: 15px;">
+		<p align="center"><img align="middle" src="msd.jpg" alt="some_text"></p>
+		<div id="buttondiv" align="center">
+	        <input type="button" value="Student" id="btnShowStudentWindow" />
+    	    <input type="button" value="Teacher" id="btnShowTeacherWindow" />
+        	<input type="button" value="Class" id="btnShowClassWindow" />
+	        <input type="button" value="Check In" id="btnShowCheckInWindow" />
+	        <input type="button" value="Show Windows" id="showWindowButton" />
+        </div>
+        <div id="mainContainer">
+            <div id="studentWindow">
+            </div>
+            <div id="teacherWindow">
+            </div>
+            <div id="classWindow">
+            </div>
+            <div id="checkinWindow">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
