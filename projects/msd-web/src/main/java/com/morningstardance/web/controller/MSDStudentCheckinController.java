@@ -5,8 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +34,17 @@ public class MSDStudentCheckinController {
 		return responseDto;
     }
     
+    @RequestMapping(params={"type=checkin","namelisttype"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
+    public @ResponseBody ResponseDto getAllStudentNameListDfltVer(String namelisttype) {
+    	return getAllStudentNameListVer1(namelisttype);
+    }
+    
+    @RequestMapping(params={"type=checkin","namelisttype"}, method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
+    public @ResponseBody ResponseDto getAllStudentNameListVer1(String namelisttype) {
+    	List<String> nameList = msdStudentCheckinFacade.getAllStudentNameList(namelisttype);
+        ResponseDto responseDto = ResponseDto.createResponseDto(nameList, "GET", "ARRAY");
+		return responseDto;
+    }
     @RequestMapping(params={"type=checkin", "msdclassid", "lastname", "firstname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameDfltVer(Long msdclassid, String lastname, String firstname) {
     	return getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameVer1(msdclassid, lastname, firstname);

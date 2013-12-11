@@ -14,6 +14,7 @@ import com.morningstardance.domain.entity.MsdStudentCheckin;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
 import com.morningstardance.domain.msdstudentcheckin.MSDStudentCheckinRepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentJPARepository;
 
 @Service("msdStudentCheckinFacade")
 public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
@@ -26,6 +27,9 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 	
 	@Resource(name="msdStudentCheckinRepository")
 	MSDStudentCheckinRepository msdStudentCheckinRepository;
+	
+	@Resource
+	MSDStudentJPARepository msdStudentJPARepository;
 	
 
 	@Override
@@ -103,5 +107,16 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 		dto.setInClass(msdStudentRepository.isStudentRegisteToClass(s.getId(), msdClassId));
 		
 		return dto;
+	}
+
+	@Override
+	public List<String> getAllStudentNameList(String namelisttype) {
+		List<String> nameList = null;
+		if ("LASTNAME".equals(namelisttype)) {
+			nameList = msdStudentJPARepository.findUniqueLastNames();
+		} else if ("FIRSTNAME".equals(namelisttype)) {
+			nameList = msdStudentJPARepository.findUniqueFirstNames();
+		}
+		return nameList;
 	}
 }

@@ -38,20 +38,6 @@ function handleFirstNameInputTextFocusout() {
 	var fname;
 	if (null != this.value && $.trim(this.value).length > 0) {
 		$(this).css('border', "");
-		if (null == $('#txtStudentCheckInLastName').val() || !($.trim($('#txtStudentCheckInLastName').val()).length > 0)) {
-			fname = $.trim(this.value);
-			var lnames = getNameList(fname, "LAST");
-			if (null != lnames && lnames.length > 0) {
-				if (1 == lnames.length) {
-					$('#txtStudentCheckInLastName').val(lnames[0]);
-					$('#txtStudentCheckInLastName').css('border',"");
-				} else {
-				    $( '#txtStudentCheckInLastName' ).autocomplete({
-						source: lnames
-					});
-				}
-			}
-		}
 	} else {
 		$(this).css('border', "solid red");
 	}
@@ -61,48 +47,9 @@ function handleLastNameInputTextFocusout() {
 	var lname
 	if (null != this.value && $.trim(this.value).length > 0) {
 		$(this).css('border', "");
-		if (null == $('#txtStudentCheckInFirstName').val() || !($.trim($('#txtStudentCheckInFirstName').val()).length > 0)) {
-			lname = $.trim(this.value);
-			var fnames = getNameList(lname, "FIRST");
-			if (null != fnames && fnames.length > 0) {
-				if (1 == fnames.length) {
-					$('#txtStudentCheckInFirstName').val(fnames[0]);
-					$('#txtStudentCheckInFirstName').css('border',"");
-				} else {
-				    $( '#txtStudentCheckInFirstName' ).autocomplete({
-						source: fnames
-					});
-				}
-			}
-		}
-		
 	} else {
 		$(this).css('border', "solid red");
 	}
-};
-
-function getNameList(name, type) {
-	var names = [];
-	var list = getStudentList();
-	var comparename;
-	var resultname;
-
-	$.each(list, function (i, theItem) {
-		if ("FIRST" == type) {
-			comparename = theItem.lastName;
-			resultname = theItem.firstName;
-		} else if ("LAST" == type) {
-			comparename = theItem.firstName;
-			resultname = theItem.lastName;
-		}
-		if (name == comparename) {
-			if ($.inArray(resultname, names) < 0) {
-				names.push(resultname);
-			}
-		}
-	});
-	
-	return names;
 };
 
 function getAllClassList() {
@@ -136,25 +83,24 @@ function getUniqueName(fieldname) {
 	console.log(" get unique name for : " + fieldname);
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdstudent",
+		url: "../msd-app/msdstudentcheckin",
 		dataType: "json",
 		contentType: "application/json",
+		data: {type:"checkin",namelisttype:fieldname },
 		success: function(response) {
 			if (404 == response.code) {
-				alert(" Can't get class for check in process ... ");
+				alert(" Can't get name list for check in process ... ");
 			} else if (302 == response.code) {
 				var data = $.parseJSON(response.result);
-				setStudentList(data);
-				var fnames = getUniqueNameFromStudentList(data, "FIRST");
-			    $( '#txtStudentCheckInFirstName' ).autocomplete({
-					source: fnames
-				});
-				
-				var lnames = getUniqueNameFromStudentList(data, "LAST");
-			    $( '#txtStudentCheckInLastName' ).autocomplete({
-					source: lnames
-				});
-
+				if ("FIRSTNAME" == fieldname) {
+			    	$( '#txtStudentCheckInFirstName' ).autocomplete({
+						source: data
+					});
+				} else if ("LASTNAME" == fieldname) {
+				    $( '#txtStudentCheckInLastName' ).autocomplete({
+						source: data
+					});
+				}
 			} else {
 				alert("error return code : " + response.code + " in getUniqueName ... ");
 			}
@@ -199,14 +145,12 @@ function handleStudentCheckInClick() {
 	if (error) {
 		alert(msg);
 	} else {
-		checkinstudent(lname, fname, checkinclass);
+		findStudentIdByFirstNameLastName(fname, lname, checkinclass);
 	}
 };
 
-function checkinstudent(lname, fname, ciclass) {
-	console.log(" F Name : " + fname + " L Name : " + lname + " Class : " + ciclass);
-	var sid = findStudentIdByFirstNameLastName(fname, lname);
-	if (0 != sid) {
+function checkinstudent(sid, ciclass) {
+	if (null != sid && 0 != sid) {
 		console.log(" call student check in ... ");
 		
 		var checkintime = new Date();
@@ -237,48 +181,29 @@ function checkinstudent(lname, fname, ciclass) {
 			}
 		});
 	} else {
-		alert(" student : " + fname + " " + lname + " are not register in system, Please check First Name and Last Name ");
+		alert(" student : " + $('#txtStudentCheckInFirstName').val() + " " + $('#txtStudentCheckInLastName').val() + " are not register in system, Please check First Name and Last Name ");
 		$('#txtStudentCheckInFirstName').focus();
 	}
-}
-
-function findStudentIdByFirstNameLastName(fname, lname) {
-	var result = 0;
-	var list = getStudentList();
-	if (null == list || list.length < 0) {
-		return result;
-	} else {
-		$.each(list, function (i, theItem) {
-			if (lname == theItem.lastName && fname == theItem.firstName) {
-				result = theItem.id;
-			}
-		});
-	}
-	return result;
-}
-
-function getUniqueNameFromStudentList(list, nametype) {
-	var names = [];
-	var name;
-	$.each(list, function (i, theItem) {
-		if ("FIRST" == nametype) {
-			name = theItem.firstName;
-		} else if ("LAST" == nametype) {
-			name = theItem.lastName;
-		}
-		
-		if ($.inArray(name, names) < 0) {
-			names.push(name);
-		}
-	});
-	
-	return names;
 };
 
-var studentList;
-function setStudentList(list) {
-	studentList = list;
-}
-function getStudentList() {
-	return studentList;
-}
+function findStudentIdByFirstNameLastName(fname, lname, checkinclass) {
+	var sid = 0;
+	$.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/msdstudent",
+		data: { firstname: fname, lastname: lname },
+		success: function(response) {
+			console.log(" get student ... ");
+			if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				sid = data.id;
+			}
+			
+			checkinstudent(sid, checkinclass)
+		},
+		error: function(msg, url, line) {
+			checkinstudent(sid, checkinclass)
+		}
+	});
+};

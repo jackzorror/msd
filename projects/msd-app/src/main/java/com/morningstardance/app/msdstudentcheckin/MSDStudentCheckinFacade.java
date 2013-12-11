@@ -10,4 +10,6 @@ public interface MSDStudentCheckinFacade {
 
 	MSDStudentCheckinDto getStudentCheckinDtoByLastNameFirstName(
 			Long msdclassid, String lastname, String firstname);
+
+	List<String> getAllStudentNameList(String namelisttype);
 }
