@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>First jQuery UI</title>
+	<link href="css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/jquery.jqGrid.min.js"></script>
+	<script src="js/jquery-ui-1.10.3.custom.js"></script>
+
+    <link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+	<link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.energyblue.css" type="text/css" />
+    
+    <script type="text/javascript" src="jqwidgets/scripts/gettheme.js"></script>
+    <script type="text/javascript" src="jqwidgets/scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtabs.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxscrollbar.js"></script>
+
+	<script src="js/msdstudentcheckin/msdstudentcheckinjqxtabs.js"></script>
+
+	<script>
+  
+        $(document).ready(function () {
+            var theme = $.data(document.body, 'theme', theme);
+            if (theme == undefined) 
+            	theme = 'energyblue';
+
+			$('#msdCheckInTabs').jqxTabs({ width: '90%', height: 200, position: 'top', theme: theme, 
+			animationType: 'fade', selectionTracker: true });
+			
+			initStudentCheckinTab();
+			handleStudentCheckInTabEvents();
+			
+		});
+  	</script>
+</head>
+<body class='default'>
+	<p align="center"><img align="middle" src="msd.jpg" alt="some_text"></p>
+	<div id='msdCheckInWidget' align="center">
+		<div id='msdCheckInTabs'>
+			<ul>
+	    		<li>Student CheckIn</li>
+				<li>Teacher CheckIn</li>
+			</ul>
+  			<div id="tabs-StudentCheckIn">
+    			<h2>Student Class Check In</h2>
+    			<div id="studentcheckindiv"></div>
+  			</div>
+  			<div id="tabs-TeacherCheckIn">
+  				<h2>Teacher Class Check In</h2>
+  			</div>
+		</div>
+	</div>
+</body>
+</html>
