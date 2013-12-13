@@ -56,19 +56,17 @@ function getAllClassList() {
 		url: "../msd-app/msdclass",
 		dataType: "json",
 		success: function(response) {
-			if (404 == response.code) {
-				alert(" Can't get class for check in process ... ");
-			} else if (302 == response.code) {
+			if (302 == response.code) {
 				var data = $.parseJSON(response.result);
 				$("#msdClassDropList").jqxDropDownList({ source: data, displayMember:"name", valueMember:"id" });
 				$("#msdClassDropList").jqxDropDownList('insertAt', 'Please Choose:', 0);
 				$("#msdClassDropList").jqxDropDownList('selectIndex', 0 ); 
 			} else {
-				alert("error return code : " + response.code + " in getAllClassList ... ");
+				$.msgBox({ title: "Error " + response.code, content: " Can't get class for check in process ... ", type:"error" });
 			}
 		},
 		error: function(msg, url, line) {
-			alert("error in get AllClassList Server call ... ");
+			$.msgBox({ title: "System error", content: " Can't get class for check in process ... ", type:"error" });
 		}
 	});
 };
@@ -82,9 +80,7 @@ function getUniqueName(fieldname) {
 		contentType: "application/json",
 		data: {type:"checkin",namelisttype:fieldname },
 		success: function(response) {
-			if (404 == response.code) {
-				alert(" Can't get name list for check in process ... ");
-			} else if (302 == response.code) {
+			if (302 == response.code) {
 				var data = $.parseJSON(response.result);
 				if ("FIRSTNAME" == fieldname) {
 			    	$( '#txtStudentCheckInFirstName' ).jqxInput({ source: data });
@@ -92,11 +88,11 @@ function getUniqueName(fieldname) {
 				    $( '#txtStudentCheckInLastName' ).jqxInput({ source: data });
 				}
 			} else {
-				alert("error return code : " + response.code + " in getUniqueName ... ");
+				$.msgBox({ title: "Error " + response.code, content: " Can't get unique for " + fieldname + " ... ", type:"error" });
 			}
 		},
 		error: function(msg, url, line) {
-			alert("error in get UniqueName Server call ... ");
+			$.msgBox({ title: "System error", content: " Can't get unique for " + fieldname + " ... ", type:"error" });
 		}
 	});
 };
@@ -127,7 +123,6 @@ function handleClassDropListChange() {
 	}
 };
 
-
 function handleStudentCheckInClick() {
 	console.log(" in handleStudentCheckInClick ... ");
 	var msg = "Please provide : ";
@@ -135,24 +130,24 @@ function handleStudentCheckInClick() {
 	var fname = $.trim($('#txtStudentCheckInFirstName').val());
 	if (null == fname || fname.length == 0) {
 		$('#txtStudentCheckInFirstName').css("border", "solid red");
-		msg += " First Name; ";
+		msg += " First Name, ";
 		error = true;
 	}
 	var lname = $.trim($('#txtStudentCheckInLastName').val());
 	if (null == lname || lname.length == 0) {
 		$('#txtStudentCheckInLastName').css("border", "solid red");
-		msg += " Last Name; ";
+		msg += " Last Name, ";
 		error = true;
 	}
 	var checkinclass = $('#msdClassDropList').val();
 	if (null == checkinclass || checkinclass.length == 0 || "Please Choose:" == checkinclass) {
 		$('#msdClassDropList').css("border", "solid red");
-		msg += " Select Class ";
+		msg += " Class Name ";
 		error = true;
 	}
 	
 	if (error) {
-		alert(msg);
+		$.msgBox({ title: "Invalid input", content: msg, type:"alert" });
 	} else {
 		findStudentIdByFirstNameLastName(fname, lname, checkinclass);
 	}
@@ -174,24 +169,25 @@ function checkinstudent(sid, ciclass) {
 			contentType: "application/json",
 			processData:false,
 			success: function(response) {
-				if (500 == response.code) {
-					alert("Internal Error, Please check service. ");
-				} else if (201 == response.code) {
-					alert(" You successfully check in class ");
+				if (201 == response.code) {
+					$.msgBox({title:"Wow", content:" You successfully check in class ", type:"info"});
+
 					$('#txtStudentCheckInFirstName').val("");
 					$('#txtStudentCheckInFirstName').jqxInput('focus');
 					$('#txtStudentCheckInLastName').val("");
 					$('#msdClassDropList').jqxDropDownList('selectIndex', 0 ); 
 				} else {
-					alert("error return code  : " + response.code + " in checkinstuent ... ");
+					$.msgBox({ title: "Error " + response.code, content: " Can't check in ... ", type:"error" });
 				}
 			},
 			error: function(msg, url, line) {
-				alert("error in get checkinstudent Server call ... ");
+				$.msgBox({ title: "System error", content: " Can't check in ... ", type:"error" });
 			}
 		});
 	} else {
-		alert(" student : " + $('#txtStudentCheckInFirstName').val() + " " + $('#txtStudentCheckInLastName').val() + " are not register in system, Please check First Name and Last Name ");
+		$.msgBox({title:"Invalid Input Info",
+				  content:" student : " + $('#txtStudentCheckInFirstName').val() + " " + $('#txtStudentCheckInLastName').val() + " are not register in system, Please check First Name and Last Name ",
+				  type:"error"});
 		$('#txtStudentCheckInFirstName').focus();
 	}
 };
