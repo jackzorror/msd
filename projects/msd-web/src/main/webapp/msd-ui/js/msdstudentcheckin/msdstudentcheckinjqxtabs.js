@@ -40,7 +40,7 @@ function initStudentCheckinTab(theme) {
 
 	var checkinbutton = $('<input/>').attr({ type: 'button', id:'btnStudentCheckIn', value:'Check In'});
 	$('#btndiv').append(checkinbutton);
-	$('#btnStudentCheckIn').jqxButton({ width: '150', theme: theme });;
+	$('#btnStudentCheckIn').jqxButton({ width: '150', theme: theme });
 
 	$('#txtStudentCheckInFirstName').jqxInput('focus');
 	

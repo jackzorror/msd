@@ -6,7 +6,34 @@
     <title id='Description'>With jqxWindow, you can create create multiple windows and display them at the same time on your page.</title>
     <link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
 	<link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.energyblue.css" type="text/css" />
-    
+
+    <style type="text/css">
+        .form
+        {
+            height: 70%;
+            width:60%;
+            margin-left:auto;
+            margin-right:auto;
+            margin-top:20px;
+        }
+        .inputContainer
+        {
+            width: 130px;
+            height: 120px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        .errormsgdiv
+        {
+	        text-align: center; 
+	        color:red; 
+	        font-size : 12px;
+	        font-family : georgia;
+	        font-style : italic;
+        }
+        
+    </style>
+
     <script type="text/javascript" src="jqwidgets/scripts/gettheme.js"></script>
     <script type="text/javascript" src="jqwidgets/scripts/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcore.js"></script>
@@ -15,67 +42,65 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxscrollbar.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
     
-    
-    
+	<link  href="Styles/msgBoxLight.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="Scripts/jquery.msgBox.js"></script>
+            
+    <script type="text/javascript" src="js/msdjqwindow/loginjqwindow.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/studentjqwindow.js"></script>
     <script type="text/javascript" src="js/msdclass/msdstudentjqueryui.js"></script>
     <script type="text/javascript">
-        function removeAll(collection) {
-            if (!collection) {
-                return;
-            }
-            var count = collection.length;
-            while (count) {
-                count -= 1;
-                collection[count].remove();
-            }
-        }
+    	var idleTime = 0;
+    	var timerId;
+    	
         function addEventListeners(theme) {
-            addEventListeners.windowsCount = 1;
-            $('#showWindowButton').mousedown(function () {
-                var window = $.data(document.body, 'jqxwindows-list'),
-                    count = window.length;
-                while (count) {
-                    count -= 1;
-                    $(window[count]).jqxWindow('open');
-                }
-            });
-            $('#addWindowButton').mousedown(function () {
-                if (addEventListeners.windowsCount < 3) {
-                    $(document.body).append('<div id="newWindow' + addEventListeners.windowsCount + '"><div>Header ' + addEventListeners.windowsCount
-                                         + '</div><div>Content of window ' + addEventListeners.windowsCount + '</div></div>');
-                    var mainContainer = $('#mainContainer');
-                    $('#newWindow' + addEventListeners.windowsCount).jqxWindow({ height: 150, width: 300, theme: theme });
-                    addEventListeners.windowsCount += 1;
-                }
-            });
-			addStudentWindowEventListeners(theme);            
-        }
-        function createElements(theme) {
-            //Creating the new windows
-            var mainContainer = $('#mainContainer');
-            var offset = mainContainer.offset();
-
-//            $('#studentWindow').jqxWindow({ height: 'auto', width: 300, theme: theme, position: { x: offset.left + 50, y: offset.top + 50} });
-            //Removing all elements
-//            $('#teacherWindow').jqxWindow({ height: 'auto', width: 300, theme: theme, position: { x: offset.left + 100, y: offset.top + 100} });
-//            $('#classWindow').jqxWindow({ height: 'auto', width: 300, theme: theme, position: { x: offset.left + 150, y: offset.top + 150} });
-//            $('#checkinWindow').jqxWindow({ height: 'auto', width: 300, theme: theme, position: { x: offset.left + 200, y: offset.top + 200} });
-
-            $('#btnShowStudentWindow').jqxButton({ theme: theme, width: '100px'});
-            $('#btnShowTeacherWindow').jqxButton({ theme: theme, width: '100px'});
-            $('#btnShowClassWindow').jqxButton({ theme: theme, width: '100px'});
-            $('#btnShowCheckInWindow').jqxButton({ theme: theme, width: '100px'});
-            $('#showWindowButton').jqxButton({ theme: theme, width: '120px'});
+			addStudentWindowEventListeners(theme);      
+			addLoginWindowEventListeners(theme);      
         }
         
+        function createElements(theme) {
+            $('#btnShowLoginWindow').jqxButton({ theme: theme, width: '100px'});
+            $('#btnShowStudentWindow').jqxButton({ theme: theme, width: '100px', disabled: true});
+            $('#btnShowTeacherWindow').jqxButton({ theme: theme, width: '100px', disabled: true});
+            $('#btnShowClassWindow').jqxButton({ theme: theme, width: '100px', disabled: true});
+            $('#btnShowCheckInWindow').jqxButton({ theme: theme, width: '100px', disabled: true});
+        }
+        
+        function isWindowCreated(wName) {
+        	var created = false;
+            var window = $.data(document.body, 'jqxwindows-list');
+			var count = window.length;
+            while (count && created == false) {
+                count -= 1;
+                if (window[count][0].id == wName) {
+                	created = true;
+                }
+            }
+            return created;
+        }
+        
+		function timercount() {
+			idleTime = idleTime + 1;
+			console.log(" call timercount : " +  idleTime);
+			if (idleTime > 9) {
+				console.log(" it's time out ... ");
+				processLogout();
+			}
+		};
         $(document).ready(function () {
             var theme = $.data(document.body, 'theme', theme);
             if (theme == undefined) theme = 'energyblue';
 
-            windowsCount = 1;
             createElements(theme);
             addEventListeners(theme);
+            
+            $(this).mousemove(function(e){
+            	console.log("mouse move ... ");
+            	idleTime=0;
+            });
+            $(this).keypress(function(e){
+            	console.log("key press ... ");
+            	idleTime=0;
+            });
         });
     </script>
 </head>
@@ -87,9 +112,11 @@
     	    <input type="button" value="Teacher" id="btnShowTeacherWindow" />
         	<input type="button" value="Class" id="btnShowClassWindow" />
 	        <input type="button" value="Check In" id="btnShowCheckInWindow" />
-	        <input type="button" value="Show Windows" id="showWindowButton" />
+			<input type="button" value="Login" id="btnShowLoginWindow" />
         </div>
         <div id="mainContainer">
+        	<div id="loginWindow">
+        	</div>
             <div id="studentWindow">
             </div>
             <div id="teacherWindow">

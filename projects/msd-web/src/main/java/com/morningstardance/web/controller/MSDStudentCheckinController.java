@@ -63,7 +63,7 @@ public class MSDStudentCheckinController {
     	
     }
 	    
-	@RequestMapping(params={"msdstudentid","msdclassid"},method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+	@RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
     public @ResponseBody ResponseDto studentClassCheckInVer1(@RequestBody MSDStudentCheckinDto studentCheckinDto, HttpServletResponse response) {
 
 		Long msdstudentid = new Long(studentCheckinDto.getStudentId());
