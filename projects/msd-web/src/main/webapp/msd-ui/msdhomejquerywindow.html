@@ -31,6 +31,13 @@
 	        font-family : georgia;
 	        font-style : italic;
         }
+        .infodiv
+        {
+            width:100%;
+            margin-left:auto;
+            margin-right:auto;
+            margin-top:10px;
+        }
         
     </style>
 
@@ -41,16 +48,22 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxbuttons.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxscrollbar.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdata.js"></script>
+
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.sort.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.edit.js"></script>
     
 	<link  href="Styles/msgBoxLight.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="Scripts/jquery.msgBox.js"></script>
             
     <script type="text/javascript" src="js/msdjqwindow/loginjqwindow.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/studentjqwindow.js"></script>
-    <script type="text/javascript" src="js/msdclass/msdstudentjqueryui.js"></script>
     <script type="text/javascript">
     	var idleTime = 0;
-    	var timerId;
     	
         function addEventListeners(theme) {
 			addStudentWindowEventListeners(theme);      
@@ -80,9 +93,7 @@
         
 		function timercount() {
 			idleTime = idleTime + 1;
-			console.log(" call timercount : " +  idleTime);
 			if (idleTime > 9) {
-				console.log(" it's time out ... ");
 				processLogout();
 			}
 		};
@@ -94,11 +105,9 @@
             addEventListeners(theme);
             
             $(this).mousemove(function(e){
-            	console.log("mouse move ... ");
             	idleTime=0;
             });
             $(this).keypress(function(e){
-            	console.log("key press ... ");
             	idleTime=0;
             });
         });

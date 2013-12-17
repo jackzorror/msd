@@ -38,7 +38,7 @@ function processLogout() {
 		studentWindowLogout();
 	}
 	
-	clearInterval(timerId);
+	clearInterval(getTimerId());
 };
 
 function loginWindowLogout() {
@@ -47,7 +47,7 @@ function loginWindowLogout() {
 }
 
 function initLogin() {
-	console.log(" init Login ... ");
+	console.log(" init Loggin ... ");
 
 	$('#msdlogindiv').empty();
 
@@ -94,8 +94,7 @@ function handleLoginClick() {
 	}
 	
 	if (error == true) {
-		$('#msgdiv').empty();
-		$('#msgdiv').append(msg);
+		$('#msgdiv').empty().append(msg);
 	} else {
 		processLogin();
 	}
@@ -116,13 +115,11 @@ function processLogin() {
 			if (302 == response.code) {
 				afterUserLoginProcess()
 			} else {
-				$('#msgdiv').empty();
-				$('#msgdiv').append('Error Login return code : ' + response.code);
+				$('#msgdiv').empty().append('Error Login return code : ' + response.code);
 			}
 		},
 		error: function(msg, url, line) {
-			$('#msgdiv').empty();
-			$('#msgdiv').append('Error in system ...');
+			$('#msgdiv').empty().append('Error in system ...');
 		}
 	});
 };
@@ -138,11 +135,18 @@ function afterUserLoginProcess() {
 	
 	$('#loginWindow').jqxWindow('close');
 	
-    timerId = setInterval("timercount()", 6000);
+    setTimerId(setInterval("timercount()", 60000));
+}
+
+var timerId;
+function getTimerId() {
+	return timerId;
+}
+function setTimerId(id) {
+	timerId = id;
 }
 
 var windowTheme;
-
 function getTheme() {
 	return windowTheme;
 };
