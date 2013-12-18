@@ -70,7 +70,19 @@ public class MSDStudentController {
 
     @RequestMapping(params={"type=registerclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto getAllStudentRegisterClassByStudentIdVer1(Long msdstudentid) {
-		List<MSDClassDto> dtos = msdStudentFacade.getAllStudentRegisterClassByStudentId(msdstudentid);
+		List<MSDClassDto> dtos = msdStudentFacade.getStudentRegisterClassByStudentId(msdstudentid);
+		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+		return responseDto;
+	}
+    
+	@RequestMapping(params={"type=nonregisterclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+	public @ResponseBody ResponseDto getStudentNonRegisteredClassByStudentIdDfltVer(Long msdstudentid) {
+		return getStudentNonRegisteredClassByStudentIdVer1(msdstudentid);
+	}
+
+    @RequestMapping(params={"type=nonregisterclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto getStudentNonRegisteredClassByStudentIdVer1(Long msdstudentid) {
+		List<MSDClassDto> dtos = msdStudentFacade.getStudentNonRegisterClassByStudentId(msdstudentid);
 		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		return responseDto;
 	}

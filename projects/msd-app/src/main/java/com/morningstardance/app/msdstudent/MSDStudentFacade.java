@@ -14,7 +14,7 @@ public interface MSDStudentFacade {
 
 	MSDStudentDetailDto getStudentDetailDtoByName(String firstname, String lastname);
 
-	List<MSDClassDto> getAllStudentRegisterClassByStudentId(Long msdstudentid);
+	List<MSDClassDto> getStudentRegisterClassByStudentId(Long msdstudentid);
 
 	MSDStudentDetailDto getStudentDetailDtoById(Long msdstudentid);
 
@@ -25,4 +25,6 @@ public interface MSDStudentFacade {
 	MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto);
 
 	List<String> getAllStudentUniqueName(String fieldname);
+
+	List<MSDClassDto> getStudentNonRegisterClassByStudentId(Long msdstudentid);
 }

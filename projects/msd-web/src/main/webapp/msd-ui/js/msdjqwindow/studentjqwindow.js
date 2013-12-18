@@ -93,11 +93,11 @@ function initStudentDiv() {
 
 	$('#msdstudentdiv').empty();
 	
-	var inputdiv = $('<div style="height: 60px; width: 380px; margin-left: 30px; margin-top:10px;" />').attr({id:'inputdiv'});
-	$('#msdstudentdiv').append(inputdiv);
+	var searchdiv = $('<div style="height: 60px; width: 380px; margin-left: 30px; margin-top:10px;" />').attr({id:'searchdiv'});
+	$('#msdstudentdiv').append(searchdiv);
 	
 	var namediv = $('<div/>').attr({id:'namediv', class:'infodiv'});
-	$('#inputdiv').append(namediv);
+	$('#searchdiv').append(namediv);
 
 	$('#namediv').append('<label>first name : </label>');
 	var fname = $('<input/>').attr({type:'text', id:'txtStudentSearchFirstName'});
@@ -110,7 +110,7 @@ function initStudentDiv() {
 	$('#txtStudentSearchLastName').jqxInput({placeHolder: "Last Name: ", height: 20, width: 100, minLength: 1, theme: getTheme() });
 
 	var btndiv = $('<div style="height:20px;"/>').attr({id:'btndiv', class:'infodiv'});
-	$('#inputdiv').append(btndiv);
+	$('#searchdiv').append(btndiv);
 	
 	var abutton = $('<input style="float:right;" />').attr({type:'button', id:'btnAddStudent', value:'add'});
 	$('#btndiv').append(abutton);
@@ -164,7 +164,8 @@ function cancelUpdateStudentInformation() {
 };
 
 function showRegisterClassInformation(data) {
-	var rowCount = data.length;
+	$('#classInformation').empty();
+	$('#classInformation').append('<h3> Registered Class </h3>');
 	var csdiv = $('<div style="border:1px solid;"/>').attr({id:'classGrid'});	
 	$('#classInformation').append(csdiv);
 	var source = {
@@ -190,6 +191,9 @@ function showRegisterClassInformation(data) {
 };
 
 function createClassRegisterGrid (data) {
+	$('#registerClass').empty();
+	$('#registerClass').append('<h3>Please register from the following list</h3>');
+
 	var crdiv = $('<div style="border:1px solid;"/>').attr({id:'registerGrid'});	
 	$('#registerClass').append(crdiv);
 	var source = {
@@ -255,8 +259,6 @@ function createStudentInfo() {
 }
 
 function addClassRegister() {
-	$('#registerClass').append('Please select class from the following list to register');
-
 	getNonRegisteredClassList();
 };
 
@@ -405,20 +407,14 @@ function getNonRegisteredClassList() {
 	console.log('in getNonRegisteredClassList ... ');
 	var data = getCurrentStudent();
 	$.ajax({
-	/*
 		type: "GET",
 		url: "../msd-app/msdstudent",
 		dataType: "json",
 		contentType: "application/json",
-		data: { type: "registerclass", msdstudentid: data.id },
-	*/
-		type: "GET",
-		url: "../msd-app/msdclass",
-		dataType: "json",
-		contentType: "application/json",
+		data: { type: "nonregisterclass", msdstudentid: data.id },
 		success: function(response) {
 			if (404 == response.code) {
-				alert(" Can't get class for  process ... ");
+				console.log(" There is no non register class  ");
 			} else if (302 == response.code) {
 				var data = $.parseJSON(response.result);
 				createClassRegisterGrid(data);
@@ -451,6 +447,7 @@ function registerClass(id) {
 			} else if (302 == response.code) {
 				var data = $.parseJSON(response.result);
 				getStudentRegisterClass(cstudent);
+				addClassRegister();
 			} else {
 				alert("error to register student ... ");
 			}

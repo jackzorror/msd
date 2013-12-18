@@ -62,8 +62,8 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	}
 
 	@Override
-	public List<MSDClassDto> getAllStudentRegisterClassByStudentId(Long msdstudentid) {
-		List<MSDClass> s = msdClassRepository.getAllStudentRegisterClassByStudentId(msdstudentid);
+	public List<MSDClassDto> getStudentRegisterClassByStudentId(Long msdstudentid) {
+		List<MSDClass> s = msdClassRepository.getStudentRegisterClassByStudentId(msdstudentid);
 		return msdClassAssembler.createDtoFromEntity(s);
 	}
 
@@ -122,5 +122,12 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public List<MSDClassDto> getStudentNonRegisterClassByStudentId(
+			Long msdstudentid) {
+		List<MSDClass> s = msdClassRepository.getStudentNonRegisterClassByStudentId(msdstudentid);
+		return msdClassAssembler.createDtoFromEntity(s);
 	}
 }
