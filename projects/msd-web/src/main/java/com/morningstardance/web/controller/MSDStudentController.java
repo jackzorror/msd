@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.morningstardance.app.msdclass.MSDClassDto;
+import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 import com.morningstardance.app.msdstudent.MSDStudentDetailDto;
 import com.morningstardance.app.msdstudent.MSDStudentDto;
@@ -50,7 +50,7 @@ public class MSDStudentController {
 		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
-
+/*
 	@RequestMapping(params={"type=checkin", "msdclassid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto getAllStudentsByClassIdForCheckinDfltVer(@RequestParam("msdclassid") Long msdClassId) {
     	return getAllStudentsByClassIdForCheckinVer1(msdClassId);
@@ -62,15 +62,15 @@ public class MSDStudentController {
     	ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
     	return responseDto;
 	}
-
+*/
 	@RequestMapping(params={"type=registerclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
-	public @ResponseBody ResponseDto getAllStudentRegisterClassByStudentIdDfltVer(Long msdstudentid) {
-		return getAllStudentRegisterClassByStudentIdVer1(msdstudentid);
+	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdDfltVer(Long msdstudentid) {
+		return getStudentRegisteredClassByStudentIdVer1(msdstudentid);
 	}
 
     @RequestMapping(params={"type=registerclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto getAllStudentRegisterClassByStudentIdVer1(Long msdstudentid) {
-		List<MSDClassDto> dtos = msdStudentFacade.getStudentRegisterClassByStudentId(msdstudentid);
+	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdVer1(Long msdstudentid) {
+		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentRegisterClassByStudentId(msdstudentid);
 		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		return responseDto;
 	}
@@ -82,19 +82,19 @@ public class MSDStudentController {
 
     @RequestMapping(params={"type=nonregisterclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto getStudentNonRegisteredClassByStudentIdVer1(Long msdstudentid) {
-		List<MSDClassDto> dtos = msdStudentFacade.getStudentNonRegisterClassByStudentId(msdstudentid);
+		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentNonRegisterClassByStudentId(msdstudentid);
 		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		return responseDto;
 	}
     
 	@RequestMapping(params={"type=nameautocomplete", "fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
-	public @ResponseBody ResponseDto getAllStudentUniqueNameDfltVer(String fieldname) {
-		return getAllStudentUniqueNameVer1(fieldname);
+	public @ResponseBody ResponseDto getStudentUniqueNameDfltVer(String fieldname) {
+		return getStudentUniqueNameVer1(fieldname);
 	}
 
     @RequestMapping(params={"type=nameautocomplete", "fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto getAllStudentUniqueNameVer1(String fieldname) {
-		List<String> names = msdStudentFacade.getAllStudentUniqueName(fieldname);
+	public @ResponseBody ResponseDto getStudentUniqueNameVer1(String fieldname) {
+		List<String> names = msdStudentFacade.getStudentUniqueName(fieldname);
 		ResponseDto responseDto = ResponseDto.createResponseDto(names, "GET", "ARRAY");
 		return responseDto;
 	}

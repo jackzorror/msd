@@ -41,6 +41,8 @@ function handleStudentSearchClick() {
 		$('#registerClass').empty();
 		getStudentByName(fname, lname);
 	}
+
+	setCurrentFunction("SEARCH");
 }
 
 function handleStudentAddClick() {

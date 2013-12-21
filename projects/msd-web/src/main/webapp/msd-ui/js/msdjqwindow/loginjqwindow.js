@@ -37,6 +37,9 @@ function processLogout() {
 	if (true == isWindowCreated("studentWindow")) {
 		studentWindowLogout();
 	}
+	if (true == isWindowCreated("classWindow")) {
+		classWindowLogout();
+	}
 	
 	clearInterval(getTimerId());
 };

@@ -50,6 +50,11 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxinput.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdata.js"></script>
+    
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtooltip.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/globalization/globalize.js"></script>
 
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.sort.js"></script>
@@ -62,12 +67,15 @@
             
     <script type="text/javascript" src="js/msdjqwindow/loginjqwindow.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/studentjqwindow.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/classjqwindow.js"></script>
     <script type="text/javascript">
     	var idleTime = 0;
+    	var ClassLocation = ['Alpheratta','Marietta'];
     	
         function addEventListeners(theme) {
 			addStudentWindowEventListeners(theme);      
-			addLoginWindowEventListeners(theme);      
+			addLoginWindowEventListeners(theme);  
+			addClassWindowEventListeners(theme);    
         }
         
         function createElements(theme) {

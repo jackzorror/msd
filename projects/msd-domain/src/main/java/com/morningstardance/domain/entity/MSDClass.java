@@ -1,11 +1,15 @@
 package com.morningstardance.domain.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.morningstardance.domain.base.entity.MSDEntityBase;
 
@@ -28,6 +32,17 @@ public class MSDClass extends MSDEntityBase {
 
 	private String name;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="class_start_time")
+	private Date classStartTime;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="class_end_time")
+	private Date classEndTime;
+	
+	@Column(name="class_status")
+	private String classStatus;
+	
 	public MSDClass() {
 	}
 
@@ -53,6 +68,30 @@ public class MSDClass extends MSDEntityBase {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Date getClassStartTime() {
+		return classStartTime;
+	}
+
+	public void setClassStartTime(Date classStartTime) {
+		this.classStartTime = classStartTime;
+	}
+
+	public Date getClassEndTime() {
+		return classEndTime;
+	}
+
+	public void setClassEndTime(Date classEndTime) {
+		this.classEndTime = classEndTime;
+	}
+
+	public String getClassStatus() {
+		return classStatus;
+	}
+
+	public void setClassStatus(String classStatus) {
+		this.classStatus = classStatus;
 	}
 
 }

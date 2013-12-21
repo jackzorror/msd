@@ -1,5 +1,6 @@
 package com.morningstardance.app.msdstudent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -7,12 +8,14 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdclass.MSDClassAssembler;
-import com.morningstardance.app.msdclass.MSDClassDto;
+import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.domain.entity.MSDClass;
+import com.morningstardance.domain.entity.MSDClassSchedular;
 import com.morningstardance.domain.entity.MSDStudent;
 import com.morningstardance.domain.entity.MSDStudentClass;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDClassSchedularJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentJPARepository;
 
@@ -37,6 +40,9 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	@Resource
 	private MSDStudentJPARepository msdStudentJPARepository;
 	
+	@Resource
+	private MSDClassSchedularJPARepository msdClassSchedularJPARepository;
+	
 	@Override
 	public List<MSDStudentDto> getAllStudents() {
 		List<MSDStudent> msdStudents = msdStudentRepository.getAll();
@@ -59,12 +65,6 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	public MSDStudentDetailDto getStudentDetailDtoByName(String firstname, String lastname) {
 		MSDStudent s = msdStudentRepository.getByLastNameFirstName(lastname, firstname);
 		return msdStudentAssembler.createDetailDtoFromEntity(s);
-	}
-
-	@Override
-	public List<MSDClassDto> getStudentRegisterClassByStudentId(Long msdstudentid) {
-		List<MSDClass> s = msdClassRepository.getStudentRegisterClassByStudentId(msdstudentid);
-		return msdClassAssembler.createDtoFromEntity(s);
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	}
 
 	@Override
-	public List<String> getAllStudentUniqueName(String fieldname) {
+	public List<String> getStudentUniqueName(String fieldname) {
 		if ("FIRSTNAME".equals(fieldname)) {
 			return msdStudentJPARepository.findUniqueFirstNames();
 		}
@@ -125,9 +125,25 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	}
 
 	@Override
-	public List<MSDClassDto> getStudentNonRegisterClassByStudentId(
-			Long msdstudentid) {
+	public List<MSDClassSummaryDto> getStudentNonRegisterClassByStudentId(Long msdstudentid) {
 		List<MSDClass> s = msdClassRepository.getStudentNonRegisterClassByStudentId(msdstudentid);
-		return msdClassAssembler.createDtoFromEntity(s);
+		return getMSDClassSummaryDtoFromEntity(s);
+	}
+
+	@Override
+	public List<MSDClassSummaryDto> getStudentRegisterClassByStudentId(Long msdstudentid) {
+		List<MSDClass> s = msdClassRepository.getStudentRegisterClassByStudentId(msdstudentid);
+
+		return getMSDClassSummaryDtoFromEntity(s);
+	}
+
+	private List<MSDClassSummaryDto> getMSDClassSummaryDtoFromEntity(List<MSDClass> s) {
+		List<MSDClassSummaryDto> dtos = new ArrayList<MSDClassSummaryDto>();
+		
+		for(MSDClass c : s) {
+			List<MSDClassSchedular> schedulars = msdClassSchedularJPARepository.findByMsdClassId(c.getId().intValue());
+			dtos.add(msdClassAssembler.createSummaryDtoFromEntity(c, schedulars));
+		}
+		return dtos;
 	}
 }
