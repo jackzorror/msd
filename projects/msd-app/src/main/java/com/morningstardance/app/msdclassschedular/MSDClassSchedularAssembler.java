@@ -10,4 +10,6 @@ public interface MSDClassSchedularAssembler {
 	
 	MSDClassSchedularDto createDtoFromEntity(MSDClassSchedular entity);
 
+	MSDClassSchedular createEntityFromDto(MSDClassSchedularDto dto);
+
 }

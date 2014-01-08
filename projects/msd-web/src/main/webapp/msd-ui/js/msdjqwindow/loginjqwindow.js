@@ -8,7 +8,17 @@ function addLoginWindowEventListeners(theme) {
 function handleShowLoginWindowClick() {
 
 	if ($('#btnShowLoginWindow').val() == 'Logout') {
-		processLogout();
+/*
+$.ajax({
+    url: "",
+    context: document.body,
+    success: function(s,x){
+        $(this).html(s);
+    }
+});
+*/	
+		window.location.reload();
+//		processLogout();
 	} else {
 		if (false == $('#loginWindow').jqxWindow('isOpen')) {
 			resetLoginWindow();

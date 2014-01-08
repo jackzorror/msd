@@ -40,9 +40,24 @@
         }
         
     </style>
+    <style type="text/css">
+        /* some styling for the page */
+        .ui-timepicker-table {  font-size: 10px; /* for the widget natural size */ }
+    </style>
+
+    <link rel="stylesheet" href="timepicker-master/include/ui-1.10.0/ui-lightness/jquery-ui-1.10.0.custom.min.css" type="text/css" />
+    <link rel="stylesheet" href="timepicker-master/jquery.ui.timepicker.css?v=0.3.3" type="text/css" />
 
     <script type="text/javascript" src="jqwidgets/scripts/gettheme.js"></script>
     <script type="text/javascript" src="jqwidgets/scripts/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript" src="timepicker-master/include/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.core.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.widget.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.tabs.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.position.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/jquery.ui.timepicker.js?v=0.3.3"></script>
+
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcore.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxwindow.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxbuttons.js"></script>
@@ -50,6 +65,10 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxinput.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdata.js"></script>
+    
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcheckbox.js"></script>
     
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcalendar.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdatetimeinput.js"></script>
@@ -64,13 +83,34 @@
     
 	<link  href="Styles/msgBoxLight.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="Scripts/jquery.msgBox.js"></script>
-            
+<!--
+    <link rel="stylesheet" href="timepicker-master/include/ui-1.10.0/ui-lightness/jquery-ui-1.10.0.custom.min.css" type="text/css" />
+    <link rel="stylesheet" href="timepicker-master/jquery.ui.timepicker.css?v=0.3.3" type="text/css" />
+    <script type="text/javascript" src="timepicker-master/include/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.core.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.widget.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.tabs.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.position.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/jquery.ui.timepicker.js?v=0.3.3"></script>
+-->
     <script type="text/javascript" src="js/msdjqwindow/loginjqwindow.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/studentjqwindow.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/classjqwindow.js"></script>
     <script type="text/javascript">
     	var idleTime = 0;
     	var ClassLocation = ['Alpheratta','Marietta'];
+    	var WeekDayShortNameArray = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    	
+    	function getWeekDayIndex(day) {
+    		var weekdayindex;
+    		$.each(WeekDayShortNameArray, function (index, value) {
+				if (value == day) {
+					weekdayindex = index;
+				}
+			});
+			
+			return weekdayindex;
+    	}
     	
         function addEventListeners(theme) {
 			addStudentWindowEventListeners(theme);      

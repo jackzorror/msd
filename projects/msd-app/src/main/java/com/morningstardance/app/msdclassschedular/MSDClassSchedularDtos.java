@@ -1,12 +1,11 @@
 package com.morningstardance.app.msdclassschedular;
 
-import com.morningstardance.app.util.WeekdayEnum;
+import java.util.List;
 
-public class MSDClassSchedularDto {
+public class MSDClassSchedularDtos {
 
 	private int id;
-	private int weekday;
-	private String WeekdayStr;
+	private List<String> weekdays;
 	private String startTime;
 	private String endTime;
 	private int msdClassId;
@@ -17,12 +16,11 @@ public class MSDClassSchedularDto {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getWeekday() {
-		return weekday;
+	public List<String> getWeekdays() {
+		return weekdays;
 	}
-	public void setWeekday(int weekday) {
-		this.weekday = weekday;
-		this.WeekdayStr = WeekdayEnum.getWeekdayString(weekday);
+	public void setWeekdays(List<String> weekdays) {
+		this.weekdays = weekdays;
 	}
 	public String getStartTime() {
 		return startTime;
@@ -35,9 +33,6 @@ public class MSDClassSchedularDto {
 	}
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
-	}
-	public String getWeekdayStr() {
-		return WeekdayStr;
 	}
 	public int getMsdClassId() {
 		return msdClassId;

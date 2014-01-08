@@ -42,9 +42,7 @@
     -->
     
 	<!-- Application Context  -->
-    <!--
-	<import resource="classpath:/msd-app-context.xml" />
-	-->
+	<import resource="msd-app-context.xml" />
     
     <!-- MessageSource -->
     <!--

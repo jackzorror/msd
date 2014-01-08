@@ -3,12 +3,18 @@ package com.morningstardance.app.msdstudent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.domain.entity.MSDStudent;
 
 @Service("msdStudentAssembler")
 public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
+
+    @Resource(name="mapper")
+    protected Mapper mapper;
 
 	@Override
 	public List<MSDStudentDto> createDtoFromEntity(List<MSDStudent> msdStudents) {
@@ -34,11 +40,13 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 	public MSDStudentDetailDto createDetailDtoFromEntity(MSDStudent msdStudent) {
 		if (null == msdStudent)
 			return null;
-		
+		/*
 		MSDStudentDetailDto dto = new MSDStudentDetailDto();
 		dto.setId(msdStudent.getId().intValue());
 		dto.setLastName(msdStudent.getLastName());
 		dto.setFirstName(msdStudent.getFirstName());
+		*/
+		MSDStudentDetailDto dto = mapper.map(msdStudent, MSDStudentDetailDto.class);
 		
 		return dto;
 	}

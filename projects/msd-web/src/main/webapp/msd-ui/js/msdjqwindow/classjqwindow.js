@@ -7,6 +7,7 @@ function addClassWindowEventListeners(theme) {
 	$(document).on('click', '#btnAddClass', handleAddClassClick);
 	$(document).on('click', '#btnEditClassInformation', handleEditClassClick);
 	$(document).on('click', '#btnSaveClassInformation', handleSaveClassClick);
+	$(document).on('click', '#btnAddSchedular', handleAddSchedularClick);
 }
 
 // Event handle
@@ -85,6 +86,21 @@ function handleAddClassClick() {
 	setCurrentFunction("ADD");
 }
 
+function handleAddSchedularClick() {
+	var weekdays = $('#weekdaydiv').jqxDropDownList('getCheckedItems');
+	var stime = $('#txtStartTime').val();
+	var etime = $('#txtEndTime').val();
+	var weekdaystrs = new Array();
+	var classid = getCurrentClass().id;
+	$.each(weekdays, function (index) {
+		weekday = this.label;
+		weekdaystrs.push(weekday);
+	});
+	newschedular = {"id":0, "msdClassId":classid, "startTime":stime, "endTime":etime, "weekdays":weekdaystrs};
+	
+	addNewSchedulars(newschedular);
+}
+
 // UI Creature
 function initClassDiv() {
 	console.log(" init class div ... ");
@@ -111,6 +127,9 @@ function initClassDiv() {
 	
 	var sdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:1px solid;"/>').attr({id:'schedularInformation'});
 	$('#msdclassdiv').append(sdiv);
+	
+	var asdiv = $('<div style = "height:100px; width:410px; margin-top: 10px; margin-left:10px; border:1px solid;"/>').attr({id:'addSchedularInformation'});
+	$('#msdclassdiv').append(asdiv);
 	
 	getAllClassName();
 
@@ -150,17 +169,6 @@ function showClassInformation(data) {
 	}
 	$('#divEndTime').jqxDateTimeInput({ disabled: true });
 
-	/*
-	if (null != data.classStatus) {
-		if ("ACTIVE" == data.classStatus) {
-			$('#classInformationdiv').append('<label style="float:left; margin-top:10px; margin-left:20px; color:green;" >' + data.classStatus + '</label>');
-		} else if ("INACTIVE" == data.classStatus) {
-			$('#classInformationdiv').append('<label style="float:left; margin-top:10px; margin-left:20px; color:blue;" >' + data.classStatus + '</label>');
-		} else {
-			$('#classInformationdiv').append('<label style="float:left; margin-top:10px; margin-left:20px; color:red;" >' + data.classStatus + '</label>');
-		}
-	}
-	*/
 	if (null != data.classStatus) {
 		if ("ACTIVE" == data.classStatus) {
 			$('#labelClassStatus').text(data.classStatus);
@@ -176,7 +184,34 @@ function showClassInformation(data) {
 	$('#btnSaveClassInformation').jqxButton({ disabled:true });
 		
 	getClassSchedularByClassId(data.id);
+	
+	createAddClassSchedularDiv();
 
+}
+
+function createAddClassSchedularDiv() {
+	$('#addSchedularInformation').empty();
+	
+	$('#addSchedularInformation').append('<label style="float:left; margin-top:2px;">Weekday : </label>');
+	var weekdaydiv = $('<div style="float:left; margin-left:5px"/>').attr({id:'weekdaydiv'});
+	$('#addSchedularInformation').append(weekdaydiv);
+	$('#weekdaydiv').jqxDropDownList({ checkboxes: true, source: WeekDayShortNameArray, selectedIndex: 1, width: '60', height: '20', theme: theme });
+	
+	$('#addSchedularInformation').append('<label style="float:left; margin-top:2px; margin-left:5px;">Start : </label>');
+	var stime = $('<input style="float:left; margin-left:5px;"/>').attr({type:'text', id:'txtStartTime'});
+	$('#addSchedularInformation').append(stime);
+	$('#txtStartTime').jqxInput({placeHolder: "Start Time", height: 20, width:45, minLength: 1, theme: getTheme() });
+	$('#txtStartTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
+	
+	$('#addSchedularInformation').append('<label style="float:left; margin-top:2px; margin-left:5px;">End : </label>');
+	var etime = $('<input style="float:left; margin-left:5px;"/>').attr({type:'text', id:'txtEndTime'});
+	$('#addSchedularInformation').append(etime);
+	$('#txtEndTime').jqxInput({placeHolder: "End Time", height: 20, width:45, minLength: 1, theme: getTheme() });
+	$('#txtEndTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
+	
+	var btnadd = $('<input style="float:right; margin-right:10px;"/>').attr({type:'button', id:'btnAddSchedular', value:'Add'});
+	$('#addSchedularInformation').append(btnadd);
+	$('#btnAddSchedular').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
 
 function createClassInformationDiv() {
@@ -234,6 +269,43 @@ function cancelUpdateClassInformation() {
 
 function showClassSchedularInformation(data) {
 	console.log(" in show class schedular information .. ");
+	$('#schedularInformation').empty();
+	$('#schedularInformation').append('<h3> Class Schedular ... </h3>');
+	var csdiv = $('<div style="border:1px solid;"/>').attr({id:'classSchedularGrid'});	
+	$('#schedularInformation').append(csdiv);
+	var source = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'msdClassId', 	type: 'int'},
+			{ name: 'weekdayStr',  type: 'string'},
+			{ name: 'weekday', 	type: 'int'},
+			{ name: 'startTime', type: 'string'},
+			{ name: 'endTime', type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	$('#classSchedularGrid').jqxGrid(
+	{
+		source:dataAdapter,
+		width: 410,
+		height: 100,
+		columns:[
+			{text: 'Class ID', datafield:'msdClassId', hidden:'true'},
+			{text: 'ID', datafield:'id', hidden:'true'},
+			{text: 'Weekday', datafield: 'weekdayStr', width: 100},
+			{text: 'Start Time', datafield: 'startTime', width:100},
+			{text: 'End Time', datafield: 'endTime', width:100},
+			{text: 'Delete', datafield: 'Delete', columntype:'button', cellsrenderer:function() {
+				return "Delete";
+			}, buttonclick:function(row) {
+				var id = $("#classSchedularGrid").jqxGrid('getcellvalue', row, "id");
+				deleteClassSchedular(id);
+			}
+		}]
+	});
+	
 }
 
 // AJAX call ...
@@ -301,6 +373,7 @@ function getClassSchedularByClassId(id) {
 		success: function(response) {
 			if (404 == response.code) {
 				console.log(" Can't find class schedular by id : " + id);
+				$('#schedularInformation').empty();				
 			} else if (302 == response.code) {
 				var data = $.parseJSON(response.result);
 				console.log(" get class schedular by id ");
@@ -334,11 +407,7 @@ function saveClassInformatioin(id, cname, clocation, sdate, edate) {
 				console.log(" add class successfully ... ");
 				data = $.parseJSON(response.result);
 				setCurrentClass(data);
-				/*
-				showStudentInformation(data);
-				$("#txtStudentSearchFirstName").val(data.firstName);
-				$("#txtStudentSearchLastName").val(data.lastName);
-				*/
+				showClassInformation(data);
 			} else {
 				alert('error');
 			}
@@ -349,6 +418,59 @@ function saveClassInformatioin(id, cname, clocation, sdate, edate) {
 	});
 }
 
+function addNewSchedulars(newschedular) {
+	$.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/msdclassschedular",
+		data: JSON.stringify(newschedular),
+		contentType: "application/json",
+		processData:false,
+		success: function(response) {
+			if (500 == response.code) {
+				alert("Internal Error, Please check service. ");
+			} else if (302 == response.code) {
+				console.log(" add class schedulars successfully ... ");
+				$('#txtStartTime').val("");
+				$('#txtEndTime').val("");
+				$('#weekdaydiv').val("");
+				$('#weekdaydiv').jqxDropDownList('uncheckAll'); 
+				getClassSchedularByClassId(getCurrentClass().id);
+			} else {
+				alert('error');
+			}
+		},
+		error: function(msg, url, line) {
+			alert('error');
+		}
+	});
+
+}
+
+function deleteClassSchedular(id) {
+	console.log(" delete class schedular ");
+	
+		$.ajax({
+		type: "DELETE",
+		dataType: "json",
+		url: "../msd-app/msdclassschedular/" + id,
+		success: function(response) {
+			console.log(" get student ... ");
+			if (404 == response.code) {
+				alert(" Can't delete class schedular ... ");
+			} else if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				getClassSchedularByClassId(getCurrentClass().id);
+			} else {
+				alert("error to find student ... ");
+			}
+		},
+		error: function(msg, url, line) {
+			alert('error to get student ... ');
+		}
+	});
+
+}
 
 var currentFunction;
 function setCurrentFunction(status) {

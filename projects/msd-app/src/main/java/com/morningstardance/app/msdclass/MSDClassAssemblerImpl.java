@@ -3,7 +3,10 @@ package com.morningstardance.app.msdclass;
 import java.sql.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
+import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.util.WeekdayEnum;
@@ -13,6 +16,10 @@ import com.morningstardance.domain.entity.MSDClassStatus;
 
 @Service("msdClassAssembler")
 public class MSDClassAssemblerImpl implements MSDClassAssembler {
+	
+    @Resource(name="mapper")
+    protected Mapper mapper;
+    
 /*
 	@Override
 	public MSDClassSummaryDto createSummaryDtoFromEntity(MSDClass msdclass) {

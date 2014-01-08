@@ -70,6 +70,7 @@ public class ResponseDto {
    		} else if ("DELETE".equals(requestType)) {
    			if (null != object) {
    				dto.setMessage("delete");
+   				dto.setCode(new Long(HttpStatus.FOUND.value()));
    			} else {
    				dto.setMessage("not delete");
    			}
