@@ -4,6 +4,7 @@ function addStudentWindowEventListeners(theme) {
 	$(document).on('click', '#btnShowStudentWindow', handleShowStudentWindowClick);
 	
 	$(document).on('click', '#btnSearchStudent', handleStudentSearchClick);
+	$(document).on('click', '#btnClearStudent', handleStudentClearClick);
 	$(document).on('click', '#btnEditStudent', handleEditStudentClick);
 	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
 	$(document).on('click', '#btnSaveStudent', handleStudentSaveClick); 
@@ -21,9 +22,19 @@ function handleShowStudentWindowClick() {
 
 	    $('#studentWindow').append('<div >MSD Student</div> <div id="msdstudentdiv"></div>');
     	initStudentDiv();
+   		getUniqueName("FIRSTNAME");
+		getUniqueName("LASTNAME");
+
 		$('#studentWindow').jqxWindow({showCollapseButton: true, height: '300px', width: '450px', theme: theme, position: { x: offset.left + 20, y: offset.top + 20} });
 	}
 };
+
+function handleStudentClearClick() {
+	initStudentDiv();
+   	$( '#txtStudentSearchFirstName' ).jqxInput({ source: getFirstNameList() });
+    $( '#txtStudentSearchLastName' ).jqxInput({ source: getLastNameList() });
+
+}
 
 function handleStudentSearchClick() {
 	console.log (" search student by name ... ");
@@ -114,7 +125,10 @@ function initStudentDiv() {
 	var btndiv = $('<div style="height:20px;"/>').attr({id:'btndiv', class:'infodiv'});
 	$('#searchdiv').append(btndiv);
 	
-	var abutton = $('<input style="float:right;" />').attr({type:'button', id:'btnAddStudent', value:'add'});
+	var cbutton = $('<input style="float:right;" />').attr({type:'button', id:'btnClearStudent', value:'clear'});
+	$('#btndiv').append(cbutton);
+	$('#btnClearStudent').jqxButton({ width: '60', height: 20, theme: getTheme() });
+	var abutton = $('<input style="float:right; margin-right:10px;" />').attr({type:'button', id:'btnAddStudent', value:'add'});
 	$('#btndiv').append(abutton);
 	$('#btnAddStudent').jqxButton({ width: '60', height: 20, theme: getTheme() });
 	var sbutton = $('<input style="float:right; margin-right:10px;" />').attr({type:'button', id:'btnSearchStudent', value:'search'});
@@ -280,6 +294,35 @@ function initStudentWindow() {
 
 
 // AJAX call ...
+function getUniqueName(fieldname) {
+	console.log(" get unique name for : " + fieldname);
+	$.ajax({
+		type: "GET",
+		url: "../msd-app/msdstudent",
+		dataType: "json",
+		contentType: "application/json",
+		data: {type:"nameautocomplete",fieldname:fieldname },
+		success: function(response) {
+			if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				if ("FIRSTNAME" == fieldname) {
+			    	$( '#txtStudentSearchFirstName' ).jqxInput({ source: data });
+			    	setFirstNameList(data);
+				} else if ("LASTNAME" == fieldname) {
+				    $( '#txtStudentSearchLastName' ).jqxInput({ source: data });
+				    setLastNameList(data);
+				}
+			} else {
+				$.msgBox({ title: "Error " + response.code, content: " Can't get unique for " + fieldname + " ... ", type:"error" });
+			}
+		},
+		error: function(msg, url, line) {
+			$.msgBox({ title: "System error", content: " Can't get unique for " + fieldname + " ... ", type:"error" });
+		}
+	});
+};
+
+
 function getStudentByName(fname, lname) {
 	
 	console.log(' get student by name ... ');
@@ -460,6 +503,21 @@ function registerClass(id) {
 	});
 }
 
+var firstNameList;
+function setFirstNameList(fnlist) {
+	firstNameList = fnlist
+}
+function getFirstNameList() {
+	return firstNameList;
+}
+
+var lastNameList;
+function setLastNameList(lnlist) {
+	lastNameList = lnlist
+}
+function getLastNameList() {
+	return lastNameList;
+}
 
 var currentFunction;
 function setCurrentFunction(status) {

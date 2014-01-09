@@ -8,15 +8,6 @@ function addLoginWindowEventListeners(theme) {
 function handleShowLoginWindowClick() {
 
 	if ($('#btnShowLoginWindow').val() == 'Logout') {
-/*
-$.ajax({
-    url: "",
-    context: document.body,
-    success: function(s,x){
-        $(this).html(s);
-    }
-});
-*/	
 		window.location.reload();
 //		processLogout();
 	} else {
@@ -36,6 +27,7 @@ $.ajax({
 	}
 };
 
+/*
 function processLogout() {
     $('#btnShowLoginWindow').val('Login');
     $('#btnShowStudentWindow').jqxButton({disabled: true});
@@ -58,7 +50,7 @@ function loginWindowLogout() {
 	$('#loginWindow').jqxWindow('close');
 	resetLoginWindow();	
 }
-
+*/
 function initLogin() {
 	console.log(" init Loggin ... ");
 

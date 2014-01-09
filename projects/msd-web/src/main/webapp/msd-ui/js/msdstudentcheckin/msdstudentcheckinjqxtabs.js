@@ -75,10 +75,10 @@ function getUniqueName(fieldname) {
 	console.log(" get unique name for : " + fieldname);
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdstudentcheckin",
+		url: "../msd-app/msdstudent",
 		dataType: "json",
 		contentType: "application/json",
-		data: {type:"checkin",namelisttype:fieldname },
+		data: {type:"nameautocomplete",fieldname:fieldname },
 		success: function(response) {
 			if (302 == response.code) {
 				var data = $.parseJSON(response.result);
