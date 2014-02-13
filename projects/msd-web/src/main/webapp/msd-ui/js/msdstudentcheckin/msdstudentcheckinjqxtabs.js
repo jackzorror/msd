@@ -38,7 +38,7 @@ function initStudentCheckinTab(theme) {
 	
 	$("#msdClassDropList").jqxDropDownList({ selectedIndex: 0, width: '150', height: '20', theme: theme });
 
-	var checkinbutton = $('<input/>').attr({ type: 'button', id:'btnStudentCheckIn', value:'Check In'});
+	var checkinbutton = $('<input style="float:right; margin-right: 40px" />').attr({ type: 'button', id:'btnStudentCheckIn', value:'Check In'});
 	$('#btndiv').append(checkinbutton);
 	$('#btnStudentCheckIn').jqxButton({ width: '150', theme: theme });
 
@@ -47,6 +47,7 @@ function initStudentCheckinTab(theme) {
 	getAllClassList();
 	getUniqueName("FIRSTNAME");
 	getUniqueName("LASTNAME");
+	getAllStudents();
 };
 
 function getAllClassList() {
@@ -67,32 +68,6 @@ function getAllClassList() {
 		},
 		error: function(msg, url, line) {
 			$.msgBox({ title: "System error", content: " Can't get class for check in process ... ", type:"error" });
-		}
-	});
-};
-
-function getUniqueName(fieldname) {
-	console.log(" get unique name for : " + fieldname);
-	$.ajax({
-		type: "GET",
-		url: "../msd-app/msdstudent",
-		dataType: "json",
-		contentType: "application/json",
-		data: {type:"nameautocomplete",fieldname:fieldname },
-		success: function(response) {
-			if (302 == response.code) {
-				var data = $.parseJSON(response.result);
-				if ("FIRSTNAME" == fieldname) {
-			    	$( '#txtStudentCheckInFirstName' ).jqxInput({ source: data });
-				} else if ("LASTNAME" == fieldname) {
-				    $( '#txtStudentCheckInLastName' ).jqxInput({ source: data });
-				}
-			} else {
-				$.msgBox({ title: "Error " + response.code, content: " Can't get unique for " + fieldname + " ... ", type:"error" });
-			}
-		},
-		error: function(msg, url, line) {
-			$.msgBox({ title: "System error", content: " Can't get unique for " + fieldname + " ... ", type:"error" });
 		}
 	});
 };
@@ -151,6 +126,54 @@ function handleStudentCheckInClick() {
 	} else {
 		findStudentIdByFirstNameLastName(fname, lname, checkinclass);
 	}
+};
+
+function getAllStudents() {
+	console.log(" get all student ");
+	$.ajax({
+		type: "GET",
+		url: "../msd-app/msdstudent",
+		dataType: "json",
+		contentType: "application/json",
+		data: {type:"summary"},
+		success: function(response) {
+			if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				setStudents(data);
+			} else {
+				$.msgBox({ title: "Error " + response.code, content: " Can't get all student ", type:"error" });
+			}
+		},
+		error: function(msg, url, line) {
+			$.msgBox({ title: "System error", content: " Can't get all student ", type:"error" });
+		}
+	});
+}
+
+function getUniqueName(fieldname) {
+	console.log(" get unique name for : " + fieldname);
+	$.ajax({
+		type: "GET",
+		url: "../msd-app/msdstudent",
+		dataType: "json",
+		contentType: "application/json",
+		data: {type:"nameautocomplete",fieldname:fieldname },
+		success: function(response) {
+			if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				if ("FIRSTNAME" == fieldname) {
+			    	$( '#txtStudentCheckInFirstName' ).jqxInput({ source: data });
+				} else if ("LASTNAME" == fieldname) {
+				    $( '#txtStudentCheckInLastName' ).jqxInput({ source: data });
+				}
+			} else {
+				$.msgBox({ title: "Error " + response.code, content: " Can't get unique for " + fieldname + " ... ", type:"error" });
+			}
+		},
+		error: function(msg, url, line) {
+			$.msgBox({ title: "System error", content: " Can't get unique for " + fieldname + " ... ", type:"error" });
+		}
+	});
 };
 
 function checkinstudent(sid, ciclass) {
@@ -213,3 +236,11 @@ function findStudentIdByFirstNameLastName(fname, lname, checkinclass) {
 		}
 	});
 };
+
+var allStudents;
+function getStudents() {
+	return allStudents;
+}
+function setStudents(data) {
+	allStudents = data;
+}

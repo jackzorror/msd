@@ -23,9 +23,6 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.selection.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.edit.js"></script>
     
-	<link  href="Styles/msgBoxLight.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="Scripts/jquery.msgBox.js"></script>
-
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcalendar.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdatetimeinput.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtooltip.js"></script>
@@ -36,7 +33,6 @@
     <script type="text/javascript" src="js/msdjqwindow/classjqwindow.js"></script>
 
     <link rel="stylesheet" href="timepicker-master/include/ui-1.10.0/ui-lightness/jquery-ui-1.10.0.custom.min.css" type="text/css" />
-    <link rel="stylesheet" href="timepicker-master/jquery.ui.timepicker.css?v=0.3.3" type="text/css" />
     <script type="text/javascript" src="timepicker-master/include/jquery-1.9.0.min.js"></script>
     <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.core.min.js"></script>
     <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.widget.min.js"></script>
@@ -44,6 +40,9 @@
     <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.position.min.js"></script>
     <script type="text/javascript" src="timepicker-master/jquery.ui.timepicker.js?v=0.3.3"></script>
 
+	<script type="text/javascript" src="Scripts/jquery.toastmessage.js"></script>
+	<link type="text/css" href="css/jquery.toastmessage.css" rel="stylesheet" />
+	
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -51,15 +50,36 @@
 			
 			$("#txtEndTime").timepicker({showAnim:'blind'});
 			
-			addTimePicker();
+//			$.msgBox({ title: "Error Can't get all student ", type:"error" });
+//			addTimePicker();
+			showmessage();
         });
         
+        function showmessage() {
+                $().toastmessage('showToast', {
+             text     : 'This is a notice message',
+             sticky   : true,
+             position : 'middle-center',
+             type     : 'notice'
+        });
+
+                $().toastmessage('showToast', {
+             text     : 'This is a error message',
+             sticky   : true,
+             position : 'middle-center',
+             type     : 'error'
+        });
+
+        }
+        /*
         function addTimePicker() {
         	$('#divtest').append("test ... ");
         	var stime = $('<input type="text" style="width: 70px;" id="txtTestTime" value="" />');
         	$('#divtest').append(stime);
         	$('#txtTestTime').timepicker({showAnim:'blind'});
+
         }
+        */
     </script> 
     
    <style type="text/css">

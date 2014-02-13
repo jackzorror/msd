@@ -29,10 +29,7 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 	public MSDStudentDto createDtoFromEntity(MSDStudent msdStudent) {
 		if (null == msdStudent) 
 			return null;
-		MSDStudentDto dto = new MSDStudentDto();
-		dto.setId(msdStudent.getId().intValue());
-		dto.setFirstName(msdStudent.getFirstName());
-		dto.setLastName(msdStudent.getLastName());
+		MSDStudentDto dto = mapper.map(msdStudent, MSDStudentDto.class);
 		return dto;
 	}
 
@@ -40,12 +37,6 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 	public MSDStudentDetailDto createDetailDtoFromEntity(MSDStudent msdStudent) {
 		if (null == msdStudent)
 			return null;
-		/*
-		MSDStudentDetailDto dto = new MSDStudentDetailDto();
-		dto.setId(msdStudent.getId().intValue());
-		dto.setLastName(msdStudent.getLastName());
-		dto.setFirstName(msdStudent.getFirstName());
-		*/
 		MSDStudentDetailDto dto = mapper.map(msdStudent, MSDStudentDetailDto.class);
 		
 		return dto;

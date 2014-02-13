@@ -45,7 +45,7 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	
 	@Override
 	public List<MSDStudentDto> getAllStudents() {
-		List<MSDStudent> msdStudents = msdStudentRepository.getAll();
+		List<MSDStudent> msdStudents = msdStudentJPARepository.findAll();
 		return msdStudentAssembler.createDtoFromEntity(msdStudents);
 	}
 

@@ -63,7 +63,21 @@ public class MSDStudentController {
     	return responseDto;
 	}
 */
-	@RequestMapping(params={"type=registerclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+
+
+	@RequestMapping(params={"type=summary"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto getAllStudentsSummaryDfltVer() {
+    	return getAllStudentsSummaryVer1();
+    }
+
+    @RequestMapping(params={"type=summary"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto getAllStudentsSummaryVer1() {
+    	List<MSDStudentDto> dtos = msdStudentFacade.getAllStudents();
+    	ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+    	return responseDto;
+	}
+
+    @RequestMapping(params={"type=registerclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
 	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdDfltVer(Long msdstudentid) {
 		return getStudentRegisteredClassByStudentIdVer1(msdstudentid);
 	}

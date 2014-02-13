@@ -7,7 +7,6 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 
 import com.morningstardance.domain.base.repository.MSDBaseRepository;
-import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDStudent;
 import com.morningstardance.domain.entity.MSDStudentClass;
 

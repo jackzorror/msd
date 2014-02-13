@@ -8,4 +8,22 @@
     <class-a>com.morningstardance.domain.entity.MSDStudent</class-a>
     <class-b>com.morningstardance.app.msdstudent.MSDStudentDetailDto</class-b>
   </mapping>
+
+  <mapping>
+    <class-a>com.morningstardance.domain.entity.MSDStudent</class-a>
+    <class-b>com.morningstardance.app.msdstudent.MSDStudentDto</class-b>
+    <field>
+    	<a>id</a>
+    	<b>id</b>
+    </field>
+    <field>
+    	<a>firstName</a>
+    	<b>firstName</b>
+    </field>
+    <field>
+    	<a>lastName</a>
+    	<b>lastName</b>
+    </field>
+  </mapping>
+
 </mappings>
