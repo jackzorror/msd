@@ -10,14 +10,20 @@ import org.springframework.stereotype.Service;
 
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDStudent;
+import com.morningstardance.domain.entity.MSDStudentClass;
 import com.morningstardance.domain.entity.MsdStudentCheckin;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
 import com.morningstardance.domain.msdstudentcheckin.MSDStudentCheckinRepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentJPARepository;
 
 @Service("msdStudentCheckinFacade")
 public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
+	
+	private final int VALID_INFORMATION = 1;
+	private final int STUDENT_NOT_REGISTER_TO_CLASS = 2;
+	private final int STUDENT_NOT_FOUND = 3;
 
 	@Resource(name="msdStudentRepository")
 	MSDStudentRepository msdStudentRepository;
@@ -30,6 +36,9 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 	
 	@Resource
 	MSDStudentJPARepository msdStudentJPARepository;
+	
+	@Resource
+	MSDStudentClassJPARepository msdStudentClassJPARepository;
 	
 
 	@Override
@@ -118,5 +127,35 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 			nameList = msdStudentJPARepository.findUniqueFirstNames();
 		}
 		return nameList;
+	}
+
+	@Override
+	public String checkStudentClassRegisteinformation(
+			Long msdclassid, Long msdstudentid) {
+		MSDStudentClass msdsc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(msdclassid.intValue(), msdstudentid.intValue());
+		if(null != msdsc) {
+			return "FOUND";
+		}
+		return "NOT FOUND";
+	}
+
+	@Override
+	public MSDStudentCheckInValidResultDto validStudentCheckInInformation(String firstname,
+			String lastname, Long msdclassid) {
+		MSDStudentCheckInValidResultDto dto = new MSDStudentCheckInValidResultDto();
+		
+		MSDStudent student = msdStudentJPARepository.findByFirstNameAndLastName(firstname, lastname);
+		if (null != student) {
+			dto.setMsdStudentId(student.getId().intValue());
+			MSDStudentClass msdsc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(msdclassid.intValue(), student.getId().intValue());
+			if (null != msdsc) {
+				dto.setValidationResult(VALID_INFORMATION);
+			} else {
+				dto.setValidationResult(STUDENT_NOT_REGISTER_TO_CLASS);
+			}
+		} else {
+			dto.setValidationResult(STUDENT_NOT_FOUND);
+		}
+		return dto;
 	}
 }

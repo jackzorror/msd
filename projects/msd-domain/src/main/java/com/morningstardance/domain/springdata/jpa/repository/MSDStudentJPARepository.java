@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.morningstardance.domain.entity.MSDStudent;
+import com.morningstardance.domain.entity.MSDStudentClass;
 
 public interface MSDStudentJPARepository extends JpaRepository<MSDStudent, Long> {
 
@@ -14,4 +15,7 @@ public interface MSDStudentJPARepository extends JpaRepository<MSDStudent, Long>
 
 	@Query("SELECT DISTINCT s.lastName FROM MSDStudent s")
 	public List<String> findUniqueLastNames();	
+	
+	public MSDStudent findByFirstNameAndLastName(String firstName, String lastName);
+
 }

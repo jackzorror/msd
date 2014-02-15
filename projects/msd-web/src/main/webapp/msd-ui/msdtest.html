@@ -43,6 +43,8 @@
 	<script type="text/javascript" src="Scripts/jquery.toastmessage.js"></script>
 	<link type="text/css" href="css/jquery.toastmessage.css" rel="stylesheet" />
 	
+	<script type="text/javascript" src="js/lib/messageutil.js"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -56,6 +58,9 @@
         });
         
         function showmessage() {
+        	 showMsg("This message show from funtion", 'error');
+        	 showMsg("This message show from funtion", 'notice');
+        	 
                 $().toastmessage('showToast', {
              text     : 'This is a notice message',
              sticky   : true,

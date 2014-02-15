@@ -40,14 +40,13 @@ function initStudentCheckinTab(theme) {
 
 	var checkinbutton = $('<input style="float:right; margin-right: 40px" />').attr({ type: 'button', id:'btnStudentCheckIn', value:'Check In'});
 	$('#btndiv').append(checkinbutton);
-	$('#btnStudentCheckIn').jqxButton({ width: '150', theme: theme });
+	$('#btnStudentCheckIn').jqxButton({ width: '153', theme: theme });
 
 	$('#txtStudentCheckInFirstName').jqxInput('focus');
 	
 	getAllClassList();
 	getUniqueName("FIRSTNAME");
 	getUniqueName("LASTNAME");
-	getAllStudents();
 };
 
 function getAllClassList() {
@@ -63,11 +62,11 @@ function getAllClassList() {
 				$("#msdClassDropList").jqxDropDownList('insertAt', 'Please Choose:', 0);
 				$("#msdClassDropList").jqxDropDownList('selectIndex', 0 ); 
 			} else {
-				$.msgBox({ title: "Error " + response.code, content: " Can't get class for check in process ... ", type:"error" });
+				showMsg("Error! " + response.code + " Can't get class for check in process ... ", "error");
 			}
 		},
 		error: function(msg, url, line) {
-			$.msgBox({ title: "System error", content: " Can't get class for check in process ... ", type:"error" });
+			showMsg("System Error! " + response.code + " Can't get class for check in process ... ", "error");
 		}
 	});
 };
@@ -122,33 +121,12 @@ function handleStudentCheckInClick() {
 	}
 	
 	if (error) {
-		$.msgBox({ title: "Invalid input", content: msg, type:"alert" });
+		showMsg("Invalid Input! " + msg, "error");
 	} else {
-		findStudentIdByFirstNameLastName(fname, lname, checkinclass);
+		setCheckInClassId(checkinclass);
+		validStudentCheckInInformation(fname, lname, checkinclass);
 	}
 };
-
-function getAllStudents() {
-	console.log(" get all student ");
-	$.ajax({
-		type: "GET",
-		url: "../msd-app/msdstudent",
-		dataType: "json",
-		contentType: "application/json",
-		data: {type:"summary"},
-		success: function(response) {
-			if (302 == response.code) {
-				var data = $.parseJSON(response.result);
-				setStudents(data);
-			} else {
-				$.msgBox({ title: "Error " + response.code, content: " Can't get all student ", type:"error" });
-			}
-		},
-		error: function(msg, url, line) {
-			$.msgBox({ title: "System error", content: " Can't get all student ", type:"error" });
-		}
-	});
-}
 
 function getUniqueName(fieldname) {
 	console.log(" get unique name for : " + fieldname);
@@ -167,22 +145,22 @@ function getUniqueName(fieldname) {
 				    $( '#txtStudentCheckInLastName' ).jqxInput({ source: data });
 				}
 			} else {
-				$.msgBox({ title: "Error " + response.code, content: " Can't get unique for " + fieldname + " ... ", type:"error" });
+				showMsg("Error! " + response.code + " Can't get unique for " + fieldname + "...", "error");
 			}
 		},
 		error: function(msg, url, line) {
-			$.msgBox({ title: "System error", content: " Can't get unique for " + fieldname + " ... ", type:"error" });
+			showMsg("System Error! Can't get unique for " + fieldname + "...", "error");
 		}
 	});
 };
 
-function checkinstudent(sid, ciclass) {
-	if (null != sid && 0 != sid) {
+function checkinstudent() {
+	if (null != getCheckInClassId() && 0 != getCheckInStudentId()) {
 		console.log(" call student check in ... ");
 		
 		var checkintime = new Date();
 
-		var scheckin = { "checkInTime":checkintime, "classId":ciclass, "id":0, "studentId":sid };
+		var scheckin = { "checkInTime":checkintime, "classId":getCheckInClassId(), "id":0, "studentId":getCheckInStudentId() };
 			
 		$.ajax({
 			type: "POST",
@@ -193,54 +171,70 @@ function checkinstudent(sid, ciclass) {
 			processData:false,
 			success: function(response) {
 				if (201 == response.code) {
-					$.msgBox({title:"Wow", content:" You successfully check in class ", type:"info"});
+					showMsg("Wow! You successfully check in class ", "notice");
 
 					$('#txtStudentCheckInFirstName').val("");
 					$('#txtStudentCheckInFirstName').jqxInput('focus');
 					$('#txtStudentCheckInLastName').val("");
 					$('#msdClassDropList').jqxDropDownList('selectIndex', 0 ); 
 				} else {
-					$.msgBox({ title: "Error " + response.code, content: " Can't check in ... ", type:"error" });
+					showMsg("Error! " + response.code + " Can't check in ...", "error");
 				}
 			},
 			error: function(msg, url, line) {
-				$.msgBox({ title: "System error", content: " Can't check in ... ", type:"error" });
+				showMsg("System Error! Can't check in ...", "error");
 			}
 		});
-	} else {
-		$.msgBox({title:"Invalid Input Info",
-				  content:" student : " + $('#txtStudentCheckInFirstName').val() + " " + $('#txtStudentCheckInLastName').val() + " are not register in system, Please check First Name and Last Name ",
-				  type:"error"});
-		$('#txtStudentCheckInFirstName').focus();
 	}
 };
 
-function findStudentIdByFirstNameLastName(fname, lname, checkinclass) {
+function validStudentCheckInInformation(fname, lname, checkinclass) {
 	var sid = 0;
 	$.ajax({
 		type: "GET",
 		dataType: "json",
-		url: "../msd-app/msdstudent",
-		data: { firstname: fname, lastname: lname },
+		url: "../msd-app/msdstudentcheckin",
+		data: { type:"checkin", firstname: fname, lastname: lname, msdclassid:checkinclass },
 		success: function(response) {
-			console.log(" get student ... ");
+			console.log(" valid student check in information ... ");
 			if (302 == response.code) {
 				var data = $.parseJSON(response.result);
-				sid = data.id;
+				if (data.validationResult == 1) {
+					setCheckInStudentId(data.msdStudentId);
+					checkinstudent();
+				} else if (data.validationResult == 2){
+					if (confirm("You didn't register to this class. Do you want continue to check in?")) { 
+						setCheckInStudentId(data.msdStudentId);
+						checkinstudent();
+					}
+				} else {
+					showMsg("Invalid Input Information : " + " student : " + fname + " " + 
+						lname + " are not register in system, Please check First Name and Last Name ",
+						"error");
+					$('#txtStudentCheckInFirstName').focus();
+				}
+			} else {
+				showMsg("Can't find student in system, Please check your input", "error");
 			}
-			
-			checkinstudent(sid, checkinclass)
 		},
 		error: function(msg, url, line) {
-			checkinstudent(sid, checkinclass)
+			showMsg("System Error to find student in system", "error");
 		}
 	});
 };
 
-var allStudents;
-function getStudents() {
-	return allStudents;
+var checkInStudentId;
+function getCheckInStudentId() {
+	return checkInStudentId;
 }
-function setStudents(data) {
-	allStudents = data;
+function setCheckInStudentId(value) {
+	checkInStudentId = value;
+}
+
+var checkInClassId;
+function getCheckInClassId() {
+	return checkInClassId;
+}
+function setCheckInClassId(value) {
+	checkInClassId = value
 }

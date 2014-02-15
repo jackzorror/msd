@@ -12,4 +12,10 @@ public interface MSDStudentCheckinFacade {
 			Long msdclassid, String lastname, String firstname);
 
 	List<String> getAllStudentNameList(String namelisttype);
+
+	String checkStudentClassRegisteinformation(Long msdclassid,
+			Long msdstudentid);
+
+	MSDStudentCheckInValidResultDto validStudentCheckInInformation(String firstname, String lastname,
+			Long msdclassid);
 }
