@@ -3,6 +3,8 @@ package com.morningstardance.web.controller;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
@@ -81,17 +83,34 @@ public class MSDStudentCheckinController {
 	}
     
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-service-Version")
-    public @ResponseBody ResponseDto studentClassCheckInDfltVer(@RequestBody MSDStudentCheckinDto studentCheckinDto, HttpServletResponse response) {
-    	return studentClassCheckInVer1(studentCheckinDto, response);
+    public @ResponseBody ResponseDto studentClassCheckInDfltVer(@RequestBody MSDStudentCheckinDto studentCheckinDto, HttpServletRequest request, HttpServletResponse response) {
+    	return studentClassCheckInVer1(studentCheckinDto, request, response);
     	
     }	    
 	@RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
-    public @ResponseBody ResponseDto studentClassCheckInVer1(@RequestBody MSDStudentCheckinDto studentCheckinDto, HttpServletResponse response) {
+    public @ResponseBody ResponseDto studentClassCheckInVer1(@RequestBody MSDStudentCheckinDto studentCheckinDto, HttpServletRequest request, HttpServletResponse response) {
 
 		Long msdstudentid = new Long(studentCheckinDto.getStudentId());
 		Long msdclassid = new Long(studentCheckinDto.getClassId());
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(msdstudentid, msdclassid);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "POST", "OBJECT");
+        
+        final String cookieName = "MSD_COOKIE";
+        final String cookieValue = "my cool value here !";  // you could assign it some encoded value
+        final Boolean useSecureCookie = new Boolean(false);
+        final int expiryTime = 60 * 60 * 24;  // 24h in seconds
+        final String cookiePath = "/";
+
+        Cookie myCookie = new Cookie(cookieName, cookieValue);
+
+        myCookie.setSecure(useSecureCookie.booleanValue());  // determines whether the cookie should only be sent using a secure protocol, such as HTTPS or SSL
+
+        myCookie.setMaxAge(expiryTime);  // A negative value means that the cookie is not stored persistently and will be deleted when the Web browser exits. A zero value causes the cookie to be deleted.
+
+        myCookie.setPath(cookiePath);  // The cookie is visible to all the pages in the directory you specify, and all the pages in that directory's subdirectories
+
+        response.addCookie(myCookie);
+
 		return responseDto;
     }
 }
