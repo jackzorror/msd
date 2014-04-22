@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.morningstardance.domain.entity.MSDStudent;
-import com.morningstardance.domain.entity.MSDStudentClass;
 
 public interface MSDStudentJPARepository extends JpaRepository<MSDStudent, Long> {
 

@@ -95,7 +95,7 @@ public class MSDStudentCheckinController {
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(msdstudentid, msdclassid);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "POST", "OBJECT");
         
-        final String cookieName = "MSD_COOKIE";
+        final String cookieName = "MSD_CHECKIN_COOKIE";
         final String cookieValue = "my cool value here !";  // you could assign it some encoded value
         final Boolean useSecureCookie = new Boolean(false);
         final int expiryTime = 60 * 60 * 24;  // 24h in seconds

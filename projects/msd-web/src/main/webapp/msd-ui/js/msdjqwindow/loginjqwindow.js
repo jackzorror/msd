@@ -113,14 +113,14 @@ function processLogin() {
 	$.ajax({
 		type: "GET",
 		dataType: "json",
-		url: "../msd-app/msdlogin",
+		url: "../msd-app/msdlogin/login",
 		data: { username: uname, password: pword },
 		success: function(response) {
 			console.log(" login ... ");
 			if (302 == response.code) {
 				afterUserLoginProcess()
 			} else {
-				$('#msgdiv').empty().append('Error Login return code : ' + response.code);
+				$('#msgdiv').empty().append('Error : ' + response.message + " - " + response.code);
 			}
 		},
 		error: function(msg, url, line) {

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-3.1.xsd
+    					http://www.springframework.org/schema/util
+    					http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+    <http pattern="/msd-ui/**" security="none"/>
+    
+    <http use-expressions="true" 
+    	  authentication-manager-ref="authenticationManager" 
+    	  entry-point-ref="loginUrlAuthenticationEntryPoint">    	    	    
+        <intercept-url pattern="/msd-app/rs/**" access="isAuthenticated()" />        
+        <logout logout-success-url="/" delete-cookies="JSESSIONID_MSD" />
+		<access-denied-handler ref="contentBasedAccessDeniedHandler"/>		
+		<custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrentSessionFilter"/>
+		<session-management session-authentication-strategy-ref="sas"/>
+
+    </http>
+
+	<beans:bean id="loginUrlAuthenticationEntryPoint"
+		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/msd-ui/login.html" />
+	</beans:bean>
+	
+    <!--
+    Usernames/Passwords are
+        agent10/Password1  password="y+DNaMvKOGglDAulRcSAMvQ+sOil5rq2A9EJJRSG93qR5GoxRtiH43QWxr22y+cBvVFN53hXPJsAaEg8HGJq7A=="
+    -->
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+     	<beans:constructor-arg name="strength" value="512" />
+     	<beans:property name="encodeHashAsBase64" value="true" />
+    </beans:bean>
+
+    <authentication-manager id="authenticationManager">
+        <authentication-provider user-service-ref="msdUserDetailsService" >
+            <password-encoder ref="passwordEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+ 
+
+	<global-method-security
+		secured-annotations="enabled"
+		pre-post-annotations="enabled"
+		proxy-target-class="true"
+		authentication-manager-ref="authenticationManager">
+	</global-method-security>
+ 
+ 	<beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+	<!-- Ajax Request Type Matcher for use by contentBasedAuthenticationEntryPoint, contentBasedAccessDeniedHandler, and concurrentSessionFilter -->
+	<beans:bean id="ajaxRequestContentTypeMatcher" class="com.morningstardance.app.security.AjaxRequestContentTypeMatcher">
+	  <beans:constructor-arg name="ajaxContentTypes">
+		<beans:set>	
+			<beans:value>application/json</beans:value>
+			<beans:value>application/xml</beans:value>
+		</beans:set>	  
+	  </beans:constructor-arg>
+	</beans:bean>
+
+   	<!-- Content Based Authentication Entry Point -->   	
+	<beans:bean id="contentBasedAuthenticationEntryPoint"  class="com.morningstardance.app.security.MSDContentBasedDelegatingAuthenticationEntryPoint">
+		<beans:constructor-arg name="contentMatchAuthenticationEntryPoint" ref="serviceAuthenticationEntryPoint" />
+		<beans:constructor-arg name="defaultAuthenticationEntryPoint" ref="defaultAuthenticationEntryPoint" />
+		<beans:constructor-arg name="requestContentTypeMatcher" ref="ajaxRequestContentTypeMatcher"/>
+	</beans:bean>
+	 
+	<beans:bean id="serviceAuthenticationEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+	    
+	<beans:bean id="defaultAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:constructor-arg name="loginFormUrl" value="/msd-ui/login.html" />
+	</beans:bean>
+	    
+	<!-- ContentBased Access Denied Handler -->
+	<beans:bean id="contentBasedAccessDeniedHandler"  class="com.morningstardance.app.security.MSDContentBasedDelegatingAccessDeniedHandler">
+		<beans:constructor-arg name="contentMatchAccessDeniedHandler" ref="serviceAccessDeniedHandler" />
+		<beans:constructor-arg name="defaultAccessDeniedHandler" ref="defaultAccessDeniedHandler" />
+		<beans:constructor-arg name="requestContentTypeMatcher" ref="ajaxRequestContentTypeMatcher"/>
+	</beans:bean>
+		    
+	<beans:bean id="serviceAccessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl" />
+	
+	<beans:bean id="defaultAccessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+		<beans:property name="errorPage" value="/msd-ui/invlid.html" />
+	</beans:bean>
+		    
+   <!-- Session control to prevent multiple user sessions -->
+   <beans:bean id="sas" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+	    <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+	    <beans:property name="maximumSessions" value="1" />
+   </beans:bean>
+ 
+  <!-- Session concurrency Filter -->
+  <beans:bean id="concurrentSessionFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+        <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+        <beans:constructor-arg name="expiredUrl" value="/msd-ui/invalid.html" />
+        <beans:property name="logoutHandlers">
+            <beans:array>
+                <beans:ref bean="securityContextLogoutHandler" />
+            </beans:array>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="securityContextLogoutHandler"
+        class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler">
+        <beans:property name="invalidateHttpSession" value="true" />
+    </beans:bean>      
+   
+</beans:beans>
