@@ -65,7 +65,7 @@
     <!-- Session configuration  -->
     <!-- =================================================================== -->
         <session-config>
-                <session-timeout>30</session-timeout>
+                <session-timeout>15</session-timeout>
                 <!-- Disable URL rewriting -->
                 <tracking-mode>COOKIE</tracking-mode>
                 <cookie-config>

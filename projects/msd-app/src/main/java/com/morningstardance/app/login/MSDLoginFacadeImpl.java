@@ -1,12 +1,15 @@
 package com.morningstardance.app.login;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.security.MSDAuthenticationService;
@@ -15,6 +18,9 @@ import com.morningstardance.app.security.MSDAuthenticationService;
 public class MSDLoginFacadeImpl implements MSDLoginFacade {
 	@Autowired
 	MSDAuthenticationService msdAuthenticationService;
+
+    @Resource(name="securityContextLogoutHandler")
+    protected LogoutHandler logoutHandler;
 
 	@Override
 	public boolean verifyLoginUser(String username, String password, HttpServletRequest request, HttpServletResponse response) {
@@ -32,4 +38,12 @@ public class MSDLoginFacadeImpl implements MSDLoginFacade {
 		return result;
 	}
 
+	@Override
+	public void logout(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        logoutHandler.logout(httpRequest, httpResponse,  getAuthentication());
+	}
+
+    public Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
 }

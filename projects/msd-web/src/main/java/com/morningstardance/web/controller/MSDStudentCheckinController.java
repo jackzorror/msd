@@ -19,7 +19,7 @@ import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinFacade;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
-@RequestMapping("/msdstudentcheckin")
+@RequestMapping("/rs/msdstudentcheckin")
 public class MSDStudentCheckinController {
 
 	@Resource(name="msdStudentCheckinFacade")

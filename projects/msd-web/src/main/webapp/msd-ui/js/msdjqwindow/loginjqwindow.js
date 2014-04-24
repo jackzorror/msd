@@ -8,8 +8,7 @@ function addLoginWindowEventListeners(theme) {
 function handleShowLoginWindowClick() {
 
 	if ($('#btnShowLoginWindow').val() == 'Logout') {
-		window.location.reload();
-//		processLogout();
+		processLogout();
 	} else {
 		if (false == $('#loginWindow').jqxWindow('isOpen')) {
 			resetLoginWindow();
@@ -128,6 +127,24 @@ function processLogin() {
 		}
 	});
 };
+
+function processLogout() {
+
+	console.log(" user logout ... ");
+	$.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/msdlogin/logout",
+		success: function(response) {
+			console.log(" logout ... ");
+			window.location.reload();
+		},
+		error: function(msg, url, line) {
+			console("Error to logout . . . ");
+			window.location.reload();
+		}
+	});
+}
 
 function afterUserLoginProcess() {
 	console.log(" user loged in ... ");

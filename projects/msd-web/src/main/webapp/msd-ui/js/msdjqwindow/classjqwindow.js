@@ -313,7 +313,7 @@ function getAllClassName() {
 	console.log(" in get all class name ... ");
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdclass",
+		url: "../msd-app/rs/msdclass",
 		dataType: "json",
 		contentType: "application/json",
 		data: { type: "classname"},
@@ -329,7 +329,7 @@ function getAllClassName() {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error');
+			handleAjaxError(msg);
 		}
 	});
 	
@@ -339,7 +339,7 @@ function getClassByName(cname) {
 	console.log(" in get class by name ... ");
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdclass",
+		url: "../msd-app/rs/msdclass",
 		dataType: "json",
 		contentType: "application/json",
 		data: { classname: cname},
@@ -357,7 +357,7 @@ function getClassByName(cname) {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error');
+			handleAjaxError(msg);
 		}
 	});
 }
@@ -366,7 +366,7 @@ function getClassSchedularByClassId(id) {
 	console.log(" in get class schedular by id ... ");
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdclassschedular",
+		url: "../msd-app/rs/msdclassschedular",
 		dataType: "json",
 		contentType: "application/json",
 		data: { msdclassid: id},
@@ -384,7 +384,7 @@ function getClassSchedularByClassId(id) {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error');
+			handleAjaxError(msg);
 		}
 	});
 
@@ -396,7 +396,7 @@ function saveClassInformatioin(id, cname, clocation, sdate, edate) {
 	$.ajax({
 		type: "PUT",
 		dataType: "json",
-		url: "../msd-app/msdclass",
+		url: "../msd-app/rs/msdclass",
 		data: JSON.stringify(classInfo),
 		contentType: "application/json",
 		processData:false,
@@ -413,7 +413,7 @@ function saveClassInformatioin(id, cname, clocation, sdate, edate) {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error');
+			handleAjaxError(msg);
 		}
 	});
 }
@@ -422,7 +422,7 @@ function addNewSchedulars(newschedular) {
 	$.ajax({
 		type: "PUT",
 		dataType: "json",
-		url: "../msd-app/msdclassschedular",
+		url: "../msd-app/rs/msdclassschedular",
 		data: JSON.stringify(newschedular),
 		contentType: "application/json",
 		processData:false,
@@ -441,7 +441,7 @@ function addNewSchedulars(newschedular) {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error');
+			handleAjaxError(msg);
 		}
 	});
 
@@ -453,7 +453,7 @@ function deleteClassSchedular(id) {
 		$.ajax({
 		type: "DELETE",
 		dataType: "json",
-		url: "../msd-app/msdclassschedular/" + id,
+		url: "../msd-app/rs/msdclassschedular/" + id,
 		success: function(response) {
 			console.log(" get student ... ");
 			if (404 == response.code) {
@@ -466,7 +466,7 @@ function deleteClassSchedular(id) {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error to get student ... ');
+			handleAjaxError(msg);
 		}
 	});
 

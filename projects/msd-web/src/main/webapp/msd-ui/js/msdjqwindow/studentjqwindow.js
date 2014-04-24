@@ -298,7 +298,7 @@ function getUniqueName(fieldname) {
 	console.log(" get unique name for : " + fieldname);
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdstudent",
+		url: "../msd-app/rs/msdstudent",
 		dataType: "json",
 		contentType: "application/json",
 		data: {type:"nameautocomplete",fieldname:fieldname },
@@ -313,11 +313,11 @@ function getUniqueName(fieldname) {
 				    setLastNameList(data);
 				}
 			} else {
-				$.msgBox({ title: "Error " + response.code, content: " Can't get unique for " + fieldname + " ... ", type:"error" });
+				alert(" Can't get unique for " + fieldname + " ... ");
 			}
 		},
 		error: function(msg, url, line) {
-			$.msgBox({ title: "System error", content: " Can't get unique for " + fieldname + " ... ", type:"error" });
+			handleAjaxError(msg);
 		}
 	});
 };
@@ -330,7 +330,7 @@ function getStudentByName(fname, lname) {
 	$.ajax({
 		type: "GET",
 		dataType: "json",
-		url: "../msd-app/msdstudent",
+		url: "../msd-app/rs/msdstudent",
 		data: { firstname: fname, lastname: lname },
 		success: function(response) {
 			console.log(" get student ... ");
@@ -349,7 +349,7 @@ function getStudentByName(fname, lname) {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error to get student ... ');
+			handleAjaxError(msg);
 		}
 	});
 }
@@ -365,7 +365,7 @@ function updateStudentInformation() {
 	$.ajax({
 		type: "POST",
 		dataType: "json",
-		url: "../msd-app/msdstudent",
+		url: "../msd-app/rs/msdstudent",
 		data: JSON.stringify(student),
 		contentType: "application/json",
 		processData:false,
@@ -384,7 +384,7 @@ function updateStudentInformation() {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error');
+			handleAjaxError(msg);
 		}
 	});
 };
@@ -398,7 +398,7 @@ function addStudentInformation() {
 	$.ajax({
 		type: "PUT",
 		dataType: "json",
-		url: "../msd-app/msdstudent",
+		url: "../msd-app/rs/msdstudent",
 		data: JSON.stringify(student),
 		contentType: "application/json",
 		processData:false,
@@ -417,7 +417,7 @@ function addStudentInformation() {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error');
+			handleAjaxError(msg);
 		}
 	});
 }
@@ -428,7 +428,7 @@ function getStudentRegisterClass(data) {
 	$.ajax({
 		type: "GET",
 		dataType: "json",
-		url: "../msd-app/msdstudent",
+		url: "../msd-app/rs/msdstudent",
 		data: { type: "registerclass", msdstudentid: data.id },
 		success: function(response) {
 			console.log(" get student register class ... ");
@@ -443,7 +443,7 @@ function getStudentRegisterClass(data) {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error to get student ... ');
+			handleAjaxError(msg);
 		}
 	});
 };
@@ -453,7 +453,7 @@ function getNonRegisteredClassList() {
 	var data = getCurrentStudent();
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdstudent",
+		url: "../msd-app/rs/msdstudent",
 		dataType: "json",
 		contentType: "application/json",
 		data: { type: "nonregisterclass", msdstudentid: data.id },
@@ -468,7 +468,7 @@ function getNonRegisteredClassList() {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error');
+			handleAjaxError(msg);
 		}
 	});
 };
@@ -481,7 +481,7 @@ function registerClass(id) {
 	$.ajax({
 		type: "PUT",
 		dataType: "json",
-		url: "../msd-app/msdstudent/" + cstudent.id,
+		url: "../msd-app/rs/msdstudent/" + cstudent.id,
 		data: JSON.stringify(scregister),
 		processData:false,
 		contentType: "application/json",
@@ -498,7 +498,7 @@ function registerClass(id) {
 			}
 		},
 		error: function(msg, url, line) {
-			alert('error to register student ... ');
+			handleAjaxError(msg);
 		}
 	});
 }

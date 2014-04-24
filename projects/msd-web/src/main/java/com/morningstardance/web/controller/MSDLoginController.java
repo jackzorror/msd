@@ -46,4 +46,16 @@ public class MSDLoginController {
 		return responseDto;
 	}
 
+    @RequestMapping(value="/logout", method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto signoutDfltVer(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    	return signoutVer1(httpRequest, httpResponse);
+    }
+
+    @RequestMapping(value="/logout", method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+    public @ResponseBody ResponseDto signoutVer1(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    	msdLoginFacade.logout(httpRequest,httpResponse);
+    	ResponseDto responseDto = null;
+		responseDto = ResponseDto.createResponseDto("Logout", "GET", "OBJECT");
+		return responseDto;
+    }
 }

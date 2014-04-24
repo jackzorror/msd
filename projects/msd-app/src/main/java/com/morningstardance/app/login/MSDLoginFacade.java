@@ -7,4 +7,6 @@ public interface MSDLoginFacade {
 
 	boolean verifyLoginUser(String username, String password, HttpServletRequest request, HttpServletResponse response);
 
+	void logout(HttpServletRequest httpRequest, HttpServletResponse httpResponse);
+
 }

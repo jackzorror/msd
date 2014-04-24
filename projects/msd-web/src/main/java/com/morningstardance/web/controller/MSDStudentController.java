@@ -20,7 +20,7 @@ import com.morningstardance.app.msdstudent.MSDStudentFacade;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
-@RequestMapping("/msdstudent")
+@RequestMapping("/rs/msdstudent")
 public class MSDStudentController {
 	
 	@Resource(name="msdStudentFacade")

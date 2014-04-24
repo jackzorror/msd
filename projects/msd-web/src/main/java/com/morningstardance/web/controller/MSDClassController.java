@@ -18,7 +18,7 @@ import com.morningstardance.app.msdstudent.MSDStudentDetailDto;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
-@RequestMapping("/msdclass")
+@RequestMapping("/rs/msdclass")
 public class MSDClassController {
 
 		@Resource(name="msdClassFacade")

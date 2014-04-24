@@ -19,7 +19,7 @@ import com.morningstardance.app.msdclassschedular.MSDClassSchedularFacade;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
-@RequestMapping("/msdclassschedular")
+@RequestMapping("/rs/msdclassschedular")
 public class MSDClassSchedularController {
 	
 	@Resource(name="msdClassSchedularFacade")
