@@ -26,7 +26,7 @@
 						http://www.springframework.org/schema/util/spring-util-3.1.xsd">
                         
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-   	  
+    
 	<!-- Load configuration properties -->
 	<import resource="msd-config-prop-context.xml" />
 	   	  

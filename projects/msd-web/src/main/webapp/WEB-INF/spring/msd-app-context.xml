@@ -30,6 +30,9 @@
                         
    <context:annotation-config/>
 
+    <task:annotation-driven />
+    <bean id="scheduledTasks" class="com.morningstardance.app.systemtask.ScheduledTasks"></bean>
+
     <bean id="mapper" class="org.dozer.spring.DozerBeanMapperFactoryBean">
         <property name="mappingFiles" value="file:/*-mapping.xml" />
     </bean>
