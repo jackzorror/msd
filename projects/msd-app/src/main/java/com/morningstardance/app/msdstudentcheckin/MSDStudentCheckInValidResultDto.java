@@ -2,6 +2,7 @@ package com.morningstardance.app.msdstudentcheckin;
 
 public class MSDStudentCheckInValidResultDto {
 	private int msdStudentId;
+	private int msdClassId;
 	private int validationResult;
 	
 	public MSDStudentCheckInValidResultDto() {
@@ -21,5 +22,13 @@ public class MSDStudentCheckInValidResultDto {
 
 	public void setValidationResult(int validationResult) {
 		this.validationResult = validationResult;
+	}
+
+	public int getMsdClassId() {
+		return msdClassId;
+	}
+
+	public void setMsdClassId(int msdClassId) {
+		this.msdClassId = msdClassId;
 	}
 }

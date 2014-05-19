@@ -107,7 +107,7 @@ function initClassDiv() {
 
 	$('#msdclassdiv').empty();
 	
-	var searchdiv = $('<div style="border:1px solid; height: 20px; width: 380px; margin-left: 30px; margin-top:10px;" />').attr({id:'searchdiv'});
+	var searchdiv = $('<div style="border:0px solid; height: 20px; width: 380px; margin-left: 30px; margin-top:10px;" />').attr({id:'searchdiv'});
 	$('#msdclassdiv').append(searchdiv);
 	
 	$('#searchdiv').append('<label>class name : </label>');
@@ -122,13 +122,13 @@ function initClassDiv() {
 	$('#searchdiv').append(sbutton);
 	$('#btnSearchClass').jqxButton({ width: '60', height: 20, theme: getTheme() });
 
-	var cdiv = $('<div style = "width:410px; margin-left:10px; margin-top:10px; border:1px solid;"/>').attr({id:'classInformationdiv'});
+	var cdiv = $('<div style = "width:410px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'classInformationdiv'});
 	$('#msdclassdiv').append(cdiv);
 	
-	var sdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:1px solid;"/>').attr({id:'schedularInformation'});
+	var sdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'schedularInformation'});
 	$('#msdclassdiv').append(sdiv);
 	
-	var asdiv = $('<div style = "height:100px; width:410px; margin-top: 10px; margin-left:10px; border:1px solid;"/>').attr({id:'addSchedularInformation'});
+	var asdiv = $('<div style = "height:100px; width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'addSchedularInformation'});
 	$('#msdclassdiv').append(asdiv);
 	
 	getAllClassName();
@@ -271,7 +271,7 @@ function showClassSchedularInformation(data) {
 	console.log(" in show class schedular information .. ");
 	$('#schedularInformation').empty();
 	$('#schedularInformation').append('<h3> Class Schedular ... </h3>');
-	var csdiv = $('<div style="border:1px solid;"/>').attr({id:'classSchedularGrid'});	
+	var csdiv = $('<div style="border:0px solid;"/>').attr({id:'classSchedularGrid'});	
 	$('#schedularInformation').append(csdiv);
 	var source = {
 		datafields:[

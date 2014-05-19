@@ -14,7 +14,7 @@
     <script type="text/javascript" src="../../jqwidgets/jqxpanel.js"></script>
     <script type="text/javascript" src="../../jqwidgets/jqxtabs.js"></script>
     <script type="text/javascript" src="../../jqwidgets/jqxcheckbox.js"></script>
-    <script type="text/javascript" src="../../scripts/gettheme.js"></script>
+    <script type="text/javascript" src="../../scripts/demos.js"></script>
     <script type="text/javascript">
         var basicDemo = (function () {
             //Adding event listeners
@@ -43,18 +43,18 @@
 
             //Creating all page elements which are jqxWidgets
             function _createElements() {
-                $('#showWindowButton').jqxButton({ theme: basicDemo.config.theme, width: '70px' });
-                $('#hideWindowButton').jqxButton({ theme: basicDemo.config.theme, width: '65px' });
-                $('#resizeCheckBox').jqxCheckBox({ theme: basicDemo.config.theme, width: '185px', checked: true });
-                $('#dragCheckBox').jqxCheckBox({ theme: basicDemo.config.theme, width: '185px', checked: true });
+                $('#showWindowButton').jqxButton({ width: '70px' });
+                $('#hideWindowButton').jqxButton({ width: '65px' });
+                $('#resizeCheckBox').jqxCheckBox({ width: '185px', checked: true });
+                $('#dragCheckBox').jqxCheckBox({ width: '185px', checked: true });
             };
 
             //Creating the demo window
             function _createWindow() {
                 $('#window').jqxWindow({
-                    showCollapseButton: true, maxHeight: 400, maxWidth: 700, minHeight: 200, minWidth: 200, height: 300, width: 500, theme: basicDemo.config.theme,
+                    showCollapseButton: true, maxHeight: 400, maxWidth: 700, minHeight: 200, minWidth: 200, height: 300, width: 500,
                     initContent: function () {
-                        $('#tab').jqxTabs({ height: '100%', width:  '100%', theme: basicDemo.config.theme });
+                        $('#tab').jqxTabs({ height: '100%', width:  '100%' });
                         $('#window').jqxWindow('focus');
                     }
                 });
@@ -62,8 +62,7 @@
 
             return {
                 config: {
-                    dragArea: null,
-                    theme: null
+                    dragArea: null
                 },
                 init: function () {
                     //Creating all jqxWindgets except the window
@@ -76,11 +75,7 @@
             };
         } ());
 
-        $(document).ready(function () {
-            var theme = getDemoTheme();
-
-            //Setting demo's theme
-            basicDemo.config.theme = theme;
+        $(document).ready(function () {  
             //Initializing the demo
             basicDemo.init();
         });

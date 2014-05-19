@@ -15,6 +15,7 @@ import com.morningstardance.domain.entity.MsdStudentCheckin;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
 import com.morningstardance.domain.msdstudentcheckin.MSDStudentCheckinRepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentJPARepository;
 
@@ -39,6 +40,9 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 	
 	@Resource
 	MSDStudentClassJPARepository msdStudentClassJPARepository;
+	
+	@Resource
+	MSDClassJPARepository msdClassJPARepository;
 	
 
 	@Override
@@ -119,12 +123,14 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 	}
 
 	@Override
-	public List<String> getAllStudentNameList(String namelisttype) {
+	public List<String> getFieldList(String fieldname) {
 		List<String> nameList = null;
-		if ("LASTNAME".equals(namelisttype)) {
+		if ("LASTNAME".equals(fieldname)) {
 			nameList = msdStudentJPARepository.findUniqueLastNames();
-		} else if ("FIRSTNAME".equals(namelisttype)) {
+		} else if ("FIRSTNAME".equals(fieldname)) {
 			nameList = msdStudentJPARepository.findUniqueFirstNames();
+		} else if ("CLASSNAME".equals(fieldname)) {
+			nameList = msdClassJPARepository.findUniqueNames();
 		}
 		return nameList;
 	}
@@ -141,13 +147,15 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 
 	@Override
 	public MSDStudentCheckInValidResultDto validStudentCheckInInformation(String firstname,
-			String lastname, Long msdclassid) {
+			String lastname, String msdclassname) {
 		MSDStudentCheckInValidResultDto dto = new MSDStudentCheckInValidResultDto();
+		MSDClass mclass = msdClassJPARepository.findByName(msdclassname);
 		
 		MSDStudent student = msdStudentJPARepository.findByFirstNameAndLastName(firstname, lastname);
 		if (null != student) {
 			dto.setMsdStudentId(student.getId().intValue());
-			MSDStudentClass msdsc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(msdclassid.intValue(), student.getId().intValue());
+			dto.setMsdClassId(mclass.getId().intValue());
+			MSDStudentClass msdsc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(mclass.getId().intValue(), student.getId().intValue());
 			if (null != msdsc) {
 				dto.setValidationResult(VALID_INFORMATION);
 			} else {

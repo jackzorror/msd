@@ -135,13 +135,13 @@ function initStudentDiv() {
 	$('#btndiv').append(sbutton);
 	$('#btnSearchStudent').jqxButton({ width: '60', height: 20, theme: getTheme() });
 
-	var sdiv = $('<div style = "height:145px; width:410px; margin-left:10px; border:1px solid;"/>').attr({id:'studentInformation'});
+	var sdiv = $('<div style = "height:145px; width:410px; margin-left:10px; border:0px solid;"/>').attr({id:'studentInformation'});
 	$('#msdstudentdiv').append(sdiv);
 	
-	var cdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:1px solid;"/>').attr({id:'classInformation'});
+	var cdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'classInformation'});
 	$('#msdstudentdiv').append(cdiv);
 
-	var rdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:1px solid;"/>').attr({id:'registerClass'});
+	var rdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'registerClass'});
 	$('#msdstudentdiv').append(rdiv);
 
 };
@@ -182,7 +182,7 @@ function cancelUpdateStudentInformation() {
 function showRegisterClassInformation(data) {
 	$('#classInformation').empty();
 	$('#classInformation').append('<h3> Registered Class </h3>');
-	var csdiv = $('<div style="border:1px solid;"/>').attr({id:'classGrid'});	
+	var csdiv = $('<div style="border:0px solid;"/>').attr({id:'classGrid'});	
 	$('#classInformation').append(csdiv);
 	var source = {
 		datafields:[
@@ -210,7 +210,7 @@ function createClassRegisterGrid (data) {
 	$('#registerClass').empty();
 	$('#registerClass').append('<h3>Please register from the following list</h3>');
 
-	var crdiv = $('<div style="border:1px solid;"/>').attr({id:'registerGrid'});	
+	var crdiv = $('<div style="border:0px solid;"/>').attr({id:'registerGrid'});	
 	$('#registerClass').append(crdiv);
 	var source = {
 		datafields:[

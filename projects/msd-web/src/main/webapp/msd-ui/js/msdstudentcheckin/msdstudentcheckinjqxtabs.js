@@ -38,7 +38,7 @@ function initStudentCheckinTab(theme) {
 	
 	$("#msdClassDropList").jqxDropDownList({ selectedIndex: 0, width: '150', height: '20', theme: theme });
 
-	var checkinbutton = $('<input style="float:right; margin-right: 40px" />').attr({ type: 'button', id:'btnStudentCheckIn', value:'Check In'});
+	var checkinbutton = $('<input style="float:left; margin-left: 542px" />').attr({ type: 'button', id:'btnStudentCheckIn', value:'Check In'});
 	$('#btndiv').append(checkinbutton);
 	$('#btnStudentCheckIn').jqxButton({ width: '153', theme: theme });
 
@@ -53,14 +53,15 @@ function getAllClassList() {
 	console.log('in getAllClassList ... ');
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdclass",
+		url: "../msd-app/msdstudentcheckin",
+		data: { type:"checkin", fieldname:"CLASSNAME" },
 		dataType: "json",
 		success: function(response) {
 			if (302 == response.code) {
 				var data = $.parseJSON(response.result);
-				$("#msdClassDropList").jqxDropDownList({ source: data, displayMember:"name", valueMember:"id" });
+				$("#msdClassDropList").jqxDropDownList({ source: data });
 				$("#msdClassDropList").jqxDropDownList('insertAt', 'Please Choose:', 0);
-				$("#msdClassDropList").jqxDropDownList('selectIndex', 0 ); 
+				$("#msdClassDropList").jqxDropDownList('selectItem', 'Please Choose:');
 			} else {
 				showMsg("Error! " + response.code + " Can't get class for check in process ... ", "error");
 			}
@@ -123,7 +124,6 @@ function handleStudentCheckInClick() {
 	if (error) {
 		showMsg("Invalid Input! " + msg, "error");
 	} else {
-		setCheckInClassId(checkinclass);
 		validStudentCheckInInformation(fname, lname, checkinclass);
 	}
 };
@@ -132,10 +132,10 @@ function getUniqueName(fieldname) {
 	console.log(" get unique name for : " + fieldname);
 	$.ajax({
 		type: "GET",
-		url: "../msd-app/msdstudent",
+		url: "../msd-app/msdstudentcheckin",
+		data: { type:"checkin", fieldname:fieldname },
 		dataType: "json",
 		contentType: "application/json",
-		data: {type:"nameautocomplete",fieldname:fieldname },
 		success: function(response) {
 			if (302 == response.code) {
 				var data = $.parseJSON(response.result);
@@ -194,17 +194,19 @@ function validStudentCheckInInformation(fname, lname, checkinclass) {
 		type: "GET",
 		dataType: "json",
 		url: "../msd-app/msdstudentcheckin",
-		data: { type:"checkin", firstname: fname, lastname: lname, msdclassid:checkinclass },
+		data: { type:"checkin", firstname: fname, lastname: lname, msdclassname:checkinclass },
 		success: function(response) {
 			console.log(" valid student check in information ... ");
 			if (302 == response.code) {
 				var data = $.parseJSON(response.result);
 				if (data.validationResult == 1) {
 					setCheckInStudentId(data.msdStudentId);
+					setCheckInClassId(data.msdClassId);
 					checkinstudent();
 				} else if (data.validationResult == 2){
 					if (confirm("You didn't register to this class. Do you want continue to check in?")) { 
 						setCheckInStudentId(data.msdStudentId);
+						setCheckInClassId(data.msdClassId);
 						checkinstudent();
 					}
 				} else {

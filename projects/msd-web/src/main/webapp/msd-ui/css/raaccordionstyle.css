@@ -1,0 +1,28 @@
+.raccordion {
+background: none repeat scroll 0 0 #e0e9f5;
+color: black;
+margin: 1px 0;
+border:1px solid #ccc;
+border-radius:3px;
+}
+.raccordion-title {
+cursor: pointer;
+display: block;
+height: 20px;
+padding: 6px 10px;
+}
+.raccordion-content {
+background: white;
+color: black;
+padding: 10px;
+}
+.raccordion-arrow {
+height: 28px;
+width: 29px;
+}
+.arrow-up {
+background: url("../images/arrow-down.png") no-repeat scroll 99% 4px / 23px auto rgba(0, 0, 0, 0);
+}
+.arrow-down {
+background: url("../images/arrow-up.png") no-repeat scroll 99% 4px / 23px auto rgba(0, 0, 0, 0);
+}

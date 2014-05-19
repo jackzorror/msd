@@ -19,7 +19,7 @@ import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinFacade;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
-@RequestMapping("/rs/msdstudentcheckin")
+@RequestMapping("/msdstudentcheckin")
 public class MSDStudentCheckinController {
 
 	@Resource(name="msdStudentCheckinFacade")
@@ -35,7 +35,7 @@ public class MSDStudentCheckinController {
         ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		return responseDto;
     }
-    
+    /*
     @RequestMapping(params={"type=checkin","namelisttype"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
     public @ResponseBody ResponseDto getAllStudentNameListDfltVer(String namelisttype) {
     	return getAllStudentNameListVer1(namelisttype);
@@ -46,7 +46,7 @@ public class MSDStudentCheckinController {
         ResponseDto responseDto = ResponseDto.createResponseDto(nameList, "GET", "ARRAY");
 		return responseDto;
     }
-
+	*/
     /*
     @RequestMapping(params={"type=checkin", "msdclassid", "lastname", "firstname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto getNonClassStudentCheckInDtoForCheckInByLastNameAndFirstNameDfltVer(Long msdclassid, String lastname, String firstname) {
@@ -60,13 +60,24 @@ public class MSDStudentCheckinController {
 	}
     */
     
-    @RequestMapping(params={"type=checkin", "firstname", "lastname", "msdclassid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
-    public @ResponseBody ResponseDto validStudentCheckInInformationDfltVer(String firstname, String lastname, Long msdclassid) {
-    	return validStudentCheckInInformationVer1(firstname, lastname, msdclassid);
+    @RequestMapping(params={"type=checkin","fieldname"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
+    public @ResponseBody ResponseDto getFieldListDfltVer(String fieldname) {
+    	return getFieldListVer1(fieldname);
     }
-    @RequestMapping(params={"type=checkin", "firstname", "lastname", "msdclassid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-    public @ResponseBody ResponseDto validStudentCheckInInformationVer1(String firstname, String lastname, Long msdclassid) {
-    	MSDStudentCheckInValidResultDto dto = msdStudentCheckinFacade.validStudentCheckInInformation(firstname, lastname, msdclassid);
+    @RequestMapping(params={"type=checkin","fieldname"}, method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
+    public @ResponseBody ResponseDto getFieldListVer1(String fieldname) {
+    	List<String> nameList = msdStudentCheckinFacade.getFieldList(fieldname);
+        ResponseDto responseDto = ResponseDto.createResponseDto(nameList, "GET", "ARRAY");
+		return responseDto;
+    }
+
+    @RequestMapping(params={"type=checkin", "firstname", "lastname", "msdclassname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto validStudentCheckInInformationDfltVer(String firstname, String lastname, String msdclassname) {
+    	return validStudentCheckInInformationVer1(firstname, lastname, msdclassname);
+    }
+    @RequestMapping(params={"type=checkin", "firstname", "lastname", "msdclassname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+    public @ResponseBody ResponseDto validStudentCheckInInformationVer1(String firstname, String lastname, String msdclassname) {
+    	MSDStudentCheckInValidResultDto dto = msdStudentCheckinFacade.validStudentCheckInInformation(firstname, lastname, msdclassname);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
@@ -95,22 +106,6 @@ public class MSDStudentCheckinController {
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(msdstudentid, msdclassid);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "POST", "OBJECT");
         
-        final String cookieName = "MSD_CHECKIN_COOKIE";
-        final String cookieValue = "my cool value here !";  // you could assign it some encoded value
-        final Boolean useSecureCookie = new Boolean(false);
-        final int expiryTime = 60 * 60 * 24;  // 24h in seconds
-        final String cookiePath = "/";
-
-        Cookie myCookie = new Cookie(cookieName, cookieValue);
-
-        myCookie.setSecure(useSecureCookie.booleanValue());  // determines whether the cookie should only be sent using a secure protocol, such as HTTPS or SSL
-
-        myCookie.setMaxAge(expiryTime);  // A negative value means that the cookie is not stored persistently and will be deleted when the Web browser exits. A zero value causes the cookie to be deleted.
-
-        myCookie.setPath(cookiePath);  // The cookie is visible to all the pages in the directory you specify, and all the pages in that directory's subdirectories
-
-        response.addCookie(myCookie);
-
 		return responseDto;
     }
 }

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="keywords" content="jQuery Window, Window Widget, Window" />
+    <meta name="description" content="With jqxWindow, you can create create multiple windows and display them at the same time on your page." />
+    <title id='Description'>With jqxWindow, you can create create multiple windows and display them at the same time on your page.</title>
+    <link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
+	<link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.energyblue.css" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.2/themes/ui-darkness/jquery-ui.css"/>
+
+    <style type="text/css">
+        .form
+        {
+            height: 70%;
+            width:60%;
+            margin-left:auto;
+            margin-right:auto;
+            margin-top:20px;
+        }
+        .inputContainer
+        {
+            width: 130px;
+            height: 120px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        .errormsgdiv
+        {
+	        text-align: center; 
+	        color:red; 
+	        font-size : 12px;
+	        font-family : georgia;
+	        font-style : italic;
+        }
+        .infodiv
+        {
+            width:100%;
+            margin-left:auto;
+            margin-right:auto;
+            margin-top:4px;
+        }
+        
+        .MainControlDiv 
+        {
+        	width: 750px;
+			height: 30px;
+			border:1px solid #ccc;
+			border-radius:3px;
+			overflow: auto;
+        }
+        
+        .MainDiv 
+        {
+        	width: 800px;
+			height: 600px;
+			border:1px solid #ccc;
+			border-radius:3px;
+			overflow: auto;
+        }
+        
+        
+    </style>
+    <style type="text/css">
+        /* some styling for the page */
+        .ui-timepicker-table {  font-size: 10px; /* for the widget natural size */ }
+    </style>
+
+    <link rel="stylesheet" href="timepicker-master/include/ui-1.10.0/ui-lightness/jquery-ui-1.10.0.custom.min.css" type="text/css" />
+    <link rel="stylesheet" href="timepicker-master/jquery.ui.timepicker.css?v=0.3.3" type="text/css" />
+
+    <script type="text/javascript" src="jqwidgets/scripts/gettheme.js"></script>
+    <script type="text/javascript" src="jqwidgets/scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.core.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.widget.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.tabs.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.position.min.js"></script>
+    <script type="text/javascript" src="timepicker-master/jquery.ui.timepicker.js?v=0.3.3"></script>
+
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtabs.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxwindow.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxexpander.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdockpanel.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxradiobutton.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdata.js"></script>
+    
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcheckbox.js"></script>
+    
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtooltip.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/globalization/globalize.js"></script>
+
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.sort.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.edit.js"></script>
+
+    <script type="text/javascript" src="js/msdjqwindow/loginjqwindowtabs.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/studentjqtabs.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/classjqwindow.js"></script>
+    
+    <script type="text/javascript" src="js/lib/messageutil.js"></script>
+    <script type="text/javascript" src="js/jquery.collapse.js"></script>
+    <script type="text/javascript" src="js/jquery.collapse_storage.js"></script>
+    <script type="text/javascript" src="js/jquery.collapsiblepanel.js"></script>
+    
+    <script type="text/javascript" src="js/raaccordion.js"></script>
+    <link rel="stylesheet" href="css/raaccordionstyle.css" type="text/css" />
+    
+    <script type="text/javascript">
+    	var idleTime = 0;
+    	var ClassLocation = ['Alpheratta','Marietta'];
+    	var WeekDayShortNameArray = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    	
+    	function getWeekDayIndex(day) {
+    		var weekdayindex;
+    		$.each(WeekDayShortNameArray, function (index, value) {
+				if (value == day) {
+					weekdayindex = index;
+				}
+			});
+			
+			return weekdayindex;
+    	}
+    	
+        function addEventListeners(theme) {
+			addStudentTabsEventListeners(theme);      
+			addLoginWindowEventListeners(theme);  
+			addClassWindowEventListeners(theme);    
+        }
+        
+        function createElements(theme) {
+            $('#btnShowLoginWindow').jqxButton({ theme: theme, width: '100px'});
+        }
+        
+        function isWindowCreated(wName) {
+        	var created = false;
+            var window = $.data(document.body, 'jqxwindows-list');
+			var count = window.length;
+            while (count && created == false) {
+                count -= 1;
+                if (window[count][0].id == wName) {
+                	created = true;
+                }
+            }
+            return created;
+        }
+        
+		function timercount() {
+			idleTime = idleTime + 1;
+			if (idleTime > 9) {
+				processLogout();
+			}
+		};
+        $(document).ready(function () {
+            var theme = $.data(document.body, 'theme', theme);
+            if (theme == undefined) theme = 'energyblue';
+
+			$('#msdMainTabs').jqxTabs({ width: 750, height: 600, position: 'top', theme: theme, animationType: 'fade', selectionTracker: true });
+			$("#studentDockPanel").jqxDockPanel({ width: 750, height: 550});	
+			document.getElementById('msdMainTabs').style.visibility= 'hidden' ;
+
+            createElements(theme);
+            addEventListeners(theme);
+            initStudentTab();
+            
+            $(this).mousemove(function(e){
+            	idleTime=0;
+            });
+            $(this).keypress(function(e){
+            	idleTime=0;
+            });
+        });
+    </script>
+</head>
+<body class='default'>
+    <div style="width: 100%; height: 100%; border: 1px solid #ccc; margin-top: 5px;" align="center">
+		<p align="center"><img align="middle" src="msd.jpg" alt="some_text"></p>
+		<div id="buttondiv" class="MainControlDiv" align="right">
+			<input type="button" value="Login" id="btnShowLoginWindow" style="margin-top:4px;" />
+        </div>
+        <div id="mainContainer" class="MainDiv" style="margin-top:5px;" align="center" >
+        	<div id="loginWindow">
+        	</div>
+			<div id='msdMainTabs'>
+				<ul>
+	    			<li>Student</li>
+					<li>Teacher</li>
+					<li>Class</li>
+				</ul>
+  				<div id="tabs-Student">
+  					<div id='studentDockPanel'>
+					    <div id='studentSearchPanel' dock='top' style='height: 30px;'></div>
+					    <div id='studentControlPanel' dock='left' style='width:100px;'></div>
+					    <div id='studentMainPanel' dock='right'></div>
+  					</div>
+  				</div>
+  				<div id="tabs-Teacher">
+  					<h2>Teacher Info</h2>
+  				</div>
+  				<div id="tabs-Class">
+  					<h2>Class Info</h2>
+  				</div>
+			</div>
+        </div>
+    </div>
+</body>
+</html>
