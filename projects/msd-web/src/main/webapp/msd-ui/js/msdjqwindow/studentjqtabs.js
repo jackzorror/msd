@@ -33,187 +33,404 @@ function initStudentTab() {
 	var rbutton = $('<input style="float:left; margin-top:10px; margin-left:3px;" />').attr({type:'button', id:'btnRegistClass', value:'Register Class'});
 	$('#studentControlPanel').append(rbutton);
 	$('#btnRegistClass').jqxButton({width:'100', theme: getTheme() });
-	
-	
-	/*
-	var sdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'studentDetailDiv'});
-	var stdiv = $('<div class="title">Student Detail Information </div>').attr({id:'studentDetailTitleDiv'});
-	var scdiv = $('<div class="content">Content</div>').attr({id:'studentDetailContentDiv'});
-	
-	$('#studentMainPanel').append(sdiv);
-	$('#studentDetailDiv').append(stdiv);
-	$('#studentDetailDiv').append(scdiv);
-	
-	$('#studentDetailDiv').raaccordion();
-	
-	var cdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'classDetailDiv'});
-	var ctdiv = $('<div class="title">Student Register Class </div>').attr({id:'classDetailTitleDiv'});
-	var ccdiv = $('<div class="content">Content</div>').attr({id:'classDetailContentDiv'});
-	
-	$('#studentMainPanel').append(cdiv);
-	$('#classDetailDiv').append(ctdiv);
-	$('#classDetailDiv').append(ccdiv);
-	
-	$('#classDetailDiv').raaccordion();
-	*/
 };
 
 function showStudentInformation(data) {
-	createStudentInfo();
+	createStudentPanel();
 	
+	bindStudentDetailInfo(data);
+	disableEditStudentDetailInfo(true);
 
-	$('#txtStudentFirstName').jqxInput('disabled', true);
-	$('#txtStudentFirstName').jqxInput('val', data.firstName);
-
-	$('#txtStudentLastName').jqxInput('disabled', true);
-	$('#txtStudentLastName').jqxInput('val', data.lastName);
-	
-	$('#txtStudentEmail').jqxInput('disabled', true)
-	$('#txtStudentEmail').jqxInput('val', 'Email@address.com');
-
-	/*
 	$('#btnEditStudent').jqxButton('val', "Edit");
-
 	$('#btnSaveStudent').jqxButton('val', "Save")
 	$('#btnSaveStudent').jqxButton('disabled', true);
 
-	$('#studentInformation').append("<br />");
-
 	setCurrentFunction("SEARCH");
+	createStudentRegisterClassPanel();	
 	getStudentRegisterClass(data);
+	getNonRegisteredClassList(data);
 	
-	addClassRegister();
-	*/
+	bindingStudentMedicalPanel(data);
+	disableEditMedicalInfo(true);
+
+	$('#btnEditMedical').jqxButton('val', "Edit");
+	$('#btnSaveMedical').jqxButton('val', "Save")
+	$('#btnSaveMedical').jqxButton('disabled', true);
 };
 
-function cancelUpdateStudentInformation() {
-	var currentStudent = getCurrentStudent();
-	$('#txtStudentFirstName').val(currentStudent.firstName);
-	$('#txtStudentLastName').val(currentStudent.lastName);
-	$('#txtStudentEmail').val("Email@address.com");
-	$('#btnSaveStudent').jqxButton('disabled', true);
-};
-
-function showRegisterClassInformation(data) {
-	$('#classInformation').empty();
-	$('#classInformation').append('<h3> Registered Class </h3>');
-	var csdiv = $('<div style="border:0px solid;"/>').attr({id:'classGrid'});	
-	$('#classInformation').append(csdiv);
-	var source = {
-		datafields:[
-			{ name: 'id',   type: 'int'}, 
-			{ name: 'name', type: 'string'}
-		],
-		datatype:'json',
-		localdata:data
-	}
-	var dataAdapter = new $.jqx.dataAdapter(source);
-	$('#classGrid').jqxGrid(
-	{
-		source:dataAdapter,
-		width: 410,
-		height: 100,
-		columns:[
-			{text: 'Class ID', datafield:'id', hidden:'true'},
-			{text: 'Class Name', datafield: 'name', width: 100},
-			{text: 'Class Schedule', datafield: ''}
-		]
-	});
-};
-
-function createClassRegisterGrid (data) {
-	$('#registerClass').empty();
-	$('#registerClass').append('<h3>Please register from the following list</h3>');
-
-	var crdiv = $('<div style="border:0px solid;"/>').attr({id:'registerGrid'});	
-	$('#registerClass').append(crdiv);
-	var source = {
-		datafields:[
-			{ name: 'id',   type: 'int'}, 
-			{ name: 'name', type: 'string'}
-		],
-		datatype:'json',
-		localdata:data
-	}
-	var dataAdapter = new $.jqx.dataAdapter(source);
-	$('#registerGrid').jqxGrid(
-	{
-		source:dataAdapter,
-		width: 410,
-		height: 100,
-		columns:[
-			{text: 'Class ID', datafield:'id', hidden:'true'},
-			{text: 'Class Name', datafield: 'name', width: 100},
-			{text: 'Class Schedule', datafield: ''},
-			{text: 'Register', datafield: 'Register', columntype:'button', width:80, cellsrenderer:function() {
-				return "Register";
-			}, buttonclick:function(row) {
-				var id = $("#registerGrid").jqxGrid('getcellvalue', row, "id");
-				registerClass(id);
-			}
-		}]
-	});
-};
-
-function createStudentInfo() {
+function createStudentPanel() {
 	
 	$('#studentMainPanel').empty();
 
+	// student detail information 
 	var sdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'studentDetailDiv'});
 	var stdiv = $('<div class="title">Student Detail Information </div>').attr({id:'studentDetailTitleDiv'});
-	var scdiv = $('<div class="content"></div>').attr({id:'studentDetailContentDiv'});
+	var scdiv = $('<div class="content" style="background:#e0e9f5;"></div>').attr({id:'studentDetailContentDiv'});
 	
 	$('#studentMainPanel').append(sdiv);
 	$('#studentDetailDiv').append(stdiv);
 	$('#studentDetailDiv').append(scdiv);
-	
+
+	createStudentDetailPanel();
 	$('#studentDetailDiv').raaccordion();
+
+	// student register class information
+	var cdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'studentClassDetailDiv'});
+	var ctdiv = $('<div class="title">Student Register Class Information </div>').attr({id:'studentClassDetailTitleDiv'});
+	var ccdiv = $('<div class="content" style="background:#e0e9f5;"></div>').attr({id:'studentClassDetailContentDiv'});
 	
+	$('#studentMainPanel').append(cdiv);
+	$('#studentClassDetailDiv').append(ctdiv);
+	$('#studentClassDetailDiv').append(ccdiv);
 	
-	$('#studentDetailContentDiv').append("<label>First Name : </label>");
+	$('#studentClassDetailDiv').raaccordion();
+
+	// student medical information
+	var mdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'studentMedicalDetailDiv'});
+	var mtdiv = $('<div class="title">Student Medical Information </div>').attr({id:'studentMedicalDetailTitleDiv'});
+	var mcdiv = $('<div class="content" style="background:#e0e9f5;"></div>').attr({id:'studentMedicalDetailContentDiv'});
+	
+	$('#studentMainPanel').append(mdiv);
+	$('#studentMedicalDetailDiv').append(mtdiv);
+	$('#studentMedicalDetailDiv').append(mcdiv);
+	
+	createStudentMedicalPanel();
+	$('#studentMedicalDetailDiv').raaccordion();
+
+}
+
+function createStudentDetailPanel() {
+	var sndiv = $('<div  dock="left" style="width:450px;"></div>').attr({id:'studentNameDiv'});
+	var sgdiv = $('<div dock="right"></div>').attr({id:'studentGenderDiv'});
+	var spdiv = $('<div dock="bottom"></div>').attr({id:'studentPhoneDiv'});
+	
+	$('#studentDetailContentDiv').append(spdiv);
+	$('#studentDetailContentDiv').append(sndiv);
+	$('#studentDetailContentDiv').append(sgdiv);
+	
+	$('#studentNameDiv').append("<label>First Name : </label>");
 	var fname = $('<input/>').attr({ type: 'text', id:'txtStudentFirstName'});
-	$('#studentDetailContentDiv').append(fname);
-	$('#txtStudentFirstName').jqxInput({height:20, width:110, theme: getTheme()});
+	$('#studentNameDiv').append(fname);
+	$('#txtStudentFirstName').jqxInput({height:20, width:130, theme: getTheme()});
 
 
-	$('#studentDetailContentDiv').append("<label> Last Name : </label>");
+	$('#studentNameDiv').append("<label> Last Name : </label>");
 	var lname = $('<input/>').attr({ type: 'text', id:'txtStudentLastName'}); 
-	$('#studentDetailContentDiv').append(lname);
-	$('#txtStudentLastName').jqxInput({height:20, width:110, theme: getTheme()});
+	$('#studentNameDiv').append(lname);
+	$('#txtStudentLastName').jqxInput({height:20, width:130, theme: getTheme()});
 	
-	$('#studentDetailContentDiv').append("</br>");
-	$('#studentDetailContentDiv').append("<label> Gender : </label>");
-	var mdiv = $('<div>Male</div>').attr({id:'rbtnGenderMale'});
-	$('#studentDetailContentDiv').append(mdiv);
-	$('#rbtnGenderMale').jqxRadioButton({ groupName :"Gender", width: 50, height: 25, boxSize:"5px", theme: getTheme()});
+	$('#studentNameDiv').append('<br />');
+	$('#studentNameDiv').append('<label style="float:left; margin-top:10px;">DOB :</label>');
+
+	var dob = $('<div style="float:left; margin-top:10px; margin-left:10px;" />').attr({id:'dtinputStudentDob'});
+	$('#studentNameDiv').append(dob);
+	$('#dtinputStudentDob').jqxDateTimeInput({height:20, width:100, formatString: 'd', theme: getTheme()});
 	
-	var fdiv = $('<div>Female</div>').attr({id:'rbtnGenderFemale'});
-	$('#studentDetailContentDiv').append(fdiv);
-	$('#rbtnGenderFemale').jqxRadioButton({ groupName :"Gender", width: 50, height: 25, boxSize:"5px", theme: getTheme()});
+	$('#studentNameDiv').append('<label style="float:left; margin-top:10px; margin-left:10px;">Email :</label>');
+	var email = $('<input style="float:left; margin-top:10px;"/>').attr({ type: 'text', id:'txtStudentEmail'}); 
+	$('#studentNameDiv').append(email);
+	$('#txtStudentEmail').jqxInput({height:20, width:230, theme: getTheme()});
 	
+	$('#studentGenderDiv').append("<label> Gender </label>");
+	var mdiv = $('<div style="margin-left:10px;">Male</div>').attr({id:'rbtnGenderMale'});
+	$('#studentGenderDiv').append(mdiv);
+	$('#rbtnGenderMale').jqxRadioButton({ groupName :"Gender", boxSize:"10px", theme: getTheme()});
 	
-	$('#studentDetailContentDiv').append('<label style="margin-top:10px;">Email :</label>');
-	var email = $('<input style="margin-top:10px;"/>').attr({ type: 'text', id:'txtStudentEmail'}); 
-	$('#studentDetailContentDiv').append(email);
-	$('#txtStudentEmail').jqxInput({height:20, width:250, theme: getTheme()});
+	var fdiv = $('<div style="margin-left:10px;">Female</div>').attr({id:'rbtnGenderFemale'});
+	$('#studentGenderDiv').append(fdiv);
+	$('#rbtnGenderFemale').jqxRadioButton({ groupName :"Gender", boxSize:"10px", theme: getTheme()});
 	
-	/*
-			
-	var editbutton = $('<input style="float:right; margin-top:10px; margin-right:10px"/>').attr({ type: 'button', id:"btnEditStudent", value:"Edit"});
-	$('#studentInformation').append(editbutton);
+	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:15px;">Home Phone :</label>');
+	var homePhone = $('<div style="float:left; margin-top:10px;"/>').attr({id:'minputHomePhone'});
+	$('#studentPhoneDiv').append(homePhone);
+	$('#minputHomePhone').jqxMaskedInput({ width: 150, height: 20, mask: '(###) ### - ####', theme:getTheme()});
+	
+	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:30px;">School Name :</label>');
+	var schoolName = $('<input style="float:left; margin-top:10px;"/>').attr({type:'text', id:'txtSchoolName'});
+	$('#studentPhoneDiv').append(schoolName);
+	$('#txtSchoolName').jqxInput({height:20, width:200, theme:getTheme()});
+	
+	$('#studentPhoneDiv').append('<br />');
+	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:30px;">Cell Phone :</label>');
+	var cellPhone = $('<div style="float:left; margin-top:10px;"/>').attr({id:'minputCellPhone'});
+	$('#studentPhoneDiv').append(cellPhone);
+	$('#minputCellPhone').jqxMaskedInput({height:20, width:150, mask: '(###) ### - ####', theme:getTheme()});
+	
+	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:30px;">School Grade :</label>');
+	var schoolGrade = $('<input style="float:left; margin-top:10px;"/>').attr({type:'text', id:'txtSchoolGrade'});
+	$('#studentPhoneDiv').append(schoolGrade);
+	$('#txtSchoolGrade').jqxInput({height:20, width:200, theme:getTheme()});
+	
+	$('#studentPhoneDiv').append('<br />');
+	$('#studentPhoneDiv').append('<label style="margin-top:10px;margin-left:4px;">Home Address :</label>');
+	var homeAddress = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtHomeAddress'});
+	$('#studentPhoneDiv').append(homeAddress);
+	$('#txtHomeAddress').jqxInput({height:20, width:480, theme:getTheme()});
+	
+	// Parent One Information
+	var parentOneDiv = $('<div style="width:600px; margin-top:10px;"></div>').attr({id:'parentOneDiv'});
+	$('#studentPhoneDiv').append(parentOneDiv);
+	
+	$('#parentOneDiv').append('<h5 style="margin-top:20px;">Parent One Informatioin :</h5>');
+	
+	$('#parentOneDiv').append('<label style="margin-left:5px;">First Name :</label>');
+	var parentOneFirstName = $('<input/>').attr({type:'text', id:'txtParentOneFirstName'});
+	$('#parentOneDiv').append(parentOneFirstName);
+	$('#txtParentOneFirstName').jqxInput({height:20, width:130, theme:getTheme()});
+	
+	$('#parentOneDiv').append('<label style="margin-left:10px;">Last Name :</label>');
+	var parentOneLastName = $('<input/>').attr({type:'text', id:'txtParentOneLastName'});
+	$('#parentOneDiv').append(parentOneLastName);
+	$('#txtParentOneLastName').jqxInput({height:20, width:130, theme:getTheme()});
+	
+	$('#parentOneDiv').append('<label style="margin-left:10px;">Relation :</label>');
+	var parentOneRelation = $('<input/>').attr({type:'text', id:'txtParentOneRelation'});
+	$('#parentOneDiv').append(parentOneRelation);
+	$('#txtParentOneRelation').jqxInput({height:20, width:70, theme:getTheme()});
+	
+	$('#parentOneDiv').append('<label style="margin-top:10px; margin-left:40px;">Email :</label>');
+	var parentOneEamil = $('<input style="margin-top:10px;" />').attr({type:'text', id:'txtParentOneEmail'});
+	$('#parentOneDiv').append(parentOneEamil);
+	$('#txtParentOneEmail').jqxInput({height:20, width:455, theme:getTheme()});
+	
+	$('#parentOneDiv').append('<br />');
+	$('#parentOneDiv').append('<label style="float:left; margin-top:10px; margin-left:8px;">Cell Phone :</label>');
+	var parentOneCellPhone = $('<div style="float:left; margin-top:10px;" />').attr({id:'minputParentOneCellPhone'});
+	$('#parentOneDiv').append(parentOneCellPhone);
+	$('#minputParentOneCellPhone').jqxMaskedInput({height:20, width:170, mask:'(###) ### - ####', theme:getTheme()});
+	
+	$('#parentOneDiv').append('<label style="float:left; margin-top:10px; margin-left:26px;">Work Phone :</label>');
+	var parentOneWorkPhone = $('<div style="float:left; margin-top:10px;" />').attr({id:'minputParentOneWorkPhone'});
+	$('#parentOneDiv').append(parentOneWorkPhone);
+	$('#minputParentOneWorkPhone').jqxMaskedInput({height:20, width:170, mask:'(###) ### - ####', theme:getTheme()});
+	$('#parentOneDiv').append('<br />');
+	$('#parentOneDiv').append('<br />');
+	
+	// Parent Two Information
+	var parentTwoDiv = $('<div style="width:600px;"></div>').attr({id:'parentTwoDiv'});
+	$('#studentPhoneDiv').append(parentTwoDiv);
+
+	$('#parentTwoDiv').append('<h5 style="margin-top:20px;">Parent Two Informatioin :</h5>');
+	
+	$('#parentTwoDiv').append('<label style="margin-left:5px;">First Name :</label>');
+	var parentTwoFirstName = $('<input/>').attr({type:'text', id:'txtParentTwoFirstName'});
+	$('#parentTwoDiv').append(parentTwoFirstName);
+	$('#txtParentTwoFirstName').jqxInput({height:20, width:130, theme:getTheme()});
+	
+	$('#parentTwoDiv').append('<label style="margin-left:10px;">Last Name :</label>');
+	var parentTwoLastName = $('<input/>').attr({type:'text', id:'txtParentTwoLastName'});
+	$('#parentTwoDiv').append(parentTwoLastName);
+	$('#txtParentTwoLastName').jqxInput({height:20, width:130, theme:getTheme()});
+	
+	$('#parentTwoDiv').append('<label style="margin-left:10px;">Relation :</label>');
+	var parentTwoRelation = $('<input/>').attr({type:'text', id:'txtParentTwoRelation'});
+	$('#parentTwoDiv').append(parentTwoRelation);
+	$('#txtParentTwoRelation').jqxInput({height:20, width:70, theme:getTheme()});
+	
+	$('#parentTwoDiv').append('<label style="margin-top:10px; margin-left:40px;">Email :</label>');
+	var parentTwoEamil = $('<input style="margin-top:10px;" />').attr({type:'text', id:'txtParentTwoEmail'});
+	$('#parentTwoDiv').append(parentTwoEamil);
+	$('#txtParentTwoEmail').jqxInput({height:20, width:455, theme:getTheme()});
+	
+	$('#parentTwoDiv').append('<br />');
+	$('#parentTwoDiv').append('<label style="float:left; margin-top:10px; margin-left:8px;">Cell Phone :</label>');
+	var parentTwoCellPhone = $('<div style="float:left; margin-top:10px;" />').attr({id:'minputParentTwoCellPhone'});
+	$('#parentTwoDiv').append(parentTwoCellPhone);
+	$('#minputParentTwoCellPhone').jqxMaskedInput({height:20, width:170, mask:'(###) ### - ####', theme:getTheme()});
+	
+	$('#parentTwoDiv').append('<label style="float:left; margin-top:10px; margin-left:26px;">Work Phone :</label>');
+	var parentTwoWorkPhone = $('<div style="float:left; margin-top:10px;" />').attr({id:'minputParentTwoWorkPhone'});
+	$('#parentTwoDiv').append(parentTwoWorkPhone);
+	$('#minputParentTwoWorkPhone').jqxMaskedInput({height:20, width:170, mask:'(###) ### - ####', theme:getTheme()});
+	
+	var editbutton = $('<input style="float:right;margin-top:10px; margin-right:10px"/>').attr({ type: 'button', id:"btnEditStudent", value:"Edit"});
+	$('#studentPhoneDiv').append(editbutton);
 	$('#btnEditStudent').jqxButton({ width: 60, height: 20, theme:getTheme() });
 
 	var savebutton = $('<input style="float:right; margin-top:10px; margin-right:10px;"/>').attr({ type: 'button', id:"btnSaveStudent", value:"Save"});
-	$('#studentInformation').append(savebutton);
+	$('#studentPhoneDiv').append(savebutton);
 	$('#btnSaveStudent').jqxButton({ width: 60, height: 20, theme:getTheme()});
-	*/
+
+	
+	$('#studentDetailContentDiv').jqxDockPanel({ width: 608, height: 450});
 }
+
+function createStudentMedicalPanel() {
+	$('#studentMedicalDetailContentDiv').empty();
+
+	// Medical Insurance Information
+	var medicalDiv = $('<div class="InnerDiv" style="width:600px; height:100px;"></div>').attr({id:'medicalDiv'});
+	$('#studentMedicalDetailContentDiv').append(medicalDiv);
+	
+	$('#medicalDiv').append('<h5>Medical Insurance Informatioin</h5>');
+	$('#medicalDiv').append('<label>Insurance Company :</label>');
+	var medicalCompany = $('<input/>').attr({type:'text', id:'txtStudentInsuranceCompany'});
+	$('#medicalDiv').append(medicalCompany);
+	$('#txtStudentInsuranceCompany').jqxInput({placeHolder: "Medical Insurance Company Name", height: 20, width: 250, minLength: 1, theme: getTheme()})
+
+	$('#medicalDiv').append('<label style="margin-left:5px;">Policy # :</label>');
+	var policyNumber = $('<input style="marign-left:5px;"/>').attr({type:'text', id:'txtStudentPolicyNumber'});
+	$('#medicalDiv').append(policyNumber);
+	$('#txtStudentPolicyNumber').jqxInput({placeHolder: "Policy #", height: 20, width: 125, minLength: 1, theme: getTheme()});
+	
+	$('#medicalDiv').append('<label style="float:left; margin-top:10px;margin-left:3px;">Pediatrician\'s Name :</label>');
+	var pediatricianName = $('<input style="float:left; margin-top:10px; marign-left:5px;"/>').attr({type:'text', id:'txtStudentPediatricianName'});
+	$('#medicalDiv').append(pediatricianName);
+	$('#txtStudentPediatricianName').jqxInput({placeHolder: "Pedictrician's Name", height: 20, width: 200, minLength: 1, theme: getTheme()});
+	
+	$('#medicalDiv').append('<label style="float:left; margin-top:10px; margin-left:10px;">Phone :</label>');
+	var pediatricianPhone = $('<div style="float:left; margin-top:10px; marign-left:5px;"/>').attr({id:'minputStudentPediatricianPhone'});
+	$('#medicalDiv').append(pediatricianPhone);
+	$('#minputStudentPediatricianPhone').jqxMaskedInput({height: 20, width: 180, mask:'(###) ###-####', theme:getTheme()});
+	
+	// Emergency Notification
+	var emergencyDiv = $('<div class="InnerDiv" style="width:600px; height:70px;"></div>').attr({id:'emergencyDiv'});
+	$('#studentMedicalDetailContentDiv').append(emergencyDiv);
+	
+	$('#emergencyDiv').append('<h5>Emergency Notification</h5>');
+	$('#emergencyDiv').append('<label style="float:left;">Name :</label>');
+	var emergencyName = $('<input style="float:left;"/>').attr({type:'text', id:'txtStudentEmergencyName'});
+	$('#emergencyDiv').append(emergencyName);
+	$('#txtStudentEmergencyName').jqxInput({height: 20, width: 150, minLength: 1, theme: getTheme()})
+
+	$('#emergencyDiv').append('<label style="float:left; margin-left:5px;">Phone :</label>');
+	var emergencyPhone = $('<div style="float:left; marign-left:5px;"/>').attr({id:'minputStudentEmergencyPhone'});
+	$('#emergencyDiv').append(emergencyPhone);
+	$('#minputStudentEmergencyPhone').jqxMaskedInput({height:20, width:100, mask:'(###) ###-####', theme:getTheme()});
+	
+	$('#emergencyDiv').append('<label style="float:left; margin-left:5px;">Alternate Phone :</label>');
+	var emergencyAltPhone = $('<div style="float:left; marign-left:5px;"/>').attr({id:'minputStudentEmergencyAltPhone'});
+	$('#emergencyDiv').append(emergencyAltPhone);
+	$('#minputStudentEmergencyAltPhone').jqxMaskedInput({height:20, width:100, mask:'(###) ###-####', theme:getTheme()});
+	
+	var buttonDiv = $('<div style="width:600px; height:30px;"></div>').attr({id:'buttonDiv'});
+	$('#studentMedicalDetailContentDiv').append(buttonDiv);
+	
+	var editbutton = $('<input style="float:right;margin-top:10px; margin-right:10px"/>').attr({ type: 'button', id:"btnEditMedical", value:"Edit"});
+	$('#buttonDiv').append(editbutton);
+	$('#btnEditMedical').jqxButton({ width: 60, height: 20, theme:getTheme() });
+
+	var savebutton = $('<input style="float:right; margin-top:10px; margin-right:10px;"/>').attr({ type: 'button', id:"btnSaveMedical", value:"Save"});
+	$('#buttonDiv').append(savebutton);
+	$('#btnSaveMedical').jqxButton({ width: 60, height: 20, theme:getTheme()});
+
+};
+
+function createStudentRegisterClassPanel() {
+	$('#studentClassDetailContentDiv').empty();
+	
+	var cdiv = $('<div style="width:600px;"></div>').attr({id:'registeredClassDiv'});
+	$('#studentClassDetailContentDiv').append(cdiv);
+}
+
+function bindStudentDetailInfo(data) {
+	if (null == data)
+		return;
+	
+	// student information
+	$('#txtStudentFirstName').jqxInput('val', data.firstName);
+	$('#txtStudentLastName').jqxInput('val', data.lastName);
+	var gender = data.gender || null;
+	if (null != gender) {
+		if (gender == 'M') 
+			$('#rbtnGenderMale').jqxRadioButton('check');
+		else 
+			$('#rbtnGenderFemale').jqxRadioButton('check');
+	}
+	$('#dtinputStudentDob').jqxDateTimeInput('setDate', data.dob || null);
+	$('#txtStudentEmail').jqxInput('val', data.email || null);
+	$('#minputHomePhone').jqxMaskedInput('clearValue');
+	$('#minputHomePhone').jqxMaskedInput('inputValue', data.homePhone || null);
+	$('#txtSchoolName').jqxInput('val', data.schoolName || null);
+	$('#minputCellPhone').jqxMaskedInput('clearValue');
+	$('#minputCellPhone').jqxMaskedInput('inputValue', data.cellPhone || null);
+	$('#txtSchoolGrade').jqxInput('val', data.shoolGrade || null);
+	$('#txtHomeAddress').jqxInput('val', data.homeAddress || null);
+	
+	// parent one information 
+	$('#txtParentOneFirstName').jqxInput('val', data.parentOneFirstName || null);
+	$('#txtParentOneLastName').jqxInput('val', data.parentOneLastName || null);
+	$('#txtParentOneRelation').jqxInput('val', data.parentOneRelation || null);
+	$('#txtParentOneEmail').jqxInput('val', data.parentOneEmail || null);
+	$('#minputParentOneCellPhone').jqxMaskedInput('clearValue');
+	$('#minputParentOneCellPhone').jqxMaskedInput('inputValue', data.parentOneCellPhone || null);
+	$('#minputParentOneWorkPhone').jqxMaskedInput('clearValue');
+	$('#minputParentOneWorkPhone').jqxMaskedInput('inputValue', data.parentOneWorkPhone || null);
+
+	// parent two information 
+	$('#txtParentTwoFirstName').jqxInput('val', data.parentTwoFirstName || null);
+	$('#txtParentTwoLastName').jqxInput('val', data.parentTwoLastName || null);
+	$('#txtParentTwoRelation').jqxInput('val', data.parentTwoRelation || null);
+	$('#txtParentTwoEmail').jqxInput('val', data.parentTwoEmail || null);
+	$('#minputParentTwoCellPhone').jqxMaskedInput('clearValue');
+	$('#minputParentTwoCellPhone').jqxMaskedInput('inputValue', data.parentTwoCellPhone || null);
+	$('#minputParentTwoWorkPhone').jqxMaskedInput('clearValue');
+	$('#minputParentTwoWorkPhone').jqxMaskedInput('inputValue', data.parentTwoWorkPhone || null);
+}
+
+function bindingStudentMedicalPanel(data) {
+	// medical information
+	$('#txtStudentInsuranceCompany').jqxInput('val', data.insuranceCompanyName || null);
+	$('#txtStudentPolicyNumber').jqxInput('val', data.policyNumber || null);
+	$('#txtStudentPediatricianName').jqxInput('val', data.pedicatricianName || null);
+	$('#minputStudentPediatricianPhone').jqxMaskedInput('clearValue');
+	$('#minputStudentPediatricianPhone').jqxMaskedInput('inputValue', data.peicatricianPhone || null);
+	$('#txtStudentEmergencyName').jqxInput('val', data.emergencyName || null);
+	$('#minputStudentEmergencyPhone').jqxMaskedInput('clearValue');
+	$('#minputStudentEmergencyPhone').jqxMaskedInput('inputValue', data.emergencyPhone || null);
+	$('#minputStudentEmergencyAltPhone').jqxMaskedInput('clearValue');
+	$('#minputStudentEmergencyAltPhone').jqxMaskedInput('inputValue', data.emergencyAltPhone || null);
+}
+
+function showRegisterClassInformation(data) {
+	$('#registeredClassDiv').empty();
+	$('#registeredClassDiv').append('<h5>Stduent Registered Class Informatioin</h5>');
+	if (null != data && data.length > 0) {
+		var idiv = $('<div></div>').attr({id:'innerDiv'});
+		$('#registeredClassDiv').append(idiv);
+		
+		for (var i = 0; i < data.length; i++) {
+			var id = data[i].id;
+			var name = data[i].name;
+			var schedules = data[i].schedule;
+			var cdivid = "cdiv_" + id;
+			var cdiv = $('<div class="InnerDiv" style="margin-top:10px"/>').attr({id:cdivid})
+			$('#innerDiv').append(cdiv);
+			cdiv.append('<label style="margin-left:10px;"> Class Name     :' + name + '</label> <br />');
+			cdiv.append('<label> Class Schedule :' + schedules + '</label> <br />');
+			var cbtnid = 'btnDeleteRegisterClass_' + id;
+			var cdbtn = $('<input style="margin-left:500px;" />').attr({type:'button', id:cbtnid, value:'Delete'});
+			cdiv.append(cdbtn);
+			cdbtn.jqxButton({width:'100', theme: getTheme() });
+		}
+	}
+};
 
 function addClassRegister() {
 	getNonRegisteredClassList();
 };
 
+function disableEditStudentDetailInfo(disable) {
+	$("#studentDetailContentDiv :text").prop("disabled", disable);
+	$("#studentDetailContentDiv div[id^='minput']").jqxMaskedInput({disabled:disable});
+	$("#studentDetailContentDiv div[id^='dtinput']").jqxDateTimeInput({disabled:disable});
+	$("#studentDetailContentDiv div[id^='rbtn']").jqxRadioButton({ disabled:disable }); 
+}
 
+function disableEditMedicalInfo(disable) {
+	$("#studentMedicalDetailContentDiv :text").prop("disabled", disable);
+	$("#studentMedicalDetailContentDiv div[id^='minput']").jqxMaskedInput({disabled:disable});
+}
+
+function cancelUpdateStudentInformation() {
+	var currentStudent = getCurrentStudent();
+	bindStudentDetailInfo(currentStudent);
+};
+
+function cancelUpdateStudentMedicalInformation() {
+	var currentStudent = getCurrentStudent();
+	bindingStudentMedicalPanel(currentStudent);
+}
 
 
 /***************************************
@@ -225,11 +442,53 @@ function addStudentTabsEventListeners(theme) {
 	$(document).on('click', '#btnSearchStudent', handleStudentSearchClick);
 	$(document).on('click', '#btnClearStudent', handleStudentClearClick);
 
-	/*
 	$(document).on('click', '#btnEditStudent', handleEditStudentClick);
-	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
 	$(document).on('click', '#btnSaveStudent', handleStudentSaveClick);
+	
+	$(document).on('click', '#btnEditMedical', handleEditMedicalClick);
+	$(document).on('click', '#btnSaveMedical', handleMedicalSaveClick);
+	
+	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnDeleteRegisterClass"]', handleDeleteRegisterClassClick);
+	
+	$(document).on('click', '#btnSelectClass', handleNonRegisteredClassSelectClick);
+	/*
+	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
 	*/ 
+	
+	$(document).on('keypress', '#txtStudentSearchFirstName', handleSearchFirstNameKeypress);
+	$(document).on('keypress', '#txtStudentSearchLastName', handleSearchLastNameKeypress);
+}
+
+function handleNonRegisteredClassSelectClick(e) {
+	var cid = $("#ddlistNonRegisteredClassList").val()
+	console.log(" non registered class list change ... : " + cid);
+	
+	$('#registclassinfoDiv').empty();
+	var name = "name"; 
+	var schedules = "schedues";
+	$('#registclassinfoDiv').append('<label style="margin-left:20px;"> Class Name     :' + name + '</label> <br />');
+	$('#registclassinfoDiv').append('<label> Class Schedule :' + schedules + '</label> <br />')
+	
+	var cdbtn = $('<input style="margin-left:480px;" />').attr({type:'button', id:'btnRegisterClass', value:'Register'});
+	$('#registclassinfoDiv').append(cdbtn);
+	cdbtn.jqxButton({width:'100', theme: getTheme() });
+}
+
+function handleSearchFirstNameKeypress(e) {
+	if (e.which == 13)
+		$('#txtStudentSearchLastName').focus();
+}
+
+function handleSearchLastNameKeypress(e) {
+	if (e.which == 13)
+		$('#btnSearchStudent').click();
+}
+
+function handleDeleteRegisterClassClick() {
+	console.log(" delete register class click ... ");
+	var buttonid = $(this)[0].id
+	var deleteid = buttonid.substr(23, buttonid.length);
+	findStudentRegisterClass(getCurrentStudent().id, deleteid);
 }
 
 function handleStudentClearClick() {
@@ -239,6 +498,7 @@ function handleStudentClearClick() {
     $( '#txtStudentSearchLastName' ).val('');
    	$( '#txtStudentSearchFirstName' ).jqxInput({ source: getFirstNameList() });
     $( '#txtStudentSearchLastName' ).jqxInput({ source: getLastNameList() });
+    $( '#txtStudentSearchFirstName' ).focus();
 
 }
 
@@ -265,7 +525,7 @@ function handleStudentAddClick() {
 	console.log(" add new student ");
 	$('#txtStudentSearchFirstName').val("");
 	$('#txtStudentSearchLastName').val("");
-	createStudentInfo();
+	createStudentPanel();
 
 	$('#btnEditStudent').jqxButton('val', "Canel");
 
@@ -277,7 +537,7 @@ function handleStudentAddClick() {
 function handleStudentSaveClick() {
 	console.log(" save student button click ... ");
 	if ("SEARCH" == getCurrentFunction()) {
-		$("#studentInformation :text").prop("disabled", true);
+		disableEditStudentDetailInfo(true);
 		$("#btnEditStudent").val("Edit");
 		updateStudentInformation();
 	} else if ("ADD" == getCurrentFunction()) {
@@ -289,21 +549,53 @@ function handleEditStudentClick() {
 	console.log(" edit student button click ... ");
 	if ("SEARCH" == getCurrentFunction()) {
 		if ("Edit" == $('#btnEditStudent').val()) {
-			$('#studentInformation :text').prop("disabled", false);
+			disableEditStudentDetailInfo(false);
 			$('#txtStudentFirstName').focus();
 			$('#btnEditStudent').val("Cancel");
 			$('#btnSaveStudent').jqxButton('disabled', false);
 		} else if ("Cancel" == $('#btnEditStudent').val()) {
 			console.log (" cancel edit student information ... ");
 			cancelUpdateStudentInformation();
-			$('#studentInformation :text').prop("disabled", true);
+			disableEditStudentDetailInfo(true);
 			$("#btnEditStudent").val("Edit");
+			$('#btnSaveStudent').jqxButton('disabled', true);
 		}
 	} else if ("ADD" == getCurrentFunction()) {
 		$('#studentInformation').empty();
 	}
 }
 
+function handleMedicalSaveClick() {
+	console.log(" save student button click ... ");
+	if ("SEARCH" == getCurrentFunction()) {
+		disableEditMedicalInfo(true);
+		$("#btnEditMedical").val("Edit");
+		$('#btnSaveMedical').jqxButton('disabled', true);
+		updateStudentMedicalInformation();
+	} else if ("ADD" == getCurrentFunction()) {
+		addStudentInformation();
+	}
+}
+
+function handleEditMedicalClick() {
+	console.log(" edit medical button click ... ");
+	if ("SEARCH" == getCurrentFunction()) {
+		if ("Edit" == $('#btnEditMedical').val()) {
+			disableEditMedicalInfo(false);
+			$('#txtStudentInsuranceCompany').focus();
+			$('#btnEditMedical').val("Cancel");
+			$('#btnSaveMedical').jqxButton('disabled', false);
+		} else if ("Cancel" == $('#btnEditMedical').val()) {
+			console.log (" cancel edit medical information ... ");
+			cancelUpdateStudentMedicalInformation();
+			disableEditMedicalInfo(true);
+			$("#btnEditMedical").val("Edit");
+			$('#btnSaveMedical').jqxButton('disabled', true);
+		}
+	} else if ("ADD" == getCurrentFunction()) {
+		$('#studentInformation').empty();
+	}
+}
 
 // AJAX call ...
 function getUniqueName(fieldname) {
@@ -333,7 +625,6 @@ function getUniqueName(fieldname) {
 		}
 	});
 };
-
 
 function getStudentByName(fname, lname) {
 	
@@ -432,6 +723,58 @@ function addStudentInformation() {
 	});
 }
 
+function findStudentRegisterClass(sid, cid) {
+	console.log(' delete student register class ... ');
+	
+	$.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent",
+		data: { type: "registerclass", msdstudentid: sid, msdclassid: cid },
+		success: function(response) {
+			console.log(" find student register class ... ");
+			if (404 == response.code) {
+				console.log(" Can not find register class for this student ... ");
+			} else if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				deleteStudentRegisterClass(data);
+			} else {
+				alert("error to find student registered class ... ");
+			}
+		},
+		error: function(msg, url, line) {
+			handleAjaxError(msg);
+		}
+	});
+}
+
+function deleteStudentRegisterClass(data) {
+	var scregister = {"id":data.id, "msdClassId":data.msdClassId, "msdStudentId":data.msdStudentId};
+/*	
+	$.ajax({
+		type: "DELETE",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent/" + cstudent.id,
+		data: JSON.stringify(scregister),
+		processData:false,
+		contentType: "application/json",
+		success: function(response) {
+			console.log(" get student ... ");
+			if (404 == response.code) {
+				alert(" Can't register class ... ");
+			} else if (302 == response.code) {
+				getStudentRegisterClass(getCurrentStudent());
+			} else {
+				alert("error to register student ... ");
+			}
+		},
+		error: function(msg, url, line) {
+			handleAjaxError(msg);
+		}
+	});
+*/
+}
+
 function getStudentRegisterClass(data) {
 	console.log(' get student register class ... ');
 			
@@ -458,9 +801,8 @@ function getStudentRegisterClass(data) {
 	});
 };
 
-function getNonRegisteredClassList() {
+function getNonRegisteredClassList(data) {
 	console.log('in getNonRegisteredClassList ... ');
-	var data = getCurrentStudent();
 	$.ajax({
 		type: "GET",
 		url: "../msd-app/rs/msdstudent",
@@ -470,17 +812,21 @@ function getNonRegisteredClassList() {
 		success: function(response) {
 			if (404 == response.code) {
 				console.log(" There is no non register class  ");
+				setNonRegisterClassList(null);
 			} else if (302 == response.code) {
 				var data = $.parseJSON(response.result);
-				createClassRegisterGrid(data);
+				setNonRegisterClassList(data);
 			} else {
+				setNonRegisterClassList(null);
 				alert('error');
 			}
 		},
 		error: function(msg, url, line) {
+			setNonRegisterClassList(null);
 			handleAjaxError(msg);
 		}
 	});
+	
 };
 
 function registerClass(id) {
@@ -511,6 +857,17 @@ function registerClass(id) {
 			handleAjaxError(msg);
 		}
 	});
+}
+
+function updateStudentMedicalInformation() {
+}
+
+function setNonRegisterClassList(nrclist) {
+	nonRegisterClassList = nrclist;
+	$('#ddlistNonRegisteredClassList').jqxDropDownList({source: nrclist, selectedIndex: -1, displayMember: "name", valueMember: "id"});
+}
+function getNonRegisterClassList() {
+	return nonRegisterClassList;
 }
 
 var firstNameList;
@@ -545,6 +902,9 @@ function getCurrentStudent() {
 	return currentStudent;
 }
 
+function getPhoneType() {
+	return ["Home", "Mobile","Work"];
+}
 
 var windowTheme;
 function getTheme() {

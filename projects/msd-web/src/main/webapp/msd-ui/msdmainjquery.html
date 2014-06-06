@@ -3,7 +3,7 @@
 <head>
     <meta name="keywords" content="jQuery Window, Window Widget, Window" />
     <meta name="description" content="With jqxWindow, you can create create multiple windows and display them at the same time on your page." />
-    <title id='Description'>With jqxWindow, you can create create multiple windows and display them at the same time on your page.</title>
+    <title id='Description'>Morning Star Dance Academic.</title>
     <link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css" />
 	<link rel="stylesheet" href="jqwidgets/jqwidgets/styles/jqx.energyblue.css" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.2/themes/ui-darkness/jquery-ui.css"/>
@@ -58,6 +58,8 @@
 			overflow: auto;
         }
         
+        .InnerDiv { border-radius:5px; background:white; }
+        
         
     </style>
     <style type="text/css">
@@ -80,6 +82,7 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtabs.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxwindow.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxmaskedinput.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxscrollbar.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxexpander.js"></script>
@@ -164,7 +167,7 @@
             var theme = $.data(document.body, 'theme', theme);
             if (theme == undefined) theme = 'energyblue';
 
-			$('#msdMainTabs').jqxTabs({ width: 750, height: 600, position: 'top', theme: theme, animationType: 'fade', selectionTracker: true });
+			$('#msdMainTabs').jqxTabs({ width: 750, height: 600, position: 'top', theme: theme, animationType: 'fade', scrollable:true, selectionTracker: true });
 			$("#studentDockPanel").jqxDockPanel({ width: 750, height: 550});	
 			document.getElementById('msdMainTabs').style.visibility= 'hidden' ;
 

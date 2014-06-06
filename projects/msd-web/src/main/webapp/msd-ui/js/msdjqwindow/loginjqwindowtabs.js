@@ -3,8 +3,11 @@ function addLoginWindowEventListeners(theme) {
 
 	$(document).on('click', '#btnShowLoginWindow', handleShowLoginWindowClick);
 	$(document).on('click', '#btnlogin', handleLoginClick);
+	$(document).on('keypress', '#txtPassword', handlePasswordKeypress)
+	$(document).on('keypress', '#txtUserName', handleUsernameKeypress);
 	
 }
+
 function handleShowLoginWindowClick() {
 
 	if ($('#btnShowLoginWindow').val() == 'Logout') {
@@ -22,34 +25,21 @@ function handleShowLoginWindowClick() {
     		$('#loginWindow').append('<div >MSD System Login</div> <div id="msdlogindiv"> test </div>');
 	    	initLogin();
 			$('#loginWindow').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: '220px', width: '340px', theme: theme, position: { x: (offset.left + 230), y: offset.top + 40} });
+			$('#txtUserName').focus();
 		}
 	}
 };
 
-/*
-function processLogout() {
-    $('#btnShowLoginWindow').val('Login');
-    $('#btnShowStudentWindow').jqxButton({disabled: true});
-    $('#btnShowTeacherWindow').jqxButton({disabled: true});
-    $('#btnShowClassWindow').jqxButton({disabled: true});
-    $('#btnShowCheckInWindow').jqxButton({disabled: true});
-
-	loginWindowLogout();
-	if (true == isWindowCreated("studentWindow")) {
-		studentWindowLogout();
-	}
-	if (true == isWindowCreated("classWindow")) {
-		classWindowLogout();
-	}
-	
-	clearInterval(getTimerId());
-};
-
-function loginWindowLogout() {
-	$('#loginWindow').jqxWindow('close');
-	resetLoginWindow();	
+function handlePasswordKeypress(e) {
+    if(e.which == 13) // Enter 
+    	$('#btnlogin').click();
 }
-*/
+
+function handleUsernameKeypress(e) {
+	if (e.which == 13)
+		$('#txtPassword').focus();
+}
+
 function initLogin() {
 	console.log(" init Loggin ... ");
 
@@ -80,6 +70,7 @@ function initLogin() {
 function resetLoginWindow() {
 	$('#txtUserName').val("");
 	$('#txtPassword').val("");
+	$('#txtUserName').focus();
 	$('#msgdiv').empty();
 };
 
@@ -156,6 +147,8 @@ function afterUserLoginProcess() {
 	if (document.getElementById('msdMainTabs') != null)
 		document.getElementById('msdMainTabs').style.visibility= 'visible' ;
 	
+		$('#txtStudentSearchFirstName').focus();
+		
 		getUniqueName("FIRSTNAME");
 		getUniqueName("LASTNAME");
 
