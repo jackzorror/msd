@@ -5,8 +5,53 @@
                               http://dozer.sourceforge.net/schema/beanmapping.xsd">
   
   <mapping>
+  	<class-a>com.morningstardance.domain.entity.MSDStudentParent</class-a>
+  	<class-b>com.morningstardance.app.msdstudent.MSDStudentParentDto</class-b>
+  </mapping>
+
+  <mapping>
     <class-a>com.morningstardance.domain.entity.MSDStudent</class-a>
     <class-b>com.morningstardance.app.msdstudent.MSDStudentDetailDto</class-b>
+    
+    <field>
+    	<a>msdStudentMedicalInfo.id</a>
+    	<b>msdStudentMedicalInfoId</b>
+    </field>
+    <field>
+    	<a>msdStudentMedicalInfo.emergencyName</a>
+    	<b>emergencyName</b>
+    </field>
+    <field>
+    	<a>msdStudentMedicalInfo.emergencyPhone</a>
+    	<b>emergencyPhone</b>
+    </field>
+    <field>
+    	<a>msdStudentMedicalInfo.emergencyPhoneAlt</a>
+    	<b>emergencyPhoneAlt</b>
+    </field>
+    <field>
+    	<a>msdStudentMedicalInfo.insuranceCompany</a>
+    	<b>insuranceCompany</b>
+    </field>
+    <field>
+    	<a>msdStudentMedicalInfo.pediatricianName</a>
+    	<b>pediatricianName</b>
+    </field>
+    <field>
+    	<a>msdStudentMedicalInfo.phone</a>
+    	<b>phone</b>
+    </field>
+    <field>
+    	<a>msdStudentMedicalInfo.policyNumber</a>
+    	<b>policyNumber</b>
+    </field>
+    <field>
+       <a>msdStudentParents</a>
+       <b>msdStudentParentDtos</b>
+       <a-hint>com.morningstardance.domain.entity.MSDStudentParent</a-hint>
+       <b-hint>com.morningstardance.app.msdstudent.MSDStudentParentDto</b-hint>
+    </field>
+    
   </mapping>
 
   <mapping>

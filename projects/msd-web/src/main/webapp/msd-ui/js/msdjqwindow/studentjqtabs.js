@@ -338,13 +338,13 @@ function bindStudentDetailInfo(data) {
 			$('#rbtnGenderFemale').jqxRadioButton('check');
 	}
 	$('#dtinputStudentDob').jqxDateTimeInput('setDate', data.dob || null);
-	$('#txtStudentEmail').jqxInput('val', data.email || null);
+	$('#txtStudentEmail').jqxInput('val', data.emailAddress || null);
 	$('#minputHomePhone').jqxMaskedInput('clearValue');
 	$('#minputHomePhone').jqxMaskedInput('inputValue', data.homePhone || null);
 	$('#txtSchoolName').jqxInput('val', data.schoolName || null);
 	$('#minputCellPhone').jqxMaskedInput('clearValue');
 	$('#minputCellPhone').jqxMaskedInput('inputValue', data.cellPhone || null);
-	$('#txtSchoolGrade').jqxInput('val', data.shoolGrade || null);
+	$('#txtSchoolGrade').jqxInput('val', data.schoolGrade || null);
 	$('#txtHomeAddress').jqxInput('val', data.homeAddress || null);
 	
 	// parent one information 
