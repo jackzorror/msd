@@ -63,7 +63,9 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 
 	@Override
 	public MSDStudentDetailDto getStudentDetailDtoByName(String firstname, String lastname) {
-		MSDStudent s = msdStudentRepository.getByLastNameFirstName(lastname, firstname);
+//		MSDStudent s = msdStudentRepository.getByLastNameFirstName(lastname, firstname);
+		MSDStudent s = msdStudentJPARepository.findByFirstNameAndLastName(firstname, lastname);
+		
 		return msdStudentAssembler.createDetailDtoFromEntity(s);
 	}
 
@@ -80,7 +82,8 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 		}
 		
 		MSDStudent student = msdStudentAssembler.createEntityFromDetailDto(studentDetailDto);
-		msdStudentRepository.save(student);
+		msdStudentJPARepository.save(student);
+		
 		return msdStudentAssembler.createDetailDtoFromEntity(student);
 	}
 

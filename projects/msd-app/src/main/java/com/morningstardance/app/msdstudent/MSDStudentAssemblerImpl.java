@@ -9,6 +9,8 @@ import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.domain.entity.MSDStudent;
+import com.morningstardance.domain.entity.MSDStudentMedicalInfo;
+import com.morningstardance.domain.entity.MSDStudentParent;
 
 @Service("msdStudentAssembler")
 public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
@@ -38,8 +40,35 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 		if (null == msdStudent)
 			return null;
 		MSDStudentDetailDto dto = mapper.map(msdStudent, MSDStudentDetailDto.class);
+		List<MSDStudentParentDto> pdtos = createStudentParentDtoFromEntity(msdStudent.getMsdStudentParents());
+		dto.setMsdStudentParentDtos(pdtos);
+		MSDStudentMedicalInfoDto mdto = createStudentMedicalInfoDtoFromEntity(msdStudent.getMsdStudentMedicalInfo());
+		dto.setMsdStudentMedicalInfoDto(mdto);
 		
 		return dto;
+	}
+
+	private MSDStudentMedicalInfoDto createStudentMedicalInfoDtoFromEntity(
+			MSDStudentMedicalInfo msdStudentMedicalInfo) {
+		if (null == msdStudentMedicalInfo)
+			return null;
+		MSDStudentMedicalInfoDto dto = mapper.map(msdStudentMedicalInfo, MSDStudentMedicalInfoDto.class);
+		return dto;
+	}
+
+	private List<MSDStudentParentDto> createStudentParentDtoFromEntity(
+			List<MSDStudentParent> msdStudentParents) {
+		
+		if (null == msdStudentParents || msdStudentParents.isEmpty()) return null;
+		
+		List<MSDStudentParentDto> dtos = new ArrayList<MSDStudentParentDto>();
+		
+		for (MSDStudentParent p : msdStudentParents) {
+			MSDStudentParentDto dto = mapper.map(p, MSDStudentParentDto.class);
+			dtos.add(dto);
+		}
+
+		return dtos;
 	}
 
 	@Override
@@ -55,10 +84,24 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 	@Override
 	public MSDStudent createEntityFromDetailDto(
 			MSDStudentDetailDto msdStudentDetailDto) {
-		MSDStudent student = new MSDStudent();
-		student.setId(new Long(msdStudentDetailDto.getId()));
-		student.setFirstName(msdStudentDetailDto.getFirstName());
-		student.setLastName(msdStudentDetailDto.getLastName());
+		List<MSDStudentParent> ps = null;
+		MSDStudent student = mapper.map(msdStudentDetailDto, MSDStudent.class);
+		if (null != msdStudentDetailDto.getMsdStudentParentDtos() && msdStudentDetailDto.getMsdStudentParentDtos().size() > 0) {
+			ps = new ArrayList<MSDStudentParent>();
+			for (MSDStudentParentDto pdto : msdStudentDetailDto.getMsdStudentParentDtos()) {
+				if (null != pdto) {
+					MSDStudentParent p = mapper.map(pdto, MSDStudentParent.class);
+					p.setMsdStudent(student);
+					ps.add(p);
+				}
+			}
+			student.setMsdStudentParents(ps);
+		}
+		if (null != msdStudentDetailDto.getMsdStudentMedicalInfoDto()) {
+			MSDStudentMedicalInfo sm = mapper.map(msdStudentDetailDto.getMsdStudentMedicalInfoDto(), MSDStudentMedicalInfo.class);
+			sm.setMsdStudent(student);
+			student.setMsdStudentMedicalInfos(sm);
+		}
 		
 		return student;
 	}

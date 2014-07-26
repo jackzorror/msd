@@ -20,7 +20,9 @@ function handleAjaxError(msg) {
  	} else {
  		alert("Error : " + msg.status + "-" + msg.statusText);
  	}
+ 	/*
 	window.location.reload();
+	*/
 }
 
 

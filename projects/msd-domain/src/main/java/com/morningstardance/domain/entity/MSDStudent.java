@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,7 +51,7 @@ public class MSDStudent extends MSDEntityBase {
 	@Column(name="first_name")
 	private String firstName;
 
-	private char gender;
+	private String gender;
 
 	@Column(name="home_address")
 	private String homeAddress;
@@ -68,12 +69,12 @@ public class MSDStudent extends MSDEntityBase {
 	private String schoolName;
 
 	//bi-directional one-to-one association to MsdStudentMedicalInfo
-	@OneToOne(mappedBy="msdStudent")
+	@OneToOne(mappedBy="msdStudent", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	private MSDStudentMedicalInfo msdStudentMedicalInfo;
 
 	//bi-directional many-to-one association to MsdStudentParent
-	@OneToMany(mappedBy="msdStudent", fetch=FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
+	@OneToMany(mappedBy="msdStudent", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+//	@Fetch(value = FetchMode.SUBSELECT)
 	private List<MSDStudentParent> msdStudentParents;
 
 	public MSDStudent() {
@@ -119,11 +120,11 @@ public class MSDStudent extends MSDEntityBase {
 		this.firstName = firstName;
 	}
 
-	public char getGender() {
+	public String getGender() {
 		return this.gender;
 	}
 
-	public void setGender(char gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 

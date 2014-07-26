@@ -15,4 +15,4 @@ create:
 config:
 	config tomcat server;
 
-
+cp -r projects/msd-web/src/main/webapp/msd-ui app_home/deploy/msd-web/.

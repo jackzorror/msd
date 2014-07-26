@@ -267,6 +267,7 @@ function createStudentMedicalPanel() {
 	var medicalCompany = $('<input/>').attr({type:'text', id:'txtStudentInsuranceCompany'});
 	$('#medicalDiv').append(medicalCompany);
 	$('#txtStudentInsuranceCompany').jqxInput({placeHolder: "Medical Insurance Company Name", height: 20, width: 250, minLength: 1, theme: getTheme()})
+//	$('#txtStudentInsuranceCompany').on('textchanged', studentMedicalInfoChange());
 
 	$('#medicalDiv').append('<label style="margin-left:5px;">Policy # :</label>');
 	var policyNumber = $('<input style="marign-left:5px;"/>').attr({type:'text', id:'txtStudentPolicyNumber'});
@@ -316,6 +317,12 @@ function createStudentMedicalPanel() {
 
 };
 
+/*
+function studentMedicalInfoChange() {
+	console.log(" student medical Info change ");
+}
+*/
+
 function createStudentRegisterClassPanel() {
 	$('#studentClassDetailContentDiv').empty();
 	
@@ -348,38 +355,43 @@ function bindStudentDetailInfo(data) {
 	$('#txtHomeAddress').jqxInput('val', data.homeAddress || null);
 	
 	// parent one information 
-	$('#txtParentOneFirstName').jqxInput('val', data.parentOneFirstName || null);
-	$('#txtParentOneLastName').jqxInput('val', data.parentOneLastName || null);
-	$('#txtParentOneRelation').jqxInput('val', data.parentOneRelation || null);
-	$('#txtParentOneEmail').jqxInput('val', data.parentOneEmail || null);
-	$('#minputParentOneCellPhone').jqxMaskedInput('clearValue');
-	$('#minputParentOneCellPhone').jqxMaskedInput('inputValue', data.parentOneCellPhone || null);
-	$('#minputParentOneWorkPhone').jqxMaskedInput('clearValue');
-	$('#minputParentOneWorkPhone').jqxMaskedInput('inputValue', data.parentOneWorkPhone || null);
-
+	if (null != data.msdStudentParentDtos && data.msdStudentParentDtos.length > 0) {
+	 	$('#txtParentOneFirstName').jqxInput('val', data.msdStudentParentDtos[0].firstName || null);
+		$('#txtParentOneLastName').jqxInput('val', data.msdStudentParentDtos[0].lastName || null);
+		$('#txtParentOneRelation').jqxInput('val', data.msdStudentParentDtos[0].relationship || null);
+		$('#txtParentOneEmail').jqxInput('val', data.msdStudentParentDtos[0].emailAddress || null);
+		$('#minputParentOneCellPhone').jqxMaskedInput('clearValue');
+		$('#minputParentOneCellPhone').jqxMaskedInput('inputValue', data.msdStudentParentDtos[0].cellPhone || null);
+		$('#minputParentOneWorkPhone').jqxMaskedInput('clearValue');
+		$('#minputParentOneWorkPhone').jqxMaskedInput('inputValue', data.msdStudentParentDtos[0].workPhone || null);
+	}
 	// parent two information 
-	$('#txtParentTwoFirstName').jqxInput('val', data.parentTwoFirstName || null);
-	$('#txtParentTwoLastName').jqxInput('val', data.parentTwoLastName || null);
-	$('#txtParentTwoRelation').jqxInput('val', data.parentTwoRelation || null);
-	$('#txtParentTwoEmail').jqxInput('val', data.parentTwoEmail || null);
-	$('#minputParentTwoCellPhone').jqxMaskedInput('clearValue');
-	$('#minputParentTwoCellPhone').jqxMaskedInput('inputValue', data.parentTwoCellPhone || null);
-	$('#minputParentTwoWorkPhone').jqxMaskedInput('clearValue');
-	$('#minputParentTwoWorkPhone').jqxMaskedInput('inputValue', data.parentTwoWorkPhone || null);
+	if (null != data.msdStudentParentDtos && data.msdStudentParentDtos.length > 1) {
+		$('#txtParentTwoFirstName').jqxInput('val', data.msdStudentParentDtos[1].firstName || null);
+		$('#txtParentTwoLastName').jqxInput('val', data.msdStudentParentDtos[1].lastName || null);
+		$('#txtParentTwoRelation').jqxInput('val', data.msdStudentParentDtos[1].relationship || null);
+		$('#txtParentTwoEmail').jqxInput('val', data.msdStudentParentDtos[1].emailAddress || null);
+		$('#minputParentTwoCellPhone').jqxMaskedInput('clearValue');
+		$('#minputParentTwoCellPhone').jqxMaskedInput('inputValue', data.msdStudentParentDtos[1].cellPhone || null);
+		$('#minputParentTwoWorkPhone').jqxMaskedInput('clearValue');
+		$('#minputParentTwoWorkPhone').jqxMaskedInput('inputValue', data.msdStudentParentDtos[1].workPhone || null);
+	}
 }
 
 function bindingStudentMedicalPanel(data) {
 	// medical information
-	$('#txtStudentInsuranceCompany').jqxInput('val', data.insuranceCompanyName || null);
-	$('#txtStudentPolicyNumber').jqxInput('val', data.policyNumber || null);
-	$('#txtStudentPediatricianName').jqxInput('val', data.pedicatricianName || null);
-	$('#minputStudentPediatricianPhone').jqxMaskedInput('clearValue');
-	$('#minputStudentPediatricianPhone').jqxMaskedInput('inputValue', data.peicatricianPhone || null);
-	$('#txtStudentEmergencyName').jqxInput('val', data.emergencyName || null);
-	$('#minputStudentEmergencyPhone').jqxMaskedInput('clearValue');
-	$('#minputStudentEmergencyPhone').jqxMaskedInput('inputValue', data.emergencyPhone || null);
-	$('#minputStudentEmergencyAltPhone').jqxMaskedInput('clearValue');
-	$('#minputStudentEmergencyAltPhone').jqxMaskedInput('inputValue', data.emergencyAltPhone || null);
+	if (null != data.msdStudentMedicalInfoDto) {
+		$('#txtStudentInsuranceCompany').jqxInput('val', data.msdStudentMedicalInfoDto.insuranceCompany || null);
+		$('#txtStudentPolicyNumber').jqxInput('val', data.msdStudentMedicalInfoDto.policyNumber || null);
+		$('#txtStudentPediatricianName').jqxInput('val', data.msdStudentMedicalInfoDto.pediatricianName || null);
+		$('#minputStudentPediatricianPhone').jqxMaskedInput('clearValue');
+		$('#minputStudentPediatricianPhone').jqxMaskedInput('inputValue', data.msdStudentMedicalInfoDto.phone || null);
+		$('#txtStudentEmergencyName').jqxInput('val', data.msdStudentMedicalInfoDto.emergencyName || null);
+		$('#minputStudentEmergencyPhone').jqxMaskedInput('clearValue');
+		$('#minputStudentEmergencyPhone').jqxMaskedInput('inputValue', data.msdStudentMedicalInfoDto.emergencyPhone || null);
+		$('#minputStudentEmergencyAltPhone').jqxMaskedInput('clearValue');
+		$('#minputStudentEmergencyAltPhone').jqxMaskedInput('inputValue', data.msdStudentMedicalInfoDto.emergencyPhoneAlt || null);
+	}
 }
 
 function showRegisterClassInformation(data) {
@@ -571,7 +583,7 @@ function handleMedicalSaveClick() {
 		disableEditMedicalInfo(true);
 		$("#btnEditMedical").val("Edit");
 		$('#btnSaveMedical').jqxButton('disabled', true);
-		updateStudentMedicalInformation();
+		updateStudentInformation();
 	} else if ("ADD" == getCurrentFunction()) {
 		addStudentInformation();
 	}
@@ -658,10 +670,7 @@ function getStudentByName(fname, lname) {
 function updateStudentInformation() {
 	console.log(' update student information ... ');
 	var currentStudent = getCurrentStudent();
-	var fname = $("#txtStudentFirstName").val();
-	var lname = $("#txtStudentLastName").val();
-	var email = $('#txtStudentEmail').val();
-	var student = { "id":currentStudent.id, "firstName":fname, "lastName":lname };	
+	var student = getStudentFromUI(currentStudent);
 
 	$.ajax({
 		type: "POST",
@@ -689,12 +698,125 @@ function updateStudentInformation() {
 		}
 	});
 };
+
+function getStudentFromUI(s) {
+	var sid, sm, p1, p2, ps = null;
+	
+	if (null != s) 
+		sid = s.id
+	else 
+		sid = 0;
+
+	var sm = getStudentMedicalInfo(s);
+	var p1 = getStudentParentInfo(s, 1);
+	var p2 = getStudentParentInfo(s, 2);
+	
+	var ps = [p1, p2];
+	var gender;
+	if ($('#rbtnGenderMale').val())
+		gender ='M';
+	else if ($('#rbtnGenderFemale').val())
+		gender ='F';
+	else
+		gender = '';
 		
+	var student = {
+		"id":sid, 
+		"firstName":$("#txtStudentFirstName").val(), 
+		"lastName":$("#txtStudentLastName").val(),
+		"gender":gender,	
+		"dob":$('#dtinputStudentDob').jqxDateTimeInput('getDate'),	
+		"emailAddress":$('#txtStudentEmail').val(),	
+		"homePhone":$('#minputHomePhone').jqxMaskedInput('inputValue'),	
+		"schoolName":$('#txtSchoolName').val(),	
+		"cellPhone":$('#minputCellPhone').jqxMaskedInput('inputValue'),	
+		"schoolGrade":$('#txtSchoolGrade').val(),	
+		"homeAddress":$('#txtHomeAddress').val(),	
+		"msdStudentParentDtos":ps,	
+		"msdStudentMedicalInfoDto":sm
+	};
+	return student;
+}
+
+function getStudentMedicalInfo(s) {
+	var sm = null;
+	var id = null;
+	
+	var insuranceCompany = $('#txtStudentInsuranceCompany').val();
+	var policyNumber = $('#txtStudentPolicyNumber').val();
+	var pediatricianName = $('#txtStudentPediatricianName').val();
+	var phone = $('#minputStudentPediatricianPhone').jqxMaskedInput('inputValue');
+	var emergencyName = $('#txtStudentEmergencyName').val();
+	var emergencyPhone = $('#minputStudentEmergencyPhone').jqxMaskedInput('inputValue');
+	var emergencyPhoneAlt = $('#minputStudentEmergencyAltPhone').jqxMaskedInput('inputValue');
+	
+	if (null != s) {
+		if (null != s.msdStudentMedicalInfoDto)
+			id = s.msdStudentMedicalInfoDto.id;
+	 	else 
+	 		if (insuranceCompany || policyNumber || pediatricianName || phone || emergencyName || emergencyPhone || emergencyPhoneAlt)
+	 			id = 0;
+		
+	} else {
+		id = 0;
+	}
+	
+	if (null != id) {
+		sm = {
+			"insuranceCompany":$('#txtStudentInsuranceCompany').val(),
+			"policyNumber":$('#txtStudentPolicyNumber').val(),
+			"pediatricianName":$('#txtStudentPediatricianName').val(),
+			"phone":$('#minputStudentPediatricianPhone').jqxMaskedInput('inputValue'),
+			"emergencyName":$('#txtStudentEmergencyName').val(),
+			"emergencyPhone":$('#minputStudentEmergencyPhone').jqxMaskedInput('inputValue'),
+			"emergencyPhoneAlt":$('#minputStudentEmergencyAltPhone').jqxMaskedInput('inputValue'),
+			"id":id
+		};
+	}
+	
+	return sm;
+}
+
+function getStudentParentInfo(s, t) {
+	var p = null;
+	var id = null;
+	
+	var cellPhone = (t == 1 ? $('#minputParentOneCellPhone').jqxMaskedInput('inputValue') :
+							$('#minputParentTwoCellPhone').jqxMaskedInput('inputValue'));
+	var emailAddress = (t == 1 ? $('#txtParentOneEmail').val() : $('#txtParentTwoEmail').val());
+	var firstName = (t == 1 ? $('#txtParentOneFirstName').val() : $('#txtParentTwoFirstName').val());
+	var lastName = (t == 1 ? $('#txtParentOneLastName').val() : $('#txtParentTwoLastName').val());
+	var relationship = (t == 1 ? $('#txtParentOneRelation').val() : $('#txtParentTwoRelation').val());
+	var workPhone = (t == 1 ? $('#minputParentOneWorkPhone').jqxMaskedInput('inputValue') :
+							$('#minputParentTwoWorkPhone').jqxMaskedInput('inputValue'));
+	
+	if (null != s) {
+		if (null != s.msdStudentParentDtos && s.msdStudentParentDtos.length > 0) 
+			id = s.msdStudentParentDtos.id;
+		else 
+			if (cellPhone || emailAddress || firstName || lastName || relationship || workPhone)
+				id = 0;
+	} else {
+		id = 0;
+	}
+	
+	if (null !=id) {
+		p = {
+			"cellPhone":$('#minputParentOneCellPhone').jqxMaskedInput('inputValue'),
+			"emailAddress":$('#txtParentOneEmail').val(),
+			"firstName":$('#txtParentOneFirstName').val(),
+			"id":id,
+			"lastName":$('#txtParentOneLastName').val(),
+			"relationship":$('#txtParentOneRelation').val(),
+			"workPhone":$('#minputParentOneWorkPhone').jqxMaskedInput('inputValue'),
+		};
+	}
+	
+	return p;
+}
+
 function addStudentInformation() {
-	var fname = $('#txtStudentFirstName').val();
-	var lname = $('#txtStudentLastName').val();
-	var email = $('#txtStudentEmail').val();
-	var student = { "id":0, "firstName":fname, "lastName":lname };	
+	var student = getStudentFromUI(null);	
 
 	$.ajax({
 		type: "PUT",
@@ -857,9 +979,6 @@ function registerClass(id) {
 			handleAjaxError(msg);
 		}
 	});
-}
-
-function updateStudentMedicalInformation() {
 }
 
 function setNonRegisterClassList(nrclist) {
