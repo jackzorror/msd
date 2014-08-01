@@ -149,4 +149,19 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 		}
 		return dtos;
 	}
+
+	@Override
+	public MSDClassSummaryDto getStudentRegisterClassByStudentIdClassId(
+			Long msdstudentid, Long msdclassid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MSDStudentClassDto deleteRegisterClassByStudentIdAndClassId(
+			Long msdstudentid, Long msdclassid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

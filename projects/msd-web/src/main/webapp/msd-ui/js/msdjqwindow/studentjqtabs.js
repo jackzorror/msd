@@ -500,7 +500,7 @@ function handleDeleteRegisterClassClick() {
 	console.log(" delete register class click ... ");
 	var buttonid = $(this)[0].id
 	var deleteid = buttonid.substr(23, buttonid.length);
-	findStudentRegisterClass(getCurrentStudent().id, deleteid);
+	deleteStudentRegisterClass(getCurrentStudent().id, deleteid);
 }
 
 function handleStudentClearClick() {
@@ -763,13 +763,13 @@ function getStudentMedicalInfo(s) {
 	
 	if (null != id) {
 		sm = {
-			"insuranceCompany":$('#txtStudentInsuranceCompany').val(),
-			"policyNumber":$('#txtStudentPolicyNumber').val(),
-			"pediatricianName":$('#txtStudentPediatricianName').val(),
-			"phone":$('#minputStudentPediatricianPhone').jqxMaskedInput('inputValue'),
-			"emergencyName":$('#txtStudentEmergencyName').val(),
-			"emergencyPhone":$('#minputStudentEmergencyPhone').jqxMaskedInput('inputValue'),
-			"emergencyPhoneAlt":$('#minputStudentEmergencyAltPhone').jqxMaskedInput('inputValue'),
+			"insuranceCompany":insuranceCompany,
+			"policyNumber":policyNumber,
+			"pediatricianName":pediatricianName,
+			"phone":phone,
+			"emergencyName":emergencyName,
+			"emergencyPhone":emergencyPhone,
+			"emergencyPhoneAlt":emergencyPhoneAlt,
 			"id":id
 		};
 	}
@@ -792,7 +792,7 @@ function getStudentParentInfo(s, t) {
 	
 	if (null != s) {
 		if (null != s.msdStudentParentDtos && s.msdStudentParentDtos.length > 0) 
-			id = s.msdStudentParentDtos.id;
+			id = s.msdStudentParentDtos[t-1].id;
 		else 
 			if (cellPhone || emailAddress || firstName || lastName || relationship || workPhone)
 				id = 0;
@@ -802,13 +802,13 @@ function getStudentParentInfo(s, t) {
 	
 	if (null !=id) {
 		p = {
-			"cellPhone":$('#minputParentOneCellPhone').jqxMaskedInput('inputValue'),
-			"emailAddress":$('#txtParentOneEmail').val(),
-			"firstName":$('#txtParentOneFirstName').val(),
+			"cellPhone":cellPhone,
+			"emailAddress":emailAddress,
+			"firstName":firstName,
 			"id":id,
-			"lastName":$('#txtParentOneLastName').val(),
-			"relationship":$('#txtParentOneRelation').val(),
-			"workPhone":$('#minputParentOneWorkPhone').jqxMaskedInput('inputValue'),
+			"lastName":lastName,
+			"relationship":relationship,
+			"workPhone":workPhone,
 		};
 	}
 	
@@ -870,31 +870,27 @@ function findStudentRegisterClass(sid, cid) {
 	});
 }
 
-function deleteStudentRegisterClass(data) {
-	var scregister = {"id":data.id, "msdClassId":data.msdClassId, "msdStudentId":data.msdStudentId};
-/*	
+function deleteStudentRegisterClass(msdStudentId, msdClassId) {
+
 	$.ajax({
 		type: "DELETE",
 		dataType: "json",
-		url: "../msd-app/rs/msdstudent/" + cstudent.id,
-		data: JSON.stringify(scregister),
-		processData:false,
+		url: "../msd-app/rs/msdstudent/" + msdStudentId + "/" +msdClassId,
 		contentType: "application/json",
 		success: function(response) {
-			console.log(" get student ... ");
+			console.log(" delete student register class ... ");
 			if (404 == response.code) {
-				alert(" Can't register class ... ");
+				alert(" Can't delete register class ... ");
 			} else if (302 == response.code) {
 				getStudentRegisterClass(getCurrentStudent());
 			} else {
-				alert("error to register student ... ");
+				alert("error to delete register student ... ");
 			}
 		},
 		error: function(msg, url, line) {
 			handleAjaxError(msg);
 		}
 	});
-*/
 }
 
 function getStudentRegisterClass(data) {

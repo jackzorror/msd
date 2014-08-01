@@ -27,4 +27,11 @@ public interface MSDStudentFacade {
 	List<String> getStudentUniqueName(String fieldname);
 
 	List<MSDClassSummaryDto> getStudentNonRegisterClassByStudentId(Long msdstudentid);
+
+	MSDClassSummaryDto getStudentRegisterClassByStudentIdClassId(
+			Long msdstudentid, Long msdclassid);
+
+	MSDStudentClassDto deleteRegisterClassByStudentIdAndClassId(
+			Long msdstudentid, Long msdclassid);
+
 }
