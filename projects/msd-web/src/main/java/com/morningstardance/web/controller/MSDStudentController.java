@@ -90,6 +90,7 @@ public class MSDStudentController {
 		return responseDto;
 	}
 */
+/*
     @RequestMapping(params={"type=registerclass", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
 	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdDfltVer(Long msdstudentid) {
 		return getStudentRegisteredClassByStudentIdVer1(msdstudentid);
@@ -113,7 +114,7 @@ public class MSDStudentController {
 		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		return responseDto;
 	}
-    
+*/    
 	@RequestMapping(params={"type=nameautocomplete", "fieldname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
 	public @ResponseBody ResponseDto getStudentUniqueNameDfltVer(String fieldname) {
 		return getStudentUniqueNameVer1(fieldname);
@@ -181,8 +182,8 @@ public class MSDStudentController {
 
     @RequestMapping(value="/{msdstudentid}/{msdclassid}", method=RequestMethod.DELETE, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto deleteStudentDeleteRegisterClassVer1(@PathVariable Long msdstudentid, @PathVariable Long msdclassid) {
-		MSDStudentClassDto newDto = msdStudentFacade.deleteRegisterClassByStudentIdAndClassId(msdstudentid, msdclassid);
-		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
+		String result = msdStudentFacade.deleteRegisterClassByStudentIdAndClassId(msdstudentid, msdclassid);
+		ResponseDto responseDto = ResponseDto.createResponseDto(result, "DELETE", "OBJECT");
 		return responseDto;
 	}
 
@@ -215,5 +216,24 @@ public class MSDStudentController {
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}
+    
+    @RequestMapping(value="/{msdstudentid}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdDfltVer(@PathVariable Long msdstudentid, String type) {
+		return getStudentRegisteredClassByStudentIdVer1(msdstudentid, type);
+	}
+
+    @RequestMapping(value="/{msdstudentid}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdVer1(@PathVariable Long msdstudentid, String type) {
+    	if ("registerclass".equals(type)) {
+    		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentRegisterClassByStudentId(msdstudentid);
+    		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+    		return responseDto;
+    	} else if ("nonregisterclass".equals(type)) {
+    		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentNonRegisterClassByStudentId(msdstudentid);
+    		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+    		return responseDto;
+    	}
+    	return null;
+    }
     
 }

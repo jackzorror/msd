@@ -68,11 +68,12 @@ public class ResponseDto {
    				dto.setCode(new Long(HttpStatus.INTERNAL_SERVER_ERROR.value()));
    			}
    		} else if ("DELETE".equals(requestType)) {
-   			if (null != object) {
+   			if (null == object) {
    				dto.setMessage("delete");
    				dto.setCode(new Long(HttpStatus.FOUND.value()));
    			} else {
    				dto.setMessage("not delete");
+   				dto.setCode(new Long(HttpStatus.INTERNAL_SERVER_ERROR.value()));
    			}
    		}
    		

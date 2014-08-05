@@ -7,5 +7,5 @@ import com.morningstardance.domain.entity.MSDStudentClass;
 public interface MSDStudentClassJPARepository extends JpaRepository<MSDStudentClass, Long> {
 	
 	public MSDStudentClass findByMsdClassIdAndMsdStudentId(int msdClassId, int msdStudentId);
-
+	
 }

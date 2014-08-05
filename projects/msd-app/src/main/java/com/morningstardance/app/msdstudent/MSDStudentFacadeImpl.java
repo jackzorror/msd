@@ -153,14 +153,19 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	@Override
 	public MSDClassSummaryDto getStudentRegisterClassByStudentIdClassId(
 			Long msdstudentid, Long msdclassid) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
-	public MSDStudentClassDto deleteRegisterClassByStudentIdAndClassId(
+	public String deleteRegisterClassByStudentIdAndClassId(
 			Long msdstudentid, Long msdclassid) {
-		// TODO Auto-generated method stub
+		try {
+			MSDStudentClass sc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(msdclassid.intValue(), msdstudentid.intValue());
+			msdStudentClassJPARepository.delete(sc);
+		}  catch (Exception ex) {
+			return ex.getStackTrace().toString();
+		}
 		return null;
 	}
 

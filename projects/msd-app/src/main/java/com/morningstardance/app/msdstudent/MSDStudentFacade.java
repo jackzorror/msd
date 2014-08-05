@@ -31,7 +31,6 @@ public interface MSDStudentFacade {
 	MSDClassSummaryDto getStudentRegisterClassByStudentIdClassId(
 			Long msdstudentid, Long msdclassid);
 
-	MSDStudentClassDto deleteRegisterClassByStudentIdAndClassId(
-			Long msdstudentid, Long msdclassid);
+	String deleteRegisterClassByStudentIdAndClassId(Long msdstudentid, Long msdclassid);
 
 }

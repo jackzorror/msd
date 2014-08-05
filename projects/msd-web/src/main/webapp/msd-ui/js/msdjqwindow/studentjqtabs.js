@@ -48,7 +48,7 @@ function showStudentInformation(data) {
 	setCurrentFunction("SEARCH");
 	createStudentRegisterClassPanel();	
 	getStudentRegisterClass(data);
-	getNonRegisteredClassList(data);
+//	getNonRegisteredClassList(data);
 	
 	bindingStudentMedicalPanel(data);
 	disableEditMedicalInfo(true);
@@ -330,6 +330,13 @@ function createStudentRegisterClassPanel() {
 	$('#studentClassDetailContentDiv').append(cdiv);
 }
 
+function createStudentNonRegisterClassPanel() {
+	$('#studentNonClassDetailContentDiv').empty();
+	
+	var cdiv = $('<div style="width:600px;"></div>').attr({id:'nonRegisteredClassDiv'});
+	$('#studentNonClassDetailContentDiv').append(cdiv);
+}
+
 function bindStudentDetailInfo(data) {
 	if (null == data)
 		return;
@@ -406,22 +413,65 @@ function showRegisterClassInformation(data) {
 			var name = data[i].name;
 			var schedules = data[i].schedule;
 			var cdivid = "cdiv_" + id;
-			var cdiv = $('<div class="InnerDiv" style="margin-top:10px"/>').attr({id:cdivid})
+			var cdiv = $('<div class="InnerDiv" style="margin-top:10px"/>').attr({id:cdivid});
 			$('#innerDiv').append(cdiv);
 			cdiv.append('<label style="margin-left:10px;"> Class Name     :' + name + '</label> <br />');
 			cdiv.append('<label> Class Schedule :' + schedules + '</label> <br />');
-			var cbtnid = 'btnDeleteRegisterClass_' + id;
-			var cdbtn = $('<input style="margin-left:500px;" />').attr({type:'button', id:cbtnid, value:'Delete'});
+
+			if ("REGISTER" == getCurrentFunction()) {
+				var cbtnid = 'btnClassDetail_' + id;
+				var cdbtn = $('<input style="margin-left:400px;" />').attr({type:'button', id:cbtnid, value:'Detail'});
+				cdiv.append(cdbtn);
+				cdbtn.jqxButton({width:'100', theme: getTheme() });
+			
+				var cbtnid = 'btnDeleteRegisterClass_' + id;
+				var cdbtn = $('<input />').attr({type:'button', id:cbtnid, value:'Remove'});
+				cdiv.append(cdbtn);
+				cdbtn.jqxButton({width:'100', theme: getTheme() });
+			} else {
+				var cbtnid = 'btnClassDetail_' + id;
+				var cdbtn = $('<input style="margin-left:500px;" />').attr({type:'button', id:cbtnid, value:'Detail'});
+				cdiv.append(cdbtn);
+				cdbtn.jqxButton({width:'100', theme: getTheme() });
+			}
+		}
+	}
+};
+
+function showNonRegisterClassInformation(data) {
+	$('#nonRegisteredClassDiv').empty();
+	$('#nonRegisteredClassDiv').append('<h5>Stduent Non Registered Class Informatioin</h5>');
+	if (null != data && data.length > 0) {
+		var idiv = $('<div></div>').attr({id:'innerNonDiv'});
+		$('#nonRegisteredClassDiv').append(idiv);
+		
+		for (var i = 0; i < data.length; i++) {
+			var id = data[i].id;
+			var name = data[i].name;
+			var schedules = data[i].schedule;
+			var cdivid = "cdiv_" + id;
+			var cdiv = $('<div class="InnerDiv" style="margin-top:10px"/>').attr({id:cdivid})
+			$('#innerNonDiv').append(cdiv);
+			cdiv.append('<label style="margin-left:10px;"> Class Name     :' + name + '</label> <br />');
+			cdiv.append('<label> Class Schedule :' + schedules + '</label> <br />');
+
+			var cbtnid = 'btnClassDetail_' + id;
+			var cdbtn = $('<input style="margin-left:400px;" />').attr({type:'button', id:cbtnid, value:'Detail'});
+			cdiv.append(cdbtn);
+			cdbtn.jqxButton({width:'100', theme: getTheme() });
+			
+			var cbtnid = 'btnRegisterClass_' + id;
+			var cdbtn = $('<input />').attr({type:'button', id:cbtnid, value:'Add'});
 			cdiv.append(cdbtn);
 			cdbtn.jqxButton({width:'100', theme: getTheme() });
 		}
 	}
 };
-
+/*
 function addClassRegister() {
 	getNonRegisteredClassList();
 };
-
+*/
 function disableEditStudentDetailInfo(disable) {
 	$("#studentDetailContentDiv :text").prop("disabled", disable);
 	$("#studentDetailContentDiv div[id^='minput']").jqxMaskedInput({disabled:disable});
@@ -461,11 +511,15 @@ function addStudentTabsEventListeners(theme) {
 	$(document).on('click', '#btnSaveMedical', handleMedicalSaveClick);
 	
 	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnDeleteRegisterClass"]', handleDeleteRegisterClassClick);
-	
-	$(document).on('click', '#btnSelectClass', handleNonRegisteredClassSelectClick);
+	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnRegisterClass"]', handleRegisterClassClick);
+	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
+	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
 	/*
+	$(document).on('click', '#btnSelectClass', handleNonRegisteredClassSelectClick);
+	*/
+	
 	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
-	*/ 
+	$(document).on('click', '#btnRegistClass', handleRegistClassClick);
 	
 	$(document).on('keypress', '#txtStudentSearchFirstName', handleSearchFirstNameKeypress);
 	$(document).on('keypress', '#txtStudentSearchLastName', handleSearchLastNameKeypress);
@@ -501,6 +555,13 @@ function handleDeleteRegisterClassClick() {
 	var buttonid = $(this)[0].id
 	var deleteid = buttonid.substr(23, buttonid.length);
 	deleteStudentRegisterClass(getCurrentStudent().id, deleteid);
+}
+
+function handleRegisterClassClick() {
+	console.log(" register class click ... ");
+	var buttonid = $(this)[0].id
+	var classid = buttonid.substr(17, buttonid.length);
+	studentRegisterClass(classid);
 }
 
 function handleStudentClearClick() {
@@ -544,6 +605,55 @@ function handleStudentAddClick() {
 	$('#btnSaveStudent').jqxButton('val', "Add")
 
 	setCurrentFunction("ADD");
+}
+
+function handleRegistClassClick() {
+	console.log(" register class ... ");
+	
+	var fname = $.trim($('#txtStudentSearchFirstName').val());
+	var lname = $.trim($('#txtStudentSearchLastName').val());
+
+	if ((null == fname || fname.length == 0) ||
+	    (null == lname || lname.length == 0) ||
+	    null == getCurrentStudent()) {
+	    alert("Please Find student with last name and first name first");
+	} else {
+		$('#studentMainPanel').empty();
+		showStudentRegisterClass();
+		showStudentNonRegisterClass();
+	}
+
+	setCurrentFunction("REGISTER");
+}
+
+function showStudentRegisterClass() {
+	// student register class information
+	var cdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'studentClassDetailDiv'});
+	var ctdiv = $('<div class="title">Student Register Class Information </div>').attr({id:'studentClassDetailTitleDiv'});
+	var ccdiv = $('<div class="content" style="background:#e0e9f5;"></div>').attr({id:'studentClassDetailContentDiv'});
+	
+	$('#studentMainPanel').append(cdiv);
+	$('#studentClassDetailDiv').append(ctdiv);
+	$('#studentClassDetailDiv').append(ccdiv);
+	
+	$('#studentClassDetailDiv').raaccordion();
+	createStudentRegisterClassPanel();	
+	getStudentRegisterClass(getCurrentStudent());
+}
+
+function showStudentNonRegisterClass() {
+	// student non register class information
+	var cdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'studentNonClassDetailDiv'});
+	var ctdiv = $('<div class="title">Student Non Register Class Information </div>').attr({id:'studentNonClassDetailTitleDiv'});
+	var ccdiv = $('<div class="content" style="background:#e0e9f5;"></div>').attr({id:'studentNonClassDetailContentDiv'});
+	
+	$('#studentMainPanel').append(cdiv);
+	$('#studentNonClassDetailDiv').append(ctdiv);
+	$('#studentNonClassDetailDiv').append(ccdiv);
+	
+	$('#studentNonClassDetailDiv').raaccordion();
+	createStudentNonRegisterClassPanel();	
+	getStudentNonRegisterClass(getCurrentStudent());
 }
 
 function handleStudentSaveClick() {
@@ -607,6 +717,18 @@ function handleEditMedicalClick() {
 	} else if ("ADD" == getCurrentFunction()) {
 		$('#studentInformation').empty();
 	}
+}
+
+function handleClassDetailClick() {
+	console.log(" this will get class detail and pop up window to show detail about class ");
+	
+	var buttonid = $(this)[0].id
+	var classid = buttonid.substr(15, buttonid.length);
+	getClassDetailById(classid);
+}
+
+function showClassDetail(data) {
+	console.log(" this will pop up window to show detail about class ");
 }
 
 // AJAX call ...
@@ -689,6 +811,11 @@ function updateStudentInformation() {
 				$("#txtStudentSearchFirstName").val(data.firstName);
 				$("#txtStudentSearchLastName").val(data.lastName);
 				$('#btnSaveStudent').jqxButton('disabled', true);
+
+				// reload student first/last name list
+				getUniqueName("FIRSTNAME");
+				getUniqueName("LASTNAME");
+
 			} else {
 				alert('error');
 			}
@@ -835,6 +962,11 @@ function addStudentInformation() {
 				showStudentInformation(data);
 				$("#txtStudentSearchFirstName").val(data.firstName);
 				$("#txtStudentSearchLastName").val(data.lastName);
+				
+				// reload student first/last name list
+				getUniqueName("FIRSTNAME");
+				getUniqueName("LASTNAME");
+				
 			} else {
 				alert('error');
 			}
@@ -882,7 +1014,10 @@ function deleteStudentRegisterClass(msdStudentId, msdClassId) {
 			if (404 == response.code) {
 				alert(" Can't delete register class ... ");
 			} else if (302 == response.code) {
-				getStudentRegisterClass(getCurrentStudent());
+//				getStudentRegisterClass(getCurrentStudent());
+				$('#studentMainPanel').empty();
+				showStudentRegisterClass();
+				showStudentNonRegisterClass();
 			} else {
 				alert("error to delete register student ... ");
 			}
@@ -899,8 +1034,8 @@ function getStudentRegisterClass(data) {
 	$.ajax({
 		type: "GET",
 		dataType: "json",
-		url: "../msd-app/rs/msdstudent",
-		data: { type: "registerclass", msdstudentid: data.id },
+		url: "../msd-app/rs/msdstudent/" + data.id,
+		data: { type: "registerclass"},
 		success: function(response) {
 			console.log(" get student register class ... ");
 			if (404 == response.code) {
@@ -919,6 +1054,32 @@ function getStudentRegisterClass(data) {
 	});
 };
 
+function getStudentNonRegisterClass(data) {
+	console.log(' get student non register class ... ');
+			
+	$.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent/" + data.id,
+		data: { type: "nonregisterclass"},
+		success: function(response) {
+			console.log(" get student non register class ... ");
+			if (404 == response.code) {
+				console.log(" There is no non register class for this student ... ");
+				$('#classInformation').empty();
+			} else if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				showNonRegisterClassInformation(data);
+			} else {
+				alert("error to find student ... ");
+			}
+		},
+		error: function(msg, url, line) {
+			handleAjaxError(msg);
+		}
+	});
+};
+/*
 function getNonRegisteredClassList(data) {
 	console.log('in getNonRegisteredClassList ... ');
 	$.ajax({
@@ -976,11 +1137,70 @@ function registerClass(id) {
 		}
 	});
 }
+*/
 
+function studentRegisterClass(id) {
+	console.log('click register class register button ... ');
+	var cstudent = getCurrentStudent();
+	var scregister = {"id":0, "msdClassId":id, "msdStudentId":cstudent.id};
+	
+	$.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent/" + cstudent.id,
+		data: JSON.stringify(scregister),
+		processData:false,
+		contentType: "application/json",
+		success: function(response) {
+			console.log(" get student ... ");
+			if (404 == response.code) {
+				alert(" Can't register class ... ");
+			} else if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				$('#studentMainPanel').empty();
+				showStudentRegisterClass();
+				showStudentNonRegisterClass();
+			} else {
+				alert("error to register student ... ");
+			}
+		},
+		error: function(msg, url, line) {
+			handleAjaxError(msg);
+		}
+	});
+}
+
+function getClassDetailById(id) {
+
+	$.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdclass/" + id,
+		contentType: "application/json",
+		success: function(response) {
+			console.log(" get class ... ");
+			if (404 == response.code) {
+				alert(" Can't get class ... ");
+			} else if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				showClassDetail(data);
+			} else {
+				alert("error to get class ... ");
+			}
+		},
+		error: function(msg, url, line) {
+			handleAjaxError(msg);
+		}
+	});
+}
+
+/*
 function setNonRegisterClassList(nrclist) {
 	nonRegisterClassList = nrclist;
 	$('#ddlistNonRegisteredClassList').jqxDropDownList({source: nrclist, selectedIndex: -1, displayMember: "name", valueMember: "id"});
 }
+*/
+
 function getNonRegisterClassList() {
 	return nonRegisterClassList;
 }
