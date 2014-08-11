@@ -3,12 +3,12 @@ package com.morningstardance.app.msdclass;
 import java.util.Date;
 
 public class MSDClassDto {
-	private int id;
-	private String name;
-	private String location;
-	private Date classStartTime;
-	private Date classEndTime;
-	private String classStatus;
+	protected int id;
+	protected String name;
+	protected String location;
+	protected Date classStartTime;
+	protected Date classEndTime;
+	protected String classStatus;
 	
 	public int getId() {
 		return id;

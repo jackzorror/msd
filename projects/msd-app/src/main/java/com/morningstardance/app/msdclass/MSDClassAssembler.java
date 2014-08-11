@@ -16,4 +16,7 @@ public interface MSDClassAssembler {
 	MSDClass createEntityFromDto(MSDClassDto msdclassdto);
 	MSDClassDto createDtoFromEntity(MSDClass msdclass);
 
+	MSDClassDetailDto createClassDetailFromEntity(MSDClass msdclass,
+			List<MSDClassSchedular> msdclassschedulars, int totalStudentCount);
+
 }

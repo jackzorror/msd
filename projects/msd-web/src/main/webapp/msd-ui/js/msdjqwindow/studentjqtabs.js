@@ -412,11 +412,24 @@ function showRegisterClassInformation(data) {
 			var id = data[i].id;
 			var name = data[i].name;
 			var schedules = data[i].schedule;
+			var scheduleList = schedules.split(";");
+			var newSchedule = "";
+			for (var j = 0; j < scheduleList.length; j++) {
+				var str = scheduleList[j].trim();
+				if (str.length > 0) {
+					if (j < 3) {
+						newSchedule += scheduleList[j] + ";";
+					} else if (j == 3) {
+						newSchedule += " ... ";
+						break;
+					}
+				}
+			}
 			var cdivid = "cdiv_" + id;
 			var cdiv = $('<div class="InnerDiv" style="margin-top:10px"/>').attr({id:cdivid});
 			$('#innerDiv').append(cdiv);
 			cdiv.append('<label style="margin-left:10px;"> Class Name     :' + name + '</label> <br />');
-			cdiv.append('<label> Class Schedule :' + schedules + '</label> <br />');
+			cdiv.append('<label> Class Schedule :' + newSchedule + '</label> <br />');
 
 			if ("REGISTER" == getCurrentFunction()) {
 				var cbtnid = 'btnClassDetail_' + id;
@@ -449,11 +462,24 @@ function showNonRegisterClassInformation(data) {
 			var id = data[i].id;
 			var name = data[i].name;
 			var schedules = data[i].schedule;
+			var scheduleList = schedules.split(";");
+			var newSchedule = "";
+			for (var j = 0; j < scheduleList.length; j++) {
+				var str = scheduleList[j].trim();
+				if (str.length > 0) {
+					if (j < 3) {
+						newSchedule += scheduleList[j] + ";";
+					} else if (j == 3) {
+						newSchedule += " ... ";
+						break;
+					}
+				}
+			}
 			var cdivid = "cdiv_" + id;
 			var cdiv = $('<div class="InnerDiv" style="margin-top:10px"/>').attr({id:cdivid})
 			$('#innerNonDiv').append(cdiv);
 			cdiv.append('<label style="margin-left:10px;"> Class Name     :' + name + '</label> <br />');
-			cdiv.append('<label> Class Schedule :' + schedules + '</label> <br />');
+			cdiv.append('<label> Class Schedule :' + newSchedule + '</label> <br />');
 
 			var cbtnid = 'btnClassDetail_' + id;
 			var cdbtn = $('<input style="margin-left:400px;" />').attr({type:'button', id:cbtnid, value:'Detail'});
@@ -498,8 +524,8 @@ function cancelUpdateStudentMedicalInformation() {
 /***************************************
  * Event handle                        *
  ***************************************/
-function addStudentTabsEventListeners(theme) {
-	setTheme(theme);
+function addStudentTabsEventListeners() {
+//	setTheme(theme);
 
 	$(document).on('click', '#btnSearchStudent', handleStudentSearchClick);
 	$(document).on('click', '#btnClearStudent', handleStudentClearClick);
@@ -729,6 +755,141 @@ function handleClassDetailClick() {
 
 function showClassDetail(data) {
 	console.log(" this will pop up window to show detail about class ");
+	
+	if (0 == $('#msdclassdetailpopupdiv').length) {
+	    $('#studentMainPanel').append('<div id="msdclassdetailpopupdiv" />');
+
+		$('#msdclassdetailpopupdiv').append('<div >Class Detail Information</div> <div id="studentclassdetaildiv"></div>');
+		$('#msdclassdetailpopupdiv').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: '500px', width: '450px', theme: theme, position: { x: 350, y: 300}});
+	
+		var cdiv = $('<div style = "width:410px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentclassInformationdiv'});
+		$('#studentclassdetaildiv').append(cdiv);
+	
+		var odiv = $('<div style = "width:410px; margin-left:10px; margin-top:30px; border:0px solid;"/>').attr({id:'classOtherInformationdiv'});
+		$('#studentclassdetaildiv').append(odiv);
+	
+		var sdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'studentClassSchedularInformationdiv'});
+		$('#studentclassdetaildiv').append(sdiv);
+	}
+	
+	if (false == $('#msdclassdetailpopupdiv').jqxWindow('isOpen')) {
+		$('#msdclassdetailpopupdiv').jqxWindow('open');
+	}
+
+	createClassDetailDiv();
+
+	$('#txtStudentClassName').jqxInput({disabled:true });
+	$('#txtStudentClassName').jqxInput('val', data.name);
+	
+	
+	$('#txtStudentClassLocation').jqxInput({disabled:true });
+	$('#txtStudentClassLocation').jqxInput('val', data.location);
+	
+	if (null != data.classStartTime) {
+		$('#txtStudentClassStartTime').val(data.classStartTime);
+	}
+	$('#txtStudentClassStartTime').jqxDateTimeInput({ disabled: true });
+	
+	if (null != data.classEndTime) {
+		$('#txtStudentClassEndTime').val(data.classEndTime);
+	}
+	$('#txtStudentClassEndTime').jqxDateTimeInput({ disabled: true });
+
+	if (null != data.classStatus) {
+		if ("ACTIVE" == data.classStatus) {
+			$('#txtStudentClassStatus').text(data.classStatus);
+			$('#txtStudentClassStatus').css("color", "green");
+		} else if ("INACTIVE" == data.classStatus) {
+			$('#txtStudentClassStatus').text(data.classStatus);
+			$('#txtStudentClassStatus').css("color", "blue");
+		} else {
+			$('#txtStudentClassStatus').text(data.classStatus);
+			$('#txtStudentClassStatus').css("color", "red");
+		}
+	}
+	
+	$('#txtTotalStudent').jqxInput({disabled:true });
+	$('#txtTotalStudent').jqxInput('val', data.totalNumberStudent);
+
+	getClassDetailSchedularByClassId(data.id);
+
+}
+
+function createClassDetailDiv() {
+	$('#studentclassInformationdiv').empty();
+	
+	$('#studentclassInformationdiv').append('<label> Class Name : </label>');
+	var cname = $('<input/>').attr({type:'text', id:'txtStudentClassName'});
+	$('#studentclassInformationdiv').append(cname);
+	$('#txtStudentClassName').jqxInput({placeHolder: "Class Name", height: 20, width:100, minLength: 1, theme: getTheme() });	
+	
+	$('#studentclassInformationdiv').append('<label style="margin-left:10px;">Location : </label>');
+	var location = $('<input/>').attr({type:'text', id:'txtStudentClassLocation'});
+	$('#studentclassInformationdiv').append(location);
+	$('#txtStudentClassLocation').jqxInput({placeHolder: "Class Location", height: 20, width:130, minLength: 1, theme: getTheme(), source:ClassLocation });
+	$('#studentclassInformationdiv').append('<br/>');
+	
+	$('#studentclassInformationdiv').append('<label style="float:left; margin-top:10px;"> Start : </label>');
+	var stime = $('<div style="float: left; margin-top:10px; margin-left:10px;"/>').attr({id:'txtStudentClassStartTime'});
+	$('#studentclassInformationdiv').append(stime);
+	$('#txtStudentClassStartTime').jqxDateTimeInput({width: '100px', height: '20px', formatString: 'd', theme: getTheme()});
+	
+	$('#studentclassInformationdiv').append('<label style="float:left; margin-top:10px; margin-left:10px;"> End: </label>');
+	var etime = $('<div style="float:left; margin-top:10px; margin-left:10px;" />').attr({id:'txtStudentClassEndTime'});
+	$('#studentclassInformationdiv').append(etime);
+	$('#txtStudentClassEndTime').jqxDateTimeInput({width: '100px', height: '20px', formatString: 'd', theme: getTheme()});
+	
+	var statusLabel = $('<label id="txtStudentClassStatus" name="txtStudentClassStatus" style="float:left; margin-top:10px; margin-left:10px;" />');
+	$('#studentclassInformationdiv').append(statusLabel);
+
+	$('#studentclassInformationdiv').append('<br/>');
+	
+	$('#classOtherInformationdiv').empty();
+
+	$('#classOtherInformationdiv').append('<label> Total Student : </label>');
+	var ctotalstudent = $('<input/>').attr({type:'text', id:'txtTotalStudent'});
+	$('#classOtherInformationdiv').append(ctotalstudent);
+	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
+	
+	$('#classOtherInformationdiv').append('<label> Class Fee : </label>');
+	var cClassFee = $('<input/>').attr({type:'text', id:'txtClassFee'});
+	$('#classOtherInformationdiv').append(cClassFee);
+	$('#txtClassFee').jqxInput({placeHolder: "$000", rtl: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
+	
+}
+
+function showClassDetailSchedular(data) {
+	console.log(" in show class schedular information .. ");
+	$('#studentClassSchedularInformationdiv').empty();
+	$('#studentClassSchedularInformationdiv').append('<label style="float:left; margin-top:10px;"> Class Schedular ... </label>');
+	var csdiv = $('<div style="border:0px solid; float:left; margin-top:10px; margin-left:45px;"/>').attr({id:'classSchedularDetailGrid'});	
+	$('#studentClassSchedularInformationdiv').append(csdiv);
+	var source = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'msdClassId', 	type: 'int'},
+			{ name: 'weekdayStr',  type: 'string'},
+			{ name: 'weekday', 	type: 'int'},
+			{ name: 'startTime', type: 'string'},
+			{ name: 'endTime', type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	$('#classSchedularDetailGrid').jqxGrid(
+	{
+		source:dataAdapter,
+		width: 410,
+		columns:[
+			{text: 'Class ID', datafield:'msdClassId', hidden:'true'},
+			{text: 'ID', datafield:'id', hidden:'true'},
+			{text: 'Weekday', datafield: 'weekdayStr', width: 100, align:'center', cellsalign:'center'},
+			{text: 'Start Time', datafield: 'startTime', width:100, align:'right', cellsalign:'right'},
+			{text: 'End Time', datafield: 'endTime', width:100, align:'right', cellsalign:'right'}
+		]
+	});
+	
 }
 
 // AJAX call ...
@@ -1176,7 +1337,7 @@ function getClassDetailById(id) {
 		type: "GET",
 		dataType: "json",
 		url: "../msd-app/rs/msdclass/" + id,
-		contentType: "application/json",
+		data: { type: "DETAIL"},
 		success: function(response) {
 			console.log(" get class ... ");
 			if (404 == response.code) {
@@ -1193,6 +1354,35 @@ function getClassDetailById(id) {
 		}
 	});
 }
+
+function getClassDetailSchedularByClassId(id) {
+	console.log(" in get class schedular by id ... ");
+	$.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdclassschedular",
+		dataType: "json",
+		contentType: "application/json",
+		data: { msdclassid: id},
+		success: function(response) {
+			if (404 == response.code) {
+				console.log(" Can't find class schedular by id : " + id);
+				$('#studentClassSchedularInformationdiv').empty();				
+			} else if (302 == response.code) {
+				var data = $.parseJSON(response.result);
+				console.log(" get class schedular by id ");
+				showClassDetailSchedular(data);
+				
+			} else {
+				alert('error');
+			}
+		},
+		error: function(msg, url, line) {
+			handleAjaxError(msg);
+		}
+	});
+
+}
+
 
 /*
 function setNonRegisterClassList(nrclist) {
@@ -1240,11 +1430,13 @@ function getCurrentStudent() {
 function getPhoneType() {
 	return ["Home", "Mobile","Work"];
 }
-
+/*
 var windowTheme;
 function getTheme() {
+	console.log("in student tabs ...")
 	return windowTheme;
 };
 function setTheme(value) {
 	windowTheme = value;
 };
+*/

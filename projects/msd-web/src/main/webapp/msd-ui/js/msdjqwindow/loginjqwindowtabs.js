@@ -1,5 +1,5 @@
-function addLoginWindowEventListeners(theme) {
-	setTheme(theme);
+function addLoginWindowEventListeners() {
+//	setTheme(theme);
 
 	$(document).on('click', '#btnShowLoginWindow', handleShowLoginWindowClick);
 	$(document).on('click', '#btnlogin', handleLoginClick);
@@ -60,7 +60,7 @@ function initLogin() {
 
 	var btnlogin=$('<input style="float: right; margin-top: 10px; margin-right: 10px;"/>').attr({type:'button', id:'btnlogin', value:'Login'});
 	$('#inputdiv').append(btnlogin);
-	$('#btnlogin').jqxButton({ width: '60', theme: theme });
+	$('#btnlogin').jqxButton({ width: '60', theme: getTheme() });
 
 	var msgdiv = $('<div class="errormsgdiv" id="msgdiv" />');
 	$('#msdlogindiv').append(msgdiv);
@@ -147,12 +147,49 @@ function afterUserLoginProcess() {
 	if (document.getElementById('msdMainTabs') != null)
 		document.getElementById('msdMainTabs').style.visibility= 'visible' ;
 	
-		$('#txtStudentSearchFirstName').focus();
+	$('#txtStudentSearchFirstName').focus();
 		
-		getUniqueName("FIRSTNAME");
-		getUniqueName("LASTNAME");
+	ajaxGetUniqueName("FIRSTNAME", getUniqueFirstNameForStudent);
+	ajaxGetUniqueName("LASTNAME",getUniqueLasstNameForStudent);
+	ajaxGetAllClassName(getAllClassName);
 
 	setTimerId(setInterval("timercount()", 60000));
+}
+
+function getUniqueFirstNameForStudent(response) {
+	if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+
+    	$( '#txtStudentSearchFirstName' ).jqxInput({ source: data });
+    	setFirstNameList(data);
+	    $( '#txtStudentSearchLastName' ).jqxInput({ source: data });
+	    setLastNameList(data);
+	} else {
+		alert(" Can't get unique for " + fieldname + " ... ");
+	}
+}
+
+function getUniqueLasstNameForStudent(response) {
+	if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+
+	    $( '#txtStudentSearchLastName' ).jqxInput({ source: data });
+	    setLastNameList(data);
+	} else {
+		alert(" Can't get unique for " + fieldname + " ... ");
+	}
+}
+
+function getAllClassName(response) {
+	if (404 == response.code) {
+		console.log(" Can't get class name ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get class name list ");
+		$('#txtClassSearchName').jqxInput({source:data});
+	} else {
+		alert('error');
+	}
 }
 
 var timerId;
@@ -162,11 +199,3 @@ function getTimerId() {
 function setTimerId(id) {
 	timerId = id;
 }
-
-var windowTheme;
-function getTheme() {
-	return windowTheme;
-};
-function setTheme(value) {
-	windowTheme = value;
-};

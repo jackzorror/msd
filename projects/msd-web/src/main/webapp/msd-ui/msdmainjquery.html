@@ -108,9 +108,11 @@
 
     <script type="text/javascript" src="js/msdjqwindow/loginjqwindowtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/studentjqtabs.js"></script>
-    <script type="text/javascript" src="js/msdjqwindow/classjqwindow.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/classjqtabs.js"></script>
     
     <script type="text/javascript" src="js/lib/messageutil.js"></script>
+    <script type="text/javascript" src="js/lib/ajaxutil.js"></script>
+    <script type="text/javascript" src="js/lib/setEnv.js"></script>
     <script type="text/javascript" src="js/jquery.collapse.js"></script>
     <script type="text/javascript" src="js/jquery.collapse_storage.js"></script>
     <script type="text/javascript" src="js/jquery.collapsiblepanel.js"></script>
@@ -135,9 +137,10 @@
     	}
     	
         function addEventListeners(theme) {
-			addStudentTabsEventListeners(theme);      
-			addLoginWindowEventListeners(theme);  
-			addClassWindowEventListeners(theme);    
+        	setTheme(theme);
+			addStudentTabsEventListeners();      
+			addLoginWindowEventListeners();  
+			addClassTabsEventListeners();    
         }
         
         function createElements(theme) {
@@ -168,12 +171,18 @@
             if (theme == undefined) theme = 'energyblue';
 
 			$('#msdMainTabs').jqxTabs({ width: 750, height: 600, position: 'top', theme: theme, animationType: 'fade', scrollable:true, selectionTracker: true });
-			$("#studentDockPanel").jqxDockPanel({ width: 750, height: 550});	
+			$('#studentDockPanel').jqxDockPanel({ width: 750, height: 550});	
+			$('#classDockPanel').jqxDockPanel({width: 750, height:550});
 			document.getElementById('msdMainTabs').style.visibility= 'hidden' ;
+
+           $('#msdMainTabs').on('selected', function (event) {
+                setTabFocusElement(event);
+            });
 
             createElements(theme);
             addEventListeners(theme);
             initStudentTab();
+            initClassTab();
             
             $(this).mousemove(function(e){
             	idleTime=0;
@@ -196,7 +205,6 @@
 			<div id='msdMainTabs'>
 				<ul>
 	    			<li>Student</li>
-					<li>Teacher</li>
 					<li>Class</li>
 				</ul>
   				<div id="tabs-Student">
@@ -206,11 +214,11 @@
 					    <div id='studentMainPanel' dock='right'></div>
   					</div>
   				</div>
-  				<div id="tabs-Teacher">
-  					<h2>Teacher Info</h2>
-  				</div>
-  				<div id="tabs-Class">
-  					<h2>Class Info</h2>
+  				<div id="tabs-Class" style='background:#e0e9f5'>
+  					<div id='classDockPanel'>
+					    <div id='classControlPanel' dock='top' style='height: 30px;'></div>
+					    <div id='classMainPanel' />
+					</div>
   				</div>
 			</div>
         </div>

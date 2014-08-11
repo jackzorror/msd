@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
+import com.morningstardance.app.msdclassschedular.MSDClassSchedularAssembler;
 import com.morningstardance.app.util.WeekdayEnum;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassSchedular;
@@ -19,6 +20,9 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 	
     @Resource(name="mapper")
     protected Mapper mapper;
+    
+    @Resource
+    private MSDClassSchedularAssembler msdClassSchedularAssembler;
     
 /*
 	@Override
@@ -84,6 +88,24 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 		dto.setClassStatus(msdclass.getClassStatus());
 		dto.setClassStartTime(msdclass.getClassStartTime());
 		dto.setClassEndTime(msdclass.getClassEndTime());
+		return dto;
+	}
+
+	@Override
+	public MSDClassDetailDto createClassDetailFromEntity(MSDClass msdclass,
+			List<MSDClassSchedular> msdclassschedulars, int totalStudentCount) {
+		MSDClassDetailDto dto = new MSDClassDetailDto();
+		dto.setId(msdclass.getId().intValue());
+		dto.setName(msdclass.getName());
+		dto.setLocation(msdclass.getLocation());
+		dto.setClassStatus(msdclass.getClassStatus());
+		dto.setClassStartTime(msdclass.getClassStartTime());
+		dto.setClassEndTime(msdclass.getClassEndTime());
+		
+		dto.setClassSchedularList(msdClassSchedularAssembler.createDtoFromEntity(msdclassschedulars));
+		
+		dto.setTotalNumberStudent(totalStudentCount);
+		
 		return dto;
 	}
 

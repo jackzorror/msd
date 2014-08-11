@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.morningstardance.app.msdclass.MSDClassDetailDto;
 import com.morningstardance.app.msdclass.MSDClassDto;
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.app.msdclass.MSDClassFacade;
@@ -43,7 +44,7 @@ public class MSDClassController {
 	
 		@RequestMapping(value="/{msdClassId}", method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
 		public @ResponseBody ResponseDto getMSDClassByIdVer1(@PathVariable("msdClassId") Long msdClassId) {
-			MSDClassSummaryDto dto = msdClassFacade.getMSDClassById(msdClassId);
+			MSDClassDto dto = msdClassFacade.getMSDClassById(msdClassId);
 	        ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 			return responseDto;
 		}
@@ -84,5 +85,26 @@ public class MSDClassController {
 			return responseDto;
 		}
 	    
+		@RequestMapping(value="/{msdClassId}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
+		public @ResponseBody ResponseDto getMSDClassByIdAndTypeDfltVer(@PathVariable("msdClassId") Long msdClassId, String type) {
+			return getMSDClassByIdAndTypeVer1(msdClassId, type);
+		}
+	
+		@RequestMapping(value="/{msdClassId}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
+		public @ResponseBody ResponseDto getMSDClassByIdAndTypeVer1(@PathVariable("msdClassId") Long msdClassId, String type) {
+			ResponseDto responseDto = null;
+			if ("SUMMARY".equals(type)) {
+				MSDClassSummaryDto dto = msdClassFacade.getMSDClassSummaryById(msdClassId);
+		        responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
+			} else if ("DETAIL".equals(type)) {
+				MSDClassDetailDto dto = msdClassFacade.getMSDClassDetailById(msdClassId);
+		        responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
+			} else {
+				responseDto = ResponseDto.createResponseDto(null, "GET", "OBJECT");
+			}
+			
+			return responseDto;
+		}
+
 	    
 }

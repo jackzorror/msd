@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassSchedular;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
+import com.morningstardance.domain.msdstudentclass.MSDStudentClassRepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassSchedularJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentClassJPARepository;
 
 @Service("msdClassFacade")
 public class MSDClassFacadeImpl implements MSDClassFacade {
@@ -28,14 +30,19 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
     
     @Resource
     private MSDClassSchedularJPARepository msdClassSchedularJPARepository;
+    
+    @Resource
+    private MSDStudentClassRepository msdStudentClassRepository;
+    
+    @Resource
+    private MSDStudentClassJPARepository msdStudentClassJPARepository;
 
 
     @Transactional(readOnly = true)
 	@Override
-	public MSDClassSummaryDto getMSDClassById(Long msdclassId) {
+	public MSDClassDto getMSDClassById(Long msdclassId) {
 		MSDClass msdclass = msdClassJPARepository.findOne(msdclassId);
-		List<MSDClassSchedular> msdclassschedulars = (List<MSDClassSchedular>) msdClassSchedularJPARepository.findByMsdClassId(msdclassId.intValue());
-		return msdClassAssembler.createSummaryDtoFromEntity(msdclass, msdclassschedulars);
+		return msdClassAssembler.createDtoFromEntity(msdclass);
 	}
 
     @Transactional(readOnly = true)
@@ -74,5 +81,23 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 		MSDClass msdc =  msdClassJPARepository.findByName(cname);
 		MSDClassDto dto = msdClassAssembler.createDtoFromEntity(msdc);
 		return dto;
+	}
+
+	@Override
+	public MSDClassSummaryDto getMSDClassSummaryById(Long msdClassId) {
+		MSDClass msdclass = msdClassJPARepository.findOne(msdClassId);
+		List<MSDClassSchedular> msdclassschedulars = (List<MSDClassSchedular>) msdClassSchedularJPARepository.findByMsdClassId(msdClassId.intValue());
+		return msdClassAssembler.createSummaryDtoFromEntity(msdclass, msdclassschedulars);
+	}
+
+	@Override
+	public MSDClassDetailDto getMSDClassDetailById(Long msdClassId) {
+		MSDClass msdclass = msdClassJPARepository.findOne(msdClassId);
+		List<MSDClassSchedular> msdclassschedulars = (List<MSDClassSchedular>) msdClassSchedularJPARepository.findByMsdClassId(msdClassId.intValue());
+//		int totalStudentCount = msdStudentClassJPARepository.getAllStudentCount(msdClassId.intValue());
+//		int totalStudentCount = msdStudentClassRepository.getAllStudentCount(msdClassId);
+		int totalStudentCount = msdStudentClassJPARepository.findByMsdClassId(msdClassId.intValue()).size();
+
+		return msdClassAssembler.createClassDetailFromEntity(msdclass, msdclassschedulars, totalStudentCount);
 	}
 }

@@ -6,7 +6,7 @@ import com.morningstardance.domain.entity.MSDClass;
 
 public interface MSDClassFacade {
 
-	MSDClassSummaryDto getMSDClassById(Long msdclassId);
+	MSDClassDto getMSDClassById(Long msdclassId);
 
 	List<MSDClassSummaryDto> getAllMSDClass();
 
@@ -17,5 +17,9 @@ public interface MSDClassFacade {
 	List<String> getClassUniqueName();
 
 	MSDClassDto getClassByClassName(String classname);
+	
+	MSDClassSummaryDto getMSDClassSummaryById(Long msdClassId);
+
+	MSDClassDetailDto getMSDClassDetailById(Long msdClassId);
 
 }
