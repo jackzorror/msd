@@ -25,15 +25,14 @@ function initClassTab() {
 
 };
 
-
 function addClassTabsEventListeners() {
 	$(document).on('click', '#btnSearchClass', handleSearchClassClick);
-/*
+	$(document).on('keypress', '#txtClassSearchName', handleClassSEarchNameKeypress);
+	$(document).on('click', '#btnClearClass', handleClearClassClick);
 	$(document).on('click', '#btnAddClass', handleAddClassClick);
+	
 	$(document).on('click', '#btnEditClassInformation', handleEditClassClick);
 	$(document).on('click', '#btnSaveClassInformation', handleSaveClassClick);
-	$(document).on('click', '#btnAddSchedular', handleAddSchedularClick);
-*/
 }
 
 // Event handle
@@ -46,17 +45,25 @@ function handleSearchClassClick() {
 	    alert("please input class name to search ... ");
 	} else {
 		console.log (" call ajax to get class ... ");
-		$('#classCommondiv').empty();
-		$('#schedularInformationdiv').empty();
-
 		ajaxGetClassDetailByName(cname, getClassDetailByName);
 	}
 
-	setCurrentFunction("SEARCH");
+	setCurrentFunctionInClassTab("SEARCH");
 };
-/*
+
+function handleClassSEarchNameKeypress(e) {
+	if (e.which == 13)
+		$('#btnSearchClass').click();
+}
+
+function handleClearClassClick() {
+	$('#classMainPanel').empty();
+	$('#txtClassSearchName').val('');
+	$('#txtClassSearchName').focus();
+}
+
 function handleEditClassClick() {
-	if ("SEARCH" == getCurrentFunction()) {
+	if ("SEARCH" == getCurrentFunctionInClassTab()) {
 		if ("Edit" == $('#btnEditClassInformation').val()) {
 			$('#classCommondiv :text').prop("disabled", false);
 			$('#txtClassName').focus();
@@ -73,78 +80,56 @@ function handleEditClassClick() {
 			$('#btnEditClassInformation').val("Edit");
 			$('#btnSaveClassInformation').jqxButton('disabled', true);
 		}
-	} else if ("ADD" == getCurrentFunction()) {
-//		$('#classCommondiv').empty();
+	} else if ("ADD" == getCurrentFunctionInClassTab()) {
+		$('#btnClearClass').click();
 	}
 };
 
 function handleSaveClassClick() {
-	console.log(" in save class information ... ");
-	var id = getCurrentClass().id;
+	var id = (null != getCurrentClassInClassTab() ? getCurrentClassInClassTab().id : null);
 	var cname = $('#txtClassName').val();
 	var clocation  = $('#txtLocation').val();
 	var sdate = $('#divStartTime').jqxDateTimeInput('value');
 	var edate = $('#divEndTime').jqxDateTimeInput('value');
 	console.log(" new class : " + cname + " -> " + clocation + " time : " + sdate  + " ~ " + edate);
-	saveClassInformatioin(id, cname, clocation, sdate, edate);
+	ajaxSaveClassInformation(id, cname, clocation, sdate, edate, saveClassInformation);
 }
 
 function handleAddClassClick() {
 	console.log(" in handle add ... ");
 	
-	setCurrentFunction("ADD");
+	setCurrentFunctionInClassTab("ADD");
+	showClassInformation(null);
+	setCurrentClassInClassTab(null);
+
+	$('#txtClassSearchName').val('');
+	$('#classCommondiv :text').prop("disabled", false);
+	$('#txtClassName').focus();
+	$('#btnEditClassInformation').val("Cancel");
+	$('#btnSaveClassInformation').jqxButton('disabled', false);
+	$('#divStartTime').jqxDateTimeInput({ disabled: false });
+	$('#divEndTime').jqxDateTimeInput({ disabled: false });
 }
 
-function handleAddSchedularClick() {
-	var weekdays = $('#weekdaydiv').jqxDropDownList('getCheckedItems');
-	var stime = $('#txtStartTime').val();
-	var etime = $('#txtEndTime').val();
-	var weekdaystrs = new Array();
-	var classid = getCurrentClass().id;
-	$.each(weekdays, function (index) {
-		weekday = this.label;
-		weekdaystrs.push(weekday);
-	});
-	newschedular = {"id":0, "msdClassId":classid, "startTime":stime, "endTime":etime, "weekdays":weekdaystrs};
-	
-	addNewSchedulars(newschedular);
-}
-
-function classWindowLogout() {
-	$('#classWindow').jqxWindow('expand');
-	$('#classWindow').jqxWindow('close');
-	initClassWindow();
-};
-
-function initClassWindow() {
-	initClassDiv();
-	var mainContainer = $('#mainContainer');
-   	var offset = mainContainer.offset();
-    var theme = getTheme();
-	$('#classWindow').jqxWindow({height: '300px', width: '450px', theme: theme, position: { x: offset.left + 50, y: offset.top + 50} });
-}
-*/
 function showClassInformation(data) {
 
 	createClassInformationDiv();
 	$('#txtClassName').jqxInput({disabled:true });
-	$('#txtClassName').jqxInput('val', data.name);
+	$('#txtClassName').jqxInput('val', null != data ? data.name : "");
 	
 	
 	$('#txtLocation').jqxInput({disabled:true });
-	$('#txtLocation').jqxInput('val', data.location);
+	$('#txtLocation').jqxInput('val', null != data ? data.location : "");
 	
-	if (null != data.classStartTime) {
-		$('#divStartTime').val(data.classStartTime);
-	}
+	$('#divStartTime').val(null != data && null != data.classStartTime ? data.classStartTime : null);
+
 	$('#divStartTime').jqxDateTimeInput({ disabled: true });
 	
-	if (null != data.classEndTime) {
-		$('#divEndTime').val(data.classEndTime);
-	}
+	$('#divEndTime').val(null != data && null != data.classEndTime ? data.classEndTime : null);
+
 	$('#divEndTime').jqxDateTimeInput({ disabled: true });
 
-	if (null != data.classStatus) {
+	if (null != data && null != data.classStatus) {
 		if ("ACTIVE" == data.classStatus) {
 			$('#labelClassStatus').text(data.classStatus);
 			$('#labelClassStatus').css("color", "green");
@@ -155,58 +140,33 @@ function showClassInformation(data) {
 			$('#labelClassStatus').text(data.classStatus);
 			$('#labelClassStatus').css("color", "red");
 		}
+	} else {
+		$('#labelClassStatus').text("NA");
+		$('#labelClassStatus').css("color", "grey");
 	}
 	$('#btnSaveClassInformation').jqxButton({ disabled:true });
-		
-//	getClassSchedularByClassId(data.id);
-	
-//	createAddClassSchedularDiv();
 
+	if (null != data)
+		ajaxGetClassSchedularByClassId(data.id, getClassSchedularByClassId);
+	
 }
-/*
-function createAddClassSchedularDiv() {
-	$('#addSchedulardiv').empty();
-	
-	$('#addSchedulardiv').append('<label style="float:left; margin-top:2px;">Weekday : </label>');
-	var weekdaydiv = $('<div style="float:left; margin-left:5px"/>').attr({id:'weekdaydiv'});
-	$('#addSchedulardiv').append(weekdaydiv);
-	$('#weekdaydiv').jqxDropDownList({ checkboxes: true, source: WeekDayShortNameArray, selectedIndex: 1, width: '60', height: '20', theme: theme });
-	
-	$('#addSchedulardiv').append('<label style="float:left; margin-top:2px; margin-left:5px;">Start : </label>');
-	var stime = $('<input style="float:left; margin-left:5px;"/>').attr({type:'text', id:'txtStartTime'});
-	$('#addSchedulardiv').append(stime);
-	$('#txtStartTime').jqxInput({placeHolder: "Start Time", height: 20, width:45, minLength: 1, theme: getTheme() });
-	$('#txtStartTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
-	
-	$('#addSchedulardiv').append('<label style="float:left; margin-top:2px; margin-left:5px;">End : </label>');
-	var etime = $('<input style="float:left; margin-left:5px;"/>').attr({type:'text', id:'txtEndTime'});
-	$('#addSchedulardiv').append(etime);
-	$('#txtEndTime').jqxInput({placeHolder: "End Time", height: 20, width:45, minLength: 1, theme: getTheme() });
-	$('#txtEndTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
-	
-	var btnadd = $('<input style="float:right; margin-right:10px;"/>').attr({type:'button', id:'btnAddSchedular', value:'Add'});
-	$('#addSchedulardiv').append(btnadd);
-	$('#btnAddSchedular').jqxButton({ width: '60', height: 20, theme: getTheme() });
-}
-*/
+
 function createClassInformationDiv() {
 
-	var ccdiv = $('<div class="InnerDiv" style = "margin-left:10px; margin-top:10px; border:0px solid; height:80px;"/>').attr({id:'classCommondiv'});
+	$('#classMainPanel').empty();
+
+	var ccdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid; height:100px;"/>').attr({id:'classCommondiv'});
 	$('#classMainPanel').append(ccdiv);
 	
-	var cddiv = $('<div class="InnerDiv" style = "margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'classDetaildiv'});
+	var cddiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid;"/>').attr({id:'classDetaildiv'});
 	$('#classMainPanel').append(cddiv);
 	
-	var asdiv = $('<div style = "margin-top: 10px; margin-left:10px; border:1px solid;"/>').attr({id:'addSchedulardiv'});
-	$('#classMainPanel').append(asdiv);
-	
-	var sdiv = $('<div style = "margin-top: 10px; margin-left:10px; border:1px solid;"/>').attr({id:'schedularInformationdiv'});
-	$('#classMainPanel').append(sdiv);
-	
+	var sdiv = $('<div class="InnerDiv" style = "margin-top: 0px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'schedularInformationdiv'});
+	$('#classMainPanel').append(sdiv);	
 
 	$('#classCommondiv').empty();
 	$('#schedularInformationdiv').empty();
-	
+	$('#classCommondiv').append('<br/>');
 	$('#classCommondiv').append('<label style="margin-left:10px; margin-top:10px;"><b>Class Information ... </b></label>');
 
 	var savebtn = $('<input style="float:right; margin-top:5px;margin-right:5px"/>').attr({type:'button', id:'btnSaveClassInformation', value:'Save' });
@@ -267,15 +227,6 @@ function createClassInformationDiv() {
 	$('#tmpdiv').append(statusLabel);
 
 	$('#classCommondiv').append('<br />');
-/*
-	var savebtn = $('<input style="margin-top:10px;"/>').attr({type:'button', id:'btnSaveClassInformation', value:'Save' });
-	$('#classCommondiv').append(savebtn);
-	$('#btnSaveClassInformation').jqxButton({ width: '60', height: 20, theme: getTheme() });
-		
-	var editbtn = $('<input style="margin-top:10px; "/>').attr({type:'button', id:'btnEditClassInformation', value:'Edit' });
-	$('#classCommondiv').append(editbtn);
-	$('#btnEditClassInformation').jqxButton({ width: '60', height: 20, theme: getTheme() });
-*/
 }
 
 function getClassDetailByName(response, request, settings) {
@@ -285,15 +236,14 @@ function getClassDetailByName(response, request, settings) {
 		console.log(" get class detail by class name");
 		var data = $.parseJSON(response.result);
 		showClassInformation(data);
+		setCurrentClassInClassTab(data);
 	} else {
 		alert('error');
 	}
 }
 
-
-/*
 function cancelUpdateClassInformation() {
-	var data = getCurrentClass();
+	var data = getCurrentClassInClassTab();
 	$('#txtClassName').jqxInput('val', data.name);
 	$('#txtClassName').jqxInput({disabled:true});
 	$('#txtLocation').jqxInput('val', data.location);
@@ -306,14 +256,38 @@ function cancelUpdateClassInformation() {
 		$('#divEndTime').val(data.classEndTime);
 	}
 	$('#divEndTime').jqxDateTimeInput({ disabled: true });
+
+	if (null != data.classStatus) {
+		if ("ACTIVE" == data.classStatus) {
+			$('#labelClassStatus').text(data.classStatus);
+			$('#labelClassStatus').css("color", "green");
+		} else if ("INACTIVE" == data.classStatus) {
+			$('#labelClassStatus').text(data.classStatus);
+			$('#labelClassStatus').css("color", "blue");
+		} else {
+			$('#labelClassStatus').text(data.classStatus);
+			$('#labelClassStatus').css("color", "red");
+		}
+	}
 }
 
 function showClassSchedularInformation(data) {
 	console.log(" in show class schedular information .. ");
 	$('#schedularInformationdiv').empty();
-	$('#schedularInformationdiv').append('<h3> Class Schedular ... </h3>');
-	var csdiv = $('<div style="border:0px solid;"/>').attr({id:'classSchedularGrid'});	
+	$('#schedularInformationdiv').append('<br/>');
+	$('#schedularInformationdiv').append('<label style="margin-left:10px; margin-top:10px;"><b>Class Scheduler ... </b></label>');
+	$('#schedularInformationdiv').append('<br/>');
+	$('#schedularInformationdiv').append('<br/>');
+	var csdiv = $('<div class="InnerDiv" style="margin-left:80px; border:0px solid;"/>').attr({id:'classSchedularDataTable'});	
 	$('#schedularInformationdiv').append(csdiv);
+	var pdiv = $('<div/>').attr({id:'addClassSchedularPopupWindow'});
+	$('#schedularInformationdiv').append(pdiv);
+	$('#addClassSchedularPopupWindow').append('<div >Add Weekday Class Scheduler</div> <div style="height:130px; width:220px;" id="addClassSchedulerdiv"></div>');
+
+    var offset = $("#classSchedularDataTable").offset();
+    $("#addClassSchedularPopupWindow").jqxWindow({
+    	width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01           
+    });
 	var source = {
 		datafields:[
 			{ name: 'id',   type: 'int'}, 
@@ -327,154 +301,230 @@ function showClassSchedularInformation(data) {
 		localdata:data
 	}
 	var dataAdapter = new $.jqx.dataAdapter(source);
-	$('#classSchedularGrid').jqxGrid(
-	{
-		source:dataAdapter,
-		width: 410,
-		height: 100,
-		columns:[
+	
+    $("#classSchedularDataTable").jqxDataTable({
+		width: 600,
+	    source: dataAdapter,
+                
+    	pageable: false,
+	    editable: false,
+    	showToolbar: true,
+	    altrows: true,
+    	ready: function(){},
+	    toolbarHeight: 25,
+    	renderToolbar: function(toolBar){
+    		var toTheme = function (className) {
+    			if (getTheme() == "") return className;
+	            return className + " " + className + "-" + theme;
+    	    }
+                    // appends buttons to the status bar.
+        	var container = $("<div style='overflow: hidden; position: relative; height: 100%; width: 100%; margin-top:5px'> <b> Weekly Class Scheduler </b></div>");
+	        var buttonTemplate = "<div style='float: right; padding: 1px; margin: 1px;'><div style='width: 16px; height: 16px;'></div></div>";
+    	    var addButton = $(buttonTemplate);
+        	var deleteButton = $(buttonTemplate);
+	        container.append(addButton);
+    	    container.append(deleteButton);
+        	toolBar.append(container);
+	        addButton.jqxButton({cursor: "pointer", enableDefault: false,  height: 25, width: 25 });
+    	    addButton.find('div:first').addClass(toTheme('jqx-icon-plus'));
+        	addButton.jqxTooltip({ position: 'bottom', content: "Add"});
+	        deleteButton.jqxButton({ cursor: "pointer", disabled: true, enableDefault: false,  height: 25, width: 25 });
+    	    deleteButton.find('div:first').addClass(toTheme('jqx-icon-delete'));
+        	deleteButton.jqxTooltip({ position: 'bottom', content: "Delete"});
+	        var updateButtons = function (action) {
+    	    	switch (action) {
+        	    	case "Select":
+            	    	addButton.jqxButton({ disabled: false });
+                	    deleteButton.jqxButton({ disabled: false });
+                    	break;
+	                case "Unselect":
+    	                addButton.jqxButton({ disabled: false });
+        	            deleteButton.jqxButton({ disabled: true });
+            	        break;
+            	}
+        	}
+	        var rowIndex = null;
+    	    $("#classSchedularDataTable").on('rowSelect', function (event) {
+        		var args = event.args;
+            	rowIndex = args.index;
+	            updateButtons('Select');
+    	    });
+        	$("#classSchedularDataTable").on('rowUnselect', function (event) {
+        		updateButtons('Unselect');
+	        });
+    	    addButton.click(function (event) {
+        		if (!addButton.jqxButton('disabled')) {
+					createAddClassSchedularDiv();
+				    var offset = $("#classSchedularDataTable").offset();
+					$("#addClassSchedularPopupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 130, y: parseInt(offset.top) - 20 } });
+                    $("#addClassSchedularPopupWindow").jqxWindow('open');
+                    
+                    $('#btnCancelAddSchedular').on('click', function () {
+						console.log(" cancel add scheduler ...");
+						$("#addClassSchedularPopupWindow").jqxWindow('hide');
+                    });
+                    $('#btnAddSchedular').on('click', function () {
+						console.log(" add new scheduler ...");
+                        $("#classSchedularDataTable").jqxDataTable('unselectRow', 0);
+						
+						var weekdays = $('#weekdaydiv').jqxDropDownList('getCheckedItems');
+						console.log(" selected weekday count : " + weekdays.length);
+						var stime = $('#txtStartTime').val();
+						var etime = $('#txtEndTime').val();
+						var weekdaystrs = new Array();
+
+						if (null == weekdays || weekdays.length < 1) {
+						    alert("please select at least one day from weekday list ");
+						} else if (null == stime || stime.length < 1) {
+						    alert("please select class start time ");
+						} else if (null == etime || etime.length < 1) {
+						    alert("please select class end time ");
+						} else {
+							$.each(weekdays, function (index) {
+								weekday = this.label;
+	                            $("#classSchedularDataTable").jqxDataTable('addRow', null, { weekdayStr:weekday, startTime:stime, endTime:etime }, 'first');
+								weekdaystrs.push(weekday);
+							});
+                            $("#classSchedularDataTable").jqxDataTable('selectRow', 0);
+							$("#addClassSchedularPopupWindow").jqxWindow('hide');
+
+							newschedular = {"id":0, "msdClassId":getCurrentClassInClassTab().id, "startTime":stime, "endTime":etime, "weekdays":weekdaystrs};
+	
+							ajaxDddNewSchedulars(newschedular, addNewSchedulars);
+						}
+                    });
+                    
+                	updateButtons('add');
+	            }
+    	    });
+        	deleteButton.click(function () {
+        		if (!deleteButton.jqxButton('disabled')) {
+        			var deleterow = $("#classSchedularDataTable").jqxDataTable('getSelection');
+            		$("#classSchedularDataTable").jqxDataTable('deleteRow', rowIndex);
+	                updateButtons('delete');
+
+	                ajaxDeleteClassSchedular(deleterow[0].id, deleteClassSchedular);
+    	        }
+        	});
+	    },
+    	columns: [
 			{text: 'Class ID', datafield:'msdClassId', hidden:'true'},
 			{text: 'ID', datafield:'id', hidden:'true'},
-			{text: 'Weekday', datafield: 'weekdayStr', width: 100},
-			{text: 'Start Time', datafield: 'startTime', width:100},
-			{text: 'End Time', datafield: 'endTime', width:100},
-			{text: 'Delete', datafield: 'Delete', columntype:'button', cellsrenderer:function() {
-				return "Delete";
-			}, buttonclick:function(row) {
-				var id = $("#classSchedularGrid").jqxGrid('getcellvalue', row, "id");
-				deleteClassSchedular(id);
-			}
-		}]
-	});
-	
+			{text: 'Weekday', datafield: 'weekdayStr', width: 200},
+			{text: 'Start Time', datafield: 'startTime', width:200},
+			{text: 'End Time', datafield: 'endTime', width:200}
+		]
+    });
+    
+	$('#schedularInformationdiv').append('<br/>');
 }
 
-// AJAX call ...
-*/
-/*
-function getClassSchedularByClassId(id) {
+function deleteClassSchedular(response, request, settings) {
+	if (404 == response.code) {
+		alert(" Can't delete class schedular ... ");
+	} else if (302 == response.code) {
+		console.log(" successfully delete class schedular ... ");
+	} else {
+		alert("error to find student ... ");
+	}
+}
+
+function createAddClassSchedularDiv() {
+	$('#addClassSchedulerdiv').empty();
+
+	// weekday	
+	var tdiv = $('<div style="margin-top:10px; border:0px solid;"/>');
+	$('#addClassSchedulerdiv').append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">Weekday : </label>');
+	var weekdaydiv = $('<div style="margin-left:5px"/>').attr({id:'weekdaydiv'});
+	tdiv.append(weekdaydiv);
+	$('#weekdaydiv').jqxDropDownList({ checkboxes: true, dropDownHeight:170, source: WeekDayShortNameArray, selectedIndex: 1, width: '120', height: '20', theme: theme });
+
+	// start time
+	var tdiv = $('<div style="margin-top:5px; width:180px;border:0px solid;" align="right" />');
+	$('#addClassSchedulerdiv').append(tdiv);
+	tdiv.append('<label style="margin-top:2px; margin-left:5px;">Start : </label>');
+	var stime = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtStartTime'});
+	tdiv.append(stime);
+	$('#txtStartTime').jqxInput({rtl: true, placeHolder: "Start Time", height: 20, width:100, minLength: 1, theme: getTheme() });
+	$('#txtStartTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
+
+	// end time
+	var tdiv = $('<div style="margin-top:5px; width:180px;border:0px solid;" align="right" />');
+	$('#addClassSchedulerdiv').append(tdiv);
+	tdiv.append('<label style="margin-top:2px; margin-left:5px;">End : </label>');
+	var etime = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtEndTime'});
+	tdiv.append(etime);
+	$('#txtEndTime').jqxInput({rtl: true, placeHolder: "End Time", height: 20, width:100, minLength: 1, theme: getTheme() });
+	$('#txtEndTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
+	
+	$('#addClassSchedulerdiv').append('<br/>');
+
+	// action button
+	var tdiv = $('<div style="margin-top:5px; border:0px solid;" align="right" />');
+	$('#addClassSchedulerdiv').append(tdiv);
+	var btnadd = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnAddSchedular', value:'Add'});
+	tdiv.append(btnadd);
+	$('#btnAddSchedular').jqxButton({ width: '60', height: 20, theme: getTheme() });
+	var btncancel = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnCancelAddSchedular', value:'Cancel'});
+	tdiv.append(btncancel);
+	$('#btnCancelAddSchedular').jqxButton({ width: '60', height: 20, theme: getTheme() });
+}
+
+function addNewSchedulars(response, request, settings) {
+	if (500 == response.code) {
+		alert("Internal Error, Please check service. ");
+	} else if (302 == response.code) {
+		console.log(" add class schedulars successfully ... ");
+	} else {
+		alert('error');
+	}
+}
+
+function getClassSchedularByClassId(response, request, settings) {
 	console.log(" in get class schedular by id ... ");
-	$.ajax({
-		type: "GET",
-		url: "../msd-app/rs/msdclassschedular",
-		dataType: "json",
-		contentType: "application/json",
-		data: { msdclassid: id},
-		success: function(response) {
-			if (404 == response.code) {
-				console.log(" Can't find class schedular by id : " + id);
-				$('#schedularInformationdiv').empty();				
-			} else if (302 == response.code) {
-				var data = $.parseJSON(response.result);
-				console.log(" get class schedular by id ");
-				showClassSchedularInformation(data);
-				
-			} else {
-				alert('error');
-			}
-		},
-		error: function(msg, url, line) {
-			handleAjaxError(msg);
-		}
-	});
-
+	if (404 == response.code) {
+		console.log(" Can't find class schedular by id : " + getCurrentClassInClassTab().id);
+		showClassSchedularInformation(null);
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get class schedular by id ");
+		showClassSchedularInformation(data);
+	} else {
+		alert('error');
+	}
 }
 
-function saveClassInformatioin(id, cname, clocation, sdate, edate) {
-	var classInfo = {"id":id, "name":cname, "location":clocation, "classStartTime":sdate, "classEndTime":edate};
-
-	$.ajax({
-		type: "PUT",
-		dataType: "json",
-		url: "../msd-app/rs/msdclass",
-		data: JSON.stringify(classInfo),
-		contentType: "application/json",
-		processData:false,
-		success: function(response) {
-			if (500 == response.code) {
-				alert("Internal Error, Please check service. ");
-			} else if (302 == response.code) {
-				console.log(" add class successfully ... ");
-				data = $.parseJSON(response.result);
-				setCurrentClass(data);
-				showClassInformation(data);
-			} else {
-				alert('error');
-			}
-		},
-		error: function(msg, url, line) {
-			handleAjaxError(msg);
-		}
-	});
+function saveClassInformation(response, request, settings) {
+	if (500 == response.code) {
+		alert("Internal Error, Please check service. ");
+	} else if (302 == response.code) {
+		console.log(" add class successfully ... ");
+		data = $.parseJSON(response.result);
+		$('#txtClassSearchName').val(data.name);
+		$('#btnSearchClass').click();		
+		ajaxGetAllClassName(getAllClassName);
+		
+//		setCurrentClassInClassTab(data);
+//		showClassInformation(data);
+	} else {
+		alert('error');
+	}
 }
 
-function addNewSchedulars(newschedular) {
-	$.ajax({
-		type: "PUT",
-		dataType: "json",
-		url: "../msd-app/rs/msdclassschedular",
-		data: JSON.stringify(newschedular),
-		contentType: "application/json",
-		processData:false,
-		success: function(response) {
-			if (500 == response.code) {
-				alert("Internal Error, Please check service. ");
-			} else if (302 == response.code) {
-				console.log(" add class schedulars successfully ... ");
-				$('#txtStartTime').val("");
-				$('#txtEndTime').val("");
-				$('#weekdaydiv').val("");
-				$('#weekdaydiv').jqxDropDownList('uncheckAll'); 
-				getClassSchedularByClassId(getCurrentClass().id);
-			} else {
-				alert('error');
-			}
-		},
-		error: function(msg, url, line) {
-			handleAjaxError(msg);
-		}
-	});
-
+var currentFunctionInClassTab;
+function setCurrentFunctionInClassTab(status) {
+	currentFunctionInClassTab = status;
+}
+function getCurrentFunctionInClassTab() {
+	return currentFunctionInClassTab;
 }
 
-function deleteClassSchedular(id) {
-	console.log(" delete class schedular ");
-	
-		$.ajax({
-		type: "DELETE",
-		dataType: "json",
-		url: "../msd-app/rs/msdclassschedular/" + id,
-		success: function(response) {
-			console.log(" get student ... ");
-			if (404 == response.code) {
-				alert(" Can't delete class schedular ... ");
-			} else if (302 == response.code) {
-				var data = $.parseJSON(response.result);
-				getClassSchedularByClassId(getCurrentClass().id);
-			} else {
-				alert("error to find student ... ");
-			}
-		},
-		error: function(msg, url, line) {
-			handleAjaxError(msg);
-		}
-	});
-
+var currentClassInClassTab;
+function getCurrentClassInClassTab(){
+	return currentClassInClassTab;
 }
-*/
-var currentFunction;
-function setCurrentFunction(status) {
-	currentFunction = status;
-}
-function getCurrentFunction() {
-	return currentFunction;
-}
-
-var currentClass;
-function getCurrentClass(){
-	return currentClass;
-}
-function setCurrentClass(value) {
-	currentClass = value;
+function setCurrentClassInClassTab(value) {
+	currentClassInClassTab = value;
 }
 

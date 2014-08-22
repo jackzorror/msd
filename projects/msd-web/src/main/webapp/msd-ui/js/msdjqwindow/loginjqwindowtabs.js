@@ -162,8 +162,6 @@ function getUniqueFirstNameForStudent(response) {
 
     	$( '#txtStudentSearchFirstName' ).jqxInput({ source: data });
     	setFirstNameList(data);
-	    $( '#txtStudentSearchLastName' ).jqxInput({ source: data });
-	    setLastNameList(data);
 	} else {
 		alert(" Can't get unique for " + fieldname + " ... ");
 	}
