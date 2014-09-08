@@ -70,7 +70,6 @@ public class MSDUserDetailsService implements UserDetailsService {
 				break;
 			case 2:
 				roleStrings.add("ROLE_ADMIN");
-				roleStrings.add("");
 				break;
 			default:
 				;

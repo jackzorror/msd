@@ -132,12 +132,27 @@ public class MSDStudentController {
 		return getStudentDetailByStudentIdVer1(msdstudentid);
 	}
 
-    @RequestMapping(params={"type=studentdetail", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+    @RequestMapping(params={"type=", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto getStudentDetailByStudentIdVer1(Long msdstudentid) {
 		MSDStudentDetailDto dto = msdStudentFacade.getStudentDetailDtoById(msdstudentid);
 		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
+    
+    @RequestMapping(value="/ByClssName/{msdclassname}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto getAllStudentByClassNameDfltVer(@PathVariable String msdclassname, String type) {
+		return getAllStudentByClassNameVer1(msdclassname, type);
+	}
+
+    @RequestMapping(value="/ByClassName/{msdclassname}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto getAllStudentByClassNameVer1(@PathVariable String msdclassname, String type) {
+    	if (type.equals("Summary")) {
+    		List<MSDStudentDto> dtos = msdStudentFacade.getAllStudentSummaryDtoByClassName(msdclassname);
+    		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+    		return responseDto;
+    	}
+    	return null;
+    }
     
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto updateStudentInformationDfltVer(@RequestBody MSDStudentDetailDto studentDetailDto) {
@@ -235,5 +250,6 @@ public class MSDStudentController {
     	}
     	return null;
     }
+    
     
 }

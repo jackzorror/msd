@@ -87,6 +87,8 @@ public class ResponseDto {
    				JSONObject json = new JSONObject(object);
    				dto.setResult(json.toString());
    			}
+   		} else if ("BOOLEAN".equals(resultType)) {
+   			dto.setResult(object.toString());
    		}
    		
    		return dto;

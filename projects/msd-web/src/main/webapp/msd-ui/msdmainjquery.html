@@ -110,6 +110,7 @@
     <script type="text/javascript" src="js/msdjqwindow/loginjqwindowtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/studentjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/classjqtabs.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/adminjqtabs.js"></script>
     
     <script type="text/javascript" src="js/lib/messageutil.js"></script>
     <script type="text/javascript" src="js/lib/ajaxutil.js"></script>
@@ -142,6 +143,7 @@
 			addStudentTabsEventListeners();      
 			addLoginWindowEventListeners();  
 			addClassTabsEventListeners();    
+			addAdminTabsEventListeners();    
         }
         
         function createElements(theme) {
@@ -174,6 +176,7 @@
 			$('#msdMainTabs').jqxTabs({ width: 750, height: 600, position: 'top', theme: theme, animationType: 'fade', scrollable:true, selectionTracker: true });
 			$('#studentDockPanel').jqxDockPanel({ width: 750, height: 550});	
 			$('#classDockPanel').jqxDockPanel({width: 750, height:550});
+			$('#adminDockPanel').jqxDockPanel({width: 750, height:550});
 			document.getElementById('msdMainTabs').style.visibility= 'hidden' ;
 
            $('#msdMainTabs').on('selected', function (event) {
@@ -184,6 +187,7 @@
             addEventListeners(theme);
             initStudentTab();
             initClassTab();
+            initAdminTab();
             
             $(this).mousemove(function(e){
             	idleTime=0;
@@ -207,6 +211,7 @@
 				<ul>
 	    			<li>Student</li>
 					<li>Class</li>
+					<li>Admin</li>		
 				</ul>
   				<div id="tabs-Student">
   					<div id='studentDockPanel'>
@@ -218,8 +223,14 @@
   				<div id="tabs-Class" style='background:#e0e9f5'>
   					<div id='classDockPanel'>
 					    <div id='classControlPanel' dock='top' style='height: 30px;'></div>
-					    <div id='classMainPanel' />
+					    <div id='classMainPanel'></div>
 					</div>
+  				</div>
+  				<div id="tabs-Admin">
+  					<div id='adminDockPanel'>
+  						<div id='adminControlPanel' dock='left' style='width: 110px;'>control</div>
+  						<div id='adminMainPanel' style='background:#e0e9f5;'></div>
+  					</div>
   				</div>
 			</div>
         </div>

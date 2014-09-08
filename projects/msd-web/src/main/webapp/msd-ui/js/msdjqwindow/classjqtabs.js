@@ -303,6 +303,7 @@ function showClassSchedularInformation(data) {
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	
     $("#classSchedularDataTable").jqxDataTable({
+		theme: getTheme(),
 		width: 600,
 	    source: dataAdapter,
                 

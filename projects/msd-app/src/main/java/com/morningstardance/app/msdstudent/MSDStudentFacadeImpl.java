@@ -15,6 +15,7 @@ import com.morningstardance.domain.entity.MSDStudent;
 import com.morningstardance.domain.entity.MSDStudentClass;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassSchedularJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentJPARepository;
@@ -42,6 +43,9 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	
 	@Resource
 	private MSDClassSchedularJPARepository msdClassSchedularJPARepository;
+	
+	@Resource
+	private MSDClassJPARepository msdClassJPARepository;
 	
 	@Override
 	public List<MSDStudentDto> getAllStudents() {
@@ -167,6 +171,22 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 			return ex.getStackTrace().toString();
 		}
 		return null;
+	}
+
+	@Override
+	public List<MSDStudentDto> getAllStudentSummaryDtoByClassName(String msdclassname) {
+		List<MSDStudent> ms = null;
+		List<MSDStudentDto> msdtos = null;
+		if (msdclassname.equals("All")) {
+			ms = msdStudentJPARepository.findAll();
+		} else {
+			MSDClass c = msdClassJPARepository.findByName(msdclassname);
+			if (null != c) {
+				ms = msdStudentRepository.getAllByClassId(c.getId());
+				msdtos = msdStudentAssembler.createDtoFromEntity(ms);
+			} 
+		}
+		return msdtos;
 	}
 
 }

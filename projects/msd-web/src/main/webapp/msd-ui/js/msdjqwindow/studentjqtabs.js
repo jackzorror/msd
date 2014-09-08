@@ -881,6 +881,7 @@ function showClassDetailSchedular(data) {
 	{
 		source:dataAdapter,
 		width: 410,
+		theme: getTheme(),
 		columns:[
 			{text: 'Class ID', datafield:'msdClassId', hidden:'true'},
 			{text: 'ID', datafield:'id', hidden:'true'},

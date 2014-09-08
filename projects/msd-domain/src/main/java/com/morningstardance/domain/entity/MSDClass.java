@@ -43,6 +43,9 @@ public class MSDClass extends MSDEntityBase {
 	@Column(name="class_status")
 	private String classStatus;
 	
+	@Column(name="is_active")
+	private byte isActive;
+
 	public MSDClass() {
 	}
 
@@ -92,6 +95,14 @@ public class MSDClass extends MSDEntityBase {
 
 	public void setClassStatus(String classStatus) {
 		this.classStatus = classStatus;
+	}
+
+	public byte getIsActive() {
+		return this.isActive;
+	}
+
+	public void setIsActive(byte isActive) {
+		this.isActive = isActive;
 	}
 
 }

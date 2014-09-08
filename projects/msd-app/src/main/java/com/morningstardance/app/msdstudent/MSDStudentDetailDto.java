@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class MSDStudentDetailDto {
+public class MSDStudentDetailDto extends MSDStudentDto {
 	private int id;
 	private String firstName;
 	private String lastName;

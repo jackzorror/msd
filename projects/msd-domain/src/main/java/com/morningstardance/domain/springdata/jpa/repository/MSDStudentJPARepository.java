@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.morningstardance.domain.entity.MSDStudent;
 
@@ -16,5 +17,8 @@ public interface MSDStudentJPARepository extends JpaRepository<MSDStudent, Long>
 	public List<String> findUniqueLastNames();	
 	
 	public MSDStudent findByFirstNameAndLastName(String firstName, String lastName);
-
+	/*
+	@Query("SELECT ms FROM MSDStudent ms join MSDStudentClass msc on ms.id = msc.msdStudentId where msc.msdClassId = :msdClassId")
+	public List<MSDStudent> findByClassId(@Param("msdClassId") int msdclassid);
+	*/
 }

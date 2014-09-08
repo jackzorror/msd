@@ -33,4 +33,6 @@ public interface MSDStudentFacade {
 
 	String deleteRegisterClassByStudentIdAndClassId(Long msdstudentid, Long msdclassid);
 
+	List<MSDStudentDto> getAllStudentSummaryDtoByClassName(String msdclassname);
+
 }

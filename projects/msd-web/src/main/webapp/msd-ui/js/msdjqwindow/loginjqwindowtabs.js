@@ -146,15 +146,32 @@ function afterUserLoginProcess() {
 	
 	if (document.getElementById('msdMainTabs') != null)
 		document.getElementById('msdMainTabs').style.visibility= 'visible' ;
-	
+
+	ajaxHasRole("ROLE_ADMIN", hasRole);
+
 	$('#txtStudentSearchFirstName').focus();
 		
 	ajaxGetUniqueName("FIRSTNAME", getUniqueFirstNameForStudent);
 	ajaxGetUniqueName("LASTNAME",getUniqueLasstNameForStudent);
 	ajaxGetAllClassName(getAllClassName);
-
+	
 	setTimerId(setInterval("timercount()", 60000));
+	
 }
+
+function hasRole(response) {
+	if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		if (!data) {
+			if (document.getElementById('msdMainTabs') != null)
+				$('#msdMainTabs').jqxTabs('removeLast'); 
+		}
+	} else {
+		alert(" Can't get unique for " + fieldname + " ... ");
+	}
+}
+
+
 
 function getUniqueFirstNameForStudent(response) {
 	if (302 == response.code) {
@@ -185,6 +202,7 @@ function getAllClassName(response) {
 		var data = $.parseJSON(response.result);
 		console.log(" get class name list ");
 		$('#txtClassSearchName').jqxInput({source:data});
+		setAllClassNameList(data);
 	} else {
 		alert('error');
 	}
@@ -196,4 +214,12 @@ function getTimerId() {
 }
 function setTimerId(id) {
 	timerId = id;
+}
+
+var allClassNameList;
+function getAllClassNameList() {
+	return allClassNameList;
+}
+function setAllClassNameList(data) {
+	allClassNameList = data;
 }

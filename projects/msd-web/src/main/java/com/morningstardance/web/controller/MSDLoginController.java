@@ -1,12 +1,12 @@
 package com.morningstardance.web.controller;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -56,6 +56,19 @@ public class MSDLoginController {
     	msdLoginFacade.logout(httpRequest,httpResponse);
     	ResponseDto responseDto = null;
 		responseDto = ResponseDto.createResponseDto("Logout", "GET", "OBJECT");
+		return responseDto;
+    }
+
+    @RequestMapping(value="/hasRole/{role}", method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto hasRoleDfltVer(HttpServletRequest httpRequest, HttpServletResponse httpResponse, @PathVariable("role")String role) {
+    	return hasRoletVer1(httpRequest, httpResponse, role);
+    }
+
+    @RequestMapping(value="/hasRole/{role}", method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+    public @ResponseBody ResponseDto hasRoletVer1(HttpServletRequest httpRequest, HttpServletResponse httpResponse, @PathVariable("role")String role) {
+    	boolean hasRole = httpRequest.isUserInRole(role);
+    	ResponseDto responseDto = null;
+		responseDto = ResponseDto.createResponseDto(hasRole, "GET", "BOOLEAN");
 		return responseDto;
     }
 }

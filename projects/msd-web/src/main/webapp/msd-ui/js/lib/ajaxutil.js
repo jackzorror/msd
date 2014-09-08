@@ -42,6 +42,17 @@ function ajaxGetClassDetailByName(className, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxHasRole(role, fName) {
+	console.log(" check user role for : " + role)
+	var ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/msdlogin/hasRole/" + role,
+		dataType: "json",
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
 
 function ajaxGetClassSchedularByClassId(id, fName) {
 	console.log(" get class schedulars by class id ... ");
@@ -114,4 +125,17 @@ function ajaxSaveClassInformation(id, cname, clocation, sdate, edate, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxGetAllStuentSummaryByClassName(cname, fName) {
+	var ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdstudent/ByClssName/" + cname,
+		dataType: "json",
+		contentType: "application/json",
+		data: { "type": "Summary"}
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+	
+}
 

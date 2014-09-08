@@ -156,7 +156,7 @@ function afterUserLoginProcess() {
     $('#btnShowCheckInWindow').jqxButton({disabled: false});
 	
 	$('#loginWindow').jqxWindow('close');
-	
+
     setTimerId(setInterval("timercount()", 60000));
 }
 
