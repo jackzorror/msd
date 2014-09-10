@@ -5,6 +5,7 @@ public class MSDStudentDto {
 	private int id;
 	private String firstName;
 	private String lastName;
+	private String emailAddress;
 	
 	public int getId() {
 		return id;
@@ -23,5 +24,11 @@ public class MSDStudentDto {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 }

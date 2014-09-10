@@ -64,6 +64,10 @@
     	<a>lastName</a>
     	<b>lastName</b>
     </field>
+    <field>
+    	<a>emailAddress</a>
+    	<b>emailAddress</b>
+    </field>
   </mapping>
 
 </mappings>

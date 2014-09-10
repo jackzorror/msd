@@ -3,24 +3,6 @@ function initAdminTab() {
 	console.log(" init admin tab ... ");
 
 	$('#adminControlPanel').empty();
-/*	
-	$('#classControlPanel').append('<label style="margin-top:10px; margin-left:20px">Please input class name : </label>');
-	var cname = $('<input style="margin-top:10px; margin-left:5px"/>').attr({type:'text', id:'txtClassSearchName'});
-	$('#classControlPanel').append(cname);
-	$('#txtClassSearchName').jqxInput({placeHolder: "Class Name", height: 20, width: 300, minLength: 1, theme: getTheme() });
-
-	var abutton = $('<input style="float:right;margin-top:10px; margin-left:3px; margin-right:10px" />').attr({type:'button', id:'btnAddClass', value:'Add'});
-	$('#classControlPanel').append(abutton);
-	$('#btnAddClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
-	
-	var cbutton = $('<input style="float:right;margin-top:10px; margin-left:3px" />').attr({type:'button', id:'btnClearClass', value:'Clear'});
-	$('#classControlPanel').append(cbutton);
-	$('#btnClearClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
-	
-	var sbutton = $('<input style="float:right; margin-top:10px;" />').attr({type:'button', id:'btnSearchClass', value:'Search'});
-	$('#classControlPanel').append(sbutton);
-	$('#btnSearchClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
-*/	
 
 	var abutton = $('<input style="float:left; margin-top:10px; margin-left:5px;" />').attr({type:'button', id:'btnStudentAdmin', value:'Student'});
 	$('#adminControlPanel').append(abutton);
@@ -41,10 +23,6 @@ function addAdminTabsEventListeners() {
 	$(document).on('click', '#btnStudentAdminClearClass', handleStudetnAdminClearClassClick);
 	$(document).on('click', '#btnStudentAdminSearchClass', handleStudentAdminSearchClassClick);
 	$(document).on('click', '#btnStudentAdminClearClass', handlesstudentAdminClearClassClick);
-/*	
-	$(document).on('click', '#btnEditClassInformation', handleEditClassClick);
-	$(document).on('click', '#btnSaveClassInformation', handleSaveClassClick);
-*/
 }
 
 function handleStudentAdminClick() {
@@ -87,6 +65,7 @@ function handleStudetnAdminClearClassClick() {
 
 function handleStudentAdminSearchClassClick() {
 	console.log(" in handleStudentAdminSearchClassClick ... ");
+	$('#studentAdminGridDiv').empty();
 	var cname = $.trim($('#txtStudentAdminClassSearchName').val());
 
 	if ((null == cname || cname.length == 0)) {
@@ -104,6 +83,7 @@ function handlesstudentAdminClearClassClick() {
 function getAllStudentSummaryByClassName(response, request, settings) {
 	if (404 == response.code) {
 		console.log(" Can't get students by class name ... ");
+		alert(" There is no student register in this class ... ");
 	} else if (302 == response.code) {
 		console.log(" get students by class name");
 		var data = $.parseJSON(response.result);
@@ -123,7 +103,8 @@ function showSelectedStudents(data) {
 		datafields:[
 			{ name: 'id',   type: 'int'}, 
 			{ name: 'firstName',  type: 'string'},
-			{ name: 'lastName', type: 'string'}
+			{ name: 'lastName', type: 'string'},
+			{ name: 'emailAddress', type: 'string'}
 		],
 		datatype:'json',
 		localdata:data
@@ -142,21 +123,42 @@ function showSelectedStudents(data) {
 	        toolbar.append(container);
     	    container.append('<input id="createEmailAddress" type="button" value="Email Address" />');
         	container.append('<input style="margin-left: 5px;" id="changeRegisterClass" type="button" value="Register Class" />');
+        	container.append('<input style="margin-left: 5px;" id="deactivateStudent" type="button" value="deActivate Student" />');
 	        $("#createEmailAddress").jqxButton({theme: getTheme()});
     	    $("#changeRegisterClass").jqxButton({theme: getTheme()});
+    	    $("#deactivateStudent").jqxButton({theme:getTheme()});
         	$("#createEmailAddress").on('click', function () {
 				console.log("create selected student email address list ... ");
 				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
-				var x;
-				var text;
+				if (selectedIndex.length < 1) {
+					alert('Please select student from the list ...');
+					return;
+				}
+				var text = "";
+				
 				for(i = 0; i < selectedIndex.length; i++) {
 					var row = $('#studentAdminGrid').jqxGrid('getrowdata', selectedIndex[i]);
-					text += " selected student : " + row.firstName + " " + row.lastName;
+					if (isNotEmpty(row.emailAddress)) 
+						text += row.emailAddress + ";";
 				} 
 				window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 	        });
     	    $("#changeRegisterClass").on('click', function () {
 				console.log("change selected student register class ... ");
+				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+					alert('Please select student from the list ...');
+					return;
+				}
+	        });
+	        $("#deactivateStudent").on('click', function() {
+				console.log("change selected student register class ... ");
+				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+					alert('Please select student from the list ...');
+					return;
+				}
+	        	
 	        });
 		},
 	    selectionmode: 'checkbox',
@@ -168,7 +170,7 @@ function showSelectedStudents(data) {
 			{text: 'ID', datafield:'id', hidden:'true'},
         	{ text: 'First Name', datafield: 'firstName', width: 180 },
 	        { text: 'Last Name', datafield: 'lastName', width: 180 },
-    	    { text: 'Email Address', datafield: ''}
+    	    { text: 'Email Address', datafield: 'emailAddress'}
 	    ]
     });
 }

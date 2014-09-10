@@ -183,9 +183,9 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 			MSDClass c = msdClassJPARepository.findByName(msdclassname);
 			if (null != c) {
 				ms = msdStudentRepository.getAllByClassId(c.getId());
-				msdtos = msdStudentAssembler.createDtoFromEntity(ms);
 			} 
 		}
+		msdtos = msdStudentAssembler.createDtoFromEntity(ms);
 		return msdtos;
 	}
 
