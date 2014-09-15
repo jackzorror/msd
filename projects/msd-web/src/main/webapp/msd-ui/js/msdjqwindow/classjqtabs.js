@@ -286,7 +286,7 @@ function showClassSchedularInformation(data) {
 
     var offset = $("#classSchedularDataTable").offset();
     $("#addClassSchedularPopupWindow").jqxWindow({
-    	width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01           
+    	width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 	var source = {
 		datafields:[
@@ -439,7 +439,7 @@ function createAddClassSchedularDiv() {
 	tdiv.append('<label style="float:left; margin-top:2px;">Weekday : </label>');
 	var weekdaydiv = $('<div style="margin-left:5px"/>').attr({id:'weekdaydiv'});
 	tdiv.append(weekdaydiv);
-	$('#weekdaydiv').jqxDropDownList({ checkboxes: true, dropDownHeight:170, source: WeekDayShortNameArray, selectedIndex: 1, width: '120', height: '20', theme: theme });
+	$('#weekdaydiv').jqxDropDownList({ checkboxes: true, dropDownHeight:170, source: WeekDayShortNameArray, selectedIndex: 1, width: '120', height: '20', theme: getTheme() });
 
 	// start time
 	var tdiv = $('<div style="margin-top:5px; width:180px;border:0px solid;" align="right" />');

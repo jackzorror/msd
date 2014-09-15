@@ -139,3 +139,44 @@ function ajaxGetAllStuentSummaryByClassName(cname, fName) {
 	
 }
 
+function ajaxStudentRegisterClasses(sid, cidList, fName) {
+	var ajaxcall = $.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentclass/" + sid + "/" + cidList,
+		processData:false,
+		contentType: "application/json",
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+	
+}
+
+function ajaxDeleteStudentRegisteredClasses(sid, cidList, fName) {
+	var ajaxcall = $.ajax({
+		type: "DELETE",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentclass/" + sid + "/" + cidList,
+		processData:false,
+		contentType: "application/json",
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+	
+}
+
+function ajaxRegisterClassByStudentIdListAndClassName(cname, sidList, rtype, ocname,fName) {
+	var ajaxcall = $.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentclass",
+		data: {classname:cname, studentidlist:sidList, oldclassname:ocname, registertype:rtype}
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+	
+}
+

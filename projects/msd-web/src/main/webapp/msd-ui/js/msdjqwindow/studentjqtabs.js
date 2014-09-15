@@ -48,7 +48,6 @@ function showStudentInformation(data) {
 	setCurrentFunction("SEARCH");
 	createStudentRegisterClassPanel();	
 	getStudentRegisterClass(data);
-//	getNonRegisteredClassList(data);
 	
 	bindingStudentMedicalPanel(data);
 	disableEditMedicalInfo(true);
@@ -317,12 +316,6 @@ function createStudentMedicalPanel() {
 
 };
 
-/*
-function studentMedicalInfoChange() {
-	console.log(" student medical Info change ");
-}
-*/
-
 function createStudentRegisterClassPanel() {
 	$('#studentClassDetailContentDiv').empty();
 	
@@ -401,103 +394,190 @@ function bindingStudentMedicalPanel(data) {
 	}
 }
 
-function showRegisterClassInformation(data) {
+function showRegisterClassInformationByGrid(data) {
 	$('#registeredClassDiv').empty();
-	$('#registeredClassDiv').append('<h5>Stduent Registered Class Informatioin</h5>');
-	if (null != data && data.length > 0) {
-		var idiv = $('<div></div>').attr({id:'innerDiv'});
-		$('#registeredClassDiv').append(idiv);
-		
-		for (var i = 0; i < data.length; i++) {
-			var id = data[i].id;
-			var name = data[i].name;
-			var schedules = data[i].schedule;
-			var scheduleList = schedules.split(";");
-			var newSchedule = "";
-			for (var j = 0; j < scheduleList.length; j++) {
-				var str = scheduleList[j].trim();
-				if (str.length > 0) {
-					if (j < 3) {
-						newSchedule += scheduleList[j] + ";";
-					} else if (j == 3) {
-						newSchedule += " ... ";
-						break;
+	var srcdiv = $('<div style="border:0px solid;"/>').attr({id:'studentRegisteredClassGrid'});	
+	$('#registeredClassDiv').append(srcdiv);
+	
+	if (null == data || data.length < 1)
+		return;
+
+	var source = {
+		datafields:[
+			{ name: 'id', type:'int'},
+			{ name: 'schedule', type: 'string'},
+			{ name: 'name', type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	
+	if ("REGISTER" == getCurrentFunction()) {
+		$('#studentRegisteredClassGrid').jqxGrid(
+		{
+			theme: getTheme(),
+			source:dataAdapter,
+			height: 300,
+			pageable: true,
+			pagesizeoptions: ['10'],
+			showtoolbar:true,
+			rendertoolbar:function (toolbar) {
+				var container = $("<div style = 'float: right; margins: 0px;'></div>");
+				toolbar.append(container);
+	        	container.append('<input style="margin-left: 5px;" id="removeRegisteredClass" type="button" value="Remove" />');
+		        $("#removeRegisteredClass").jqxButton({theme: getTheme()});
+	        	$("#removeRegisteredClass").on('click', function () {
+					console.log("Remove registered class ... ");
+					var selectedIndex = $('#studentRegisteredClassGrid').jqxGrid('getselectedrowindexes');
+					if (selectedIndex.length < 1) {
+						alert('Please select class from the list ...');
+						return;
+					}
+					var cidlist = "";
+					
+					for(i = 0; i < selectedIndex.length; i++) {
+						var row = $('#studentRegisteredClassGrid').jqxGrid('getrowdata', selectedIndex[i]);
+						var id = row.id;
+						cidlist += id + ",";
+					} 
+					var sid = getCurrentStudent().id;
+					ajaxDeleteStudentRegisteredClasses(sid, cidlist, deleteStudentRegisteredClasses);
+					
+	    	    });
+			},
+			selectionmode: 'checkbox',
+			columns:[
+				{text: 'Class ID', datafield:'id', hidden:'true'},
+				{text: 'Class Name', datafield:'name', width:150},
+				{text: 'Class Scheduler', datafield:'schedule', width:360},
+				{text: '', datafield: 'Detail', width:60, columntype:'button', cellsrenderer:function(){
+						return "Detail";
+					}, buttonclick:function(row) {
+						var id = $('#studentRegisteredClassGrid').jqxGrid('getcellvalue', row, 'id');
+						getClassDetailById(id);
 					}
 				}
-			}
-			var cdivid = "cdiv_" + id;
-			var cdiv = $('<div class="InnerDiv" style="margin-top:10px"/>').attr({id:cdivid});
-			$('#innerDiv').append(cdiv);
-			cdiv.append('<label style="margin-left:10px;"> Class Name     :' + name + '</label> <br />');
-			cdiv.append('<label> Class Schedule :' + newSchedule + '</label> <br />');
-
-			if ("REGISTER" == getCurrentFunction()) {
-				var cbtnid = 'btnClassDetail_' + id;
-				var cdbtn = $('<input style="margin-left:400px;" />').attr({type:'button', id:cbtnid, value:'Detail'});
-				cdiv.append(cdbtn);
-				cdbtn.jqxButton({width:'100', theme: getTheme() });
-			
-				var cbtnid = 'btnDeleteRegisterClass_' + id;
-				var cdbtn = $('<input />').attr({type:'button', id:cbtnid, value:'Remove'});
-				cdiv.append(cdbtn);
-				cdbtn.jqxButton({width:'100', theme: getTheme() });
-			} else {
-				var cbtnid = 'btnClassDetail_' + id;
-				var cdbtn = $('<input style="margin-left:500px;" />').attr({type:'button', id:cbtnid, value:'Detail'});
-				cdiv.append(cdbtn);
-				cdbtn.jqxButton({width:'100', theme: getTheme() });
-			}
-		}
+			]
+		});
+	} else {
+		$('#studentRegisteredClassGrid').jqxGrid(
+		{
+			theme: getTheme(),
+			source:dataAdapter,
+			height: 300,
+			pageable: true,
+			pagesizeoptions: ['10'],
+			columns:[
+				{text: 'Class ID', datafield:'id', hidden:'true'},
+				{text: 'Class Name', datafield:'name', width:150},
+				{text: 'Class Scheduler', datafield:'schedule', width:390},
+				{text: '', datafield: '', width:60, columntype:'button', cellsrenderer:function(){
+						return "Detail";
+					}, buttonclick:function(row) {
+						var id = $('#studentRegisteredClassGrid').jqxGrid('getcellvalue', row, 'id');
+						getClassDetailById(id);
+					}
+				}
+			]
+		});
 	}
 };
 
-function showNonRegisterClassInformation(data) {
+function showNonRegisterClassInformationByGrid(data) {
 	$('#nonRegisteredClassDiv').empty();
-	$('#nonRegisteredClassDiv').append('<h5>Stduent Non Registered Class Informatioin</h5>');
-	if (null != data && data.length > 0) {
-		var idiv = $('<div></div>').attr({id:'innerNonDiv'});
-		$('#nonRegisteredClassDiv').append(idiv);
+	var nrcdiv = $('<div style="border:0px solid;"/>').attr({id:'studentNonRegisteredClassGrid'});
+	$('#nonRegisteredClassDiv').append(nrcdiv);
+
+	if (null == data || data.length < 1)
+		return;
 		
-		for (var i = 0; i < data.length; i++) {
-			var id = data[i].id;
-			var name = data[i].name;
-			var schedules = data[i].schedule;
-			var scheduleList = schedules.split(";");
-			var newSchedule = "";
-			for (var j = 0; j < scheduleList.length; j++) {
-				var str = scheduleList[j].trim();
-				if (str.length > 0) {
-					if (j < 3) {
-						newSchedule += scheduleList[j] + ";";
-					} else if (j == 3) {
-						newSchedule += " ... ";
-						break;
-					}
+	var source = {
+		datafields:[
+			{ name: 'id', type:'int'},
+			{ name: 'schedule', type: 'string'},
+			{ name: 'name', type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	
+	$('#studentNonRegisteredClassGrid').jqxGrid(
+	{
+		theme: getTheme(),
+		source:dataAdapter,
+		height: 300,
+		pageable: true,
+		pagesizeoptions: ['10'],
+		showtoolbar:true,
+		rendertoolbar:function (toolbar) {
+			var container = $("<div style = 'float: right; margins: 0px;'></div>");
+			toolbar.append(container);
+        	container.append('<input style="margin-left: 5px;" id="addNonRegisteredClass" type="button" value="Register" />');
+	        $("#addNonRegisteredClass").jqxButton({theme: getTheme()});
+        	$("#addNonRegisteredClass").on('click', function () {
+				console.log("Add Non registered class ... ");
+				var selectedIndex = $('#studentNonRegisteredClassGrid').jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+					alert('Please select class from the list ...');
+					return;
+				}
+				var cidlist = "";
+					
+				for(i = 0; i < selectedIndex.length; i++) {
+					var row = $('#studentNonRegisteredClassGrid').jqxGrid('getrowdata', selectedIndex[i]);
+					var id = row.id;
+					cidlist += id + ","
+				} 
+				sid = getCurrentStudent().id;
+				ajaxStudentRegisterClasses(sid, cidlist, studentRegisterClasses);
+    	    });
+		},
+		selectionmode: 'checkbox',
+		columns:[
+			{text: 'Class ID', datafield:'id', hidden:'true'},
+			{text: 'Class Name', datafield:'name', width:150},
+			{text: 'Class Scheduler', datafield:'schedule', width:360},
+			{text: '', datafield: 'Detail', width:60, columntype:'button', cellsrenderer:function(){
+					return "Detail";
+				}, buttonclick:function(row) {
+					var id = $('#studentNonRegisteredClassGrid').jqxGrid('getcellvalue', row, 'id');
+					getClassDetailById(id);
 				}
 			}
-			var cdivid = "cdiv_" + id;
-			var cdiv = $('<div class="InnerDiv" style="margin-top:10px"/>').attr({id:cdivid})
-			$('#innerNonDiv').append(cdiv);
-			cdiv.append('<label style="margin-left:10px;"> Class Name     :' + name + '</label> <br />');
-			cdiv.append('<label> Class Schedule :' + newSchedule + '</label> <br />');
+		]
+	});
+}
 
-			var cbtnid = 'btnClassDetail_' + id;
-			var cdbtn = $('<input style="margin-left:400px;" />').attr({type:'button', id:cbtnid, value:'Detail'});
-			cdiv.append(cdbtn);
-			cdbtn.jqxButton({width:'100', theme: getTheme() });
-			
-			var cbtnid = 'btnRegisterClass_' + id;
-			var cdbtn = $('<input />').attr({type:'button', id:cbtnid, value:'Add'});
-			cdiv.append(cdbtn);
-			cdbtn.jqxButton({width:'100', theme: getTheme() });
-		}
+function deleteStudentRegisteredClasses (response, request, settings) {
+	console.log(" get student ... ");
+	if (404 == response.code) {
+		alert(" Can't delete registered class ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		$('#studentMainPanel').empty();
+		showStudentRegisterClass();
+		showStudentNonRegisterClass();
+	} else {
+		alert("error to delete student registered class ... ");
 	}
-};
-/*
-function addClassRegister() {
-	getNonRegisteredClassList();
-};
-*/
+}
+
+function studentRegisterClasses (response, request, settings) {
+	console.log(" get student ... ");
+	if (404 == response.code) {
+		alert(" Can't register class ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		$('#studentMainPanel').empty();
+		showStudentRegisterClass();
+		showStudentNonRegisterClass();
+	} else {
+		alert("error to register student ... ");
+	}
+}
+
 function disableEditStudentDetailInfo(disable) {
 	$("#studentDetailContentDiv :text").prop("disabled", disable);
 	$("#studentDetailContentDiv div[id^='minput']").jqxMaskedInput({disabled:disable});
@@ -525,7 +605,6 @@ function cancelUpdateStudentMedicalInformation() {
  * Event handle                        *
  ***************************************/
 function addStudentTabsEventListeners() {
-//	setTheme(theme);
 
 	$(document).on('click', '#btnSearchStudent', handleStudentSearchClick);
 	$(document).on('click', '#btnClearStudent', handleStudentClearClick);
@@ -536,13 +615,10 @@ function addStudentTabsEventListeners() {
 	$(document).on('click', '#btnEditMedical', handleEditMedicalClick);
 	$(document).on('click', '#btnSaveMedical', handleMedicalSaveClick);
 	
-	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnDeleteRegisterClass"]', handleDeleteRegisterClassClick);
-	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnRegisterClass"]', handleRegisterClassClick);
+//	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnDeleteRegisterClass"]', handleDeleteRegisterClassClick);
+//	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnRegisterClass"]', handleRegisterClassClick);
 	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
 	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
-	/*
-	$(document).on('click', '#btnSelectClass', handleNonRegisteredClassSelectClick);
-	*/
 	
 	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
 	$(document).on('click', '#btnRegistClass', handleRegistClassClick);
@@ -575,7 +651,7 @@ function handleSearchLastNameKeypress(e) {
 	if (e.which == 13)
 		$('#btnSearchStudent').click();
 }
-
+/*
 function handleDeleteRegisterClassClick() {
 	console.log(" delete register class click ... ");
 	var buttonid = $(this)[0].id
@@ -589,7 +665,7 @@ function handleRegisterClassClick() {
 	var classid = buttonid.substr(17, buttonid.length);
 	studentRegisterClass(classid);
 }
-
+*/
 function handleStudentClearClick() {
 	$('#studentMainPanel').empty();
 	
@@ -1176,7 +1252,6 @@ function deleteStudentRegisterClass(msdStudentId, msdClassId) {
 			if (404 == response.code) {
 				alert(" Can't delete register class ... ");
 			} else if (302 == response.code) {
-//				getStudentRegisterClass(getCurrentStudent());
 				$('#studentMainPanel').empty();
 				showStudentRegisterClass();
 				showStudentNonRegisterClass();
@@ -1205,7 +1280,7 @@ function getStudentRegisterClass(data) {
 				$('#classInformation').empty();
 			} else if (302 == response.code) {
 				var data = $.parseJSON(response.result);
-				showRegisterClassInformation(data);
+				showRegisterClassInformationByGrid(data);
 			} else {
 				alert("error to find student ... ");
 			}
@@ -1231,7 +1306,7 @@ function getStudentNonRegisterClass(data) {
 				$('#classInformation').empty();
 			} else if (302 == response.code) {
 				var data = $.parseJSON(response.result);
-				showNonRegisterClassInformation(data);
+				showNonRegisterClassInformationByGrid(data);
 			} else {
 				alert("error to find student ... ");
 			}
