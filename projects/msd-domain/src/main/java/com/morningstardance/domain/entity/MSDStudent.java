@@ -1,9 +1,8 @@
 package com.morningstardance.domain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,11 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import com.morningstardance.domain.base.entity.MSDEntityBase;
 
 
@@ -31,7 +25,7 @@ import com.morningstardance.domain.base.entity.MSDEntityBase;
  */
 @Entity
 @Table(name="msd_student")
-public class MSDStudent extends MSDEntityBase {
+public class MSDStudent extends MSDEntityBase implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -76,6 +70,9 @@ public class MSDStudent extends MSDEntityBase {
 	@OneToMany(mappedBy="msdStudent", fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 //	@Fetch(value = FetchMode.SUBSELECT)
 	private List<MSDStudentParent> msdStudentParents;
+
+	@Column(name="is_active")
+	private byte isActive;
 
 	public MSDStudent() {
 	}
@@ -183,4 +180,13 @@ public class MSDStudent extends MSDEntityBase {
 	public void setMsdStudentParents(List<MSDStudentParent> msdStudentParents) {
 		this.msdStudentParents = msdStudentParents;
 	}
+
+	public byte getIsActive() {
+		return this.isActive;
+	}
+
+	public void setIsActive(byte isActive) {
+		this.isActive = isActive;
+	}
+
 }

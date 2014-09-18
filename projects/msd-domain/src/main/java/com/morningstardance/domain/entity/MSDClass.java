@@ -1,5 +1,6 @@
 package com.morningstardance.domain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,7 +21,7 @@ import com.morningstardance.domain.base.entity.MSDEntityBase;
  */
 @Entity
 @Table(name="msd_class")
-public class MSDClass extends MSDEntityBase {
+public class MSDClass extends MSDEntityBase implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id

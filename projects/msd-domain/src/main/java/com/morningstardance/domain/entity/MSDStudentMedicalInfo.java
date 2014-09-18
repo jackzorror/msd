@@ -3,6 +3,8 @@ package com.morningstardance.domain.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.morningstardance.domain.base.entity.MSDEntityBase;
+
 
 /**
  * The persistent class for the msd_student_medical_info database table.
@@ -10,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="msd_student_medical_info")
-public class MSDStudentMedicalInfo implements Serializable {
+public class MSDStudentMedicalInfo extends MSDEntityBase implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id

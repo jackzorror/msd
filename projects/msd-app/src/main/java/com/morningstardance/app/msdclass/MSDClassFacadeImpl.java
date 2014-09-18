@@ -100,4 +100,14 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 
 		return msdClassAssembler.createClassDetailFromEntity(msdclass, msdclassschedulars, totalStudentCount);
 	}
+
+	@Override
+	public List<MSDClassSummaryDto> getAllMSDClassByStatus(String classstatus) {
+		List<MSDClass> msdclasses = null;
+		if (classstatus.equals("ACTIVE")) {
+			byte a = 1;
+			msdclasses  = msdClassJPARepository.findByIsActive(a);
+		}
+		return null;
+	}
 }

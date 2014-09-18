@@ -1,5 +1,7 @@
 package com.morningstardance.domain.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 import com.morningstardance.domain.base.entity.MSDEntityBase;
@@ -11,7 +13,7 @@ import com.morningstardance.domain.base.entity.MSDEntityBase;
  */
 @Entity
 @Table(name="msd_class_schedular")
-public class MSDClassSchedular extends MSDEntityBase {
+public class MSDClassSchedular extends MSDEntityBase implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -29,6 +31,9 @@ public class MSDClassSchedular extends MSDEntityBase {
 	private String endTime;
 
 	private int weekday;
+
+	@Column(name="is_active")
+	private byte isActive;
 
 	public MSDClassSchedular() {
 	}
@@ -71,6 +76,14 @@ public class MSDClassSchedular extends MSDEntityBase {
 
 	public void setWeekday(int weekday) {
 		this.weekday = weekday;
+	}
+
+	public byte getIsActive() {
+		return this.isActive;
+	}
+
+	public void setIsActive(byte isActive) {
+		this.isActive = isActive;
 	}
 
 }

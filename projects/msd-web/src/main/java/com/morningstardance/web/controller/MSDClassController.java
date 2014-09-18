@@ -15,7 +15,6 @@ import com.morningstardance.app.msdclass.MSDClassDetailDto;
 import com.morningstardance.app.msdclass.MSDClassDto;
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.app.msdclass.MSDClassFacade;
-import com.morningstardance.app.msdstudent.MSDStudentDetailDto;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -33,6 +32,18 @@ public class MSDClassController {
 		@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
 		private ResponseDto getAllMSDClassVer1() {
 			List<MSDClassSummaryDto> dtos = msdClassFacade.getAllMSDClass();
+	        ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+			return responseDto;
+		}
+
+		@RequestMapping(params={"classstatus"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
+		public @ResponseBody ResponseDto getAllMSDClassByStatusDfltVer(String classstatus) {
+			return getAllMSDClassStatusVer1(classstatus);
+		}
+		
+		@RequestMapping(params={"classstatus"}, method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
+		private ResponseDto getAllMSDClassStatusVer1(String classstatus) {
+			List<MSDClassSummaryDto> dtos = msdClassFacade.getAllMSDClassByStatus(classstatus);
 	        ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 			return responseDto;
 		}

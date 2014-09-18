@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDStudent;
@@ -24,6 +25,9 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	@Resource
 	private MSDStudentJPARepository msdStudentJPARepository;
 	
+	@Resource
+	private MSDOperationService msdOperationService;
+	
 	@Override
 	public MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto) {
 		MSDStudentClass entity = studentRegisterClass(studentClassDto.getMsdStudentId(), studentClassDto.getMsdClassId());
@@ -37,7 +41,15 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 
 	@Override
 	public void deleteRegisteredStudentClass(Long id) {
-		msdStudentClassJPARepository.delete(id);
+		deleteRegisteredStudentClassById(id);
+	}
+	
+	private void deleteRegisteredStudentClassById(Long id) {
+		MSDStudentClass msdsc = msdStudentClassJPARepository.findOne(id);
+		if (null != msdsc) {
+			msdsc.setIsActive((byte)0);
+			msdStudentClassJPARepository.saveAndFlush(msdsc);
+		}
 	}
 
 	@Override
@@ -60,6 +72,17 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid,	sid);
 		if (null == entity) {
 			entity = msdStudentClassJPARepository.save(studentClass);
+			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid, "INFO");
+		} else {
+			if (entity.getIsActive() == (byte) 0) {
+				entity.setIsActive((byte)1);
+				msdStudentClassJPARepository.saveAndFlush(entity);
+				msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid, "INFO");
+			} else {
+				msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid +
+						Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
+
+			}
 		}
 		return entity;
 	}
@@ -80,6 +103,10 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		MSDStudentClass entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid, sid);
 		if (null != entity) {
 			deleteRegisteredStudentClass(entity.getId());
+			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid, "INFO");
+		} else {
+			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid + " " + 
+					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
 		}
 		
 	}

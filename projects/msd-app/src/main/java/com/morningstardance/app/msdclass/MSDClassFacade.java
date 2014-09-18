@@ -22,4 +22,6 @@ public interface MSDClassFacade {
 
 	MSDClassDetailDto getMSDClassDetailById(Long msdClassId);
 
+	List<MSDClassSummaryDto> getAllMSDClassByStatus(String classstatus);
+
 }

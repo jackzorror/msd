@@ -26,6 +26,8 @@ public class MSDStudentClass extends MSDEntityBase implements Serializable {
 	@Column(name="msd_class_id")
 	private int msdClassId;
 
+	@Column(name="is_active")
+	private byte isActive;
 
 	public MSDStudentClass() {
 	}
@@ -58,6 +60,14 @@ public class MSDStudentClass extends MSDEntityBase implements Serializable {
 
 	public void setMsdClassId(int msdClassId) {
 		this.msdClassId = msdClassId;
+	}
+
+	public byte getIsActive() {
+		return this.isActive;
+	}
+
+	public void setIsActive(byte isActive) {
+		this.isActive = isActive;
 	}
 
 }

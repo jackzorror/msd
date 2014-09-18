@@ -13,4 +13,6 @@ public interface MSDClassJPARepository extends JpaRepository<MSDClass, Long> {
 	public List<String> findUniqueNames();	
 
 	public MSDClass findByName(String name);
+	
+	public List<MSDClass> findByIsActive (byte isActive);
 }
