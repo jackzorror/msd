@@ -12,6 +12,19 @@ function ajaxGetUniqueName(fieldname, fName) {
 	ajaxcall.error(handleAjaxError);
 };
 
+function ajaxGetAllClass(fName) {
+	console.log(" get all class ... ");
+	var ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdclass",
+		dataType: "json",
+		contentType: "application/json",
+		data: { classstatus: "ALL"}
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
 
 function ajaxGetAllClassName(fName) {
 	console.log(" get all class name ... ");
@@ -36,6 +49,19 @@ function ajaxGetClassDetailByName(className, fName) {
 		dataType: "json",
 		contentType: "application/json",
 		data: { classname: className}
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetClassDetailById(classId, fName) {
+	console.log(" get class detail by class id ... ");
+	var ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdclass/" + classId,
+		dataType: "json",
+		contentType: "application/json",
 	});
 	
 	ajaxcall.done(fName);
@@ -109,8 +135,8 @@ function ajaxDddNewSchedulars(newschedular, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxSaveClassInformation(id, cname, clocation, sdate, edate, fName) {
-	var classInfo = {"id":id, "name":cname, "location":clocation, "classStartTime":sdate, "classEndTime":edate};
+function ajaxSaveClassInformation(id, cname, clocation, sdate, edate, isactive, fName) {
+	var classInfo = {"id":id, "name":cname, "location":clocation, "classStartTime":sdate, "classEndTime":edate, "isactive":isactive};
 
 	var ajaxcall = $.ajax({
 		type: "PUT",
@@ -125,10 +151,10 @@ function ajaxSaveClassInformation(id, cname, clocation, sdate, edate, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxGetAllStuentSummaryByClassName(cname, fName) {
+function ajaxGetAllStuentSummaryByClassId(cid, fName) {
 	var ajaxcall = $.ajax({
 		type: "GET",
-		url: "../msd-app/rs/msdstudent/ByClssName/" + cname,
+		url: "../msd-app/rs/msdstudent/ByClssId/" + cid,
 		dataType: "json",
 		contentType: "application/json",
 		data: { "type": "Summary"}
@@ -167,12 +193,12 @@ function ajaxDeleteStudentRegisteredClasses(sid, cidList, fName) {
 	
 }
 
-function ajaxRegisterClassByStudentIdListAndClassName(cname, sidList, rtype, ocname,fName) {
+function ajaxregisterClassByStudentIdListAndClassId(cid, sidList, rtype, ocid,fName) {
 	var ajaxcall = $.ajax({
 		type: "POST",
 		dataType: "json",
 		url: "../msd-app/rs/msdstudentclass",
-		data: {classname:cname, studentidlist:sidList, oldclassname:ocname, registertype:rtype}
+		data: {classid:cid, studentidlist:sidList, oldclassid:ocid, registertype:rtype}
 	});
 
 	ajaxcall.done(fName);

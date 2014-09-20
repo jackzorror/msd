@@ -9,6 +9,7 @@ public class MSDClassDto {
 	protected Date classStartTime;
 	protected Date classEndTime;
 	protected String classStatus;
+	protected boolean isactive;
 	
 	public int getId() {
 		return id;
@@ -45,5 +46,11 @@ public class MSDClassDto {
 	}
 	public void setClassStatus(String classStatus) {
 		this.classStatus = classStatus;
+	}
+	public boolean isIsactive() {
+		return isactive;
+	}
+	public void setIsactive(boolean isactive) {
+		this.isactive = isactive;
 	}
 }

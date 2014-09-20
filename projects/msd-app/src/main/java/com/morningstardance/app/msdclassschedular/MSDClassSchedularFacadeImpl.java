@@ -61,7 +61,6 @@ public class MSDClassSchedularFacadeImpl implements MSDClassSchedularFacade {
 	public void addClassSchedularList(MSDClassSchedularDtos classSchedularDtos) {
 		for (String weekday : classSchedularDtos.getWeekdays()) {
 			MSDClassSchedular entity = new MSDClassSchedular();
-			entity.setId(new Long(classSchedularDtos.getId()));
 			entity.setMsdClassId(classSchedularDtos.getMsdClassId());
 			entity.setStartTime(classSchedularDtos.getStartTime());
 			entity.setEndTime(classSchedularDtos.getEndTime());

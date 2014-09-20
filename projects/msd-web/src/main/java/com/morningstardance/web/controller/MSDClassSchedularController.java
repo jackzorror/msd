@@ -45,7 +45,7 @@ public class MSDClassSchedularController {
 		@RequestMapping(value="/{msdClassSchedularId}", method=RequestMethod.DELETE, headers="!X-Api-service-Version=1.0")
 		public @ResponseBody ResponseDto deleteClassSchedularByIdVer1(@PathVariable("msdClassSchedularId") Long msdClassSchedularId) {
 			msdClassSchedularFacade.deleteClasSchedularById(msdClassSchedularId);
-	        ResponseDto responseDto = ResponseDto.createResponseDto("Delete Successfully", "DELETE", "OBJECT");
+	        ResponseDto responseDto = ResponseDto.createResponseDto(null, "DELETE", "OBJECT");
 			return responseDto;
 		}
 

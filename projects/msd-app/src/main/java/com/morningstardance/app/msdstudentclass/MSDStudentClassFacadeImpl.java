@@ -29,8 +29,12 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	private MSDOperationService msdOperationService;
 	
 	@Override
-	public MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto) {
-		MSDStudentClass entity = studentRegisterClass(studentClassDto.getMsdStudentId(), studentClassDto.getMsdClassId());
+	public MSDStudentClassDto registerStudentToClassByStudentClassDto(MSDStudentClassDto studentClassDto) {
+		return registerStudentToClassByStudentIdAndClassId(new Long(studentClassDto.getMsdStudentId()), new Long(studentClassDto.getMsdClassId()));
+	}
+	
+	public MSDStudentClassDto registerStudentToClassByStudentIdAndClassId(Long sid, Long cid) {
+		MSDStudentClass entity = registerStudentToClassByStudentIdClassId(sid, cid);
 		
 		MSDStudentClassDto dto = new MSDStudentClassDto();
 		dto.setId(entity.getId().intValue());
@@ -39,12 +43,7 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		return dto;
 	}
 
-	@Override
-	public void deleteRegisteredStudentClass(Long id) {
-		deleteRegisteredStudentClassById(id);
-	}
-	
-	private void deleteRegisteredStudentClassById(Long id) {
+	private void unRegisterStudentFromClassById(Long id) {
 		MSDStudentClass msdsc = msdStudentClassJPARepository.findOne(id);
 		if (null != msdsc) {
 			msdsc.setIsActive((byte)0);
@@ -53,23 +52,24 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	}
 
 	@Override
-	public String registerStudentToClasses(Long msdstudentid, String msdclassidlist) {
+	public String registerStudentToClassesByStudentIdAndClassIdList(Long msdstudentid, String msdclassidlist) {
 		if (null == msdclassidlist || msdclassidlist.isEmpty()) return null;
 		String [] ids = msdclassidlist.split(",");
 		for (String id : ids) {
 			if (null != id && !(id.isEmpty()))
-				studentRegisterClass(msdstudentid.intValue(), new Integer(id).intValue());
+				registerStudentToClassByStudentIdAndClassId(msdstudentid, new Long(id));
 		}
 		
 		return "Sucess";
 	}
 	
-	private MSDStudentClass studentRegisterClass(int sid, int cid) {
+	private MSDStudentClass registerStudentToClassByStudentIdClassId(Long sid, Long cid) {
 		MSDStudentClass studentClass = new MSDStudentClass();
-		studentClass.setMsdClassId(cid);
-		studentClass.setMsdStudentId(sid);
+		studentClass.setMsdClassId(cid.intValue());
+		studentClass.setMsdStudentId(sid.intValue());
+		studentClass.setIsActive((byte)1);
 		MSDStudentClass entity = null;
-		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid,	sid);
+		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(),	sid.intValue());
 		if (null == entity) {
 			entity = msdStudentClassJPARepository.save(studentClass);
 			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid, "INFO");
@@ -88,59 +88,61 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	}
 
 	@Override
-	public String deleteRegisterStudentToClasses(Long msdstudentid, String msdclassidlist) {
+	public String unRegisterStudentFromClassesByStudentIdAndClassIdList(Long msdstudentid, String msdclassidlist) {
 		if (null == msdclassidlist || msdclassidlist.isEmpty()) return null;
 		String [] ids = msdclassidlist.split(",");
 		for (String id : ids) {
 			if (null != id && !(id.isEmpty()))
-				studentDeleteRegisteredClass(msdstudentid.intValue(), new Integer(id).intValue());
+				unRegisterStudentFromClassByStudentIdAndClassId(msdstudentid, new Long(id));
 		}
 		
 		return "Sucess";
 	}
 
-	private void studentDeleteRegisteredClass(int sid, int cid) {
-		MSDStudentClass entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid, sid);
+	public String unRegisterStudentFromClassByStudentIdAndClassId(Long sid, Long cid) {
+		MSDStudentClass entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(), sid.intValue());
 		if (null != entity) {
-			deleteRegisteredStudentClass(entity.getId());
+			unRegisterStudentFromClassById(entity.getId());
 			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid, "INFO");
 		} else {
 			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid + " " + 
 					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
 		}
 		
+		return "success";
+		
 	}
 
 	@Override
-	public String registerClassByClassNameAndStudentIDlistAndType(String classname, String studentidlist, String oldclassname, String registertype) {
+	public String registerStudentToClassByClassIDAndStudentIdlistAndType(Long classid, String studentidlist, Long oldclassid, String registertype) {
 		if (null == registertype || registertype.isEmpty() || null == studentidlist || studentidlist.isEmpty()) return null;
 		
-		if (registertype.equals("REGISTER") && (null == classname || classname.isEmpty())) return null;
+		if (registertype.equals("REGISTER") && (null == classid || classid == 0)) return null;
 		
-		if ((registertype.equals("UPGREATE") || registertype.equals("REMOVE")) && (null == oldclassname || oldclassname.isEmpty())) return null;
+		if ((registertype.equals("UPGREATE") || registertype.equals("REMOVE")) && (null == classid || classid == 0)) return null;
 		
 		if (registertype.equals("REMOVE")) {
-			MSDClass oldmsdclass = msdClassJPARepository.findByName(oldclassname);
+			MSDClass oldmsdclass = msdClassJPARepository.findOne(classid);
 			if (oldmsdclass == null) return null;
 
 			String sids[] = studentidlist.split(",");
 			for (String id : sids) {
 				MSDStudent student = msdStudentJPARepository.findOne(new Long(id));
 				if (null != student)
-					studentDeleteRegisteredClass(student.getId().intValue(), oldmsdclass.getId().intValue());
+					unRegisterStudentFromClassByStudentIdAndClassId(student.getId(), classid);
 			}
 
 			return "Sucess";
 
 		}
 		
-		MSDClass msdclass = msdClassJPARepository.findByName(classname);
+		MSDClass msdclass = msdClassJPARepository.findOne(classid);
 		if (null == msdclass) return null;
 		
 		MSDClass oldmsdclass = null;
 		
-		if (registertype != null && registertype.equals("UPGREATE") && oldclassname != null && !(oldclassname.isEmpty())) {
-			oldmsdclass = msdClassJPARepository.findByName(oldclassname);
+		if (registertype != null && registertype.equals("UPGREATE") && oldclassid != null && oldclassid != 0) {
+			oldmsdclass = msdClassJPARepository.findOne(oldclassid);
 			if (oldmsdclass == null) return null;
 		}
 		
@@ -148,9 +150,9 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		for (String id : sids) {
 			MSDStudent student = msdStudentJPARepository.findOne(new Long(id));
 			if (null != student) {
-				studentRegisterClass(student.getId().intValue(), msdclass.getId().intValue());
+				registerStudentToClassByStudentIdAndClassId(student.getId(), msdclass.getId());
 				if (null != oldmsdclass)
-					studentDeleteRegisteredClass(student.getId().intValue(), oldmsdclass.getId().intValue());
+					unRegisterStudentFromClassByStudentIdAndClassId(student.getId(), oldmsdclass.getId());
 			}
 		}
 

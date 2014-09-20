@@ -153,7 +153,8 @@ function afterUserLoginProcess() {
 		
 	ajaxGetUniqueName("FIRSTNAME", getUniqueFirstNameForStudent);
 	ajaxGetUniqueName("LASTNAME",getUniqueLasstNameForStudent);
-	ajaxGetAllClassName(getAllClassName);
+	ajaxGetAllClass(getAllClass);
+//	ajaxGetAllClassName(getAllClassName);
 	
 	setTimerId(setInterval("timercount()", 60000));
 	
@@ -195,6 +196,29 @@ function getUniqueLasstNameForStudent(response) {
 	}
 }
 
+function getAllClass(response) {
+	if (404 == response.code) {
+		console.log(" Can't get active summary class ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get active summary class  list ");
+		var activeClassName = [];
+		var allClassName = [];
+		var newDataSource = [];
+		for (index in data) {
+			allClassName.push({text:data[index].name, value:data[index].id});
+			if (data[index].isactive) {
+				activeClassName.push({text:data[index].name, value:data[index].id});
+			}
+		}
+		loadClassNameDropDownListDataSource(activeClassName);
+		setAllClassNameList(allClassName);
+		setActiveClassNameList(activeClassName);
+	} else {
+		alert('error');
+	}
+}
+
 function getAllClassName(response) {
 	if (404 == response.code) {
 		console.log(" Can't get class name ... ");
@@ -222,4 +246,12 @@ function getAllClassNameList() {
 }
 function setAllClassNameList(data) {
 	allClassNameList = data;
+}
+
+var activeClassNameList;
+function getActiveClassNameList() {
+	return activeClassNameList;
+}
+function setActiveClassNameList(data) {
+	activeClassNameList = data;
 }

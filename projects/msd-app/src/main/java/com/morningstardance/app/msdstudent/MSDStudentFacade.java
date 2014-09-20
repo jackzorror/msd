@@ -22,7 +22,7 @@ public interface MSDStudentFacade {
 
 	MSDStudentDetailDto addStudent(MSDStudentDetailDto studentDetailDto);
 
-	MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto);
+	MSDStudentClassDto registerStudentToClassByStudentClassDto(MSDStudentClassDto studentClassDto);
 
 	List<String> getStudentUniqueName(String fieldname);
 
@@ -31,8 +31,8 @@ public interface MSDStudentFacade {
 	MSDClassSummaryDto getStudentRegisterClassByStudentIdClassId(
 			Long msdstudentid, Long msdclassid);
 
-	String deleteRegisterClassByStudentIdAndClassId(Long msdstudentid, Long msdclassid);
-
 	List<MSDStudentDto> getAllStudentSummaryDtoByClassName(String msdclassname);
+
+	List<MSDStudentDto> getAllStudentSummaryDtoByClassId(Long msdclassid);
 
 }

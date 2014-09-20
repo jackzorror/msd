@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdclass.MSDClassAssembler;
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
+import com.morningstardance.app.msdstudentclass.MSDStudentClassFacade;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassSchedular;
 import com.morningstardance.domain.entity.MSDStudent;
@@ -46,6 +47,9 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	
 	@Resource
 	private MSDClassJPARepository msdClassJPARepository;
+	
+	@Resource
+	private MSDStudentClassFacade msdStudentClassFacade;
 	
 	@Override
 	public List<MSDStudentDto> getAllStudents() {
@@ -102,20 +106,8 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	}
 
 	@Override
-	public MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto) {
-		MSDStudentClass studentClass = new MSDStudentClass();
-		studentClass.setMsdClassId(studentClassDto.getMsdClassId());
-		studentClass.setMsdStudentId(studentClassDto.getMsdStudentId());
-		MSDStudentClass entity = null;
-		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(studentClassDto.getMsdClassId(),	studentClassDto.getMsdStudentId());
-		if (null == entity) {
-			entity = msdStudentClassJPARepository.save(studentClass);
-		}
-		MSDStudentClassDto dto = new MSDStudentClassDto();
-		dto.setId(entity.getId().intValue());
-		dto.setMsdClassId(entity.getMsdClassId());
-		dto.setMsdStudentId(entity.getMsdStudentId());
-		return dto;
+	public MSDStudentClassDto registerStudentToClassByStudentClassDto(MSDStudentClassDto studentClassDto) {
+		return msdStudentClassFacade.registerStudentToClassByStudentClassDto(studentClassDto);
 	}
 
 	@Override
@@ -162,18 +154,6 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	}
 
 	@Override
-	public String deleteRegisterClassByStudentIdAndClassId(
-			Long msdstudentid, Long msdclassid) {
-		try {
-			MSDStudentClass sc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(msdclassid.intValue(), msdstudentid.intValue());
-			msdStudentClassJPARepository.delete(sc);
-		}  catch (Exception ex) {
-			return ex.getStackTrace().toString();
-		}
-		return null;
-	}
-
-	@Override
 	public List<MSDStudentDto> getAllStudentSummaryDtoByClassName(String msdclassname) {
 		List<MSDStudent> ms = null;
 		List<MSDStudentDto> msdtos = null;
@@ -186,6 +166,23 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 			} 
 		}
 		msdtos = msdStudentAssembler.createDtoFromEntity(ms);
+		return msdtos;
+	}
+
+	@Override
+	public List<MSDStudentDto> getAllStudentSummaryDtoByClassId(Long msdclassid) {
+		List<MSDStudent> ms = null;
+		List<MSDStudentDto> msdtos = null;
+		if (null != msdclassid && msdclassid.intValue() != 0) {
+			MSDClass c = msdClassJPARepository.findOne(msdclassid);
+			if (null != c) {
+				ms = msdStudentRepository.getAllByClassId(c.getId());
+				msdtos = msdStudentAssembler.createDtoFromEntity(ms);
+			} 
+		} else {
+			ms = msdStudentJPARepository.findAll();
+			msdtos = msdStudentAssembler.createDtoFromEntity(ms);
+		}
 		return msdtos;
 	}
 

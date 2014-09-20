@@ -47,6 +47,7 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 		MSDClassSummaryDto dto = new MSDClassSummaryDto();
 		dto.setId(msdclass.getId().intValue());
 		dto.setName(msdclass.getName() + " - " + msdclass.getLocation());
+		dto.setIsactive((byte)1 == msdclass.getIsActive());
 		StringBuffer schedular = new StringBuffer();
 		for (MSDClassSchedular s : msdclassschedulars) {
 			schedular.append(WeekdayEnum.getWeekdayString(s.getWeekday()) + " " + s.getStartTime() + "~" + s.getEndTime() + "; ");
@@ -59,11 +60,19 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 	@Override
 	public MSDClass createEntityFromDto(MSDClassDto dto) {
 		MSDClass entity = new MSDClass();
-		entity.setId(new Long(dto.getId()));
+		if (dto.getId() != 0)
+			entity.setId(new Long(dto.getId()));
+		else 
+			entity.setId(null);
 		entity.setName(dto.getName());
 		entity.setLocation(dto.getLocation());
 		entity.setClassStartTime(dto.getClassStartTime());
 		entity.setClassEndTime(dto.getClassEndTime());
+		if (dto.isIsactive()) {
+			entity.setIsActive((byte)1);
+		} else {
+			entity.setIsActive((byte)0);
+		}
 		if (StringUtils.isNotEmpty(dto.getClassStatus())) {
 			entity.setClassStatus(dto.getClassStatus());
 		} else {
@@ -88,6 +97,7 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 		dto.setClassStatus(msdclass.getClassStatus());
 		dto.setClassStartTime(msdclass.getClassStartTime());
 		dto.setClassEndTime(msdclass.getClassEndTime());
+		dto.setIsactive((byte)1 == msdclass.getIsActive());
 		return dto;
 	}
 
@@ -101,6 +111,7 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 		dto.setClassStatus(msdclass.getClassStatus());
 		dto.setClassStartTime(msdclass.getClassStartTime());
 		dto.setClassEndTime(msdclass.getClassEndTime());
+		dto.setIsactive((byte)1 == msdclass.getIsActive());
 		
 		dto.setClassSchedularList(msdClassSchedularAssembler.createDtoFromEntity(msdclassschedulars));
 		

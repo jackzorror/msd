@@ -5,6 +5,7 @@ public class MSDClassSummaryDto {
 	private int id;
 	private String name;
 	private String schedule;
+	private boolean isactive;
 	
 	public int getId() {
 		return id;
@@ -23,6 +24,12 @@ public class MSDClassSummaryDto {
 	}
 	public void setSchedule(String schedule) {
 		this.schedule = schedule;
+	}
+	public boolean isIsactive() {
+		return isactive;
+	}
+	public void setIsactive(boolean isactive) {
+		this.isactive = isactive;
 	}
 
 }

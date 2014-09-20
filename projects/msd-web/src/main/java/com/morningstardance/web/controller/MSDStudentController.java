@@ -18,6 +18,7 @@ import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 import com.morningstardance.app.msdstudent.MSDStudentDetailDto;
 import com.morningstardance.app.msdstudent.MSDStudentDto;
 import com.morningstardance.app.msdstudent.MSDStudentFacade;
+import com.morningstardance.app.msdstudentclass.MSDStudentClassFacade;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -26,6 +27,9 @@ public class MSDStudentController {
 	
 	@Resource(name="msdStudentFacade")
 	protected MSDStudentFacade msdStudentFacade;
+	
+	@Resource
+	protected MSDStudentClassFacade msdStudentClassFacade;
 	
 
 	@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version")
@@ -138,7 +142,7 @@ public class MSDStudentController {
 		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
-    
+    /*
     @RequestMapping(value="/ByClssName/{msdclassname}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto getAllStudentByClassNameDfltVer(@PathVariable String msdclassname, String type) {
 		return getAllStudentByClassNameVer1(msdclassname, type);
@@ -153,7 +157,23 @@ public class MSDStudentController {
     	}
     	return null;
     }
+    */
     
+    @RequestMapping(value="/ByClssId/{msdclassid}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto getAllStudentByClassNameDfltVer(@PathVariable Long msdclassid, String type) {
+		return getAllStudentByClassNameVer1(msdclassid, type);
+	}
+
+    @RequestMapping(value="/ByClassId/{msdclassid}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto getAllStudentByClassNameVer1(@PathVariable Long msdclassid, String type) {
+    	if (type.equals("Summary")) {
+    		List<MSDStudentDto> dtos = msdStudentFacade.getAllStudentSummaryDtoByClassId(msdclassid);
+    		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+    		return responseDto;
+    	}
+    	return null;
+    }
+
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto updateStudentInformationDfltVer(@RequestBody MSDStudentDetailDto studentDetailDto) {
 		return updateStudentInformationVer1(studentDetailDto);
@@ -185,23 +205,10 @@ public class MSDStudentController {
 
     @RequestMapping(value="/{msdstudentid}", method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentRegisterClassVer1(MSDStudentClassDto studentClassDto) {
-		MSDStudentClassDto newDto = msdStudentFacade.registerStudentToClass(studentClassDto);
+		MSDStudentClassDto newDto = msdStudentFacade.registerStudentToClassByStudentClassDto(studentClassDto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}
-    
-    @RequestMapping(value="/{msdstudentid}/{msdclassid}", method=RequestMethod.DELETE, headers="!X-Api-Service-Version")
-    public @ResponseBody ResponseDto deleteStudentRegisterClassDfltVer(@PathVariable Long msdstudentid, @PathVariable Long msdclassid) {
-    	return deleteStudentDeleteRegisterClassVer1(msdstudentid, msdclassid);
-    }
-
-    @RequestMapping(value="/{msdstudentid}/{msdclassid}", method=RequestMethod.DELETE, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto deleteStudentDeleteRegisterClassVer1(@PathVariable Long msdstudentid, @PathVariable Long msdclassid) {
-		String result = msdStudentFacade.deleteRegisterClassByStudentIdAndClassId(msdstudentid, msdclassid);
-		ResponseDto responseDto = ResponseDto.createResponseDto(result, "DELETE", "OBJECT");
-		return responseDto;
-	}
-
     @RequestMapping(params={"msdclassid","msdstudentid"}, method=RequestMethod.PUT, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto studentRegisterClassOldDfltVer(Long msdclassid, Long msdstudentid) {
     	return studentRegisterClassOldVer1(msdclassid, msdstudentid);
@@ -212,7 +219,7 @@ public class MSDStudentController {
     	MSDStudentClassDto studentClassDto = new MSDStudentClassDto();
     	studentClassDto.setMsdClassId(msdclassid.intValue());
     	studentClassDto.setMsdStudentId(msdstudentid.intValue());
-		MSDStudentClassDto newDto = msdStudentFacade.registerStudentToClass(studentClassDto);
+		MSDStudentClassDto newDto = msdStudentClassFacade.registerStudentToClassByStudentClassDto(studentClassDto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}
@@ -227,7 +234,7 @@ public class MSDStudentController {
     	MSDStudentClassDto studentClassDto = new MSDStudentClassDto();
     	studentClassDto.setMsdClassId(msdclassid.intValue());
     	studentClassDto.setMsdStudentId(msdstudentid.intValue());
-		MSDStudentClassDto newDto = msdStudentFacade.registerStudentToClass(studentClassDto);
+		MSDStudentClassDto newDto = msdStudentFacade.registerStudentToClassByStudentClassDto(studentClassDto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}

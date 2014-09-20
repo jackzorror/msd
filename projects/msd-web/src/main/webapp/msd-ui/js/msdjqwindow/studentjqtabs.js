@@ -418,7 +418,7 @@ function showRegisterClassInformationByGrid(data) {
 		{
 			theme: getTheme(),
 			source:dataAdapter,
-			height: 300,
+			height: 350,
 			pageable: true,
 			pagesizeoptions: ['10'],
 			showtoolbar:true,
@@ -455,7 +455,7 @@ function showRegisterClassInformationByGrid(data) {
 						return "Detail";
 					}, buttonclick:function(row) {
 						var id = $('#studentRegisteredClassGrid').jqxGrid('getcellvalue', row, 'id');
-						getClassDetailById(id);
+						ajaxGetClassDetailById(id, getClassDetailByIdInStudentTab);
 					}
 				}
 			]
@@ -465,7 +465,7 @@ function showRegisterClassInformationByGrid(data) {
 		{
 			theme: getTheme(),
 			source:dataAdapter,
-			height: 300,
+			height: 320,
 			pageable: true,
 			pagesizeoptions: ['10'],
 			columns:[
@@ -476,7 +476,7 @@ function showRegisterClassInformationByGrid(data) {
 						return "Detail";
 					}, buttonclick:function(row) {
 						var id = $('#studentRegisteredClassGrid').jqxGrid('getcellvalue', row, 'id');
-						getClassDetailById(id);
+						ajaxGetClassDetailById(id, getClassDetailByIdInStudentTab);
 					}
 				}
 			]
@@ -507,7 +507,7 @@ function showNonRegisterClassInformationByGrid(data) {
 	{
 		theme: getTheme(),
 		source:dataAdapter,
-		height: 300,
+		height: 350,
 		pageable: true,
 		pagesizeoptions: ['10'],
 		showtoolbar:true,
@@ -543,7 +543,7 @@ function showNonRegisterClassInformationByGrid(data) {
 					return "Detail";
 				}, buttonclick:function(row) {
 					var id = $('#studentNonRegisteredClassGrid').jqxGrid('getcellvalue', row, 'id');
-					getClassDetailById(id);
+					ajaxGetClassDetailById(id, getClassDetailByIdInStudentTab);
 				}
 			}
 		]
@@ -617,8 +617,8 @@ function addStudentTabsEventListeners() {
 	
 //	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnDeleteRegisterClass"]', handleDeleteRegisterClassClick);
 //	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnRegisterClass"]', handleRegisterClassClick);
-	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
-	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
+//	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
+//	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
 	
 	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
 	$(document).on('click', '#btnRegistClass', handleRegistClassClick);
@@ -820,7 +820,7 @@ function handleEditMedicalClick() {
 		$('#studentInformation').empty();
 	}
 }
-
+/*
 function handleClassDetailClick() {
 	console.log(" this will get class detail and pop up window to show detail about class ");
 	
@@ -828,7 +828,7 @@ function handleClassDetailClick() {
 	var classid = buttonid.substr(15, buttonid.length);
 	getClassDetailById(classid);
 }
-
+*/
 function showClassDetail(data) {
 	console.log(" this will pop up window to show detail about class ");
 	
@@ -1407,28 +1407,16 @@ function studentRegisterClass(id) {
 	});
 }
 
-function getClassDetailById(id) {
-
-	$.ajax({
-		type: "GET",
-		dataType: "json",
-		url: "../msd-app/rs/msdclass/" + id,
-		data: { type: "DETAIL"},
-		success: function(response) {
-			console.log(" get class ... ");
-			if (404 == response.code) {
-				alert(" Can't get class ... ");
-			} else if (302 == response.code) {
-				var data = $.parseJSON(response.result);
-				showClassDetail(data);
-			} else {
-				alert("error to get class ... ");
-			}
-		},
-		error: function(msg, url, line) {
-			handleAjaxError(msg);
-		}
-	});
+function getClassDetailByIdInStudentTab(response, request, settings){
+	console.log(" get class ... ");
+	if (404 == response.code) {
+		alert(" Can't get class ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		showClassDetail(data);
+	} else {
+		alert("error to get class ... ");
+	}
 }
 
 function getClassDetailSchedularByClassId(id) {

@@ -104,10 +104,21 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 	@Override
 	public List<MSDClassSummaryDto> getAllMSDClassByStatus(String classstatus) {
 		List<MSDClass> msdclasses = null;
+		List<MSDClassSummaryDto> dtos = null;
 		if (classstatus.equals("ACTIVE")) {
-			byte a = 1;
-			msdclasses  = msdClassJPARepository.findByIsActive(a);
+			msdclasses  = msdClassJPARepository.findByIsActive((byte) 1);
+		} else if (classstatus.equals("ALL")) {
+			msdclasses  = msdClassJPARepository.findAll();
 		}
-		return null;
+		if (null != msdclasses && msdclasses.size() > 0) {
+			dtos = new ArrayList<MSDClassSummaryDto>();
+			
+			for (MSDClass msdc : msdclasses) {
+				List<MSDClassSchedular> msdclassschedulars = (List<MSDClassSchedular>) msdClassSchedularJPARepository.findByMsdClassId(msdc.getId().intValue());
+				dtos.add(msdClassAssembler.createSummaryDtoFromEntity(msdc, msdclassschedulars));
+			}
+		}
+		
+		return dtos;
 	}
 }

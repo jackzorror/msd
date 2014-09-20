@@ -4,30 +4,40 @@ function initClassTab() {
 
 	$('#classControlPanel').empty();
 	
-	$('#classControlPanel').append('<label style="margin-top:10px; margin-left:20px">Please input class name : </label>');
-	var cname = $('<input style="margin-top:10px; margin-left:5px"/>').attr({type:'text', id:'txtClassSearchName'});
-	$('#classControlPanel').append(cname);
-	$('#txtClassSearchName').jqxInput({placeHolder: "Class Name", height: 20, width: 300, minLength: 1, theme: getTheme() });
+	var scpdiv = $('<div style="border:0px solid;"/>').attr({id:'classControldiv'});
+	$('#classControlPanel').append(scpdiv);
 
-	var abutton = $('<input style="float:right;margin-top:10px; margin-left:3px; margin-right:10px" />').attr({type:'button', id:'btnAddClass', value:'Add'});
-	$('#classControlPanel').append(abutton);
+	var ddldiv = $('<div dock="left" style="margin-top:10px; border:0px solid  #ccc; height:20px; width:500px;"/>');
+	var btndiv = $('<div dock="right" style="margin-top:10px; border:0px solid  #ccc; height:20px;"/>');
+	scpdiv.append(ddldiv);
+	scpdiv.append(btndiv);
+	
+	ddldiv.append('<label style="float:left; margin-top:8px; margin-left:20px">Please Select class name : </label>');
+	var cname = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlClassSearchName'});
+	ddldiv.append(cname);
+	$('#ddlClassSearchName').jqxDropDownList({placeHolder: "Please Select Class Name", height: 20, width: 300, dropDownHeight: 150, theme: getTheme()});
+
+	var abutton = $('<input style="float:right;margin-top:5px; margin-left:3px; margin-right:10px" />').attr({type:'button', id:'btnAddClass', value:'Add'});
+	btndiv.append(abutton);
 	$('#btnAddClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
 	
-	var cbutton = $('<input style="float:right;margin-top:10px; margin-left:3px" />').attr({type:'button', id:'btnClearClass', value:'Clear'});
-	$('#classControlPanel').append(cbutton);
+	var cbutton = $('<input style="float:right;margin-top:5px; margin-left:3px" />').attr({type:'button', id:'btnClearClass', value:'Clear'});
+	btndiv.append(cbutton);
 	$('#btnClearClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
 	
-	var sbutton = $('<input style="float:right; margin-top:10px;" />').attr({type:'button', id:'btnSearchClass', value:'Search'});
-	$('#classControlPanel').append(sbutton);
+	var sbutton = $('<input style="float:right; margin-top:5px;" />').attr({type:'button', id:'btnSearchClass', value:'Search'});
+	btndiv.append(sbutton);
 	$('#btnSearchClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
 	
+	$('#classControldiv').jqxDockPanel({height: 40});
+
 	$('classMainPanel').empty();
 
 };
 
 function addClassTabsEventListeners() {
 	$(document).on('click', '#btnSearchClass', handleSearchClassClick);
-	$(document).on('keypress', '#txtClassSearchName', handleClassSEarchNameKeypress);
+	$(document).on('keypress', '#ddlClassSearchName', handleClassSEarchNameKeypress);
 	$(document).on('click', '#btnClearClass', handleClearClassClick);
 	$(document).on('click', '#btnAddClass', handleAddClassClick);
 	
@@ -39,13 +49,17 @@ function addClassTabsEventListeners() {
 function handleSearchClassClick() {
 	console.log(" in handle search ... ");
 
-	var cname = $.trim($('#txtClassSearchName').val());
+	var item = $('#ddlClassSearchName').jqxDropDownList('getSelectedItem');
 
-	if ((null == cname || cname.length == 0)) {
-	    alert("please input class name to search ... ");
+	if (null == item) {
+	    alert("Please select class name from list ... ");
 	} else {
 		console.log (" call ajax to get class ... ");
-		ajaxGetClassDetailByName(cname, getClassDetailByName);
+		var cid = item.value;
+		if (null == cid || cid == 0) 
+			alert("Please select class from list ... ");
+		else 
+			ajaxGetClassDetailById(cid, getClassDetailById);
 	}
 
 	setCurrentFunctionInClassTab("SEARCH");
@@ -58,8 +72,7 @@ function handleClassSEarchNameKeypress(e) {
 
 function handleClearClassClick() {
 	$('#classMainPanel').empty();
-	$('#txtClassSearchName').val('');
-	$('#txtClassSearchName').focus();
+	$('#ddlClassSearchName').jqxDropDownList({selectedIndex:-1});
 }
 
 function handleEditClassClick() {
@@ -87,12 +100,13 @@ function handleEditClassClick() {
 
 function handleSaveClassClick() {
 	var id = (null != getCurrentClassInClassTab() ? getCurrentClassInClassTab().id : null);
+	var isActive = (null != getCurrentClassInClassTab() ? getCurrentClassInClassTab().isactive : true);
 	var cname = $('#txtClassName').val();
 	var clocation  = $('#txtLocation').val();
 	var sdate = $('#divStartTime').jqxDateTimeInput('value');
 	var edate = $('#divEndTime').jqxDateTimeInput('value');
 	console.log(" new class : " + cname + " -> " + clocation + " time : " + sdate  + " ~ " + edate);
-	ajaxSaveClassInformation(id, cname, clocation, sdate, edate, saveClassInformation);
+	ajaxSaveClassInformation(id, cname, clocation, sdate, edate, isActive, saveClassInformation);
 }
 
 function handleAddClassClick() {
@@ -102,7 +116,7 @@ function handleAddClassClick() {
 	showClassInformation(null);
 	setCurrentClassInClassTab(null);
 
-	$('#txtClassSearchName').val('');
+	$('#ddlClassSearchName').jqxDropDownList({selectedIndex: -1});
 	$('#classCommondiv :text').prop("disabled", false);
 	$('#txtClassName').focus();
 	$('#btnEditClassInformation').val("Cancel");
@@ -116,7 +130,6 @@ function showClassInformation(data) {
 	createClassInformationDiv();
 	$('#txtClassName').jqxInput({disabled:true });
 	$('#txtClassName').jqxInput('val', null != data ? data.name : "");
-	
 	
 	$('#txtLocation').jqxInput({disabled:true });
 	$('#txtLocation').jqxInput('val', null != data ? data.location : "");
@@ -193,23 +206,7 @@ function createClassInformationDiv() {
 	
 	var tmpdiv = $('<div class="InnerDiv" style = "margin-top:10px; border:0px solid;"/>').attr({id:'tmpdiv'});
 	$('#classCommondiv').append(tmpdiv);
-/*	
-	$('#classCommondiv').append('<label style="float:left; margin-top:10px;"> Start : </label>');
-	var stime = $('<div style="float: left; margin-top:10px; margin-left:10px;"/>').attr({id:'divStartTime'});
-	$('#classCommondiv').append(stime);
-	$('#divStartTime').jqxDateTimeInput({width: '150px', height: '20px', formatString: 'd', theme: getTheme()});
-	
-	$('#classCommondiv').append('<label style="float:left; margin-top:10px; margin-left:10px;"> End: </label>');
-	var etime = $('<div style="float:left; margin-top:10px; margin-left:10px;" />').attr({id:'divEndTime'});
-	$('#classCommondiv').append(etime);
-	$('#divEndTime').jqxDateTimeInput({width: '150px', height: '20px', formatString: 'd', theme: getTheme()});
-	
-	var label = $('<label id="statuslabel" name="statuslabel" style="float:left; margin-top:10px; margin-left:20px;">Class Status : </label>');
-	$('#classCommondiv').append(label);
 
-	var statusLabel = $('<label id="labelClassStatus" name="labelClassStatus" style="float:left; margin-top:10px; margin-left:20px;" />');
-	$('#classCommondiv').append(statusLabel);
-*/
 	$('#tmpdiv').append('<label style="float:left; margin-top:5px;"> Start : </label>');
 	var stime = $('<div style="float: left; margin-top:0px; margin-left:10px;"/>').attr({id:'divStartTime'});
 	$('#tmpdiv').append(stime);
@@ -229,7 +226,7 @@ function createClassInformationDiv() {
 	$('#classCommondiv').append('<br />');
 }
 
-function getClassDetailByName(response, request, settings) {
+function getClassDetailById(response, request, settings) {
 	if (404 == response.code) {
 		console.log(" Can't get class detail by class name ... ");
 	} else if (302 == response.code) {
@@ -502,16 +499,32 @@ function saveClassInformation(response, request, settings) {
 	} else if (302 == response.code) {
 		console.log(" add class successfully ... ");
 		data = $.parseJSON(response.result);
-		$('#txtClassSearchName').val(data.name);
-		$('#btnSearchClass').click();		
-		ajaxGetAllClassName(getAllClassName);
-		
-//		setCurrentClassInClassTab(data);
-//		showClassInformation(data);
+		ajaxGetAllClass(getAllClass);
 	} else {
 		alert('error');
 	}
 }
+
+function loadClassNameDropDownListDataSource(data) {
+	var activesource = {
+		datafields:[
+			{ name: 'value',   type: 'int'}, 
+			{ name: 'text',  type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var activedataadapter = new $.jqx.dataAdapter(activesource);
+	
+	$('#ddlClassSearchName').jqxDropDownList({source:activedataadapter, displayMember: "text", valueMember: "value"});
+	
+		if (getCurrentFunctionInClassTab() == 'ADD') {
+			$('#ddlClassSearchName').jqxDropDownList({selectedIndex: getActiveClassNameList().length });
+			$('#btnSearchClass').click();
+		} else if (getCurrentFunctionInClassTab() == 'SEARCH') {
+			$('#btnSearchClass').click();
+		}
+} 
 
 var currentFunctionInClassTab;
 function setCurrentFunctionInClassTab(status) {

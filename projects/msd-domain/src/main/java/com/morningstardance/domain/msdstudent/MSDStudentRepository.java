@@ -29,7 +29,7 @@ public class MSDStudentRepository extends MSDBaseRepository<MSDStudent> {
 	public List<MSDStudent> getAllByClassId(Long msdClassId) {
 		Query query = this.getEntityManager().createNativeQuery(
 				"SELECT * FROM msd_student AS s JOIN  msd_student_class AS sc ON s.id = sc.msd_student_id " +
-				"WHERE sc.msd_class_id = :msdClassID ",
+				"WHERE sc.msd_class_id = :msdClassID AND sc.is_active = 1",
 				MSDStudent.class);
 		query.setParameter("msdClassID", msdClassId);
 		return(List<MSDStudent>)query.getResultList();

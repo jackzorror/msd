@@ -4,13 +4,15 @@ import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 
 public interface MSDStudentClassFacade {
 
-	MSDStudentClassDto registerStudentToClass(MSDStudentClassDto studentClassDto);
+	MSDStudentClassDto registerStudentToClassByStudentClassDto(MSDStudentClassDto studentClassDto);
 
-	void deleteRegisteredStudentClass(Long id);
+//	void unRegisterStudentFromClassById(Long id);
 
-	String registerStudentToClasses(Long msdstudentid, String msdclassidlist);
+	String unRegisterStudentFromClassByStudentIdAndClassId(Long studentid, Long classid);
+	
+	String registerStudentToClassesByStudentIdAndClassIdList(Long msdstudentid, String msdclassidlist);
 
-	String deleteRegisterStudentToClasses(Long msdstudentid, String msdclassidlist);
+	String unRegisterStudentFromClassesByStudentIdAndClassIdList(Long msdstudentid, String msdclassidlist);
 
-	String registerClassByClassNameAndStudentIDlistAndType(String classname, String studentidlist, String oldclassname, String registertype);
+	String registerStudentToClassByClassIDAndStudentIdlistAndType(Long classid, String studentidlist, Long oldclassid, String registertype);
 }

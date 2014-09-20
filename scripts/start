@@ -8,4 +8,8 @@ cd $APP_HOME/../scripts
 
 ./app-service start
 
+returncode=$?
+
 cd $dirhome
+
+exit $returncode

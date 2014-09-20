@@ -29,7 +29,7 @@ public class MSDStudentClassController {
 
     @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentRegisterClassVer1(MSDStudentClassDto studentClassDto) {
-		MSDStudentClassDto newDto = msdStudentClassFacade.registerStudentToClass(studentClassDto);
+		MSDStudentClassDto newDto = msdStudentClassFacade.registerStudentToClassByStudentClassDto(studentClassDto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}
@@ -41,19 +41,19 @@ public class MSDStudentClassController {
 
     @RequestMapping(value="/{msdstudentid}/{msdclassidlist}", method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentRegisterClassesVer1(@PathVariable Long msdstudentid, @PathVariable String msdclassidlist) {
-		String newDto = msdStudentClassFacade.registerStudentToClasses(msdstudentid, msdclassidlist);
+		String newDto = msdStudentClassFacade.registerStudentToClassesByStudentIdAndClassIdList(msdstudentid, msdclassidlist);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}
     
-    @RequestMapping(params={"classname", "studentidlist", "oldclassname", "registertype"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
-    public @ResponseBody ResponseDto registerClassByClassNameAndStudentIDlistAndTypeDfltVer(String classname, String studentidlist, String oldclassname, String registertype) {
-    	return registerClassByClassNameAndStudentIDlistAndTypeVer1(classname, studentidlist,oldclassname, registertype);
+    @RequestMapping(params={"classid", "studentidlist", "oldclassid", "registertype"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto registerClassByClassIdAndStudentIDlistAndTypeDfltVer(Long classid, String studentidlist, Long oldclassid, String registertype) {
+    	return registerClassByClassIdAndStudentIDlistAndTypeVer1(classid, studentidlist,oldclassid, registertype);
     }
 
     @RequestMapping(params={"classname", "studentidlist", "oldclassname", "registertype"}, method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto registerClassByClassNameAndStudentIDlistAndTypeVer1(String classname, String studentidlist, String oldclassname, String registertype) {
-		String newDto = msdStudentClassFacade.registerClassByClassNameAndStudentIDlistAndType(classname, studentidlist, oldclassname, registertype);
+	public @ResponseBody ResponseDto registerClassByClassIdAndStudentIDlistAndTypeVer1(Long classid, String studentidlist, Long oldclassid, String registertype) {
+		String newDto = msdStudentClassFacade.registerStudentToClassByClassIDAndStudentIdlistAndType(classid, studentidlist, oldclassid, registertype);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
 		return responseDto;
 	}
@@ -65,7 +65,7 @@ public class MSDStudentClassController {
 
     @RequestMapping(value="/{msdstudentid}/{msdclassidlist}", method=RequestMethod.DELETE, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentDeleteRegisteredClassesVer1(@PathVariable Long msdstudentid, @PathVariable String msdclassidlist) {
-		String newDto = msdStudentClassFacade.deleteRegisterStudentToClasses(msdstudentid, msdclassidlist);
+		String newDto = msdStudentClassFacade.unRegisterStudentFromClassesByStudentIdAndClassIdList(msdstudentid, msdclassidlist);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}

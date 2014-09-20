@@ -53,6 +53,7 @@ start() {
   # Check if the server is already running
   if [ -f $SERVER_PID_FILE ]; then
     echo $SERVER_PID_FILE exists. Please stop the server first!
+    RETVAL=1
   else 
     echo -n $"Starting MSD server ... "
     ./loop.sh >> loop.log &
