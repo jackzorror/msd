@@ -33,6 +33,29 @@ public class MSDStudentCheckinRepository extends MSDBaseRepository<MsdStudentChe
 			return null;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MsdStudentCheckin> findByStudentIdAndClassId(int msdstudentid, int msdclassid) {
+		Query query = this.getEntityManager().createNativeQuery(
+				"SELECT * FROM msd_student_checkin " +
+				"WHERE msd_class_id = :msdclassid and msd_student_id = :msdstudentid ",
+				MsdStudentCheckin.class);
+		query.setParameter("msdclassid",  msdclassid);
+		query.setParameter("msdstudentid", msdstudentid);
+		List<MsdStudentCheckin> list = (List<MsdStudentCheckin>) query.getResultList();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MsdStudentCheckin> findByStudentId(int msdstudentid) {
+		Query query = this.getEntityManager().createNativeQuery(
+				"SELECT msdsc.* FROM msd_student_checkin msdsc join msd.msd_class as msdc on msdc.id = msdsc.msd_class_id " +
+				"WHERE msd_student_id = :msdstudentid and msdc.is_active = 1 ",
+				MsdStudentCheckin.class);
+		query.setParameter("msdstudentid", msdstudentid);
+		List<MsdStudentCheckin> list = (List<MsdStudentCheckin>) query.getResultList();
+		return list;
+	}
 
 
 }

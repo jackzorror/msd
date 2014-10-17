@@ -106,4 +106,14 @@ public class MSDClass extends MSDEntityBase implements Serializable {
 		this.isActive = isActive;
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		return sb.append("MSDClass ID: " + getId())
+				 .append(" Name: " + getName())
+				 .append(" Location: " + getLocation())
+				 .append(" Start: " + getClassStartTime())
+				 .append(" End: " + getClassEndTime())
+				 .append(" Status:" + getClassStatus())
+				 .append(" IsActive: " + getIsActive()).toString();
+	}
 }

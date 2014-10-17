@@ -32,9 +32,6 @@ public class MSDClassSchedular extends MSDEntityBase implements Serializable {
 
 	private int weekday;
 
-	@Column(name="is_active")
-	private byte isActive;
-
 	public MSDClassSchedular() {
 	}
 
@@ -77,13 +74,8 @@ public class MSDClassSchedular extends MSDEntityBase implements Serializable {
 	public void setWeekday(int weekday) {
 		this.weekday = weekday;
 	}
-
-	public byte getIsActive() {
-		return this.isActive;
-	}
-
-	public void setIsActive(byte isActive) {
-		this.isActive = isActive;
-	}
-
+	
+//	public String toString() {
+//		return "ID: " + getId() + " MSDClass ID: " + getMsdClassId() + " Start: " + getStartTime() + " End: " + getEndTime() + " WeekDay: " + getWeekday();
+//	}
 }

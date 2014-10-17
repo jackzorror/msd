@@ -120,4 +120,17 @@ public class MSDStudentMedicalInfo extends MSDEntityBase implements Serializable
 		this.msdStudent = msdStudent;
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		
+		return sb.append("MSDStudentMedicalInfo ID:" + getId())
+				 .append(" EmergencyName:" + getEmergencyName())
+				 .append(" EmergencyPhone:" + getEmergencyPhone())
+				 .append(" EmergencyPhoneAlt:" + getEmergencyPhoneAlt())
+				 .append(" InsuranceCompany:" + getInsuranceCompany())
+				 .append(" PediatricianName:" + getPediatricianName())
+				 .append(" PediatricianPhone:" + getPhone())
+				 .append(" PolicyNumber:" + getPolicyNumber())
+				 .append(" student ID:" + (null != getMsdStudent() ? getMsdStudent().getId() : null)).toString();
+	}
 }

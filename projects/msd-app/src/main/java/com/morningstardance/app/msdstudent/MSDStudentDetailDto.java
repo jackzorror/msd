@@ -16,6 +16,7 @@ public class MSDStudentDetailDto extends MSDStudentDto {
 	private String homePhone;
 	private String schoolGrade;
 	private String schoolName;
+	private byte isActive;
 	private List<MSDStudentParentDto> msdStudentParentDtos;
 	
 	private MSDStudentMedicalInfoDto msdStudentMedicalInfoDto;
@@ -155,6 +156,12 @@ public class MSDStudentDetailDto extends MSDStudentDto {
 	public void setMsdStudentMedicalInfoDto(
 			MSDStudentMedicalInfoDto msdStudentMedicalInfoDto) {
 		this.msdStudentMedicalInfoDto = msdStudentMedicalInfoDto;
+	}
+	public byte getIsActive() {
+		return isActive;
+	}
+	public void setIsActive(byte isActive) {
+		this.isActive = isActive;
 	}
 	
 

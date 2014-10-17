@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdclass.MSDClassAssembler;
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
+import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.app.msdstudentclass.MSDStudentClassFacade;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassSchedular;
@@ -51,6 +52,9 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 	@Resource
 	private MSDStudentClassFacade msdStudentClassFacade;
 	
+	@Resource
+	private MSDOperationService msdOperationService;
+	
 	@Override
 	public List<MSDStudentDto> getAllStudents() {
 		List<MSDStudent> msdStudents = msdStudentJPARepository.findAll();
@@ -89,8 +93,12 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 			return null;
 		}
 		
+		MSDStudent old = msdStudentJPARepository.findOne(new Long(studentDetailDto.getId()));
+		
 		MSDStudent student = msdStudentAssembler.createEntityFromDetailDto(studentDetailDto);
 		msdStudentJPARepository.save(student);
+		
+		msdOperationService.msdStudentOperation(student.getId(), "Update Student", student.toString(), null != old ? old.toString() : null, "DATABASE");
 		
 		return msdStudentAssembler.createDetailDtoFromEntity(student);
 	}
@@ -101,6 +109,7 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 		if (null == student) {
 			student = msdStudentAssembler.createEntityFromDetailDto(studentDetailDto);
 			student = msdStudentRepository.save(student);
+			msdOperationService.msdStudentOperation(student.getId(), "Create New Student", student.toString(), null, "DATABASE");
 		}
 		return msdStudentAssembler.createDetailDtoFromEntity(student);
 	}

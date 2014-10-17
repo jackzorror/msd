@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.app.msdclassschedular.MSDClassSchedularDto;
 import com.morningstardance.app.msdclassschedular.MSDClassSchedularDtos;
 import com.morningstardance.app.msdclassschedular.MSDClassSchedularFacade;

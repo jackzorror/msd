@@ -3,36 +3,63 @@ function initAdminTab() {
 	console.log(" init admin tab ... ");
 
 	$('#adminControlPanel').empty();
-
-	var abutton = $('<input style="float:left; margin-top:10px; margin-left:5px;" />').attr({type:'button', id:'btnStudentAdmin', value:'Student'});
-	$('#adminControlPanel').append(abutton);
+	
+	var btnholddiv = $('<div style="margin-top:10px; margin-left:5px; border:0px solid;" />');
+	$('#adminControlPanel').append(btnholddiv);
+	var bholddiv = $('<div style="margin-top:10px; margin-left:5px; border:0px solid;" />');
+	$('#adminControlPanel').append(bholddiv);
+	
+	var abutton = $('<input />').attr({type:'button', id:'btnStudentAdmin', value:'Student'});
+	btnholddiv.append(abutton);
 	$('#btnStudentAdmin').jqxButton({ width: '100', theme: getTheme() });
 	
-	var cbutton = $('<input style="float:left; margin-top:10px; margin-left:5px;" />').attr({type:'button', id:'btnClassAdmin', value:'Class'});
-	$('#adminControlPanel').append(cbutton);
+	var cbutton = $('<input style="margin-top:10px;" />').attr({type:'button', id:'btnClassAdmin', value:'Class'});
+	btnholddiv.append(cbutton);
 	$('#btnClassAdmin').jqxButton({width:'100', theme: getTheme() });
 
+	var dbutton = $('<div id="btnCompetitionAdmin"><div style="border: none;" id="btnCompetitionAdminTree"><ul><li>YAGP</li><li>ShowStopper</li><li>IDC</li><li>ADC/ABC</li></ul></div></div>');
+	bholddiv.append(dbutton);
+	$('#btnCompetitionAdmin').jqxDropDownButton({width:'100', height:'22', theme: getTheme() });
+    $('#btnCompetitionAdminTree').on('select', function (event) {
+    	onCompetitionDropDownButtonSelect(event);
+    	$('#btnCompetitionAdmin').jqxDropDownButton('close')
+    });
+    $("#btnCompetitionAdminTree").jqxTree({ width: 150, theme:getTheme() });	
+   	$("#btnCompetitionAdmin").jqxDropDownButton('setContent', 'Competition');
 	$('#adminMainPanel').empty();
 
 };
 
 function addAdminTabsEventListeners() {
 	$(document).on('click', '#btnStudentAdmin', handleStudentAdminClick);
+	$(document).on('click', '#btnClassAdmin', handleClassAdminClick);
 
 	$(document).on('keypress', '#ddlStudentAdminClassSearchName', handleStudentAdminClassSearchNameKeypress);
-	$(document).on('click', '#btnStudentAdminClearClass', handleStudetnAdminClearClassClick);
+	$(document).on('click', '#btnStudentAdminClearClass', handleStudentAdminClearClassClick);
 	$(document).on('click', '#btnStudentAdminSearchClass', handleStudentAdminSearchClassClick);
-	$(document).on('click', '#btnStudentAdminClearClass', handlesstudentAdminClearClassClick);
+}
+function handleClassAdminClick() {
+	console.log(' in Class admin click ... ');
+   	$("#btnCompetitionAdmin").jqxDropDownButton('setContent', 'Competition');
+	$('#adminMainPanel').empty();
+}
+
+function handleCompetitionAdminClick() {
+	console.log(' in Competittion admin click ... ');
+	$('#adminMainPanel').empty();
+	showCompetitionAdminPanel();
 }
 
 function handleStudentAdminClick() {
 	console.log(' in Sudent admin click ... ');
+   	$("#btnCompetitionAdmin").jqxDropDownButton('setContent', 'Competition');
+
 	$('#adminMainPanel').empty();
 	
 	var sdiv = $('<div id="studentAdminSearchDockPanel" style="height:550;"/>');
 	$('#adminMainPanel').append(sdiv);
 
-	var ssdiv = $('<div id="studentAdminClassInputPancel" style="border:0px solid ;"/>');
+	var ssdiv = $('<div id="studentAdminClassInputPancel" style="border:0px solid;"/>');
 	sdiv.append(ssdiv);
 	
 	var ddldiv = $('<div dock="left" style="margin-top:10px; border:1px solid  #e0e9f5; height:20px;"/>');
@@ -50,17 +77,17 @@ function handleStudentAdminClick() {
 			{ name: 'text',  type: 'string'}
 		],
 		datatype:'json',
-		localdata:getAllClassNameList()
+		localdata:getActiveClassNameList()
 	}
 	var alldataadapter = new $.jqx.dataAdapter(allsource);
 	
 	$('#ddlStudentAdminClassSearchName').jqxDropDownList({placeHolder: "Please Select Class Name", height: 20, width: 260, dropDownHeight:150, theme: getTheme(), selectedIndex:-1, source:alldataadapter, displayMember: "text", valueMember: "value"});
 
-	var cbutton = $('<input style="float:right; margin-top:0px; margin-left:0px" />').attr({type:'button', id:'btnStudentAdminClearClass', value:'Clear'});
+	var cbutton = $('<input style="float:right; margin-right:10px; margin-left:0px" />').attr({type:'button', id:'btnStudentAdminClearClass', value:'Clear'});
 	btndiv.append(cbutton);
 	$('#btnStudentAdminClearClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
 	
-	var sbutton = $('<input style="float:right; margin-top:0px;" />').attr({type:'button', id:'btnStudentAdminSearchClass', value:'Search'});
+	var sbutton = $('<input style="float:right; margin-right:10px;" />').attr({type:'button', id:'btnStudentAdminSearchClass', value:'Search'});
 	btndiv.append(sbutton);
 	$('#btnStudentAdminSearchClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
 
@@ -76,10 +103,6 @@ function handleStudentAdminClassSearchNameKeypress(e) {
 		$('#btnStudentAdminSearchClass').click();
 }
 
-function handleStudetnAdminClearClassClick() {
-	console.log (" in handleStudetnAdminClearClassClick ... ");
-}
-
 function handleStudentAdminSearchClassClick() {
 	console.log(" in handleStudentAdminSearchClassClick ... ");
 	$('#studentAdminGridDiv').empty();
@@ -88,7 +111,7 @@ function handleStudentAdminSearchClassClick() {
 	ajaxGetAllStuentSummaryByClassId(null != item ? item.value : 0, getAllStudentSummaryByClassId);
 }
 
-function handlesstudentAdminClearClassClick() {
+function handleStudentAdminClearClassClick() {
 	console.log(" in handlesstudentAdminClearClassClick ... ");
 	$('#studentAdminGridDiv').empty();
 	$('#ddlStudentAdminClassSearchName').jqxDropDownList('selectIndex', -1 ); 
@@ -110,24 +133,42 @@ function getAllStudentSummaryByClassId(response, request, settings) {
 function showSelectedStudents(data) {
 	$('#studentAdminGridDiv').empty();
 
-
+	// Create pop up Register Class window
 	var pdiv = $('<div/>').attr({id:'popupRegisterClassWindow'});
 	$('#studentAdminGridDiv').append(pdiv);
 	$('#popupRegisterClassWindow').append('<div >Register Class</div> <div style="height:130px; width:220px;" id="popupReisterClassPaneldiv"></div>');
-
     $("#popupRegisterClassWindow").jqxWindow({
     	width: 350, height:130, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 
-	var sgrid = $('<div id="studentAdminGrid"/>');
-	$('#studentAdminGridDiv').append(sgrid);
-
+	//Create pop up Check In Widow
 	var pdiv = $('<div/>').attr({id:'popupCheckinClassWindow'});
 	$('#studentAdminGridDiv').append(pdiv);
 	$('#popupCheckinClassWindow').append('<div >Check In Class</div> <div style="height:130px; width:220px;" id="popupCheckinClassPaneldiv"></div>');
     $("#popupCheckinClassWindow").jqxWindow({
     	width: 370, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
+
+	//Create pop up Check in Report window
+	var pdiv = $('<div/>').attr({id:'popupCheckinReportWindow'});
+	$('#studentAdminGridDiv').append(pdiv);
+	$('#popupCheckinReportWindow').append('<div> Check In Report</div> <div style="height:500px; width:600px;" id="popCheckinReportPaneldiv"></div>');
+	$('#popupCheckinReportWindow').jqxWindow({
+		width:700, resizable: false, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+	});
+	
+	//Create pop up All check in Report window
+	var pdiv = $('<div/>').attr({id:'popupAllCheckinReportWindow'});
+	$('#studentAdminGridDiv').append(pdiv);
+	$('#popupAllCheckinReportWindow').append('<div>All Class Check In Report</div> <div style="height:500px; width:600px;" id="popAllCheckinReportPaneldiv"></div>');
+	$('#popupAllCheckinReportWindow').jqxWindow({
+		width:700, resizable: false, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+	});
+	
+		
+	var sgrid = $('<div id="studentAdminGrid"/>');
+	$('#studentAdminGridDiv').append(sgrid);
+
 	var source = {
 		datafields:[
 			{ name: 'id',   type: 'int'}, 
@@ -135,12 +176,12 @@ function showSelectedStudents(data) {
 			{ name: 'lastName', type: 'string'},
 			{ name: 'emailAddress', type: 'string'}
 		],
-                deleterow: function (rowid, commit) {
+/*                deleterow: function (rowid, commit) {
                     // synchronize with the server - send delete command
                     // call commit with parameter true if the synchronization with the server is successful 
                     //and with parameter false if the synchronization failed.
                     commit(true);
-                },
+                }, */
 		datatype:'json',
 		localdata:data
 	}
@@ -204,9 +245,13 @@ function showSelectedStudents(data) {
 			
 			createPopupRegisterClassWindow();
 			createPopupCheckinClassWindow();
+			createPopupCheckinReportWindow();
+			createPopupAllCheckinReportWindow();
 		    var offset = $("#studentAdminGridDiv").offset();
 			$("#popupRegisterClassWindow").jqxWindow({ position: { x: parseInt(offset.left) + 100, y: parseInt(offset.top) - 20 } });
 			$("#popupCheckinClassWindow").jqxWindow({ position: { x: parseInt(offset.left) + 100, y: parseInt(offset.top) - 20 } });
+			$("#popupCheckinReportWindow").jqxWindow({ position: { x: parseInt(offset.left) - 40, y:parseInt(offset.top) - 60} });
+			$("#popupAllCheckinReportWindow").jqxWindow({ position: { x: parseInt(offset.left) - 40, y:parseInt(offset.top) - 60} });
 
             $('#btnCancelRegisterClass').on('click', function () {
 				console.log(" cancel Register class ...");
@@ -371,7 +416,15 @@ function showSelectedStudents(data) {
 					alert('Please only select one student from the list ...');
 					return;
 				}
-	        	
+
+				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
+				var row = $('#studentAdminGrid').jqxGrid('getrowdata', selectedIndex[0]);
+				var sid = row.id;
+
+				var item = $("#ddlStudentAdminClassSearchName").jqxDropDownList('getSelectedItem');
+				var cid = item.value;
+				
+				ajaxGetStudentCheckinReportByStudentIdAndClassId(sid, cid, getStudentCheckinReportByStudentIdAndClassId);
 	        });
 
 	        $("#allAttendentReport").on('click', function() {
@@ -381,6 +434,11 @@ function showSelectedStudents(data) {
 					return;
 				}
 	        	
+				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
+				var row = $('#studentAdminGrid').jqxGrid('getrowdata', selectedIndex[0]);
+				var sid = row.id;
+
+				ajaxGetAllStudentCheckinReportByStudentId(sid, getAllStudentCheckinReportByStudentId);
 	        });
 
     	    $("#studentCheckin").on('click', function () {
@@ -397,6 +455,10 @@ function showSelectedStudents(data) {
                 
 	        });
 	        
+	        $("#btnCancelCheckinReport").on('click', function () {
+	        	console.log(" Cancel checkin report ...");
+	        	$('#popupCheckinReportWindow').jqxWindow('hide');
+	        });
 		},
 	    selectionmode: 'checkbox',
     	altrows: true,
@@ -466,7 +528,7 @@ function createPopupCheckinClassWindow() {
 	tdiv.append('<label style="float:left; margin-top:2px;">Class Name : </label>');
 	var classNamediv = $('<div style="margin-left:5px"/>').attr({id:'checkinclassnamediv'});
 	tdiv.append(classNamediv);
-	$('#checkinclassnamediv').jqxDropDownList({ placeHolder: "Please Select Class Name: ", dropDownHeight:150, source: getAllClassNameList(), selectedIndex: -1, width: '260', height: '20', theme: getTheme() });
+	$('#checkinclassnamediv').jqxDropDownList({ placeHolder: "Please Select Class Name: ", dropDownHeight:150, source: getAllClassNameList(), selectedIndex: -1, width: '260', height: '20', theme: getTheme(), displayMember: "text", valueMember: "value"});
 
 	$('#popupCheckinClassPaneldiv').append('<br/>');
 	
@@ -488,6 +550,149 @@ function createPopupCheckinClassWindow() {
 	var btncheckinCancel = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnCancelCheckinClass', value:'Cancel'});
 	tdiv.append(btncheckinCancel);
 	$('#btnCancelCheckinClass').jqxButton({ width: '80', height: 20, theme: getTheme() });
+}
+
+function createPopupCheckinReportWindow() {
+	$('#popCheckinReportPaneldiv').empty();
+	
+	var tdiv = $('<div style="border:0px solid; height: 400;"/>').attr({id:'popupCheckinReportGrid'});
+	$('#popCheckinReportPaneldiv').append(tdiv);
+	
+	// action button
+	var tdiv = $('<div style="margin-top:5px; border:0px solid;" align="right" />');
+	$('#popCheckinReportPaneldiv').append(tdiv);
+	var btncancel = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnCancelCheckinReport', value:'Close'});
+	tdiv.append(btncancel);
+	$('#btnCancelCheckinReport').jqxButton({ width: '60', height: 20, theme: getTheme() });
+}
+
+function createPopupAllCheckinReportWindow() {
+	$('#popAllCheckinReportPaneldiv').empty();
+	
+	var tdiv = $('<div style="border:0px solid; height: 400;"/>').attr({id:'popupAllCheckinReportGrid'});
+	$('#popAllCheckinReportPaneldiv').append(tdiv);
+	
+	// action button
+	var tdiv = $('<div style="margin-top:5px; border:0px solid;" align="right" />');
+	$('#popAllCheckinReportPaneldiv').append(tdiv);
+	var btncancel = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnCancelAllCheckinReport', value:'Close'});
+	tdiv.append(btncancel);
+	$('#btnCancelAllCheckinReport').jqxButton({ width: '60', height: 20, theme: getTheme() });
+}
+
+function getStudentCheckinReportByStudentIdAndClassId(response, request, settings) {
+	if (404 == response.code) {
+		console.log(" Can't getStudentCheckinReportByStudentIdAndClassId ... ");
+		alert(" Can not getStudentCheckinReportByStudentIdAndClassId ... ");
+	} else if (302 == response.code) {
+		console.log(" getStudentCheckinReportByStudentIdAndClassId ");
+		var data = $.parseJSON(response.result);
+		showStudentCheckInReport(data);
+	} else {
+		alert('error');
+	}
+}
+
+function showStudentCheckInReport(data) {
+   	$('#popupCheckinReportWindow').jqxWindow('open');
+   	
+	var sgrid = $('<div id="studentCheckinReportGrid"/>');
+	$('#popupCheckinReportGrid').append(sgrid);
+
+	var source = {
+		datafields:[
+			{ name: 'id',   type: 'int'}
+			,{ name: 'className',  type: 'string'}
+			,{ name: 'checkInTime', type: 'date'}
+			,{ name: 'registerClass', type: 'bool'}
+			,{ name: 'other', type: 'bool'}
+			,{ name: 'makeup', type: 'bool'}
+			,{ name: 'fiveHoursMoreStduent', type: 'bool'}
+			,{ name: 'note',  type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source);
+
+	$('#studentCheckinReportGrid').jqxGrid({
+		theme: getTheme(),
+    	width: 680,
+    	height:450,
+        source: dataAdapter,
+    	altrows: true,
+		pageable: true,
+    	pagesize: 15,
+		pagesizeoptions: ['15'],
+	    columns: [
+			{text: 'ID', datafield:'id', hidden:'true'}
+        	,{ text: 'Class Name', datafield: 'className', hidden:'true' }
+        	,{ text: 'Checkin Time', datafield: 'checkInTime', width: 210, align: 'right', cellsalign: 'right', cellsformat: 'dddd HH:mm MM/dd/yyyy' }
+        	,{ text: 'Registered', datafield: 'registerClass', columntype: 'checkbox', width: 80, cellsalign: 'center', align: 'center' }
+    	    ,{ text: 'Make up', datafield: 'makeup', columntype: 'checkbox', width: 80, cellsalign: 'center', align: 'center' }
+    	    ,{ text: '5+ hours', datafield: 'fiveHoursMoreStduent', columntype: 'checkbox', width: 80, cellsalign: 'center', align: 'center' }
+	        ,{ text: 'Other', datafield: 'other', columntype: 'checkbox', width: 50, cellsalign: 'center', align: 'center' }
+    	    ,{ text: 'Note', datafield: 'note'}
+	    ],
+	});	
+   	
+}
+
+function getAllStudentCheckinReportByStudentId(response, request, settings) {
+	if (404 == response.code) {
+		console.log(" Can't getAllStudentCheckinReportByStudentId ... ");
+		alert(" Can not getAllStudentCheckinReportByStudentId ... ");
+	} else if (302 == response.code) {
+		console.log(" getAllStudentCheckinReportByStudentId ");
+		var data = $.parseJSON(response.result);
+		showAllStudentCheckInReport(data);
+	} else {
+		alert('error');
+	}
+}
+
+function showAllStudentCheckInReport(data) {
+	$('#popupAllCheckinReportWindow').jqxWindow('open');
+	
+	var sgrid = $('<div id="studentAllCheckinReportDataTable"/>');
+	$('#popupAllCheckinReportGrid').append(sgrid);
+
+	var source = {
+		datafields:[
+			{ name: 'id',   type: 'int'}
+			,{ name: 'className',  type: 'string'}
+			,{ name: 'checkInTime', type: 'date'}
+			,{ name: 'registerClass', type: 'bool'}
+			,{ name: 'other', type: 'bool'}
+			,{ name: 'makeup', type: 'bool'}
+			,{ name: 'fiveHoursMoreStduent', type: 'bool'}
+			,{ name: 'note',  type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source);
+
+	$('#studentAllCheckinReportDataTable').jqxGrid({
+		theme: getTheme(),
+    	width: 680,
+    	height:450,
+        source: dataAdapter,
+    	altrows: true,
+		groupable:true,
+	    columns: [
+			{text: 'ID', datafield:'id', hidden:'true'}
+        	,{ text: 'Class Name', datafield: 'className', hidden:'true' }
+        	,{ text: 'Checkin Time', datafield: 'checkInTime', width: 210, align: 'right', cellsalign: 'right', cellsformat: 'dddd HH:mm MM/dd/yyyy' }
+        	,{ text: 'Registered', datafield: 'registerClass', columntype: 'checkbox', width: 80, cellsalign: 'center', align: 'center' }
+    	    ,{ text: 'Make up', datafield: 'makeup', columntype: 'checkbox', width: 80, cellsalign: 'center', align: 'center' }
+    	    ,{ text: '5+ hours', datafield: 'fiveHoursMoreStduent', columntype: 'checkbox', width: 80, cellsalign: 'center', align: 'center' }
+	        ,{ text: 'Other', datafield: 'other', columntype: 'checkbox', width: 50, cellsalign: 'center', align: 'center' }
+    	    ,{ text: 'Note', datafield: 'note'}
+	    ],
+	    groups:['className']
+	});	
+   	
 }
 
 var registerFunction;

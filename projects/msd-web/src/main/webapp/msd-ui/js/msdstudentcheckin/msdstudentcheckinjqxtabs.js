@@ -26,23 +26,30 @@ function initStudentCheckinTab(theme) {
 	$('#namediv').append('<label>first name : </label>');
 	var fname = $('<input/>').attr({type:'text', id:'txtStudentCheckInFirstName'});
 	$('#namediv').append(fname);
-	$('#txtStudentCheckInFirstName').jqxInput({placeHolder: "First Name: ", height: 20, width: 150, minLength: 1, theme: theme });
+	$('#txtStudentCheckInFirstName').jqxInput({placeHolder: "First Name: ", height: 20, width: 150, minLength: 1, theme: getTheme() });
 
 	$('#namediv').append('<label style="margin-left: 10px;"> last name : </label>');
 	var lname = $('<input/>').attr({type:'text', id:'txtStudentCheckInLastName'});
 	$('#namediv').append(lname);
-	$('#txtStudentCheckInLastName').jqxInput({placeHolder: "Last Name: ", height: 20, width: 150, minLength: 1, theme: theme });
+	$('#txtStudentCheckInLastName').jqxInput({placeHolder: "Last Name: ", height: 20, width: 150, minLength: 1, theme: getTheme() });
 
 	$('#namediv').append('<label style="margin-left: 10px;"> Class : &nbsp;</label>');
 	$('#classdiv').append(' <div style="margin-left: 10px; margin-top:10px;" id="msdClassDropList"></div> ');
 	
-	$("#msdClassDropList").jqxDropDownList({ selectedIndex: 0, width: '150', height: '20', theme: theme });
+	$("#msdClassDropList").jqxDropDownList({ selectedIndex: 0, width: '150', height: '23', theme: getTheme() });
 
-	var checkinbutton = $('<input style="float:left; margin-left: 542px" />').attr({ type: 'button', id:'btnStudentCheckIn', value:'Check In'});
+	var checkinbutton = $('<input style="float:right; margin-right: 40px" />').attr({ type: 'button', id:'btnStudentCheckIn', value:'Check In'});
 	$('#btndiv').append(checkinbutton);
-	$('#btnStudentCheckIn').jqxButton({ width: '153', theme: theme });
+	$('#btnStudentCheckIn').jqxButton({ width: '153', theme: getTheme() });
 
 	$('#txtStudentCheckInFirstName').jqxInput('focus');
+	
+	var pdiv=$('<div/>').attr({id:'popupSpecialCheckWindow'});
+	$('#studentcheckindiv').append(pdiv);
+	$('#popupSpecialCheckWindow').append('<div >Special Check In</div> <div style="height:180px; width:300px;" id="specialCheckinPopupdiv"></div>');	
+	$('#popupSpecialCheckWindow').jqxWindow({
+    	width: 370, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+	});
 	
 	getAllClassList();
 	getUniqueName("FIRSTNAME");
@@ -154,13 +161,14 @@ function getUniqueName(fieldname) {
 	});
 };
 
-function checkinstudent() {
+function checkinstudent(ismakeup, isfivemorehursstudent, isother, otherReason) {
 	if (null != getCheckInClassId() && 0 != getCheckInStudentId()) {
 		console.log(" call student check in ... ");
 		
 		var checkintime = new Date();
 
-		var scheckin = { "checkInTime":checkintime, "classId":getCheckInClassId(), "id":0, "studentId":getCheckInStudentId() };
+		var scheckin = { "checkInTime":checkintime, "classId":getCheckInClassId(), "id":0, "studentId":getCheckInStudentId(),
+						"isMakeup":ismakeup, "isFiveHoursMore":isfivemorehursstudent, "isOther":isother, "otherCheckinReason":otherReason};
 			
 		$.ajax({
 			type: "POST",
@@ -202,13 +210,10 @@ function validStudentCheckInInformation(fname, lname, checkinclass) {
 				if (data.validationResult == 1) {
 					setCheckInStudentId(data.msdStudentId);
 					setCheckInClassId(data.msdClassId);
-					checkinstudent();
+					checkinstudent(false, false, false, "");
 				} else if (data.validationResult == 2){
-					if (confirm("You didn't register to this class. Do you want continue to check in?")) { 
-						setCheckInStudentId(data.msdStudentId);
-						setCheckInClassId(data.msdClassId);
-						checkinstudent();
-					}
+					CreateSpecialStudentCheckin(data);
+					$('#popupSpecialCheckWindow').jqxWindow('open');
 				} else {
 					showMsg("Invalid Input Information : " + " student : " + fname + " " + 
 						lname + " are not register in system, Please check First Name and Last Name ",
@@ -225,6 +230,83 @@ function validStudentCheckInInformation(fname, lname, checkinclass) {
 	});
 };
 
+function CreateSpecialStudentCheckin(data) {
+	$('#specialCheckinPopupdiv').empty();
+	
+	var tdiv = $('<div style="margin-top:0px; border:0px solid;"/>');
+	$('#specialCheckinPopupdiv').append(tdiv);
+
+	tdiv.append('<label style="margin-top:5px;">You did not register to this class. Please select check in option or cancel</label>');
+
+	var temp = $('<div style="margin-left:15px; margin-top:5px;" id="ismakeup">Is Makeup Class Checkin </div>');
+	tdiv.append(temp);
+	$("#ismakeup").jqxRadioButton({ width: 250, height: 25, checked: true, theme:getTheme()});
+	
+	var temp = $('<div style="margin-left:15px; margin-top:5px;" id="isfivemorehursstudent">Is Five more hours student Checkin </div>');
+	tdiv.append(temp);
+	$("#isfivemorehursstudent").jqxRadioButton({ width: 250, height: 25, theme:getTheme()});
+	
+	var temp = $('<div style="margin-left:15px; margin-top:5px;" id="isother">Other Checkin </div>');
+	tdiv.append(temp);
+	$("#isother").jqxRadioButton({ width: 250, height: 25, theme:getTheme()});
+	
+	var odiv = $('<div style="margin-left:35px; margin-top:0px; border:0px solid;"/>');
+	$('#specialCheckinPopupdiv').append(odiv);
+	
+	var otherreason = $('<input style="float:right; margin-right:5px;"/>').attr({type:'text', id:'txtOtherReasonForCheckin'});
+	odiv.append(otherreason);
+	$('#txtOtherReasonForCheckin').jqxInput({placeHolder: "Other Reason for Check in ", height: 20, width: 320, minLength: 1, theme: getTheme(), disabled: true});
+
+	var cbutton = $('<input style="float:right; margin-top:5px; margin-left:5px; margin-right:5px;" />').attr({type:'button', id:'btnCancel', value:'Cancel'});
+	$('#specialCheckinPopupdiv').append(cbutton);
+	$('#btnCancel').jqxButton({width:'100', theme: getTheme() });
+
+	var abutton = $('<input style="float:right; margin-top:5px; margin-left:5px;" />').attr({type:'button', id:'specialcheckinbtn', value:'Check In'});
+	$('#specialCheckinPopupdiv').append(abutton);
+	$('#specialcheckinbtn').jqxButton({ width: '100', theme: getTheme() });
+	
+	var makeup = true;
+    $('#ismakeup').on('change', function (event) {
+	    var checked = event.args.checked;
+        if (checked)
+        	makeup = true;
+        else
+            makeup = false;
+    });
+	var fivemorehursstudent = false;
+    $('#isfivemorehursstudent').on('change', function (event) {
+	    var checked = event.args.checked;
+        if (checked)
+        	fivemorehursstudent = true;
+        else
+            fivemorehursstudent = false;
+    });
+	var other = false;
+    $('#isother').on('change', function (event) {
+	    var checked = event.args.checked;
+        if (checked) {
+        	$('#txtOtherReasonForCheckin').jqxInput({disabled: false});
+        	other = true;
+        }
+        else {
+            $('#txtOtherReasonForCheckin').jqxInput({disabled: true});
+            other = false;
+        }
+    });
+    $('#btnCancel').on('click', function (event) {
+		$('#popupSpecialCheckWindow').jqxWindow('hide');    	
+    });
+		
+    $('#specialcheckinbtn').on('click', function (event) {
+		$('#popupSpecialCheckWindow').jqxWindow('hide');
+		setCheckInStudentId(data.msdStudentId);
+		setCheckInClassId(data.msdClassId);
+		var otherReason = $.trim($('#txtOtherReasonForCheckin').val());
+    
+		checkinstudent(makeup, fivemorehursstudent, other, otherReason);
+    });
+}
+
 var checkInStudentId;
 function getCheckInStudentId() {
 	return checkInStudentId;
@@ -239,4 +321,8 @@ function getCheckInClassId() {
 }
 function setCheckInClassId(value) {
 	checkInClassId = value
+}
+
+function getTheme() {
+	return 'energyblue';
 }

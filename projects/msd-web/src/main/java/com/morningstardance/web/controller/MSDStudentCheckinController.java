@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckInValidResultDto;
 import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinDto;
 import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinFacade;
+import com.morningstardance.app.msdstudentcheckin.MSDStudentCheckinReportDto;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -59,7 +61,30 @@ public class MSDStudentCheckinController {
 		return responseDto;
 	}
     */
+    @RequestMapping(value="/{msdstudentid}", method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto getStudentAllCheckinReportByStudentIdDfltVer(@PathVariable Long msdstudentid) {
+    	return getStudentAllCheckinReportByStudentIdVer1(msdstudentid);
+    }
     
+    @RequestMapping(value="/{msdstudentid}", method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+    public @ResponseBody ResponseDto getStudentAllCheckinReportByStudentIdVer1(@PathVariable Long msdstudentid) {
+    	List<MSDStudentCheckinReportDto> reportDtos = msdStudentCheckinFacade.getStudentAllCheckinReportByStudentId(msdstudentid);
+    	ResponseDto responseDto = ResponseDto.createResponseDto(reportDtos, "GET", "ARRAY");
+    	return responseDto;
+    }
+
+    @RequestMapping(value="/{msdstudentid}/{msdclassid}", method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto getStudentCheckinReportByStudentIdAndClassIdDfltVer(@PathVariable Long msdstudentid, @PathVariable Long msdclassid) {
+    	return getStudentCheckinReportByStudentIdAndClassIdVer1(msdstudentid, msdclassid);
+    }
+    
+    @RequestMapping(value="/{msdstudentid}/{msdclassid}", method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+    public @ResponseBody ResponseDto getStudentCheckinReportByStudentIdAndClassIdVer1(@PathVariable Long msdstudentid, @PathVariable Long msdclassid) {
+    	List<MSDStudentCheckinReportDto> reportDtos = msdStudentCheckinFacade.getStudentCheckinReportByStudentIdAndClassId(msdstudentid, msdclassid);
+    	ResponseDto responseDto = ResponseDto.createResponseDto(reportDtos, "GET", "ARRAY");
+    	return responseDto;
+    }
+
     @RequestMapping(params={"type=checkin","fieldname"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
     public @ResponseBody ResponseDto getFieldListDfltVer(String fieldname) {
     	return getFieldListVer1(fieldname);
@@ -103,7 +128,8 @@ public class MSDStudentCheckinController {
 
 		Long msdstudentid = new Long(studentCheckinDto.getStudentId());
 		Long msdclassid = new Long(studentCheckinDto.getClassId());
-    	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(msdstudentid, msdclassid);
+//    	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(msdstudentid, msdclassid);
+    	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(studentCheckinDto);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "POST", "OBJECT");
         
 		return responseDto;

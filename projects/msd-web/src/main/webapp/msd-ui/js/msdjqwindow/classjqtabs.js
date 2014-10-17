@@ -159,8 +159,10 @@ function showClassInformation(data) {
 	}
 	$('#btnSaveClassInformation').jqxButton({ disabled:true });
 
-	if (null != data)
+	if (null != data) {
 		ajaxGetClassSchedularByClassId(data.id, getClassSchedularByClassId);
+		ajaxGetClassFeeByClassId(data.id, getClassFeeByClassId);
+	}
 	
 }
 
@@ -174,11 +176,16 @@ function createClassInformationDiv() {
 	var cddiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid;"/>').attr({id:'classDetaildiv'});
 	$('#classMainPanel').append(cddiv);
 	
-	var sdiv = $('<div class="InnerDiv" style = "margin-top: 0px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'schedularInformationdiv'});
+	var sdiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'schedularInformationdiv'});
 	$('#classMainPanel').append(sdiv);	
+
+	var ccdiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'costInformationdiv'});
+	$('#classMainPanel').append(ccdiv);	
 
 	$('#classCommondiv').empty();
 	$('#schedularInformationdiv').empty();
+	$('#costInformationdiv').empty();
+	
 	$('#classCommondiv').append('<br/>');
 	$('#classCommondiv').append('<label style="margin-left:10px; margin-top:10px;"><b>Class Information ... </b></label>');
 
@@ -272,9 +279,6 @@ function showClassSchedularInformation(data) {
 	console.log(" in show class schedular information .. ");
 	$('#schedularInformationdiv').empty();
 	$('#schedularInformationdiv').append('<br/>');
-	$('#schedularInformationdiv').append('<label style="margin-left:10px; margin-top:10px;"><b>Class Scheduler ... </b></label>');
-	$('#schedularInformationdiv').append('<br/>');
-	$('#schedularInformationdiv').append('<br/>');
 	var csdiv = $('<div class="InnerDiv" style="margin-left:80px; border:0px solid;"/>').attr({id:'classSchedularDataTable'});	
 	$('#schedularInformationdiv').append(csdiv);
 	var pdiv = $('<div/>').attr({id:'addClassSchedularPopupWindow'});
@@ -306,7 +310,10 @@ function showClassSchedularInformation(data) {
                 
     	pageable: false,
 	    editable: false,
+	    selectionMode: 'singleRow',
     	showToolbar: true,
+    	pageable:true,
+    	pagesize:4,
 	    altrows: true,
     	ready: function(){},
 	    toolbarHeight: 25,
@@ -315,7 +322,7 @@ function showClassSchedularInformation(data) {
     			if (getTheme() == "") return className;
 	            return className + " " + className + "-" + theme;
     	    }
-                    // appends buttons to the status bar.
+
         	var container = $("<div style='overflow: hidden; position: relative; height: 100%; width: 100%; margin-top:5px'> <b> Weekly Class Scheduler </b></div>");
 	        var buttonTemplate = "<div style='float: right; padding: 1px; margin: 1px;'><div style='width: 16px; height: 16px;'></div></div>";
     	    var addButton = $(buttonTemplate);
@@ -397,9 +404,10 @@ function showClassSchedularInformation(data) {
     	    });
         	deleteButton.click(function () {
         		if (!deleteButton.jqxButton('disabled')) {
-        			var deleterow = $("#classSchedularDataTable").jqxDataTable('getSelection');
-            		$("#classSchedularDataTable").jqxDataTable('deleteRow', rowIndex);
+     				var deleterow = $("#classSchedularDataTable").jqxDataTable('getSelection');
+             		$("#classSchedularDataTable").jqxDataTable('deleteRow', rowIndex);
 	                updateButtons('delete');
+	            	$("#classSchedularDataTable").jqxDataTable('unselectRow', rowIndex);
 
 	                ajaxDeleteClassSchedular(deleterow[0].id, deleteClassSchedular);
     	        }
@@ -413,8 +421,152 @@ function showClassSchedularInformation(data) {
 			{text: 'End Time', datafield: 'endTime', width:200}
 		]
     });
-    
+
 	$('#schedularInformationdiv').append('<br/>');
+}
+
+function showClassFeeInformation(data) {
+	console.log(" in show class Fee information .. ");
+	
+	$('#costInformationdiv').empty();
+	$('#costInformationdiv').append('<br/>');
+	var csdiv = $('<div class="InnerDiv" style="margin-left:80px; border:0px solid;"/>').attr({id:'classFeeDataTable'});	
+	$('#costInformationdiv').append(csdiv);
+	var pdiv = $('<div/>').attr({id:'addClassFeePopupWindow'});
+	$('#costInformationdiv').append(pdiv);
+	$('#addClassFeePopupWindow').append('<div >Add Class Fee</div> <div style="height:130px; width:220px;" id="addClassFeediv"></div>');
+
+    var offset = $("#classFeeDataTable").offset();
+    $("#addClassFeePopupWindow").jqxWindow({
+    	width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    });
+
+	var source = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'msdClassId', 	type: 'int'},
+			{ name: 'feeName',  type: 'string'},
+			{ name: 'feeTypeName', 	type: 'string'},
+			{ name: 'cost', type: 'number'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	
+    $("#classFeeDataTable").jqxDataTable({
+		theme: getTheme(),
+		width: 600,
+	    source: dataAdapter,
+                
+    	pageable: false,
+	    editable: false,
+	    selectionMode: 'singleRow',
+    	showToolbar: true,
+    	pageable:true,
+    	pagesize:4,
+	    altrows: true,
+    	ready: function(){},
+	    toolbarHeight: 25,
+    	renderToolbar: function(toolBar){
+    		var toTheme = function (className) {
+    			if (getTheme() == "") return className;
+	            return className + " " + className + "-" + theme;
+    	    }
+
+        	var container = $("<div style='overflow: hidden; position: relative; height: 100%; width: 100%; margin-top:5px'> <b> Class Fee </b></div>");
+	        var buttonTemplate = "<div style='float: right; padding: 1px; margin: 1px;'><div style='width: 16px; height: 16px;'></div></div>";
+    	    var addButton = $(buttonTemplate);
+        	var deleteButton = $(buttonTemplate);
+	        container.append(addButton);
+    	    container.append(deleteButton);
+        	toolBar.append(container);
+	        addButton.jqxButton({cursor: "pointer", enableDefault: false,  height: 25, width: 25 });
+    	    addButton.find('div:first').addClass(toTheme('jqx-icon-plus'));
+        	addButton.jqxTooltip({ position: 'bottom', content: "Add"});
+	        deleteButton.jqxButton({ cursor: "pointer", disabled: true, enableDefault: false,  height: 25, width: 25 });
+    	    deleteButton.find('div:first').addClass(toTheme('jqx-icon-delete'));
+        	deleteButton.jqxTooltip({ position: 'bottom', content: "Delete"});
+	        var updateButtons = function (action) {
+    	    	switch (action) {
+        	    	case "Select":
+            	    	addButton.jqxButton({ disabled: false });
+                	    deleteButton.jqxButton({ disabled: false });
+                    	break;
+	                case "Unselect":
+    	                addButton.jqxButton({ disabled: false });
+        	            deleteButton.jqxButton({ disabled: true });
+            	        break;
+            	}
+        	}
+	        var rowIndex = null;
+    	    $("#classFeeDataTable").on('rowSelect', function (event) {
+        		var args = event.args;
+            	rowIndex = args.index;
+	            updateButtons('Select');
+    	    });
+        	$("#classFeeDataTable").on('rowUnselect', function (event) {
+        		updateButtons('Unselect');
+	        });
+    	    addButton.click(function (event) {
+        		if (!addButton.jqxButton('disabled')) {
+					createAddClassFeeDiv();
+				    var offset = $("#classFeeDataTable").offset();
+					$("#addClassFeePopupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 130, y: parseInt(offset.top) - 20 } });
+                    $("#addClassFeePopupWindow").jqxWindow('open');
+                    
+                    $('#btnCancelAddFee').on('click', function () {
+						console.log(" cancel add Fee ...");
+						$("#addClassFeePopupWindow").jqxWindow('hide');
+                    });
+                    $('#btnAddFee').on('click', function () {
+						console.log(" add new scheduler ...");
+                        $("#classFeeDataTable").jqxDataTable('unselectRow', 0);
+                        
+                        var name = $('#txtFeeName').val();
+                        var cost = $('#txtCost').val();
+                        var type = $('#costType').jqxDropDownList('getSelectedItem').value;
+                        var cid = getCurrentClassInClassTab().id;
+                        
+                        if (null == name || name.length < 1) {
+                        	alert("please provide one name ");
+                        } else if (null == cost || cost.length < 1) {
+                        	alert("please provide fee value ");
+                        } else if (null == type || type < 1) {
+                        	alert("please select one type from list ");
+                        } else {
+                            $("#classFeeDataTable").jqxDataTable('selectRow', 0);
+							$("#addClassFeePopupWindow").jqxWindow('hide');
+
+							var classfee = {"id":0, "msdClassId":getCurrentClassInClassTab().id, "feeName":name, "cost":cost, "feeTypeName":null, "msdCostTypeId":type};
+							ajaxAddNewFee(classfee, addNewFee);
+                        }
+                    });
+                    
+                	updateButtons('add');
+	            }
+    	    });
+        	deleteButton.click(function () {
+        		if (!deleteButton.jqxButton('disabled')) {
+     				var deleterow = $("#classFeeDataTable").jqxDataTable('getSelection');
+             		$("#classFeeDataTable").jqxDataTable('deleteRow', rowIndex);
+	                updateButtons('delete');
+	            	$("#classFeeDataTable").jqxDataTable('unselectRow', rowIndex);
+
+	                ajaxDeleteClassFee(deleterow[0].id, deleteClassFee);
+    	        }
+        	});
+	    },
+    	columns: [
+			{text: 'Class ID', datafield:'msdClassId', hidden:'true'},
+			{text: 'ID', datafield:'id', hidden:'true'},
+			{text: 'Name', datafield: 'feeName', width: 250},
+			{text: 'Type', datafield: 'feeTypeName', width:250},
+			{text: 'Fee', datafield: 'cost', width:100, cellsAlign: 'right', align: 'right', cellsFormat: 'c2'}
+		]
+    });
+
+	$('#costInformationdiv').append('<br/>');
 }
 
 function deleteClassSchedular(response, request, settings) {
@@ -423,7 +575,17 @@ function deleteClassSchedular(response, request, settings) {
 	} else if (302 == response.code) {
 		console.log(" successfully delete class schedular ... ");
 	} else {
-		alert("error to find student ... ");
+		alert("error to delete class schedule ... ");
+	}
+}
+
+function deleteClassFee(response, request, settings) {
+	if (404 == response.code) {
+		alert(" Can't delete class fee ... ");
+	} else if (302 == response.code) {
+		console.log(" successfully delete class fee ... ");
+	} else {
+		alert("error to delete class fee ... ");
 	}
 }
 
@@ -469,11 +631,58 @@ function createAddClassSchedularDiv() {
 	$('#btnCancelAddSchedular').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
 
+function createAddClassFeeDiv() {
+	$('#addClassFeediv').empty();
+	
+	var tdiv = $('<div style="float:right; margin-top:10px; border:0px solid;"/>');
+	$('#addClassFeediv').append(tdiv);
+	tdiv.append('<label style="margin-top:2px;">Name :</label>');
+	var name = $('<input/>').attr({type:'text',id:'txtFeeName'});
+	tdiv.append(name);
+	$('#txtFeeName').jqxInput({placeHolder: "Enter Fee Name", height: 20, width: 180, minLength: 1, theme: getTheme() });
+	
+	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+	$('#addClassFeediv').append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">Fee :</label>');
+	var cost = $('<div/>').attr({id:'txtCost'});
+	tdiv.append(cost);
+	$('#txtCost').jqxNumberInput({ width: '180px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+
+	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+	$('#addClassFeediv').append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">Type :</label>');
+	var costType = $('<div/>').attr({id:'costType'});
+	tdiv.append(costType);
+	$('#costType').jqxDropDownList({selectedIndex: 1, width: '180', height: '20', theme: getTheme(), source: getAllCostType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
+
+	$('#addClassFeediv').append('<br/>');
+
+	// action button
+	var atdiv = $('<div style="float:right; margin-top:20px; border:0px solid;" />');
+	$('#addClassFeediv').append(atdiv);
+	var btnadd = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnAddFee', value:'Add'});
+	atdiv.append(btnadd);
+	$('#btnAddFee').jqxButton({ width: '60', height: 20, theme: getTheme() });
+	var btncancel = $('<input style="margin-right:0px;"/>').attr({type:'button', id:'btnCancelAddFee', value:'Cancel'});
+	atdiv.append(btncancel);
+	$('#btnCancelAddFee').jqxButton({ width: '60', height: 20, theme: getTheme() });
+}
+
 function addNewSchedulars(response, request, settings) {
 	if (500 == response.code) {
 		alert("Internal Error, Please check service. ");
 	} else if (302 == response.code) {
 		console.log(" add class schedulars successfully ... ");
+	} else {
+		alert('error');
+	}
+}
+
+function addNewFee(response, request, settings) {
+	if (500 == response.code) {
+		alert("Internal Error, Please check service. ");
+	} else if (302 == response.code) {
+		console.log(" add class fee successfully ... ");
 	} else {
 		alert('error');
 	}
@@ -488,6 +697,20 @@ function getClassSchedularByClassId(response, request, settings) {
 		var data = $.parseJSON(response.result);
 		console.log(" get class schedular by id ");
 		showClassSchedularInformation(data);
+	} else {
+		alert('error');
+	}
+}
+
+function getClassFeeByClassId(response, request, settings) {
+	console.log(" in get class fee by id ... ");
+	if (404 == response.code) {
+		console.log(" Can't find class fee by id : " + getCurrentClassInClassTab().id);
+		showClassFeeInformation(null);
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get class fee by id ");
+		showClassFeeInformation(data);
 	} else {
 		alert('error');
 	}

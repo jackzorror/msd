@@ -15,7 +15,15 @@ public interface MSDStudentCheckinFacade {
 
 	String checkStudentClassRegisteinformation(Long msdclassid,
 			Long msdstudentid);
-
+	
+	MSDStudentCheckinDto studentClassCheckin(MSDStudentCheckinDto indto) ;
+	
 	MSDStudentCheckInValidResultDto validStudentCheckInInformation(String firstname, String lastname,
 			String msdclassname);
+
+	List<MSDStudentCheckinReportDto> getStudentCheckinReportByStudentIdAndClassId(
+			Long msdstudentid, Long msdclassid);
+
+	List<MSDStudentCheckinReportDto> getStudentAllCheckinReportByStudentId(
+			Long msdstudentid);
 }

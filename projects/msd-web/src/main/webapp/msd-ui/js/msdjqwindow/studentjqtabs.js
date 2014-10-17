@@ -26,13 +26,22 @@ function initStudentTab() {
 	$('#namediv').append(sbutton);
 	$('#btnSearchStudent').jqxButton({ width: '80', theme: getTheme() });
 
-	var abutton = $('<input style="float:left; margin-top:10px; margin-left:3px;" />').attr({type:'button', id:'btnAddStudent', value:'New Student'});
-	$('#studentControlPanel').append(abutton);
-	$('#btnAddStudent').jqxButton({ width: '100', theme: getTheme() });
+	var ibutton = $('<input style="float:left; margin-top:10px; margin-left:3px;" />').attr({type:'button', id:'btnStudentInfo', value:'Student Info'});
+	$('#studentControlPanel').append(ibutton);
+	$('#btnStudentInfo').jqxButton({ width: '100', theme: getTheme() });
 	
 	var rbutton = $('<input style="float:left; margin-top:10px; margin-left:3px;" />').attr({type:'button', id:'btnRegistClass', value:'Register Class'});
 	$('#studentControlPanel').append(rbutton);
 	$('#btnRegistClass').jqxButton({width:'100', theme: getTheme() });
+	
+	var cbutton = $('<input style="float:left; margin-top:10px; margin-left:3px;" />').attr({type:'button', id:'btnCompetitionInfo', value:'Competition'});
+	$('#studentControlPanel').append(cbutton);
+	$('#btnCompetitionInfo').jqxButton({width:'100', theme: getTheme() });
+	
+	var abutton = $('<input style="float:left; margin-top:10px; margin-left:3px;" />').attr({type:'button', id:'btnAddStudent', value:'New Student'});
+	$('#studentControlPanel').append(abutton);
+	$('#btnAddStudent').jqxButton({ width: '100', theme: getTheme() });
+	
 };
 
 function showStudentInformation(data) {
@@ -251,7 +260,7 @@ function createStudentDetailPanel() {
 	$('#btnSaveStudent').jqxButton({ width: 60, height: 20, theme:getTheme()});
 
 	
-	$('#studentDetailContentDiv').jqxDockPanel({ width: 608, height: 450});
+	$('#studentDetailContentDiv').jqxDockPanel({ height: 450});
 }
 
 function createStudentMedicalPanel() {
@@ -620,8 +629,10 @@ function addStudentTabsEventListeners() {
 //	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
 //	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
 	
-	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
+	$(document).on('click', '#btnStudentInfo', handleStudentInfoClick);
 	$(document).on('click', '#btnRegistClass', handleRegistClassClick);
+	$(document).on('click', '#btnCompetitionInfo', handleCompetitionInfoClick);
+	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
 	
 	$(document).on('keypress', '#txtStudentSearchFirstName', handleSearchFirstNameKeypress);
 	$(document).on('keypress', '#txtStudentSearchLastName', handleSearchLastNameKeypress);
@@ -651,21 +662,7 @@ function handleSearchLastNameKeypress(e) {
 	if (e.which == 13)
 		$('#btnSearchStudent').click();
 }
-/*
-function handleDeleteRegisterClassClick() {
-	console.log(" delete register class click ... ");
-	var buttonid = $(this)[0].id
-	var deleteid = buttonid.substr(23, buttonid.length);
-	deleteStudentRegisterClass(getCurrentStudent().id, deleteid);
-}
 
-function handleRegisterClassClick() {
-	console.log(" register class click ... ");
-	var buttonid = $(this)[0].id
-	var classid = buttonid.substr(17, buttonid.length);
-	studentRegisterClass(classid);
-}
-*/
 function handleStudentClearClick() {
 	$('#studentMainPanel').empty();
 	
@@ -709,6 +706,10 @@ function handleStudentAddClick() {
 	setCurrentFunction("ADD");
 }
 
+function handleStudentInfoClick() {
+	$('#btnSearchStudent').click();
+}
+
 function handleRegistClassClick() {
 	console.log(" register class ... ");
 	
@@ -726,6 +727,24 @@ function handleRegistClassClick() {
 	}
 
 	setCurrentFunction("REGISTER");
+}
+
+function handleCompetitionInfoClick() {
+	console.log(" Competition Information ... ");
+	
+	var fname = $.trim($('#txtStudentSearchFirstName').val());
+	var lname = $.trim($('#txtStudentSearchLastName').val());
+
+	if ((null == fname || fname.length == 0) ||
+	    (null == lname || lname.length == 0) ||
+	    null == getCurrentStudent()) {
+	    alert("Please Find student with last name and first name first");
+	} else {
+		$('#studentMainPanel').empty();
+		showStudentCompetitionInfo();
+	}
+
+	setCurrentFunction("COMPETITION");
 }
 
 function showStudentRegisterClass() {
@@ -1085,6 +1104,12 @@ function getStudentFromUI(s) {
 	else
 		gender = '';
 		
+	var isActive;
+	if (null != s)
+		isActive = s.isActive;
+	else 
+		isActive = 1;
+		
 	var student = {
 		"id":sid, 
 		"firstName":$("#txtStudentFirstName").val(), 
@@ -1098,7 +1123,8 @@ function getStudentFromUI(s) {
 		"schoolGrade":$('#txtSchoolGrade').val(),	
 		"homeAddress":$('#txtHomeAddress').val(),	
 		"msdStudentParentDtos":ps,	
-		"msdStudentMedicalInfoDto":sm
+		"msdStudentMedicalInfoDto":sm,
+		"isActive":(null != s ? s.isActive : 1)
 	};
 	return student;
 }

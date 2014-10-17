@@ -81,6 +81,8 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtabs.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxwindow.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdropdownbutton.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtree.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxmaskedinput.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxscrollbar.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
@@ -90,6 +92,8 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxradiobutton.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdata.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdatatable.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxnumberinput.js"></script>
     
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxlistbox.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdropdownlist.js"></script>
@@ -105,11 +109,15 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.pager.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.selection.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.edit.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.grouping.js"></script>
 
     <script type="text/javascript" src="js/msdjqwindow/loginjqwindowtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/studentjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/classjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/adminjqtabs.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/student/studentCompetition.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/admin/competition/adminCompetitionjqtabs.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/admin/competition/YAGPCompetition.js"></script>
     
     <script type="text/javascript" src="js/lib/messageutil.js"></script>
     <script type="text/javascript" src="js/lib/ajaxutil.js"></script>
@@ -143,7 +151,8 @@
 			addStudentTabsEventListeners();      
 			addLoginWindowEventListeners();  
 			addClassTabsEventListeners();    
-			addAdminTabsEventListeners();    
+			addAdminTabsEventListeners();
+			addCompetitionAdminTabsEventListeners();
         }
         
         function createElements(theme) {
@@ -216,7 +225,7 @@
   				<div id="tabs-Student">
   					<div id='studentDockPanel'>
 					    <div id='studentSearchPanel' dock='top' style='height: 30px;'></div>
-					    <div id='studentControlPanel' dock='left' style='width:100px;'></div>
+					    <div id='studentControlPanel' dock='left' style='width:110px;'></div>
 					    <div id='studentMainPanel' dock='right'></div>
   					</div>
   				</div>

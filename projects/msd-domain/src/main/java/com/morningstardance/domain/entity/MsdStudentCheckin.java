@@ -32,6 +32,18 @@ public class MsdStudentCheckin extends MSDEntityBase implements Serializable {
 	@Column(name="checkin_time")
 	private Date checkinTime;
 
+	@Column(name="is_makeup")
+	private Byte isMakeup;
+
+	@Column(name="is_fivehoursmore")
+	private Byte isFivehoursmore;
+
+	@Column(name="is_other")
+	private Byte isOther;
+
+	@Column(name="note")
+	private String note;
+
 	public MsdStudentCheckin() {
 	}
 
@@ -65,6 +77,38 @@ public class MsdStudentCheckin extends MSDEntityBase implements Serializable {
 
 	public void setCheckinTime(Date checkinTime) {
 		this.checkinTime = checkinTime;
+	}
+
+	public Byte getIsMakeup() {
+		return isMakeup;
+	}
+
+	public void setIsMakeup(Byte isMakeup) {
+		this.isMakeup = isMakeup;
+	}
+
+	public Byte getIsFivehoursmore() {
+		return isFivehoursmore;
+	}
+
+	public void setIsFivehoursmore(Byte isFivehoursmore) {
+		this.isFivehoursmore = isFivehoursmore;
+	}
+
+	public Byte getIsOther() {
+		return isOther;
+	}
+
+	public void setIsOther(Byte isOther) {
+		this.isOther = isOther;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 }

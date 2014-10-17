@@ -109,4 +109,15 @@ public class MSDStudentParent extends MSDEntityBase implements Serializable {
 		this.msdStudent = msdStudent;
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		return sb.append("MSDStudentParent ID:" + getId())
+				 .append(" FirstName:" + getFirstName())
+				 .append(" LastName:" + getLastName())
+				 .append(" Cell:" + getCellPhone())
+				 .append(" work:" + getWorkPhone())
+				 .append(" relationship:" + getRelationship())
+				 .append(" Email:" + getEmailAddress())
+				 .append(" student ID:" + (null != getMsdStudent() ? getMsdStudent().getId() : null)).toString();
+	}
 }

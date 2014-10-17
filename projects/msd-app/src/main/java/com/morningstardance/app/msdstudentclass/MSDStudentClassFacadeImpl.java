@@ -72,16 +72,15 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(),	sid.intValue());
 		if (null == entity) {
 			entity = msdStudentClassJPARepository.save(studentClass);
-			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid, "INFO");
+			msdOperationService.msdStudentClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid, "DATABASE");
 		} else {
 			if (entity.getIsActive() == (byte) 0) {
 				entity.setIsActive((byte)1);
 				msdStudentClassJPARepository.saveAndFlush(entity);
-				msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid, "INFO");
+				msdOperationService.msdStudentClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid, "DATABASE");
 			} else {
-				msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid +
+				msdOperationService.msdStudentClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid +
 						Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
-
 			}
 		}
 		return entity;
@@ -103,9 +102,9 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		MSDStudentClass entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(), sid.intValue());
 		if (null != entity) {
 			unRegisterStudentFromClassById(entity.getId());
-			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid, "INFO");
+			msdOperationService.msdStudentClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid, "DATABASE");
 		} else {
-			msdOperationService.msdStudentRegisterUnregisterClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid + " " + 
+			msdOperationService.msdStudentClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid + " " + 
 					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
 		}
 		

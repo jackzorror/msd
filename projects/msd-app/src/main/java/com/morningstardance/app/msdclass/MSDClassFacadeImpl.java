@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassSchedular;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
@@ -36,6 +37,9 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
     
     @Resource
     private MSDStudentClassJPARepository msdStudentClassJPARepository;
+    
+	@Resource
+	private MSDOperationService msdOperationService;
 
 
     @Transactional(readOnly = true)
@@ -68,6 +72,15 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 		MSDClass centity = msdClassAssembler.createEntityFromDto(msdclassdto);
 		msdClassJPARepository.save(centity);
 		MSDClassDto dto = msdClassAssembler.createDtoFromEntity(centity);
+		if (msdclassdto.getId() == 0) {
+			msdOperationService.msdClassOperation(centity.getId(), "Create New Class", centity.toString(), null, "DATABASE");
+		} else {
+			MSDClass ocentity = msdClassJPARepository.findOne(new Long(msdclassdto.getId()));
+			String ovalue = null;
+			if (null != ocentity) 
+				ovalue = ocentity.toString();
+			msdOperationService.msdClassOperation(centity.getId(), "Change Class", centity.toString(), ovalue, "DATABASE");
+		}
 		return dto;
 	}
 

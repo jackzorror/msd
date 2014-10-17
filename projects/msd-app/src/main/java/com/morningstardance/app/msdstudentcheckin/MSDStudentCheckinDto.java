@@ -12,6 +12,10 @@ public class MSDStudentCheckinDto {
 	private Date checkInTime;
 	private boolean isCheckedIn;
 	private boolean inClass;
+	private boolean isMakeup;
+	private boolean isOther;
+	private boolean isFiveHoursMore;
+	private String otherCheckinReason;
 	private String name;
 
 	public MSDStudentCheckinDto() {
@@ -74,4 +78,35 @@ public class MSDStudentCheckinDto {
 		this.inClass = inClass;
 	}
 
+	public boolean isIsMakeup() {
+		return isMakeup;
+	}
+
+	public void setIsMakeup(boolean isMakeup) {
+		this.isMakeup = isMakeup;
+	}
+
+	public boolean isIsOther() {
+		return isOther;
+	}
+
+	public void setIsOther(boolean isOther) {
+		this.isOther = isOther;
+	}
+
+	public boolean isIsFiveHoursMore() {
+		return isFiveHoursMore;
+	}
+
+	public void setIsFiveHoursMore(boolean isFiveHoursMore) {
+		this.isFiveHoursMore = isFiveHoursMore;
+	}
+
+	public String getOtherCheckinReason() {
+		return otherCheckinReason;
+	}
+
+	public void setOtherCheckinReason(String otherCheckinReason) {
+		this.otherCheckinReason = otherCheckinReason;
+	}
 }

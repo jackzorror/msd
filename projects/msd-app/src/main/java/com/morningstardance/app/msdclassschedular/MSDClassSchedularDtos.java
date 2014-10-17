@@ -3,7 +3,7 @@ package com.morningstardance.app.msdclassschedular;
 import java.util.List;
 
 public class MSDClassSchedularDtos {
-
+	
 	private int id;
 	private List<String> weekdays;
 	private String startTime;

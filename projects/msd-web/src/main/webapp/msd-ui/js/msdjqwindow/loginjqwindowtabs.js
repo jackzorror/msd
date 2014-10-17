@@ -155,6 +155,7 @@ function afterUserLoginProcess() {
 	ajaxGetUniqueName("LASTNAME",getUniqueLasstNameForStudent);
 	ajaxGetAllClass(getAllClass);
 //	ajaxGetAllClassName(getAllClassName);
+	ajaxGetAllMSDCostType(getAllMSDCostType);
 	
 	setTimerId(setInterval("timercount()", 60000));
 	
@@ -232,6 +233,18 @@ function getAllClassName(response) {
 	}
 }
 
+function getAllMSDCostType(response) {
+	if (404 == response.code) {
+		console.log(" Can't get all cost type ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get all cost type list ");
+		setAllCostType(data);
+	} else {
+		alert('error');
+	}
+}
+
 var timerId;
 function getTimerId() {
 	return timerId;
@@ -254,4 +267,12 @@ function getActiveClassNameList() {
 }
 function setActiveClassNameList(data) {
 	activeClassNameList = data;
+}
+
+var allCostType;
+function setAllCostType(data) {
+	allCostType = data;
+}
+function getAllCostType() {
+	return allCostType;
 }

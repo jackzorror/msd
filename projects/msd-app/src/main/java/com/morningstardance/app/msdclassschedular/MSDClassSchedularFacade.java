@@ -15,6 +15,8 @@ public interface MSDClassSchedularFacade {
 
 	void addClassSchedularList(MSDClassSchedularDtos classSchedularDtos);
 
+	void deleteClasSchedularByIdList(Long [] msdClassSchedularIds);
+
 	void deleteClasSchedularById(Long msdClassSchedularId);
 
 }

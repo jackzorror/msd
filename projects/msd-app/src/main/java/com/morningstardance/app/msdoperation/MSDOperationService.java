@@ -20,29 +20,9 @@ public class MSDOperationService {
 	@Resource
 	private MSDOperationJPARepository msdOperationJPARepository;
 	
-	public void msdStudentRegisterUnregisterClassOperation(Long sid, Long cid, String operationDescription, String operationtype) {
-	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	    String name = auth.getName();
-		
-		Timestamp now = new Timestamp(new Date().getTime());
-		
-		MSDOperation msdoa = new MSDOperation();
-		msdoa.setObjectId(sid.intValue());
-		msdoa.setObjectType(MSDStudent.class.getSimpleName());
-		msdoa.setUserName(name);
-		msdoa.setOperationTime(now);
-		msdoa.setOperationDescription(operationDescription);
-		msdoa.setOperationType(operationtype);
-		msdOperationJPARepository.save(msdoa);
-
-		MSDOperation msdob = new MSDOperation();
-		msdob.setObjectId(cid.intValue());
-		msdob.setObjectType(MSDClass.class.getSimpleName());
-		msdob.setUserName(name);
-		msdob.setOperationTime(now);
-		msdob.setOperationDescription(operationDescription);
-		msdob.setOperationType(operationtype);
-		msdOperationJPARepository.save(msdob);
+	public void msdStudentClassOperation(Long sid, Long cid, String operationDescription, String operationtype) {
+		msdClassOperation(cid, operationDescription, null, null, operationtype);
+		msdStudentOperation(cid, operationDescription, null, null, operationtype);
 	}
 
 	public void msdUserLoginSuccessfully(String username) {
@@ -97,4 +77,30 @@ public class MSDOperationService {
 		msdOperationJPARepository.save(msdo);
 	}
 
+	public void msdClassOperation(Long cid, String operationDescription, String nvalue, String ovalue, String operationtype) {
+		msdEntityOperation(cid, operationDescription, nvalue, ovalue, MSDClass.class.getSimpleName(), operationtype);
+	}
+	
+	public void msdStudentOperation(Long sid, String operationDescription, String nvalue, String ovalue, String operationtype) {
+		msdEntityOperation(sid, operationDescription, nvalue, ovalue, MSDStudent.class.getSimpleName(), operationtype);
+	}
+	
+	private void msdEntityOperation(Long cid, String operationDescription, String nvalue, String ovalue, String objectType, String operationtype) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    String name = auth.getName();
+		
+		Timestamp now = new Timestamp(new Date().getTime());
+		
+		MSDOperation msdo = new MSDOperation();
+		msdo.setObjectId(cid.intValue());
+		msdo.setObjectType(objectType);
+		msdo.setUserName(name);
+		msdo.setOperationTime(now);
+		msdo.setOperationDescription(operationDescription);
+		msdo.setOperationType(operationtype);
+		msdo.setNewValue(nvalue);
+		msdo.setOldValue(ovalue);
+		msdOperationJPARepository.save(msdo);
+
+	}
 }

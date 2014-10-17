@@ -189,4 +189,23 @@ public class MSDStudent extends MSDEntityBase implements Serializable {
 		this.isActive = isActive;
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("MSDStudent ID:" + getId())
+		  .append(" FirstName:" + getFirstName())
+		  .append(" LastName:" + getLastName())
+		  .append(" Email:" + getEmailAddress())
+		  .append(" Gender:" + getGender())
+		  .append(" Home Address:" + getHomeAddress())
+		  .append(" Home Phone:" + getHomePhone())
+		  .append(" School Name:" + getSchoolName())
+		  .append(" Grade:" + getSchoolGrade())
+		  .append(" IsActive: " + getIsActive())
+		  .append(null != getMsdStudentMedicalInfo() ? getMsdStudentMedicalInfo().toString() : null);
+		for (MSDStudentParent sp : msdStudentParents) 
+			sb.append(sp.toString());
+		
+		return sb.toString();
+	}
+
 }
