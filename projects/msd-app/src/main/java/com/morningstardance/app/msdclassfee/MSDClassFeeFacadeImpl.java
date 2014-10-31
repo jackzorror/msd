@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.domain.entity.MSDClassFee;
-import com.morningstardance.domain.entity.MSDClassSchedular;
 import com.morningstardance.domain.entity.MSDCostType;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassFeeJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDCostTypeJPARepository;
@@ -31,7 +30,7 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 	private MSDOperationService msdOperationService;
 	
 	@Override
-	public MSDClassFeeDto getClasFeeById(Long msdclassfeeid) {
+	public MSDClassFeeDto getClassFeeById(Long msdclassfeeid) {
 		MSDClassFee entity = msdClassFeeJPARepository.findOne(msdclassfeeid);
 		MSDClassFeeDto dto = msdClassFeeAssembler.createDtoFromEntity(entity);
 		return dto;
@@ -75,11 +74,13 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 
 	@Override
 	public void deleteClassFeeById(Long msdClassFeeId) {
+		if (null == msdClassFeeId || msdClassFeeId.intValue() == 0) return;
+		
 		MSDClassFee entity = msdClassFeeJPARepository.findOne(msdClassFeeId);
 		if (null != entity) {
 			entity.setIsActive((byte) 0);
 			msdClassFeeJPARepository.save(entity);
-			msdOperationService.msdClassOperation(msdClassFeeId, "De active Class Fee", null, entity.toString(), "DATABASE");
+			msdOperationService.msdClassOperation(new Long(entity.getMsdClassId()), "De active Class Fee", null, entity.toString(), "DATABASE");
 		}
 	}
 

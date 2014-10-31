@@ -67,7 +67,7 @@ public class MSDClassController {
 
 	    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
 		public@ResponseBody ResponseDto addClassVer1(@RequestBody MSDClassDto msdclassdto) {
-	    	MSDClassDto addedDto = msdClassFacade.addClass(msdclassdto);
+	    	MSDClassDto addedDto = msdClassFacade.saveClass(msdclassdto);
 			ResponseDto responseDto = ResponseDto.createResponseDto(addedDto, "PUT", "OBJECT");
 			return responseDto;
 		}

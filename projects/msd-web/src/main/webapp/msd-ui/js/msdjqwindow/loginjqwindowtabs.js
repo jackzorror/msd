@@ -156,6 +156,8 @@ function afterUserLoginProcess() {
 	ajaxGetAllClass(getAllClass);
 //	ajaxGetAllClassName(getAllClassName);
 	ajaxGetAllMSDCostType(getAllMSDCostType);
+	ajaxGetAllMSDCompetitionType(getAllMSDCompetitionType);
+	ajaxGetAllCompetition(getAllCompetitionNameIdList);
 	
 	setTimerId(setInterval("timercount()", 60000));
 	
@@ -245,6 +247,41 @@ function getAllMSDCostType(response) {
 	}
 }
 
+function getAllMSDCompetitionType(response) {
+	if (404 == response.code) {
+		console.log(" Can't get all competition type ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get all competition type list ");
+		setAllCompetitionType(data);
+	} else {
+		alert('error');
+	}
+}
+
+function getAllCompetitionNameIdList(response) {
+	if (404 == response.code) {
+		console.log(" Can't get active all competition ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get active competition  list ");
+		var activeCompetitionName = [];
+		var allCompetitionName = [];
+		for (index in data) {
+			allCompetitionName.push({text:data[index].name, value:data[index].id});
+			if (data[index].isActive) {
+				activeCompetitionName.push({text:data[index].name, value:data[index].id});
+			}
+		}
+		setAllCompetitionNameList(allCompetitionName);
+		setActiveCompetitionNameList(activeCompetitionName);
+		competitionTabLoadddlCompetitionSearchNameDataSource()		
+	} else {
+		alert('error');
+	}
+
+}
+
 var timerId;
 function getTimerId() {
 	return timerId;
@@ -276,3 +313,28 @@ function setAllCostType(data) {
 function getAllCostType() {
 	return allCostType;
 }
+
+var allCompetitionType;
+function setAllCompetitionType(data) {
+	allCompetitionType = data;
+}
+function getAllCompetitionType() {
+	return allCompetitionType;
+}
+
+var allCompetitionNameList;
+function setAllCompetitionNameList(clist) {
+	allCompetitionNameList = clist;
+}
+function getAllCompetitionNameList() {
+	return allCompetitionNameList;
+}
+
+var activeCompetitionNameList;
+function setActiveCompetitionNameList(clist) {
+	activeCompetitionNameList = clist;
+}
+function getActiveCompetitionNameList() {
+	return activeCompetitionNameList;
+}
+

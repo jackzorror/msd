@@ -865,6 +865,9 @@ function showClassDetail(data) {
 	
 		var sdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'studentClassSchedularInformationdiv'});
 		$('#studentclassdetaildiv').append(sdiv);
+
+		var fdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'studentClassFeeInformationdiv'});
+		$('#studentclassdetaildiv').append(fdiv);
 	}
 	
 	if (false == $('#msdclassdetailpopupdiv').jqxWindow('isOpen')) {
@@ -906,7 +909,8 @@ function showClassDetail(data) {
 	$('#txtTotalStudent').jqxInput({disabled:true });
 	$('#txtTotalStudent').jqxInput('val', data.totalNumberStudent);
 
-	getClassDetailSchedularByClassId(data.id);
+	ajaxGetClassSchedularByClassId(data.id,getClassDetailSchedularByClassId);
+	ajaxGetClassFeeByClassId(data.id, getClassDetailFeeByClassId);
 
 }
 
@@ -944,20 +948,20 @@ function createClassDetailDiv() {
 	$('#classOtherInformationdiv').append('<label> Total Student : </label>');
 	var ctotalstudent = $('<input/>').attr({type:'text', id:'txtTotalStudent'});
 	$('#classOtherInformationdiv').append(ctotalstudent);
-	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
+	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:80, minLength: 1, theme: getTheme() });	
 	
-	$('#classOtherInformationdiv').append('<label> Class Fee : </label>');
+	$('#classOtherInformationdiv').append('<label> Total Class Fee : </label>');
 	var cClassFee = $('<input/>').attr({type:'text', id:'txtClassFee'});
 	$('#classOtherInformationdiv').append(cClassFee);
-	$('#txtClassFee').jqxInput({placeHolder: "$000", rtl: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
+	$('#txtClassFee').jqxInput({placeHolder: "$000", rtl: true, height: 20, width:80, minLength: 1, theme: getTheme() });	
 	
 }
 
 function showClassDetailSchedular(data) {
 	console.log(" in show class schedular information .. ");
 	$('#studentClassSchedularInformationdiv').empty();
-	$('#studentClassSchedularInformationdiv').append('<label style="float:left; margin-top:10px;"> Class Schedular ... </label>');
-	var csdiv = $('<div style="border:0px solid; float:left; margin-top:10px; margin-left:45px;"/>').attr({id:'classSchedularDetailGrid'});	
+	$('#studentClassSchedularInformationdiv').append('<label style="margin-top:10px;"> Class Schedular ... </label>');
+	var csdiv = $('<div style="border:0px solid; margin-top:10px; margin-left:45px;"/>').attr({id:'classSchedularDetailGrid'});	
 	$('#studentClassSchedularInformationdiv').append(csdiv);
 	var source = {
 		datafields:[
@@ -975,7 +979,8 @@ function showClassDetailSchedular(data) {
 	$('#classSchedularDetailGrid').jqxGrid(
 	{
 		source:dataAdapter,
-		width: 410,
+		width: 350,
+	    autoheight:true,
 		theme: getTheme(),
 		columns:[
 			{text: 'Class ID', datafield:'msdClassId', hidden:'true'},
@@ -983,6 +988,41 @@ function showClassDetailSchedular(data) {
 			{text: 'Weekday', datafield: 'weekdayStr', width: 100, align:'center', cellsalign:'center'},
 			{text: 'Start Time', datafield: 'startTime', width:100, align:'right', cellsalign:'right'},
 			{text: 'End Time', datafield: 'endTime', width:100, align:'right', cellsalign:'right'}
+		]
+	});
+	
+}
+
+function showClassDetailFee(data) {
+	console.log(" in show class fee information .. ");
+	$('#studentClassFeeInformationdiv').empty();
+	$('#studentClassFeeInformationdiv').append('<label style="margin-top:10px;"> Class Fee ... </label>');
+	var csdiv = $('<div style="border:0px solid; margin-top:10px; margin-left:10px"/>').attr({id:'classFeeDetailGrid'});	
+	$('#studentClassFeeInformationdiv').append(csdiv);
+	var source = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'msdClassId', 	type: 'int'},
+			{ name: 'feeName',  type: 'string'},
+			{ name: 'feeTypeName', 	type: 'string'},
+			{ name: 'cost', type: 'number'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	$('#classFeeDetailGrid').jqxGrid(
+	{
+		source:dataAdapter,
+		width: 400,
+	    autoheight:true,
+		theme: getTheme(),
+		columns:[
+			{text: 'Class ID', datafield:'msdClassId', hidden:'true'},
+			{text: 'ID', datafield:'id', hidden:'true'},
+			{text: 'Name', datafield: 'feeName', width: 180},
+			{text: 'Type', datafield: 'feeTypeName', width:120},
+			{text: 'Fee', datafield: 'cost', width:100, cellsAlign: 'right', align: 'right', cellsFormat: 'c2'}
 		]
 	});
 	
@@ -1445,32 +1485,30 @@ function getClassDetailByIdInStudentTab(response, request, settings){
 	}
 }
 
-function getClassDetailSchedularByClassId(id) {
-	console.log(" in get class schedular by id ... ");
-	$.ajax({
-		type: "GET",
-		url: "../msd-app/rs/msdclassschedular",
-		dataType: "json",
-		contentType: "application/json",
-		data: { msdclassid: id},
-		success: function(response) {
-			if (404 == response.code) {
-				console.log(" Can't find class schedular by id : " + id);
-				$('#studentClassSchedularInformationdiv').empty();				
-			} else if (302 == response.code) {
-				var data = $.parseJSON(response.result);
-				console.log(" get class schedular by id ");
-				showClassDetailSchedular(data);
-				
-			} else {
-				alert('error');
-			}
-		},
-		error: function(msg, url, line) {
-			handleAjaxError(msg);
-		}
-	});
+function getClassDetailSchedularByClassId(response) {
+	if (404 == response.code) {
+		console.log(" Can't find class schedular by id : " + id);
+		$('#studentClassSchedularInformationdiv').empty();				
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get class schedular by id ");
+		showClassDetailSchedular(data);
+	} else {
+		alert('error');
+	}
+}
 
+function getClassDetailFeeByClassId(response) {
+	if (404 == response.code) {
+		console.log(" Can't find class fee by id : " + id);
+		$('#studentClassFeeInformationdiv').empty();				
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get class fee by id ");
+		showClassDetailFee(data);
+	} else {
+		alert('error');
+	}
 }
 
 

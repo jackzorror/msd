@@ -1,5 +1,6 @@
 package com.morningstardance.app.msdclass;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassSchedular;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudentclass.MSDStudentClassRepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDClassFeeJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassSchedularJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentClassJPARepository;
@@ -28,6 +30,9 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 	
     @Resource
     private MSDClassJPARepository msdClassJPARepository;
+    
+    @Resource
+    private MSDClassFeeJPARepository msdClassFeeJPARepository;
     
     @Resource
     private MSDClassSchedularJPARepository msdClassSchedularJPARepository;
@@ -46,6 +51,8 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 	@Override
 	public MSDClassDto getMSDClassById(Long msdclassId) {
 		MSDClass msdclass = msdClassJPARepository.findOne(msdclassId);
+		Long studnetCount = msdStudentClassJPARepository.getTotalCountByClassIdAndIsActive(new Integer(msdclassId.intValue()), (byte) 1);
+		BigDecimal totalFee = msdClassFeeJPARepository.getTotalClassFeeByClassIdAndIsActive(new Integer(msdclassId.intValue()), (byte) 1);
 		return msdClassAssembler.createDtoFromEntity(msdclass);
 	}
 
@@ -68,17 +75,20 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
     }
 
 	@Override
-	public MSDClassDto addClass(MSDClassDto msdclassdto) {
+	public MSDClassDto saveClass(MSDClassDto msdclassdto) {
+		MSDClass oentity = null;
+		String ovalue = null;
+		if (msdclassdto.getId() != 0) {
+			oentity = msdClassJPARepository.findOne(new Long(msdclassdto.getId()));
+			if (null != oentity) 
+				ovalue = oentity.toString();
+		}
 		MSDClass centity = msdClassAssembler.createEntityFromDto(msdclassdto);
 		msdClassJPARepository.save(centity);
 		MSDClassDto dto = msdClassAssembler.createDtoFromEntity(centity);
 		if (msdclassdto.getId() == 0) {
 			msdOperationService.msdClassOperation(centity.getId(), "Create New Class", centity.toString(), null, "DATABASE");
 		} else {
-			MSDClass ocentity = msdClassJPARepository.findOne(new Long(msdclassdto.getId()));
-			String ovalue = null;
-			if (null != ocentity) 
-				ovalue = ocentity.toString();
 			msdOperationService.msdClassOperation(centity.getId(), "Change Class", centity.toString(), ovalue, "DATABASE");
 		}
 		return dto;
@@ -110,6 +120,7 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 //		int totalStudentCount = msdStudentClassJPARepository.getAllStudentCount(msdClassId.intValue());
 //		int totalStudentCount = msdStudentClassRepository.getAllStudentCount(msdClassId);
 		int totalStudentCount = msdStudentClassJPARepository.findByMsdClassId(msdClassId.intValue()).size();
+//		int studnetCount = msdStudentClassJPARepository.getAllStudentCount(new Integer(msdClassId.intValue()));
 
 		return msdClassAssembler.createClassDetailFromEntity(msdclass, msdclassschedulars, totalStudentCount);
 	}

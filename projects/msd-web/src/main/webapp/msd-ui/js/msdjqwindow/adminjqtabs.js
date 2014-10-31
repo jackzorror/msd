@@ -441,6 +441,11 @@ function showSelectedStudents(data) {
 				ajaxGetAllStudentCheckinReportByStudentId(sid, getAllStudentCheckinReportByStudentId);
 	        });
 
+	        $("#btnCancelAllCheckinReport").on('click', function () {
+	        	console.log(" Cancel checkin report ...");
+	        	$('#popupAllCheckinReportWindow').jqxWindow('hide');
+	        });
+
     	    $("#studentCheckin").on('click', function () {
 				console.log("selected student check in  ... ");
 				setRegisterFunction("CheckIn");

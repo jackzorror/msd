@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.app.msdstudent.MSDStudentClassDto;
+import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDStudent;
 import com.morningstardance.domain.entity.MSDStudentClass;
@@ -28,6 +29,9 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	@Resource
 	private MSDOperationService msdOperationService;
 	
+	@Resource
+	private MSDStudentFeeFacade msdStudentFeeFacade;
+	
 	@Override
 	public MSDStudentClassDto registerStudentToClassByStudentClassDto(MSDStudentClassDto studentClassDto) {
 		return registerStudentToClassByStudentIdAndClassId(new Long(studentClassDto.getMsdStudentId()), new Long(studentClassDto.getMsdClassId()));
@@ -48,6 +52,10 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		if (null != msdsc) {
 			msdsc.setIsActive((byte)0);
 			msdStudentClassJPARepository.saveAndFlush(msdsc);
+			Long sid = new Long(msdsc.getMsdStudentId());
+			Long cid = new Long(msdsc.getMsdClassId());
+			msdOperationService.msdStudentClassOperation(sid, cid, "Un Register Student : " + sid + " from Class : " + cid, "DATABASE");
+			msdStudentFeeFacade.removeClassFeeFromStudentFeeByStudentIdAndStudentClassId(sid, msdsc.getId());
 		}
 	}
 
@@ -69,19 +77,14 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		studentClass.setMsdStudentId(sid.intValue());
 		studentClass.setIsActive((byte)1);
 		MSDStudentClass entity = null;
-		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(),	sid.intValue());
-		if (null == entity) {
+		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(), sid.intValue());
+		if (null == entity || entity.getIsActive() == (byte) 0) {
 			entity = msdStudentClassJPARepository.save(studentClass);
 			msdOperationService.msdStudentClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid, "DATABASE");
+			msdStudentFeeFacade.addClassFeeToStudentFeeByStudentIdAndStudentClassId(sid, entity.getId());
 		} else {
-			if (entity.getIsActive() == (byte) 0) {
-				entity.setIsActive((byte)1);
-				msdStudentClassJPARepository.saveAndFlush(entity);
-				msdOperationService.msdStudentClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid, "DATABASE");
-			} else {
-				msdOperationService.msdStudentClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid +
-						Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
-			}
+			msdOperationService.msdStudentClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid +
+					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
 		}
 		return entity;
 	}
@@ -102,7 +105,6 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		MSDStudentClass entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(), sid.intValue());
 		if (null != entity) {
 			unRegisterStudentFromClassById(entity.getId());
-			msdOperationService.msdStudentClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid, "DATABASE");
 		} else {
 			msdOperationService.msdStudentClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid + " " + 
 					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");

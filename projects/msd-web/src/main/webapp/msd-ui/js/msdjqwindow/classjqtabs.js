@@ -37,7 +37,7 @@ function initClassTab() {
 
 function addClassTabsEventListeners() {
 	$(document).on('click', '#btnSearchClass', handleSearchClassClick);
-	$(document).on('keypress', '#ddlClassSearchName', handleClassSEarchNameKeypress);
+	$(document).on('keypress', '#ddlClassSearchName', handleClassSearchNameKeypress);
 	$(document).on('click', '#btnClearClass', handleClearClassClick);
 	$(document).on('click', '#btnAddClass', handleAddClassClick);
 	
@@ -65,7 +65,7 @@ function handleSearchClassClick() {
 	setCurrentFunctionInClassTab("SEARCH");
 };
 
-function handleClassSEarchNameKeypress(e) {
+function handleClassSearchNameKeypress(e) {
 	if (e.which == 13)
 		$('#btnSearchClass').click();
 }
@@ -172,9 +172,6 @@ function createClassInformationDiv() {
 
 	var ccdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid; height:100px;"/>').attr({id:'classCommondiv'});
 	$('#classMainPanel').append(ccdiv);
-	
-	var cddiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid;"/>').attr({id:'classDetaildiv'});
-	$('#classMainPanel').append(cddiv);
 	
 	var sdiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'schedularInformationdiv'});
 	$('#classMainPanel').append(sdiv);	
@@ -313,7 +310,7 @@ function showClassSchedularInformation(data) {
 	    selectionMode: 'singleRow',
     	showToolbar: true,
     	pageable:true,
-    	pagesize:4,
+    	pagesize:3,
 	    altrows: true,
     	ready: function(){},
 	    toolbarHeight: 25,
@@ -464,7 +461,7 @@ function showClassFeeInformation(data) {
 	    selectionMode: 'singleRow',
     	showToolbar: true,
     	pageable:true,
-    	pagesize:4,
+    	pagesize:2,
 	    altrows: true,
     	ready: function(){},
 	    toolbarHeight: 25,
@@ -526,6 +523,7 @@ function showClassFeeInformation(data) {
                         var name = $('#txtFeeName').val();
                         var cost = $('#txtCost').val();
                         var type = $('#costType').jqxDropDownList('getSelectedItem').value;
+                        var typename = $('#costType').jqxDropDownList('getSelectedItem').label;
                         var cid = getCurrentClassInClassTab().id;
                         
                         if (null == name || name.length < 1) {
@@ -540,6 +538,7 @@ function showClassFeeInformation(data) {
 
 							var classfee = {"id":0, "msdClassId":getCurrentClassInClassTab().id, "feeName":name, "cost":cost, "feeTypeName":null, "msdCostTypeId":type};
 							ajaxAddNewFee(classfee, addNewFee);
+                            $("#classFeeDataTable").jqxDataTable('addRow', null, {"id":0, "msdClassId":getCurrentClassInClassTab().id, "feeName":name, "cost":cost, "feeTypeName":typename}, 'first');
                         }
                     });
                     

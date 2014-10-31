@@ -17,8 +17,9 @@ public interface MSDStudentClassJPARepository extends JpaRepository<MSDStudentCl
 	public MSDStudentClass findByMsdClassIdAndMsdStudentIdAndIsActive(int msdClassId, int msdStudentId, byte isActive);
 
 	public List<MSDStudentClass> findByMsdClassId(int msdClassId);
-/*	
-	@Query("SELECT COUNT(*) FROM MSDStudentClass c WHERE msdClassId = :msdclassid")
-	public int getAllStudentCount(@Param("msdclassid") int msdclassid);
-*/
+	
+	public List<MSDStudentClass> findByMsdClassIdAndIsActive(int msdClassId, byte isActive);
+	
+	@Query("SELECT COUNT(*) FROM MSDStudentClass c WHERE msdClassId = :msdclassid and isActive = :isactive")
+	public Long getTotalCountByClassIdAndIsActive(@Param("msdclassid") Integer msdclassid, @Param("isactive") byte isactive);
 }

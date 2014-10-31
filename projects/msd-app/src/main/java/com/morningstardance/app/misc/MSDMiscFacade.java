@@ -6,4 +6,6 @@ public interface MSDMiscFacade {
 
 	List<MSDCostTypeDto> getCostType();
 
+	List<MSDCompetitionTypeDto> getCompetitionType();
+
 }

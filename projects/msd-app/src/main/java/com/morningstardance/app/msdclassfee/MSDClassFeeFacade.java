@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface MSDClassFeeFacade {
 
-	MSDClassFeeDto getClasFeeById(Long msdclassfeeid);
+	MSDClassFeeDto getClassFeeById(Long msdclassfeeid);
 
 	List<MSDClassFeeDto> getClassFeeByClassId(Long msdclassid);
 

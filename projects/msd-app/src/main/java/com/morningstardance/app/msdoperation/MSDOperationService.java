@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.domain.entity.MSDClass;
+import com.morningstardance.domain.entity.MSDCompetition;
 import com.morningstardance.domain.entity.MSDOperation;
 import com.morningstardance.domain.entity.MSDStudent;
 import com.morningstardance.domain.springdata.jpa.repository.MSDOperationJPARepository;
@@ -83,6 +84,10 @@ public class MSDOperationService {
 	
 	public void msdStudentOperation(Long sid, String operationDescription, String nvalue, String ovalue, String operationtype) {
 		msdEntityOperation(sid, operationDescription, nvalue, ovalue, MSDStudent.class.getSimpleName(), operationtype);
+	}
+	
+	public void msdCompetitionOperation(Long cid, String operationDescription, String nvalue, String ovalue, String operationtype) {
+		msdEntityOperation(cid, operationDescription, nvalue, ovalue, MSDCompetition.class.getSimpleName(), operationtype);
 	}
 	
 	private void msdEntityOperation(Long cid, String operationDescription, String nvalue, String ovalue, String objectType, String operationtype) {

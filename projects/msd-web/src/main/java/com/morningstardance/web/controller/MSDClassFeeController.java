@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.morningstardance.app.msdclassfee.MSDClassFeeDto;
 import com.morningstardance.app.msdclassfee.MSDClassFeeFacade;
-import com.morningstardance.app.msdclassschedular.MSDClassSchedularDtos;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -31,18 +30,18 @@ public class MSDClassFeeController {
 
 	@RequestMapping(value="/{msdclassfeeid}", method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
 	public @ResponseBody ResponseDto getClassFeeByIdVer1(@PathVariable("msdclassfeeid") Long msdclassfeeid) {
-		MSDClassFeeDto dto = msdClassFeeFacade.getClasFeeById(msdclassfeeid);
+		MSDClassFeeDto dto = msdClassFeeFacade.getClassFeeById(msdclassfeeid);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
 
 	@RequestMapping(value="/{msdClassFeeId}", method=RequestMethod.DELETE, headers="!X-Api-service-Version")
-	public @ResponseBody ResponseDto deleteClassSchedularByIdDfltVer(@PathVariable("msdClassFeeId") Long msdClassFeeId) {
-		return deleteClassSchedularByIdVer1(msdClassFeeId);
+	public @ResponseBody ResponseDto deleteClassFeeByIdDfltVer(@PathVariable("msdClassFeeId") Long msdClassFeeId) {
+		return deleteClassFeeByIdVer1(msdClassFeeId);
 	}
 
 	@RequestMapping(value="/{msdClassFeeId}", method=RequestMethod.DELETE, headers="!X-Api-service-Version=1.0")
-	public @ResponseBody ResponseDto deleteClassSchedularByIdVer1(@PathVariable("msdClassFeeId") Long msdClassFeeId) {
+	public @ResponseBody ResponseDto deleteClassFeeByIdVer1(@PathVariable("msdClassFeeId") Long msdClassFeeId) {
 		msdClassFeeFacade.deleteClassFeeById(msdClassFeeId);
         ResponseDto responseDto = ResponseDto.createResponseDto(null, "DELETE", "OBJECT");
 		return responseDto;

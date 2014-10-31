@@ -1,0 +1,39 @@
+Student:
+	1. Kee all student activate;
+
+Student_Class;
+	1. Can't be deleted, only be deactivated;
+	2. Anytime if student register to class, it will create new record in this table;
+		a. if class has class fee, it will add class fee to student fee table;
+		
+	3. Anytime if student de register from class, it will deactivate this recored;
+		a. if class has class fee, it will deactivate class fee from student fee table;
+	
+Student_Fee:
+	1. Can't be deleted, only be deactivated;
+	2. Student fee should be add/deactivated during register/unregister class or other stuff; 
+	3. Student fee object name should be Class or Competition, the object id should be class fee id or competition fee id;
+	
+
+Class:
+	1. Can't be deleted, only be deactivated;
+	2. if deactivated a class:
+		a. it will deactivate Student register class;
+		b. it will deactivate Class Fee; 
+	
+Class_Scheduler:
+	1. Can be added, or deleted;
+	
+Class_Fee:
+	1. Can't be deleted, only be deactivated;
+	2. If add new class fee, this fee will be add to student fee, if student register to this class;
+	3. If deactivate a class fee, this fee will be deactivated from student fee, if student register to this class;
+	
+		
+Competition :
+	same as Class
+		
+Competition_Fee:
+	Same as Class_Fee;
+	
+

@@ -12,7 +12,7 @@ public interface MSDClassFacade {
 
 	List<MSDClass> findAll();
 
-	MSDClassDto addClass(MSDClassDto msdclassdto);
+	MSDClassDto saveClass(MSDClassDto msdclassdto);
 
 	List<String> getClassUniqueName();
 

@@ -177,6 +177,32 @@ function ajaxSaveClassInformation(id, cname, clocation, sdate, edate, isactive, 
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxSaveCompetitionInformation(competition, fName) {
+	var ajaxcall = $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdcompetition",
+		data: JSON.stringify(competition),
+		contentType: "application/json",
+		processData:false
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetAllCompetition(fName) {
+	var ajaxcall = $.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdcompetition",
+		contentType: "application/json",
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxGetAllStuentSummaryByClassId(cid, fName) {
 	var ajaxcall = $.ajax({
 		type: "GET",
@@ -291,3 +317,90 @@ function ajaxGetAllMSDCostType(fName) {
 	ajaxcall.done(fName);
 	ajaxcall.error(handleAjaxError);
 };
+
+function ajaxGetAllMSDCompetitionType (fName) {
+	console.log(" call get all competition type ... ");
+		
+	ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdmisc",
+		dataType: "json",
+		contentType: "application/json",
+		data:{miscname: 'COMPETITION_TYPE'}
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+};
+
+function ajaxGetClassDetailSchedularByClassId(cid, fName) {
+	console.log(" in get class schedular by id ... ");
+
+	ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdclassschedular",
+		dataType: "json",
+		contentType: "application/json",
+		data: { msdclassid: cid},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetCompetitionDetailById(cid, fName) {
+	console.log(" in get competition by id ... ");
+
+	ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdcompetition/" + cid,
+		dataType: "json",
+		contentType: "application/json"
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetCompetitionFeeByCompetitionId(cid, fName) {
+	console.log(" in get competition fee by id ... ");
+
+	ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdcompetitionfee",
+		dataType: "json",
+		contentType: "application/json",
+		data: { msdcompetitionid: cid},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxAddCompetitionFee(competitionfee, fName) {
+	var ajaxcall = $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdcompetitionfee",
+		data: JSON.stringify(competitionfee),
+		contentType: "application/json",
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxDeleteCcompetitionFee(id, fName) {
+	console.log(" delete competition fee ");
+	
+	var ajaxcall =  $.ajax({
+		type: "DELETE",
+		dataType: "json",
+		url: "../msd-app/rs/msdcompetitionfee/" + id
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+

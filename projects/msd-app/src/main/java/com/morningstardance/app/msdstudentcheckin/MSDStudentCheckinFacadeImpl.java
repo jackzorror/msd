@@ -49,6 +49,15 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 	MSDOperationService msdOperationService;
 
 	@Override
+	public MSDStudentCheckinDto studentClassCheckin(Long msdStudentId, Long msdClassId) {
+		MSDStudentCheckinDto dto = new MSDStudentCheckinDto();
+		dto.setStudentId(msdStudentId.intValue());
+		dto.setClassId(msdClassId.intValue());
+
+		return studentClassCheckin(dto);
+	}
+
+	@Override
 	public MSDStudentCheckinDto studentClassCheckin(MSDStudentCheckinDto indto) {
 		if (null == indto) {
 			return null;
@@ -72,39 +81,6 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 		checkin.setIsMakeup(indto.isIsMakeup() == true ? new Byte((byte)1) : new Byte((byte)0));
 		checkin.setIsOther(indto.isIsOther() == true ? new Byte((byte)1) : new Byte((byte)0));
 		checkin.setNote(indto.getOtherCheckinReason());
-		
-		checkin = msdStudentCheckinRepository.save(checkin);
-		
-		MSDStudentCheckinDto dto = new MSDStudentCheckinDto(checkin);
-
-		msdOperationService.msdStudentClassOperation(new Long(checkin.getMsdStudentId()), new Long(checkin.getMsdClassId()), 
-				"Student : " + checkin.getMsdStudentId() + " Check in Class : " + checkin.getMsdClassId(), "DATABASE");
-		
-		return dto;
-	}
-
-
-	@Override
-	public MSDStudentCheckinDto studentClassCheckin(Long msdStudentId,
-			Long msdClassId) {
-		if (null == msdStudentId || null == msdClassId) {
-			return null;
-		}
-		
-		MSDStudent msdStudent = msdStudentRepository.findById(msdStudentId);
-		if (null == msdStudent) {
-			return null;
-		}
-		
-		MSDClass msdClass = msdClassRepository.findById(msdClassId);
-		if (null == msdClass) {
-			return null;
-		}
-		
-		MsdStudentCheckin checkin = new MsdStudentCheckin();
-		checkin.setMsdClassId(msdClassId.intValue());
-		checkin.setMsdStudentId(msdStudentId.intValue());
-		checkin.setCheckinTime(new Date());
 		
 		checkin = msdStudentCheckinRepository.save(checkin);
 		
@@ -234,18 +210,9 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 		List<MSDStudentCheckinReportDto> dtos = new ArrayList<MSDStudentCheckinReportDto>();
 		
 		for (MsdStudentCheckin sci : scilist) {
-			MSDStudentCheckinReportDto dto = new MSDStudentCheckinReportDto();
-			dto.setId(sci.getId().intValue());
-			dto.setCheckInTime(sci.getCheckinTime());
-			dto.setClassId(sci.getMsdClassId());
-			dto.setClassName(cname);
-			dto.setFiveHoursMoreStduent(sci.getIsFivehoursmore() == new Byte((byte)1));
-			dto.setMakeup(sci.getIsFivehoursmore() == new Byte((byte)1));
-			dto.setNote(sci.getNote());
-			dto.setOther(sci.getIsOther() == new Byte((byte)1));
-			dto.setRegisterClass(isRegisterStudent);
-			dto.setStudentId(sci.getMsdStudentId());
 			
+			MSDStudentCheckinReportDto dto = createStudentCheckinReportDto(sci, cname, isRegisterStudent);
+
 			dtos.add(dto);
 		}
 		return dtos;
