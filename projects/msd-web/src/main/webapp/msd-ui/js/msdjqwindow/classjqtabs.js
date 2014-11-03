@@ -78,20 +78,26 @@ function handleClearClassClick() {
 function handleEditClassClick() {
 	if ("SEARCH" == getCurrentFunctionInClassTab()) {
 		if ("Edit" == $('#btnEditClassInformation').val()) {
-			$('#classCommondiv :text').prop("disabled", false);
+			$('#txtClassName').jqxInput({disabled:false });
+			$('#txtLocation').jqxInput({disabled:false });
 			$('#txtClassName').focus();
 			$('#btnEditClassInformation').val("Cancel");
 			$('#btnSaveClassInformation').jqxButton('disabled', false);
 			$('#divStartTime').jqxDateTimeInput({ disabled: false });
 			$('#divEndTime').jqxDateTimeInput({ disabled: false });
+			$('#btnAddNonClassDate').jqxButton('disabled', false);
+			$('#btnDeleteNonClassDate').jqxButton('disabled', false);
 		} else if ("Cancel" == $('#btnEditClassInformation').val()) {
 			console.log (" cancel edit class information ... ");
 			cancelUpdateClassInformation();
-			$('#classCommondiv :text').prop("disabled", true);
+			$('#txtClassName').jqxInput({disabled:true });
+			$('#txtLocation').jqxInput({disabled:true });
 			$('#divStartTime').jqxDateTimeInput({ disabled: true });
 			$('#divEndTime').jqxDateTimeInput({ disabled: true });
 			$('#btnEditClassInformation').val("Edit");
 			$('#btnSaveClassInformation').jqxButton('disabled', true);
+			$('#btnAddNonClassDate').jqxButton('disabled', true);
+			$('#btnDeleteNonClassDate').jqxButton('disabled', true);
 		}
 	} else if ("ADD" == getCurrentFunctionInClassTab()) {
 		$('#btnClearClass').click();
@@ -123,6 +129,10 @@ function handleAddClassClick() {
 	$('#btnSaveClassInformation').jqxButton('disabled', false);
 	$('#divStartTime').jqxDateTimeInput({ disabled: false });
 	$('#divEndTime').jqxDateTimeInput({ disabled: false });
+
+	$('#txtTotalStudent').jqxInput('val', "0");
+	$('#txtTotalClassFee').jqxInput('val', "$0");
+	
 }
 
 function showClassInformation(data) {
@@ -157,8 +167,21 @@ function showClassInformation(data) {
 		$('#labelClassStatus').text("NA");
 		$('#labelClassStatus').css("color", "grey");
 	}
+	
+	if (null != data && null != data.totalStudent)
+		$('#txtTotalStudent').jqxInput('val', data.totalStudent);
+	else
+		$('#txtTotalStudent').jqxInput('val', "0");
+
+	if (null != data && null != data.totalClassFee)
+		$('#txtTotalClassFee').jqxInput('val', data.totalClassFee);
+	else
+		$('#txtTotalClassFee').jqxInput('val', "$0");
+	
 	$('#btnSaveClassInformation').jqxButton({ disabled:true });
 
+	$('#btnAddNonClassDate').jqxButton('disabled', true);
+	$('#btnDeleteNonClassDate').jqxButton('disabled', true);
 	if (null != data) {
 		ajaxGetClassSchedularByClassId(data.id, getClassSchedularByClassId);
 		ajaxGetClassFeeByClassId(data.id, getClassFeeByClassId);
@@ -170,7 +193,7 @@ function createClassInformationDiv() {
 
 	$('#classMainPanel').empty();
 
-	var ccdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid; height:100px;"/>').attr({id:'classCommondiv'});
+	var ccdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid; height:120px;"/>').attr({id:'classCommondiv'});
 	$('#classMainPanel').append(ccdiv);
 	
 	var sdiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'schedularInformationdiv'});
@@ -183,18 +206,25 @@ function createClassInformationDiv() {
 	$('#schedularInformationdiv').empty();
 	$('#costInformationdiv').empty();
 	
-	$('#classCommondiv').append('<br/>');
-	$('#classCommondiv').append('<label style="margin-left:10px; margin-top:10px;"><b>Class Information ... </b></label>');
+	var tmpdiv = $('<div class="InnerDiv" style = "margin-top:5px; border:0px solid;"/>');
+	$('#classCommondiv').append(tmpdiv);
 
-	var savebtn = $('<input style="float:right; margin-top:5px;margin-right:5px"/>').attr({type:'button', id:'btnSaveClassInformation', value:'Save' });
-	$('#classCommondiv').append(savebtn);
+	var ldiv = $('<div dock="left" style="margin-top:5px; border:0px solid  #ccc; width:500px;"/>');
+	var btndiv = $('<div dock="right" style="margin-top:5px; border:0px solid  #ccc; height:20px;"/>');
+	tmpdiv.append(ldiv);
+	tmpdiv.append(btndiv);
+
+	ldiv.append('<label style="margin-left:10px; margin-top:8px;"><b>Class Information ... </b></label>');
+
+	var savebtn = $('<input style="float:right; margin-top:0px;margin-right:5px"/>').attr({type:'button', id:'btnSaveClassInformation', value:'Save' });
+	btndiv.append(savebtn);
 	$('#btnSaveClassInformation').jqxButton({ width: '60', height: 20, theme: getTheme() });
 		
-	var editbtn = $('<input style="float:right; margin-top:5px; margin-right:10px;"/>').attr({type:'button', id:'btnEditClassInformation', value:'Edit' });
-	$('#classCommondiv').append(editbtn);
+	var editbtn = $('<input style="float:right; margin-top:0px; margin-right:10px;"/>').attr({type:'button', id:'btnEditClassInformation', value:'Edit' });
+	btndiv.append(editbtn);
 	$('#btnEditClassInformation').jqxButton({ width: '60', height: 20, theme: getTheme() });
 
-	$('#classCommondiv').append('<br />');
+	tmpdiv.jqxDockPanel({height: 25});
 
 	$('#classCommondiv').append('<label style="margin-top:10px;"> Class Name : </label>');
 	var cname = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtClassName'});
@@ -206,9 +236,7 @@ function createClassInformationDiv() {
 	$('#classCommondiv').append(location);
 	$('#txtLocation').jqxInput({placeHolder: "Class Location", height: 20, width:220, minLength: 1, theme: getTheme(), source:ClassLocation });
 
-	$('#classCommondiv').append('<br/>');
-	
-	var tmpdiv = $('<div class="InnerDiv" style = "margin-top:10px; border:0px solid;"/>').attr({id:'tmpdiv'});
+	var tmpdiv = $('<div class="InnerDiv" style = "float:left; margin-top:5px; border:0px solid;"/>').attr({id:'tmpdiv'});
 	$('#classCommondiv').append(tmpdiv);
 
 	$('#tmpdiv').append('<label style="float:left; margin-top:5px;"> Start : </label>');
@@ -220,14 +248,77 @@ function createClassInformationDiv() {
 	var etime = $('<div style="float:left; margin-top:0px; margin-left:10px;" />').attr({id:'divEndTime'});
 	$('#tmpdiv').append(etime);
 	$('#divEndTime').jqxDateTimeInput({width: '150px', height: '20px', formatString: 'd', theme: getTheme()});
-	
+
+	$('#tmpdiv').append('<label style="float:left; margin-top:5px; margin-left:10px">Non Class Date : </label>');
+	var ddlnoclassdate = $('<div style="float:left; margin-top:0px; margin-left:10px"/>').attr({id:'ddlNonClassDateList'});
+	$('#tmpdiv').append(ddlnoclassdate);
+	$('#ddlNonClassDateList').jqxDropDownList({placeHolder: "", height: 20, width: 100, dropDownHeight: 100, theme: getTheme()});
+
+	var toTheme = function (className) {
+		if (getTheme() == "") return className;
+        return className + " " + className + "-" + theme;
+    };
+
+    var buttonTemplate = "<div style='float: left; margin-top:4px; margin-left:8px'><div style='width: 15px; height: 15px;'></div></div>";
+    var addButton = $(buttonTemplate).attr({id:'btnAddNonClassDate'});
+    $('#tmpdiv').append(addButton);
+    addButton.jqxButton({cursor: "pointer", enableDefault: false,  height: 15, width: 15, theme: getTheme() });
+    addButton.find('div:first').addClass(toTheme('jqx-icon-plus'));
+   	addButton.jqxTooltip({ position: 'bottom', content: "Add"});
+   	
+   	addButton.click(function () {
+   		if (!addButton.jqxButton('disabled')) {
+   			console.log("add non class date");
+   		}
+   	});
+
+   	
+    var deleteButton = $(buttonTemplate).attr({id:'btnDeleteNonClassDate'});
+    $('#tmpdiv').append(deleteButton);
+    deleteButton.jqxButton({cursor: "pointer", enableDefault: false,  height: 15, width: 15, theme: getTheme() });
+    deleteButton.find('div:first').addClass(toTheme('jqx-icon-delete'));
+   	deleteButton.jqxTooltip({ position: 'bottom', content: "Delete"});
+   	
+   	deleteButton.click(function () {
+   		if (!deleteButton.jqxButton('disabled')) {
+   			console.log("delete selected non class date");
+   		}
+   	});
+
+
+/*	
 	var label = $('<label id="statuslabel" name="statuslabel" style="float:left; margin-top:5px; margin-left:20px;">Class Status : </label>');
 	$('#tmpdiv').append(label);
 
 	var statusLabel = $('<label id="labelClassStatus" name="labelClassStatus" style="float:left; margin-top:5px; margin-left:20px;" />');
 	$('#tmpdiv').append(statusLabel);
+*/
+	var tmpdiv = $('<div class="InnerDiv" style = "float:left; margin-top:5px; border:0px solid;"/>');
+	$('#classCommondiv').append(tmpdiv);
+
+	tmpdiv.append('<label style=" margin-top:0px;"> Total Student : </label>');
+	var totalStudent = $('<input style="margin-top:0px; margin-left:5px"/>').attr({type:'text', id:'txtTotalStudent'});
+	tmpdiv.append(totalStudent);
+	$('#txtTotalStudent').jqxInput({rtl: true, disabled: true, height: 20, width:20, minLength: 1, theme: getTheme() });	
+	
+	tmpdiv.append('<label style="margin-top:0px; margin-left:10px"> Total Class Fee : </label>');
+	var totalClassFee = $('<input style="margin-top:0px; margin-left:5px;"/>').attr({type:'text', id:'txtTotalClassFee'});
+	tmpdiv.append(totalClassFee);
+	$('#txtTotalClassFee').jqxInput({rtl: true, disabled: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
+	
+	tmpdiv.append('<label style="margin-top:0px; margin-left:10px"> Total Class Time : </label>');
+	var totalClassTime = $('<input style="margin-top:0px; margin-left:5px;"/>').attr({type:'text', id:'txtTotalClassTime'});
+	tmpdiv.append(totalClassTime);
+	$('#txtTotalClassTime').jqxInput({rtl: true, disabled: true, height: 20, width:20, minLength: 1, theme: getTheme() });	
+	
+	var label = $('<label id="statuslabel" name="statuslabel" style="margin-top:0px; margin-left:10px;">Class Status : </label>');
+	tmpdiv.append(label);
+
+	var statusLabel = $('<label id="labelClassStatus" name="labelClassStatus" style="margin-top:0px; margin-left:10px;" />');
+	tmpdiv.append(statusLabel);
 
 	$('#classCommondiv').append('<br />');
+
 }
 
 function getClassDetailById(response, request, settings) {

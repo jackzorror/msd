@@ -3,7 +3,19 @@ function runjqtestdiv() {
 	var cdiv = $('<div class="InnerDiv" style = "margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'classInformationdiv'});
 	$('#jqtestdiv').append(cdiv);
 	
+	$('#classInformationdiv').append('<label style="margin-top:10px;"> Pickup Non Class Date : </label>');
+	var cname = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtdatepicker', size:50});
+	$('#classInformationdiv').append(cname);
+	$('#txtdatepicker').datepick({multiSelect: 10, showTrigger: '#calImg'});
 
+
+
+	$('#classInformationdiv').append('<input name="date2" id="date2" />');
+	$('#date2').datepick({multiSelect: 2, showTrigger: '#calImg'})
+	$('#txtdatepicker').datepick('disable');
+	var date = $('#txtdatepicker').datepick('setDate','10/24/2013','10/25/2013');
+	console.log("select " + date);
+/*
 
 	$('#classInformationdiv').append('<label style="margin-left:10px; margin-top:40px;"><b>Class Information ... </b></label>');
 
@@ -43,7 +55,7 @@ function runjqtestdiv() {
 	var statusLabel = $('<label id="labelClassStatus" name="labelClassStatus" style="float:left; margin-left:20px;">Status</label>');
 	$('#newdiv').append(statusLabel);
 
-/*
+
 	var savebtn = $('<input style="margin-top:10px;"/>').attr({type:'button', id:'btnSaveClassInformation', value:'Save' });
 	$('#classInformationdiv').append(savebtn);
 	$('#btnSaveClassInformation').jqxButton({ width: '60', height: 20, theme: getTheme() });
@@ -51,9 +63,10 @@ function runjqtestdiv() {
 	var editbtn = $('<input style="margin-top:10px; "/>').attr({type:'button', id:'btnEditClassInformation', value:'Edit' });
 	$('#classInformationdiv').append(editbtn);
 	$('#btnEditClassInformation').jqxButton({ width: '60', height: 20, theme: getTheme() });
-*/
+
 	$('#classInformationdiv').append('<label style="margin-top:10px;"> Class Name : </label>');
 	$('#classInformationdiv').append('<br />');
 	
 	$('#classInformationdiv').append('<label style="margin-top:10px;"> Class Name : </label>');
+*/
 }

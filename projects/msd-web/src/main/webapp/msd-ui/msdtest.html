@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="timepicker-master/include/ui-1.10.0/ui-lightness/jquery-ui-1.10.0.custom.min.css" type="text/css" />
     <link rel="stylesheet" href="timepicker-master/jquery.ui.timepicker.css?v=0.3.3" type="text/css" />
 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
     <script type="text/javascript" src="jqwidgets/scripts/gettheme.js"></script>
     <script type="text/javascript" src="jqwidgets/scripts/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="timepicker-master/include/ui-1.10.0/jquery.ui.core.min.js"></script>
@@ -60,9 +62,28 @@
 	<script type="text/javascript" src="js/lib/messageutil.js"></script>
 	<script type="text/javascript" src="js/jqtest.js"></script>
 
+
+<link rel="stylesheet" type="text/css" href="css/jquery.datepick.new.css"> 
+<script type="text/javascript" src="js/jquery.plugin.js"></script> 
+<script type="text/javascript" src="js/jquery.datepick.js"></script>
+<style>
+.datepick-popup { z-index: 10; }
+.datepick-popup img { border: none; }
+img.trigger { 
+      position: relative;
+      left: -18px;
+      top: 5px;
+}
+
+</style>
+
+
     <script type="text/javascript">
 
+
         $(document).ready(function () {
+        
+        
 //			$(".mytimepicker").timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
 			
 //			$("#txtEndTime").timepicker({showAnim:'blind'});
@@ -103,18 +124,17 @@
         */
     </script> 
     
-   <style type="text/css">
-        /* some styling for the page */
-        .ui-timepicker-table {  font-size: 10px; /* for the widget natural size */ }
-    </style>
+<div style="display: none;">
+	<img id="calImg" src="images/calendarIcon.png" alt="Popup" class="trigger">
+</div>
 
     
     
 </head>
 <body>
     <div style="width: 100%; height: 650px; border: 1px solid #ccc; margin-top: 15px;">
-		<p align="center"><img align="middle" src="msd.jpg" alt="some_text"></p>
-<!--		<div id="testdiv" align="center">
+<!--		<p align="center"><img align="middle" src="msd.jpg" alt="some_text"></p>
+		<div id="testdiv" align="center">
 			<label> Start time : </label>
 			<input type="text" style="width: 70px;" id="txtStartTime" value=""  class="mytimepicker" />
 			<br>
