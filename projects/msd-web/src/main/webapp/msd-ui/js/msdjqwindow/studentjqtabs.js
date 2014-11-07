@@ -55,8 +55,6 @@ function showStudentInformation(data) {
 	$('#btnSaveStudent').jqxButton('disabled', true);
 
 	setCurrentFunction("SEARCH");
-	createStudentRegisterClassPanel();	
-	getStudentRegisterClass(data);
 	
 	bindingStudentMedicalPanel(data);
 	disableEditMedicalInfo(true);
@@ -81,17 +79,6 @@ function createStudentPanel() {
 
 	createStudentDetailPanel();
 	$('#studentDetailDiv').raaccordion();
-
-	// student register class information
-	var cdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'studentClassDetailDiv'});
-	var ctdiv = $('<div class="title">Student Register Class Information </div>').attr({id:'studentClassDetailTitleDiv'});
-	var ccdiv = $('<div class="content" style="background:#e0e9f5;"></div>').attr({id:'studentClassDetailContentDiv'});
-	
-	$('#studentMainPanel').append(cdiv);
-	$('#studentClassDetailDiv').append(ctdiv);
-	$('#studentClassDetailDiv').append(ccdiv);
-	
-	$('#studentClassDetailDiv').raaccordion();
 
 	// student medical information
 	var mdiv = $('<div class="accord" style="margin-left:10px;margin-right:10px;margin-top:10px;" />').attr({id:'studentMedicalDetailDiv'});
@@ -855,18 +842,18 @@ function showClassDetail(data) {
 	    $('#studentMainPanel').append('<div id="msdclassdetailpopupdiv" />');
 
 		$('#msdclassdetailpopupdiv').append('<div >Class Detail Information</div> <div id="studentclassdetaildiv"></div>');
-		$('#msdclassdetailpopupdiv').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: '500px', width: '450px', theme: theme, position: { x: 350, y: 150}});
+		$('#msdclassdetailpopupdiv').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: 500, width: 500, theme: theme, position: { x: 350, y: 150}});
 	
-		var cdiv = $('<div style = "width:410px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentclassInformationdiv'});
+		var cdiv = $('<div style = "width:480px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentclassInformationdiv'});
 		$('#studentclassdetaildiv').append(cdiv);
 	
-		var odiv = $('<div style = "width:410px; margin-left:10px; margin-top:30px; border:0px solid;"/>').attr({id:'classOtherInformationdiv'});
+		var odiv = $('<div style = "width:480px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'classOtherInformationdiv'});
 		$('#studentclassdetaildiv').append(odiv);
 	
-		var sdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'studentClassSchedularInformationdiv'});
+		var sdiv = $('<div style = "width:480px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'studentClassSchedularInformationdiv'});
 		$('#studentclassdetaildiv').append(sdiv);
 
-		var fdiv = $('<div style = "width:410px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'studentClassFeeInformationdiv'});
+		var fdiv = $('<div style = "width:480px; margin-top: 10px; margin-left:10px; border:0px solid;"/>').attr({id:'studentClassFeeInformationdiv'});
 		$('#studentclassdetaildiv').append(fdiv);
 	}
 	
@@ -884,14 +871,14 @@ function showClassDetail(data) {
 	$('#txtStudentClassLocation').jqxInput('val', data.location);
 	
 	if (null != data.classStartTime) {
-		$('#txtStudentClassStartTime').val(data.classStartTime);
+		$('#txtStudentClassStartTime').jqxInput('val', getFormattedDateToMMDDYYYY(data.classStartTime));
 	}
-	$('#txtStudentClassStartTime').jqxDateTimeInput({ disabled: true });
+	$('#txtStudentClassStartTime').jqxInput({ disabled: true });
 	
 	if (null != data.classEndTime) {
-		$('#txtStudentClassEndTime').val(data.classEndTime);
+		$('#txtStudentClassEndTime').jqxInput('val', getFormattedDateToMMDDYYYY(data.classEndTime));
 	}
-	$('#txtStudentClassEndTime').jqxDateTimeInput({ disabled: true });
+	$('#txtStudentClassEndTime').jqxInput({ disabled: true });
 
 	if (null != data.classStatus) {
 		if ("ACTIVE" == data.classStatus) {
@@ -907,10 +894,19 @@ function showClassDetail(data) {
 	}
 	
 	$('#txtTotalStudent').jqxInput({disabled:true });
-	$('#txtTotalStudent').jqxInput('val', data.totalNumberStudent);
+	if (null != data && null != data.totalNumberStudent)
+		$('#txtTotalStudent').jqxInput('val', data.totalNumberStudent);
+	else 
+		$('#txtTotalStudent').jqxInput('val', "0");
+	
+	$('#txtClassFee').jqxInput({disabled:true });
+	if (null != data && null != data.totalClassFee)
+		$('#txtClassFee').jqxInput('val', '$ ' + data.totalClassFee);
+	else 
+		$('#txtClassFee').jqxInput('val', '$ 0');
 
-	ajaxGetClassSchedularByClassId(data.id,getClassDetailSchedularByClassId);
-	ajaxGetClassFeeByClassId(data.id, getClassDetailFeeByClassId);
+	showClassDetailSchedular(data.classSchedularList);
+	showClassDetailFee(data.classFeeList);
 
 }
 
@@ -925,35 +921,33 @@ function createClassDetailDiv() {
 	$('#studentclassInformationdiv').append('<label style="margin-left:10px;">Location : </label>');
 	var location = $('<input/>').attr({type:'text', id:'txtStudentClassLocation'});
 	$('#studentclassInformationdiv').append(location);
-	$('#txtStudentClassLocation').jqxInput({placeHolder: "Class Location", height: 20, width:130, minLength: 1, theme: getTheme(), source:ClassLocation });
+	$('#txtStudentClassLocation').jqxInput({placeHolder: "Class Location", height: 20, width:200, minLength: 1, theme: getTheme() });
 	$('#studentclassInformationdiv').append('<br/>');
 	
-	$('#studentclassInformationdiv').append('<label style="float:left; margin-top:10px;"> Start : </label>');
-	var stime = $('<div style="float: left; margin-top:10px; margin-left:10px;"/>').attr({id:'txtStudentClassStartTime'});
+	$('#studentclassInformationdiv').append('<label style="margin-top:10px;"> Start : </label>');
+	var stime = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtStudentClassStartTime'});
 	$('#studentclassInformationdiv').append(stime);
-	$('#txtStudentClassStartTime').jqxDateTimeInput({width: '100px', height: '20px', formatString: 'd', theme: getTheme()});
-	
-	$('#studentclassInformationdiv').append('<label style="float:left; margin-top:10px; margin-left:10px;"> End: </label>');
-	var etime = $('<div style="float:left; margin-top:10px; margin-left:10px;" />').attr({id:'txtStudentClassEndTime'});
+	$('#txtStudentClassStartTime').jqxInput({placeHolder: "Start date", width: 100, height: 20, minLength: 1, theme: getTheme() });
+
+	$('#studentclassInformationdiv').append('<label style="margin-top:10px; margin-left:10px;"> End: </label>');
+	var etime = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtStudentClassEndTime'});
 	$('#studentclassInformationdiv').append(etime);
-	$('#txtStudentClassEndTime').jqxDateTimeInput({width: '100px', height: '20px', formatString: 'd', theme: getTheme()});
+	$('#txtStudentClassEndTime').jqxInput({placeHolder:"End date", width: 100, height: 20, minLength: 1, theme: getTheme() });
 	
-	var statusLabel = $('<label id="txtStudentClassStatus" name="txtStudentClassStatus" style="float:left; margin-top:10px; margin-left:10px;" />');
+	var statusLabel = $('<label id="txtStudentClassStatus" name="txtStudentClassStatus" style="margin-top:10px; margin-left:10px;" />');
 	$('#studentclassInformationdiv').append(statusLabel);
 
-	$('#studentclassInformationdiv').append('<br/>');
-	
 	$('#classOtherInformationdiv').empty();
 
 	$('#classOtherInformationdiv').append('<label> Total Student : </label>');
 	var ctotalstudent = $('<input/>').attr({type:'text', id:'txtTotalStudent'});
 	$('#classOtherInformationdiv').append(ctotalstudent);
-	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:20, minLength: 1, theme: getTheme() });	
+	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
 	
 	$('#classOtherInformationdiv').append('<label> Total Class Fee : </label>');
 	var cClassFee = $('<input/>').attr({type:'text', id:'txtClassFee'});
 	$('#classOtherInformationdiv').append(cClassFee);
-	$('#txtClassFee').jqxInput({placeHolder: "$000", rtl: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
+	$('#txtClassFee').jqxInput({placeHolder: "$0", rtl: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
 	
 }
 
@@ -1484,34 +1478,6 @@ function getClassDetailByIdInStudentTab(response, request, settings){
 		alert("error to get class ... ");
 	}
 }
-
-function getClassDetailSchedularByClassId(response) {
-	if (404 == response.code) {
-		console.log(" Can't find class schedular by id : " + id);
-		$('#studentClassSchedularInformationdiv').empty();				
-	} else if (302 == response.code) {
-		var data = $.parseJSON(response.result);
-		console.log(" get class schedular by id ");
-		showClassDetailSchedular(data);
-	} else {
-		alert('error');
-	}
-}
-
-function getClassDetailFeeByClassId(response) {
-	if (404 == response.code) {
-		console.log(" Can't find class fee by id : " + id);
-		$('#studentClassFeeInformationdiv').empty();				
-	} else if (302 == response.code) {
-		var data = $.parseJSON(response.result);
-		console.log(" get class fee by id ");
-		showClassDetailFee(data);
-	} else {
-		alert('error');
-	}
-}
-
-
 /*
 function setNonRegisterClassList(nrclist) {
 	nonRegisterClassList = nrclist;
