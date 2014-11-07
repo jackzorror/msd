@@ -1,8 +1,11 @@
 package com.morningstardance.app.msdclass;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.morningstardance.domain.entity.MSDClass;
+import com.morningstardance.domain.entity.MSDClassFee;
+import com.morningstardance.domain.entity.MSDClassNonClassDate;
 import com.morningstardance.domain.entity.MSDClassSchedular;
 
 public interface MSDClassAssembler {
@@ -17,6 +20,6 @@ public interface MSDClassAssembler {
 	MSDClassDto createDtoFromEntity(MSDClass msdclass);
 
 	MSDClassDetailDto createClassDetailFromEntity(MSDClass msdclass,
-			List<MSDClassSchedular> msdclassschedulars, int totalStudentCount);
+			List<MSDClassSchedular> msdclassschedulars, List<MSDClassFee> msdclassfees, List<MSDClassNonClassDate> msdnonclassdates, int totalStudentCount, BigDecimal totalClassFee, int totalClassCount);
 
 }

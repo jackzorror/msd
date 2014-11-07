@@ -8,5 +8,4 @@ import com.morningstardance.domain.entity.MSDClassSchedular;
 
 public interface MSDClassSchedularJPARepository extends JpaRepository<MSDClassSchedular, Long> {
 	List<MSDClassSchedular> findByMsdClassId(int msdClassId);
-
 }

@@ -61,6 +61,7 @@ function ajaxGetClassDetailById(classId, fName) {
 		url: "../msd-app/rs/msdclass/" + classId,
 		dataType: "json",
 		contentType: "application/json",
+		data:{"type":"DETAIL"}
 	});
 	
 	ajaxcall.done(fName);
@@ -404,3 +405,29 @@ function ajaxDeleteCcompetitionFee(id, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxAddNewNonClassDate(nonClassDate, fName) {
+	var ajaxcall = $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdclassnonclassdate",
+		data: JSON.stringify(nonClassDate),
+		contentType: "application/json",
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxDeleteNonClassDate(id, fName) {
+	console.log(" delete non class date ");
+	
+	var ajaxcall =  $.ajax({
+		type: "DELETE",
+		dataType: "json",
+		url: "../msd-app/rs/msdclassnonclassdate/" + id
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}

@@ -855,7 +855,7 @@ function showClassDetail(data) {
 	    $('#studentMainPanel').append('<div id="msdclassdetailpopupdiv" />');
 
 		$('#msdclassdetailpopupdiv').append('<div >Class Detail Information</div> <div id="studentclassdetaildiv"></div>');
-		$('#msdclassdetailpopupdiv').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: '500px', width: '450px', theme: theme, position: { x: 350, y: 300}});
+		$('#msdclassdetailpopupdiv').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: '500px', width: '450px', theme: theme, position: { x: 350, y: 150}});
 	
 		var cdiv = $('<div style = "width:410px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentclassInformationdiv'});
 		$('#studentclassdetaildiv').append(cdiv);
@@ -948,12 +948,12 @@ function createClassDetailDiv() {
 	$('#classOtherInformationdiv').append('<label> Total Student : </label>');
 	var ctotalstudent = $('<input/>').attr({type:'text', id:'txtTotalStudent'});
 	$('#classOtherInformationdiv').append(ctotalstudent);
-	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:80, minLength: 1, theme: getTheme() });	
+	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:20, minLength: 1, theme: getTheme() });	
 	
 	$('#classOtherInformationdiv').append('<label> Total Class Fee : </label>');
 	var cClassFee = $('<input/>').attr({type:'text', id:'txtClassFee'});
 	$('#classOtherInformationdiv').append(cClassFee);
-	$('#txtClassFee').jqxInput({placeHolder: "$000", rtl: true, height: 20, width:80, minLength: 1, theme: getTheme() });	
+	$('#txtClassFee').jqxInput({placeHolder: "$000", rtl: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
 	
 }
 

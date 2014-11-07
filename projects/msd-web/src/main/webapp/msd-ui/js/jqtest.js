@@ -6,13 +6,14 @@ function runjqtestdiv() {
 	$('#classInformationdiv').append('<label style="margin-top:10px;"> Pickup Non Class Date : </label>');
 	var cname = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtdatepicker', size:50});
 	$('#classInformationdiv').append(cname);
-	$('#txtdatepicker').datepick({multiSelect: 10, showTrigger: '#calImg'});
+	$('#txtdatepicker').datepick({pickerClass: 'demo', 
+    renderer: $.datepick.themeRollerRenderer, showTrigger: '#calImg'}); 
+         
 
 
 
 	$('#classInformationdiv').append('<input name="date2" id="date2" />');
 	$('#date2').datepick({multiSelect: 2, showTrigger: '#calImg'})
-	$('#txtdatepicker').datepick('disable');
 	var date = $('#txtdatepicker').datepick('setDate','10/24/2013','10/25/2013');
 	console.log("select " + date);
 /*

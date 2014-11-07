@@ -1,5 +1,8 @@
 package com.morningstardance.app.msdclassfee;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.domain.entity.MSDClassFee;
@@ -17,6 +20,17 @@ public class MSDClassFeeAssemblerImpl implements MSDClassFeeAssembler {
 		dto.setMsdCostTypeId(entity.getMsdCostType().getId().intValue());
 		
 		return dto;
+	}
+
+	@Override
+	public List<MSDClassFeeDto> createDtoFromEntity(List<MSDClassFee> msdclassfees) {
+		if (null == msdclassfees || msdclassfees.size() == 0) return null;
+		
+		List<MSDClassFeeDto> dtos = new ArrayList<MSDClassFeeDto>();
+		for (MSDClassFee cf : msdclassfees) {
+			dtos.add(createDtoFromEntity(cf));
+		}
+		return dtos;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.morningstardance.app.msdclass;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -9,9 +10,12 @@ import org.apache.commons.lang.StringUtils;
 import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
+import com.morningstardance.app.msdclassfee.MSDClassFeeAssembler;
 import com.morningstardance.app.msdclassschedular.MSDClassSchedularAssembler;
 import com.morningstardance.app.util.WeekdayEnum;
 import com.morningstardance.domain.entity.MSDClass;
+import com.morningstardance.domain.entity.MSDClassFee;
+import com.morningstardance.domain.entity.MSDClassNonClassDate;
 import com.morningstardance.domain.entity.MSDClassSchedular;
 import com.morningstardance.domain.entity.MSDClassStatus;
 
@@ -23,6 +27,9 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
     
     @Resource
     private MSDClassSchedularAssembler msdClassSchedularAssembler;
+    
+    @Resource
+    private MSDClassFeeAssembler msdClassFeeAssembler;
     
 /*
 	@Override
@@ -103,19 +110,32 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 
 	@Override
 	public MSDClassDetailDto createClassDetailFromEntity(MSDClass msdclass,
-			List<MSDClassSchedular> msdclassschedulars, int totalStudentCount) {
+			List<MSDClassSchedular> msdclassschedulars, List<MSDClassFee> msdclassfees, List<MSDClassNonClassDate> msdnonclassdates, int totalStudentCount, BigDecimal totalClassFee, int totalClassCount) {
 		MSDClassDetailDto dto = new MSDClassDetailDto();
 		dto.setId(msdclass.getId().intValue());
 		dto.setName(msdclass.getName());
 		dto.setLocation(msdclass.getLocation());
-		dto.setClassStatus(msdclass.getClassStatus());
+
+		Date now = new Date(System.currentTimeMillis());
+		if(now.before(msdclass.getClassStartTime())) {
+			dto.setClassStatus(MSDClassStatus.INACTIVE.name());
+		} else if (now.after(msdclass.getClassStartTime()) && now.before(msdclass.getClassEndTime())) {
+			dto.setClassStatus(MSDClassStatus.ACTIVE.name());
+		} else if (now.after(msdclass.getClassEndTime())) {
+			dto.setClassStatus(MSDClassStatus.EXPIRED.name());
+		}
+		
 		dto.setClassStartTime(msdclass.getClassStartTime());
 		dto.setClassEndTime(msdclass.getClassEndTime());
 		dto.setIsactive((byte)1 == msdclass.getIsActive());
-		
+
 		dto.setClassSchedularList(msdClassSchedularAssembler.createDtoFromEntity(msdclassschedulars));
+		dto.setClassFeeList(msdClassFeeAssembler.createDtoFromEntity(msdclassfees));
+		dto.setNonClassDateList(msdnonclassdates);
 		
 		dto.setTotalNumberStudent(totalStudentCount);
+		dto.setTotalClassFee(totalClassFee);
+		dto.setTotalClassCount(totalClassCount);
 		
 		return dto;
 	}

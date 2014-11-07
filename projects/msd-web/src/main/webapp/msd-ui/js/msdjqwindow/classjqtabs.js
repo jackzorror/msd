@@ -78,26 +78,14 @@ function handleClearClassClick() {
 function handleEditClassClick() {
 	if ("SEARCH" == getCurrentFunctionInClassTab()) {
 		if ("Edit" == $('#btnEditClassInformation').val()) {
-			$('#txtClassName').jqxInput({disabled:false });
-			$('#txtLocation').jqxInput({disabled:false });
+			enableEditClassInformation();
 			$('#txtClassName').focus();
 			$('#btnEditClassInformation').val("Cancel");
-			$('#btnSaveClassInformation').jqxButton('disabled', false);
-			$('#divStartTime').jqxDateTimeInput({ disabled: false });
-			$('#divEndTime').jqxDateTimeInput({ disabled: false });
-			$('#btnAddNonClassDate').jqxButton('disabled', false);
-			$('#btnDeleteNonClassDate').jqxButton('disabled', false);
 		} else if ("Cancel" == $('#btnEditClassInformation').val()) {
 			console.log (" cancel edit class information ... ");
 			cancelUpdateClassInformation();
-			$('#txtClassName').jqxInput({disabled:true });
-			$('#txtLocation').jqxInput({disabled:true });
-			$('#divStartTime').jqxDateTimeInput({ disabled: true });
-			$('#divEndTime').jqxDateTimeInput({ disabled: true });
+			disableEditClassInformation();
 			$('#btnEditClassInformation').val("Edit");
-			$('#btnSaveClassInformation').jqxButton('disabled', true);
-			$('#btnAddNonClassDate').jqxButton('disabled', true);
-			$('#btnDeleteNonClassDate').jqxButton('disabled', true);
 		}
 	} else if ("ADD" == getCurrentFunctionInClassTab()) {
 		$('#btnClearClass').click();
@@ -111,7 +99,14 @@ function handleSaveClassClick() {
 	var clocation  = $('#txtLocation').val();
 	var sdate = $('#divStartTime').jqxDateTimeInput('value');
 	var edate = $('#divEndTime').jqxDateTimeInput('value');
-	console.log(" new class : " + cname + " -> " + clocation + " time : " + sdate  + " ~ " + edate);
+	var ncdate = $("#ddlNonClassDateList").jqxDropDownList('getItems'); 
+	var ncdatestr = "";
+	for (i in ncdate) {
+		if (null != ncdate[i] && ncdate[i].value.length > 0) {
+			ncdatestr += ncdate[i].value + ",";
+		}
+	}	
+	console.log(" new class : " + cname + " -> " + clocation + " time : " + sdate  + " ~ " + edate + " - " + ncdatestr);
 	ajaxSaveClassInformation(id, cname, clocation, sdate, edate, isActive, saveClassInformation);
 }
 
@@ -121,36 +116,22 @@ function handleAddClassClick() {
 	setCurrentFunctionInClassTab("ADD");
 	showClassInformation(null);
 	setCurrentClassInClassTab(null);
-
+	enableEditClassInformation();
 	$('#ddlClassSearchName').jqxDropDownList({selectedIndex: -1});
-	$('#classCommondiv :text').prop("disabled", false);
 	$('#txtClassName').focus();
 	$('#btnEditClassInformation').val("Cancel");
-	$('#btnSaveClassInformation').jqxButton('disabled', false);
-	$('#divStartTime').jqxDateTimeInput({ disabled: false });
-	$('#divEndTime').jqxDateTimeInput({ disabled: false });
 
-	$('#txtTotalStudent').jqxInput('val', "0");
-	$('#txtTotalClassFee').jqxInput('val', "$0");
-	
+	initClassLabelInformation();
 }
 
 function showClassInformation(data) {
 
 	createClassInformationDiv();
-	$('#txtClassName').jqxInput({disabled:true });
+
 	$('#txtClassName').jqxInput('val', null != data ? data.name : "");
-	
-	$('#txtLocation').jqxInput({disabled:true });
 	$('#txtLocation').jqxInput('val', null != data ? data.location : "");
-	
 	$('#divStartTime').val(null != data && null != data.classStartTime ? data.classStartTime : null);
-
-	$('#divStartTime').jqxDateTimeInput({ disabled: true });
-	
 	$('#divEndTime').val(null != data && null != data.classEndTime ? data.classEndTime : null);
-
-	$('#divEndTime').jqxDateTimeInput({ disabled: true });
 
 	if (null != data && null != data.classStatus) {
 		if ("ACTIVE" == data.classStatus) {
@@ -168,23 +149,30 @@ function showClassInformation(data) {
 		$('#labelClassStatus').css("color", "grey");
 	}
 	
-	if (null != data && null != data.totalStudent)
-		$('#txtTotalStudent').jqxInput('val', data.totalStudent);
+	if (null != data && null != data.totalNumberStudent)
+		$('#txtTotalStudent').jqxInput('val', data.totalNumberStudent);
 	else
 		$('#txtTotalStudent').jqxInput('val', "0");
 
 	if (null != data && null != data.totalClassFee)
-		$('#txtTotalClassFee').jqxInput('val', data.totalClassFee);
+		$('#txtTotalClassFee').jqxInput('val', '$ ' + data.totalClassFee);
 	else
 		$('#txtTotalClassFee').jqxInput('val', "$0");
 	
-	$('#btnSaveClassInformation').jqxButton({ disabled:true });
-
-	$('#btnAddNonClassDate').jqxButton('disabled', true);
-	$('#btnDeleteNonClassDate').jqxButton('disabled', true);
+	if (null != data && null != data.totalClassCount)
+		$('#txtTotalClassTime').jqxInput('val', data.totalClassCount);
+	else
+		$('#txtTotalClassTime').jqxInput('val', "0");
+	
+	disableEditClassInformation();
 	if (null != data) {
-		ajaxGetClassSchedularByClassId(data.id, getClassSchedularByClassId);
-		ajaxGetClassFeeByClassId(data.id, getClassFeeByClassId);
+		var nonClassDateSource = getNonClassDateSource(data);
+		$('#ddlNonClassDateList').jqxDropDownList({source:nonClassDateSource, displayMember: "text", valueMember: "value"});
+		if (nonClassDateSource.length > 0) 
+			$('#ddlNonClassDateList').jqxDropDownList({selectedIndex:0});
+
+		showClassSchedularInformation(data.classSchedularList);
+		showClassFeeInformation(data.classFeeList)
 	}
 	
 }
@@ -252,7 +240,7 @@ function createClassInformationDiv() {
 	$('#tmpdiv').append('<label style="float:left; margin-top:5px; margin-left:10px">Non Class Date : </label>');
 	var ddlnoclassdate = $('<div style="float:left; margin-top:0px; margin-left:10px"/>').attr({id:'ddlNonClassDateList'});
 	$('#tmpdiv').append(ddlnoclassdate);
-	$('#ddlNonClassDateList').jqxDropDownList({placeHolder: "", height: 20, width: 100, dropDownHeight: 100, theme: getTheme()});
+	$('#ddlNonClassDateList').jqxDropDownList({placeHolder: "", height: 20, width: 110, dropDownHeight: 100, theme: getTheme()});
 
 	var toTheme = function (className) {
 		if (getTheme() == "") return className;
@@ -269,7 +257,31 @@ function createClassInformationDiv() {
    	addButton.click(function () {
    		if (!addButton.jqxButton('disabled')) {
    			console.log("add non class date");
+			createAddNonClassDateDiv();
+
+			var offset = $("#classCommondiv").offset();
+			$("#addNonClassDatePopupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 130, y: parseInt(offset.top) - 20 } });
+            $("#addNonClassDatePopupWindow").jqxWindow('open');
+			
    		}
+        $('#btnCancelAddNonClassDate').on('click', function () {
+			console.log(" cancel add Non class Date ...");
+			$("#addNonClassDatePopupWindow").jqxWindow('hide');
+        });
+        $('#btnAddNonClassDateValue').on('click', function () {
+			console.log(" add new non class Date ...");
+			var newdate = $('#divNewNonClassDate').jqxDateTimeInput('value');
+			var startdate = $('#divStartTime').jqxDateTimeInput('value');
+			var enddate = $('#divEndTime').jqxDateTimeInput('value');
+			if (newdate < startdate || newdate > enddate)
+				alert("Please select between class start date and end date");
+			else {
+				$("#addNonClassDatePopupWindow").jqxWindow('hide');
+				var cid = getCurrentClassInClassTab().id;
+				var ncdate = {"id":0, "msdClassId":cid, "nonClassDate":newdate};
+				ajaxAddNewNonClassDate(ncdate, addNewNonClassDate);
+			}
+        });
    	});
 
    	
@@ -282,17 +294,15 @@ function createClassInformationDiv() {
    	deleteButton.click(function () {
    		if (!deleteButton.jqxButton('disabled')) {
    			console.log("delete selected non class date");
+   			var item = $("#ddlNonClassDateList").jqxDropDownList('getSelectedItem'); 
+   			if (null == item) 
+			    alert("please select date from list ");
+			else {
+				ajaxDeleteNonClassDate(item.value, deleteNonClassDate);
+			}
    		}
    	});
 
-
-/*	
-	var label = $('<label id="statuslabel" name="statuslabel" style="float:left; margin-top:5px; margin-left:20px;">Class Status : </label>');
-	$('#tmpdiv').append(label);
-
-	var statusLabel = $('<label id="labelClassStatus" name="labelClassStatus" style="float:left; margin-top:5px; margin-left:20px;" />');
-	$('#tmpdiv').append(statusLabel);
-*/
 	var tmpdiv = $('<div class="InnerDiv" style = "float:left; margin-top:5px; border:0px solid;"/>');
 	$('#classCommondiv').append(tmpdiv);
 
@@ -317,6 +327,14 @@ function createClassInformationDiv() {
 	var statusLabel = $('<label id="labelClassStatus" name="labelClassStatus" style="margin-top:0px; margin-left:10px;" />');
 	tmpdiv.append(statusLabel);
 
+	var pdiv = $('<div/>').attr({id:'addNonClassDatePopupWindow'});
+	$('#classCommondiv').append(pdiv);
+	$('#addNonClassDatePopupWindow').append('<div >Add Non Class Date</div> <div style="height:70px; width:300px;" id="addNonClassDatediv"></div>');
+    var offset = $("#classCommondiv").offset();
+    $("#addNonClassDatePopupWindow").jqxWindow({
+    	width: 300, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    });
+
 	$('#classCommondiv').append('<br />');
 
 }
@@ -337,17 +355,13 @@ function getClassDetailById(response, request, settings) {
 function cancelUpdateClassInformation() {
 	var data = getCurrentClassInClassTab();
 	$('#txtClassName').jqxInput('val', data.name);
-	$('#txtClassName').jqxInput({disabled:true});
 	$('#txtLocation').jqxInput('val', data.location);
-	$('#txtLocation').jqxInput({disabled:true});
 	if (null != data.classStartTime) {
 		$('#divStartTime').val(data.classStartTime);
 	}
-	$('#divStartTime').jqxDateTimeInput({ disabled: true });
 	if (null != data.classEndTime) {
 		$('#divEndTime').val(data.classEndTime);
 	}
-	$('#divEndTime').jqxDateTimeInput({ disabled: true });
 
 	if (null != data.classStatus) {
 		if ("ACTIVE" == data.classStatus) {
@@ -361,6 +375,11 @@ function cancelUpdateClassInformation() {
 			$('#labelClassStatus').css("color", "red");
 		}
 	}
+
+	var nonClassDateSource = getNonClassDateSource(data);
+	$('#ddlNonClassDateList').jqxDropDownList({source:nonClassDateSource});
+	if (nonClassDateSource.length > 0) 
+		$('#ddlNonClassDateList').jqxDropDownList({selectedIndex:0});
 }
 
 function showClassSchedularInformation(data) {
@@ -667,6 +686,7 @@ function deleteClassSchedular(response, request, settings) {
 	} else {
 		alert("error to delete class schedule ... ");
 	}
+	$('#btnSearchClass').click();
 }
 
 function deleteClassFee(response, request, settings) {
@@ -677,6 +697,18 @@ function deleteClassFee(response, request, settings) {
 	} else {
 		alert("error to delete class fee ... ");
 	}
+	$('#btnSearchClass').click();
+}
+
+function deleteNonClassDate(response, request, settings) {
+	if (404 == response.code) {
+		alert(" Can't delete non class date ... ");
+	} else if (302 == response.code) {
+		console.log(" successfully delete non class date ... ");
+	} else {
+		alert("error to delete non class date ... ");
+	}
+	$('#btnSearchClass').click();
 }
 
 function createAddClassSchedularDiv() {
@@ -758,6 +790,27 @@ function createAddClassFeeDiv() {
 	$('#btnCancelAddFee').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
 
+function createAddNonClassDateDiv() {
+	$('#addNonClassDatediv').empty();
+
+	var atdiv = $('<div style="margin-top:5px; border:0px solid;" />');
+	$('#addNonClassDatediv').append(atdiv);
+	atdiv.append('<label style="float:left; margin-top:5px;"> Select Date : </label>');
+	var stime = $('<div style="float:left; margin-top:0px; margin-left:10px;"/>').attr({id:'divNewNonClassDate'});
+	atdiv.append(stime);
+	$('#divNewNonClassDate').jqxDateTimeInput({width: '100px', height: '20px', formatString: 'd', theme: getTheme()});
+
+	// action button
+	var atdiv = $('<div style="float:right; margin-top:10px; border:0px solid;" />');
+	$('#addNonClassDatediv').append(atdiv);
+	var btnadd = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnAddNonClassDateValue', value:'Add'});
+	atdiv.append(btnadd);
+	$('#btnAddNonClassDateValue').jqxButton({ width: '60', height: 20, theme: getTheme() });
+	var btncancel = $('<input style="margin-right:0px;"/>').attr({type:'button', id:'btnCancelAddNonClassDate', value:'Cancel'});
+	atdiv.append(btncancel);
+	$('#btnCancelAddNonClassDate').jqxButton({ width: '60', height: 20, theme: getTheme() });
+}
+
 function addNewSchedulars(response, request, settings) {
 	if (500 == response.code) {
 		alert("Internal Error, Please check service. ");
@@ -766,6 +819,7 @@ function addNewSchedulars(response, request, settings) {
 	} else {
 		alert('error');
 	}
+	$('#btnSearchClass').click();
 }
 
 function addNewFee(response, request, settings) {
@@ -776,34 +830,18 @@ function addNewFee(response, request, settings) {
 	} else {
 		alert('error');
 	}
+	$('#btnSearchClass').click();
 }
 
-function getClassSchedularByClassId(response, request, settings) {
-	console.log(" in get class schedular by id ... ");
-	if (404 == response.code) {
-		console.log(" Can't find class schedular by id : " + getCurrentClassInClassTab().id);
-		showClassSchedularInformation(null);
+function addNewNonClassDate(response, request, settings) {
+	if (500 == response.code) {
+		alert("Internal Error, Please check service. ");
 	} else if (302 == response.code) {
-		var data = $.parseJSON(response.result);
-		console.log(" get class schedular by id ");
-		showClassSchedularInformation(data);
+		console.log(" add non class date successfully ... ");
 	} else {
 		alert('error');
 	}
-}
-
-function getClassFeeByClassId(response, request, settings) {
-	console.log(" in get class fee by id ... ");
-	if (404 == response.code) {
-		console.log(" Can't find class fee by id : " + getCurrentClassInClassTab().id);
-		showClassFeeInformation(null);
-	} else if (302 == response.code) {
-		var data = $.parseJSON(response.result);
-		console.log(" get class fee by id ");
-		showClassFeeInformation(data);
-	} else {
-		alert('error');
-	}
+	$('#btnSearchClass').click();
 }
 
 function saveClassInformation(response, request, settings) {
@@ -838,6 +876,60 @@ function loadClassNameDropDownListDataSource(data) {
 			$('#btnSearchClass').click();
 		}
 } 
+
+function initClassLabelInformation() {
+	$('#txtTotalStudent').jqxInput('val', "0");
+	$('#txtTotalClassFee').jqxInput('val', "$0");
+	$('#txtTotalClassTime').jqxInput('val', "0");
+	$('#labelClassStatus').text('N/A');
+}
+
+function enableEditClassInformation() {
+	setupEditClassInformation(false);
+}
+
+function disableEditClassInformation() {
+	setupEditClassInformation(true)
+}
+
+function setupEditClassInformation(edit) {
+	$('#txtClassName').jqxInput({disabled:edit });
+	$('#txtLocation').jqxInput({disabled:edit });
+	$('#divStartTime').jqxDateTimeInput({ disabled: edit });
+	$('#divEndTime').jqxDateTimeInput({ disabled: edit });
+	$('#btnSaveClassInformation').jqxButton('disabled', edit);
+//	$('#btnAddNonClassDate').jqxButton('disabled', edit);
+//	$('#btnDeleteNonClassDate').jqxButton('disabled', edit);
+}
+
+function getNonClassDateSource(cdata) {
+	var nonClassDateList = [];
+	var  data = cdata.nonClassDateList;
+	if (null != cdata || null != data || data.length > 0) {
+		for (index in data) {
+			nonClassDateList.push({text:getFormattedDateToMMDDYYYY(data[index].nonClassDate), value:data[index].id});
+		}
+	}
+	return nonClassDateList;
+}
+
+function showClassStatusLabel(data) {
+	if (null != data && null != data.classStatus) {
+		if ("ACTIVE" == data.classStatus) {
+			$('#labelClassStatus').text(data.classStatus);
+			$('#labelClassStatus').css("color", "green");
+		} else if ("INACTIVE" == data.classStatus) {
+			$('#labelClassStatus').text(data.classStatus);
+			$('#labelClassStatus').css("color", "blue");
+		} else {
+			$('#labelClassStatus').text(data.classStatus);
+			$('#labelClassStatus').css("color", "red");
+		}
+	} else {
+		$('#labelClassStatus').text("NA");
+		$('#labelClassStatus').css("color", "grey");
+	}
+}
 
 var currentFunctionInClassTab;
 function setCurrentFunctionInClassTab(status) {
