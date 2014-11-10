@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.morningstardance.app.msdstudent.MSDStudentClassDto;
-import com.morningstardance.app.msdstudent.MSDStudentFacade;
 import com.morningstardance.app.msdstudentclass.MSDStudentClassFacade;
 import com.morningstardance.web.ResponseDto;
 
@@ -21,7 +20,6 @@ public class MSDStudentClassController {
 	@Resource(name="msdStudentClassFacade")
 	protected MSDStudentClassFacade msdStudentClassFacade;
 	
-
     @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto studentRegisterClassDfltVer(@RequestBody MSDStudentClassDto studentClassDto) {
     	return studentRegisterClassVer1(studentClassDto);

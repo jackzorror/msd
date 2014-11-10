@@ -182,7 +182,7 @@ function createCompetitionInformationDiv() {
 
 	$('#competitionMainPanel').empty();
 
-	var ccdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid;"/>').attr({id:'competitionCommondiv'});
+	var ccdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid; height:150px;"/>').attr({id:'competitionCommondiv'});
 	$('#competitionMainPanel').append(ccdiv);
 	
 	var ccdiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'competitionFeeInformationdiv'});
@@ -196,58 +196,77 @@ function createCompetitionInformationDiv() {
 	var tmpdiv = $('<div class="InnerDiv" style = "margin-top:0px; border:0px solid;"/>');
 	$('#competitionCommondiv').append(tmpdiv);
 
-	var ldiv = $('<div dock="left" style="margin-top:2px; border:0px solid  #ccc; width:500px;"/>');
-	var btndiv = $('<div dock="right" style="margin-top:0px; border:0px solid  #ccc; height:20px;"/>');
+	var ldiv = $('<div dock="left" style="border:0px solid; width:500px;"/>');
+	var btndiv = $('<div dock="right" style="border:0px solid;"/>');
 	tmpdiv.append(ldiv);
 	tmpdiv.append(btndiv);
 	
-	ldiv.append('<label style="margin-left:10px; margin-top:0px;"><b>Competition Information ... </b></label>');
+	ldiv.append('<label style="margin-top:5; margin-left:0px;"><b>Competition Information ... </b></label>');
 
-	var savebtn = $('<input style="float:right; margin-top:0px;margin-right:5px"/>').attr({type:'button', id:'btnSaveCompetitionInformation', value:'Save' });
+	var savebtn = $('<input style="float:right; margin-top:3px;margin-right:5px"/>').attr({type:'button', id:'btnSaveCompetitionInformation', value:'Save' });
 	btndiv.append(savebtn);
-	$('#btnSaveCompetitionInformation').jqxButton({ width: '100', height: 20, theme: getTheme() });
+	$('#btnSaveCompetitionInformation').jqxButton({ width: 60, height: 20, theme: getTheme() });
 
-	var editbtn = $('<input style="float:right; margin-top:0px; margin-right:10px;"/>').attr({type:'button', id:'btnEditCompetitionInformation', value:'Edit' });
+	var editbtn = $('<input style="float:right; margin-top:3px; margin-right:10px;"/>').attr({type:'button', id:'btnEditCompetitionInformation', value:'Edit' });
 	btndiv.append(editbtn);
-	$('#btnEditCompetitionInformation').jqxButton({ width: '100', height: 20, theme: getTheme() });
+	$('#btnEditCompetitionInformation').jqxButton({ width: 60, height: 20, theme: getTheme() });
 
-	tmpdiv.jqxDockPanel({height: 20});
+	tmpdiv.jqxDockPanel({height: 25});
 
-	var tmpdiv = $('<div class="InnerDiv" style = "margin-top:5px; border:0px solid;"/>');
+	$('#competitionCommondiv').append('<br/>');
+
+	var tmpdiv = $('<div class="InnerDiv" style="margin-top:5px; border:0px solid;"/>');
 	$('#competitionCommondiv').append(tmpdiv);
 
 	tmpdiv.append('<label style="margin-top:0px;">Name : </label>');
-	var cname = $('<input style="margin-top:0px;"/>').attr({type:'text', id:'txtCompetitionName'});
+	var cname = $('<input style="margin-top:0px;margin-left:5px;"/>').attr({type:'text', id:'txtCompetitionName'});
 	tmpdiv.append(cname);
 	$('#txtCompetitionName').jqxInput({placeHolder: "Competition Name", height: 20, width:150, minLength: 1, theme: getTheme() });	
 	
 	tmpdiv.append('<label style="margin-left:10px;margin-top:0px">Location : </label>');
-	var location = $('<input style="margin-top:0px;"/>').attr({type:'text', id:'txtCompetitionLocation'});
+	var location = $('<input style="margin-top:0px;margin-left=5px;"/>').attr({type:'text', id:'txtCompetitionLocation'});
 	tmpdiv.append(location);
 	$('#txtCompetitionLocation').jqxInput({placeHolder: "Competition Location", height: 20, width:400, minLength: 1, theme: getTheme(), source:ClassLocation });
 
-	var tempdiv = $('<div class="InnerDiv" style = "margin-top:10px; border:0px solid;"/>')
-	tmpdiv.append(tempdiv);
+	var tempdiv = $('<div class="InnerDiv" style="float:left; margin-top:10px; border:0px solid;"/>')
+	$('#competitionCommondiv').append(tempdiv);
 
 	tempdiv.append('<label style="float:left; margin-top:3px;"> Competition Date : </label>');
-	var stime = $('<div style="float:left; margin-top:0px; margin-left:10px;"/>').attr({id:'divCompetitionTime'});
+	var stime = $('<div style="float:left; margin-top:0px; margin-left:5px;"/>').attr({id:'divCompetitionTime'});
 	tempdiv.append(stime);
 	$('#divCompetitionTime').jqxDateTimeInput({width: '200px', height: '20px', theme: getTheme(), selectionMode: 'range', formatString: 'd'});
 
-	tempdiv.append('<label style="float:left; margin-top:3px; margin-left:10px;"> Register Deadline: </label>');
-	var etime = $('<div style="margin-top:0px; margin-left:10px;" />').attr({id:'divCompetitionRegisterDeadTime'});
+	tempdiv.append('<label style="float:left; margin-top:3px; margin-left:20px;"> Register Deadline: </label>');
+	var etime = $('<div style="float:left; margin-top:0px; margin-left:5px;" />').attr({id:'divCompetitionRegisterDeadTime'});
 	tempdiv.append(etime);
 	$('#divCompetitionRegisterDeadTime').jqxDateTimeInput({width: '150px', height: '20px', formatString: 'd', theme: getTheme()});
 
-	var tempdiv = $('<div class="InnerDiv" style = "margin-top:10px; border:0px solid;"/>')
-	tmpdiv.append(tempdiv);
+	var tdiv = $('<div class="InnerDiv" style="float:left; margin-top:10px; border:0px solid;"/>')
+	$('#competitionCommondiv').append(tdiv);
 
-	tempdiv.append('<label style="float:left; margin-top:3px; margin-left:10px;"> Competition Type:    </label>');
-	var ctname = $('<div style="margin-top:0px; margin-left:10px"/>').attr({id:'ddlCompetitionTypeName'});
-	tempdiv.append(ctname);
+	tdiv.append('<label style="float:left; margin-top:3px; margin-left:0px;"> Competition Type: </label>');
+	var ctname = $('<div style="float:left; margin-top:0px; margin-left:5px"/>').attr({id:'ddlCompetitionTypeName'});
+	tdiv.append(ctname);
 	$('#ddlCompetitionTypeName').jqxDropDownList({placeHolder: "Please Select Competition Type", height: 20, width: 150, dropDownHeight: 150, theme: getTheme(), source: getAllCompetitionType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
 
-	$('#competitionCommondiv').append('<br/>');
+	tdiv.append('<label style="float:left; margin-top:3px;margin-left:10px;">Total Student : </label>');
+	var totalStudent = $('<input style="float:left; margin-top:0px;margin-left:5px;"/>').attr({type:'text', id:'txtTotalStudent'});
+	tdiv.append(totalStudent);
+	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", height: 20, width:30, minLength: 1, theme: getTheme() });	
+	
+	tdiv.append('<label style="float:left; margin-left:10px;margin-top:3px">Total Fee : </label>');
+	var totalFee = $('<input style="float:left; margin-top:0px;margin-left:5px;"/>').attr({type:'text', id:'txtTotalFee'});
+	tdiv.append(totalFee);
+	$('#txtTotalFee').jqxInput({placeHolder: "Total Fee", height: 20, width:50, minLength: 1, theme: getTheme(), source:ClassLocation });
+
+	var label = $('<label id="competitionstatuslabel" name="competitionstatuslabel" style="float:left; margin-top:3px; margin-left:10px;">Status : </label>');
+	tdiv.append(label);
+
+	var statusLabel = $('<label id="labelCompetitionStatus" name="labelCompetitionStatus" style="float:left; margin-top:3px; margin-left:5px;">N/A</label>');
+	tdiv.append(statusLabel);
+
+
+//	$('#competitionCommondiv').append('<br/>');
 
 }
 

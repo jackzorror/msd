@@ -1,5 +1,6 @@
 package com.morningstardance.app.msdcompetition;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +8,11 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.morningstardance.app.msdcompetitionfee.MSDCompetitionSummaryDto;
 import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.domain.entity.MSDCompetition;
+import com.morningstardance.domain.entity.MSDCompetitionFee;
+import com.morningstardance.domain.springdata.jpa.repository.MSDCompetitionFeeJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDCompetitionJPARepository;
 
 @Service("msdCompetitionFacade")
@@ -16,6 +20,9 @@ public class MSDCompetitionFacadeImpl implements MSDCompetitionFacade {
 
 	@Resource
 	private MSDCompetitionJPARepository msdCompetitionJPARepository;
+	
+	@Resource
+	private MSDCompetitionFeeJPARepository msdCompetitionFeeJPARepository;
 	
 	@Resource
 	private MSDCompetitionAssembler msdCompetitionAssembler;
@@ -85,6 +92,25 @@ public class MSDCompetitionFacadeImpl implements MSDCompetitionFacade {
 		msdCompetitionJPARepository.save(entity);
 		
 		msdOperationService.msdCompetitionOperation(entity.getId(), "Disable Competition", entity.toString(), null, "DATABASE");
+	}
+
+	@Override
+	public MSDCompetitionSummaryDto getMSDCompetitionSummaryDtoById(Long msdCompetitionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MSDCompetitionDetailDto getMSDCompetitionDetailDtoById(Long msdCompetitionId) {
+		if (null == msdCompetitionId || msdCompetitionId.intValue() == 0) return null;
+		MSDCompetition entity = msdCompetitionJPARepository.findOne(msdCompetitionId);
+		
+		if (null == entity) return null;
+		List<MSDCompetitionFee> cfees = msdCompetitionFeeJPARepository.findByMsdCompetitionIdAndIsActive(msdCompetitionId.intValue(), (byte)1);
+		BigDecimal totalFee = msdCompetitionFeeJPARepository.getTotalCompetitionFeeByCompetitionIdAndIsActive(new Integer(msdCompetitionId.intValue()), (byte)1);
+			
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

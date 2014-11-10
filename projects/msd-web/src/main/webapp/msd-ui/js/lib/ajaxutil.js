@@ -218,6 +218,32 @@ function ajaxGetAllStuentSummaryByClassId(cid, fName) {
 	
 }
 
+function ajaxGetStudentRegisterCompeition(sid, fName) {
+	var ajaxcall = $.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent/" + data.id,
+		data: { type: "registercompetition"},
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+	
+}
+
+function ajaxGetStudentNonRegisterCompeition(sid, fName) {
+	var ajaxcall = $.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent/" + data.id,
+		data: { type: "nonregistercompetition"},
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+	
+}
+
 function ajaxStudentRegisterClasses(sid, cidList, fName) {
 	var ajaxcall = $.ajax({
 		type: "POST",

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
+import com.morningstardance.app.msdcompetition.MSDCompetitionSummaryDto;
 import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 import com.morningstardance.app.msdstudent.MSDStudentDetailDto;
 import com.morningstardance.app.msdstudent.MSDStudentDto;
@@ -254,6 +255,8 @@ public class MSDStudentController {
     		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentNonRegisterClassByStudentId(msdstudentid);
     		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
     		return responseDto;
+    	} else if ("registercompetition".equals(type)) {
+    		List<MSDCompetitionSummaryDto> dtos = msdStudentFacade.getStudentRegisterCompetitionByStudentId(msdstudentid);
     	}
     	return null;
     }

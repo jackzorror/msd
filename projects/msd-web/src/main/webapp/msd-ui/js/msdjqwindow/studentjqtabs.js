@@ -95,9 +95,9 @@ function createStudentPanel() {
 }
 
 function createStudentDetailPanel() {
-	var sndiv = $('<div  dock="left" style="width:450px;"></div>').attr({id:'studentNameDiv'});
-	var sgdiv = $('<div dock="right"></div>').attr({id:'studentGenderDiv'});
-	var spdiv = $('<div dock="bottom"></div>').attr({id:'studentPhoneDiv'});
+	var sndiv = $('<div  dock="left" style="width:450px;border:0px solid;"></div>').attr({id:'studentNameDiv'});
+	var sgdiv = $('<div dock="right" style="border:0px solid;"></div>').attr({id:'studentGenderDiv'});
+	var spdiv = $('<div dock="bottom" style="border:0px solid;"></div>').attr({id:'studentPhoneDiv'});
 	
 	$('#studentDetailContentDiv').append(spdiv);
 	$('#studentDetailContentDiv').append(sndiv);
@@ -108,21 +108,19 @@ function createStudentDetailPanel() {
 	$('#studentNameDiv').append(fname);
 	$('#txtStudentFirstName').jqxInput({height:20, width:130, theme: getTheme()});
 
-
 	$('#studentNameDiv').append("<label> Last Name : </label>");
 	var lname = $('<input/>').attr({ type: 'text', id:'txtStudentLastName'}); 
 	$('#studentNameDiv').append(lname);
 	$('#txtStudentLastName').jqxInput({height:20, width:130, theme: getTheme()});
 	
-	$('#studentNameDiv').append('<br />');
 	$('#studentNameDiv').append('<label style="float:left; margin-top:10px;">DOB :</label>');
 
-	var dob = $('<div style="float:left; margin-top:10px; margin-left:10px;" />').attr({id:'dtinputStudentDob'});
+	var dob = $('<div style="float:left; margin-top:6px; margin-left:5px;" />').attr({id:'dtinputStudentDob'});
 	$('#studentNameDiv').append(dob);
 	$('#dtinputStudentDob').jqxDateTimeInput({height:20, width:100, formatString: 'd', theme: getTheme()});
 	
 	$('#studentNameDiv').append('<label style="float:left; margin-top:10px; margin-left:10px;">Email :</label>');
-	var email = $('<input style="float:left; margin-top:10px;"/>').attr({ type: 'text', id:'txtStudentEmail'}); 
+	var email = $('<input style="float:left; margin-top:6px; margin-left:5px;"/>').attr({ type: 'text', id:'txtStudentEmail'}); 
 	$('#studentNameDiv').append(email);
 	$('#txtStudentEmail').jqxInput({height:20, width:230, theme: getTheme()});
 	
@@ -136,109 +134,111 @@ function createStudentDetailPanel() {
 	$('#rbtnGenderFemale').jqxRadioButton({ groupName :"Gender", boxSize:"10px", theme: getTheme()});
 	
 	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:15px;">Home Phone :</label>');
-	var homePhone = $('<div style="float:left; margin-top:10px;"/>').attr({id:'minputHomePhone'});
+	var homePhone = $('<div style="float:left; margin-top:6px;margin-left:5px"/>').attr({id:'minputHomePhone'});
 	$('#studentPhoneDiv').append(homePhone);
 	$('#minputHomePhone').jqxMaskedInput({ width: 150, height: 20, mask: '(###) ### - ####', theme:getTheme()});
 	
-	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:30px;">School Name :</label>');
-	var schoolName = $('<input style="float:left; margin-top:10px;"/>').attr({type:'text', id:'txtSchoolName'});
+	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:25px;">School Name :</label>');
+	var schoolName = $('<input style="float:left; margin-top:6px;margin-left:5px"/>').attr({type:'text', id:'txtSchoolName'});
 	$('#studentPhoneDiv').append(schoolName);
 	$('#txtSchoolName').jqxInput({height:20, width:200, theme:getTheme()});
 	
 	$('#studentPhoneDiv').append('<br />');
-	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:30px;">Cell Phone :</label>');
-	var cellPhone = $('<div style="float:left; margin-top:10px;"/>').attr({id:'minputCellPhone'});
+	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:29px;">Cell Phone :</label>');
+	var cellPhone = $('<div style="float:left; margin-top:6px;margin-left:5px"/>').attr({id:'minputCellPhone'});
 	$('#studentPhoneDiv').append(cellPhone);
 	$('#minputCellPhone').jqxMaskedInput({height:20, width:150, mask: '(###) ### - ####', theme:getTheme()});
 	
-	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:30px;">School Grade :</label>');
-	var schoolGrade = $('<input style="float:left; margin-top:10px;"/>').attr({type:'text', id:'txtSchoolGrade'});
+	$('#studentPhoneDiv').append('<label style="float:left; margin-top:10px;margin-left:25px;">School Grade :</label>');
+	var schoolGrade = $('<input style="float:left; margin-top:6px;margin-left:4px"/>').attr({type:'text', id:'txtSchoolGrade'});
 	$('#studentPhoneDiv').append(schoolGrade);
 	$('#txtSchoolGrade').jqxInput({height:20, width:200, theme:getTheme()});
 	
 	$('#studentPhoneDiv').append('<br />');
-	$('#studentPhoneDiv').append('<label style="margin-top:10px;margin-left:4px;">Home Address :</label>');
-	var homeAddress = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtHomeAddress'});
+	$('#studentPhoneDiv').append('<label style="margin-top:10px;margin-left:3px;">Home Address :</label>');
+	var homeAddress = $('<input style="margin-top:10px;margin-left:3px;"/>').attr({type:'text', id:'txtHomeAddress'});
 	$('#studentPhoneDiv').append(homeAddress);
 	$('#txtHomeAddress').jqxInput({height:20, width:480, theme:getTheme()});
 	
 	// Parent One Information
-	var parentOneDiv = $('<div style="width:600px; margin-top:10px;"></div>').attr({id:'parentOneDiv'});
+	var parentOneDiv = $('<div style="width:600px; margin-top:10px;border:0px solid;"></div>').attr({id:'parentOneDiv'});
 	$('#studentPhoneDiv').append(parentOneDiv);
 	
-	$('#parentOneDiv').append('<h5 style="margin-top:20px;">Parent One Informatioin :</h5>');
+	$('#parentOneDiv').append('<h5 style="margin-top:10px;">Parent One Informatioin :</h5>');
 	
 	$('#parentOneDiv').append('<label style="margin-left:5px;">First Name :</label>');
-	var parentOneFirstName = $('<input/>').attr({type:'text', id:'txtParentOneFirstName'});
+	var parentOneFirstName = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtParentOneFirstName'});
 	$('#parentOneDiv').append(parentOneFirstName);
 	$('#txtParentOneFirstName').jqxInput({height:20, width:130, theme:getTheme()});
 	
 	$('#parentOneDiv').append('<label style="margin-left:10px;">Last Name :</label>');
-	var parentOneLastName = $('<input/>').attr({type:'text', id:'txtParentOneLastName'});
+	var parentOneLastName = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtParentOneLastName'});
 	$('#parentOneDiv').append(parentOneLastName);
 	$('#txtParentOneLastName').jqxInput({height:20, width:130, theme:getTheme()});
 	
 	$('#parentOneDiv').append('<label style="margin-left:10px;">Relation :</label>');
-	var parentOneRelation = $('<input/>').attr({type:'text', id:'txtParentOneRelation'});
+	var parentOneRelation = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtParentOneRelation'});
 	$('#parentOneDiv').append(parentOneRelation);
-	$('#txtParentOneRelation').jqxInput({height:20, width:70, theme:getTheme()});
+	$('#txtParentOneRelation').jqxInput({height:20, width:60, theme:getTheme()});
 	
 	$('#parentOneDiv').append('<label style="margin-top:10px; margin-left:40px;">Email :</label>');
-	var parentOneEamil = $('<input style="margin-top:10px;" />').attr({type:'text', id:'txtParentOneEmail'});
+	var parentOneEamil = $('<input style="margin-top:10px;margin-left:5px" />').attr({type:'text', id:'txtParentOneEmail'});
 	$('#parentOneDiv').append(parentOneEamil);
-	$('#txtParentOneEmail').jqxInput({height:20, width:455, theme:getTheme()});
+	$('#txtParentOneEmail').jqxInput({height:20, width:460, theme:getTheme()});
 	
 	$('#parentOneDiv').append('<br />');
 	$('#parentOneDiv').append('<label style="float:left; margin-top:10px; margin-left:8px;">Cell Phone :</label>');
-	var parentOneCellPhone = $('<div style="float:left; margin-top:10px;" />').attr({id:'minputParentOneCellPhone'});
+	var parentOneCellPhone = $('<div style="float:left; margin-top:6px; margin-left:4px" />').attr({id:'minputParentOneCellPhone'});
 	$('#parentOneDiv').append(parentOneCellPhone);
 	$('#minputParentOneCellPhone').jqxMaskedInput({height:20, width:170, mask:'(###) ### - ####', theme:getTheme()});
 	
 	$('#parentOneDiv').append('<label style="float:left; margin-top:10px; margin-left:26px;">Work Phone :</label>');
-	var parentOneWorkPhone = $('<div style="float:left; margin-top:10px;" />').attr({id:'minputParentOneWorkPhone'});
+	var parentOneWorkPhone = $('<div style="float:left; margin-top:6px; margin-left:5px" />').attr({id:'minputParentOneWorkPhone'});
 	$('#parentOneDiv').append(parentOneWorkPhone);
 	$('#minputParentOneWorkPhone').jqxMaskedInput({height:20, width:170, mask:'(###) ### - ####', theme:getTheme()});
 	$('#parentOneDiv').append('<br />');
 	$('#parentOneDiv').append('<br />');
 	
 	// Parent Two Information
-	var parentTwoDiv = $('<div style="width:600px;"></div>').attr({id:'parentTwoDiv'});
+	var parentTwoDiv = $('<div style="width:600px;border:0px solid;"></div>').attr({id:'parentTwoDiv'});
 	$('#studentPhoneDiv').append(parentTwoDiv);
 
-	$('#parentTwoDiv').append('<h5 style="margin-top:20px;">Parent Two Informatioin :</h5>');
+	$('#parentTwoDiv').append('<h5 style="margin-top:10px;">Parent Two Informatioin :</h5>');
 	
 	$('#parentTwoDiv').append('<label style="margin-left:5px;">First Name :</label>');
-	var parentTwoFirstName = $('<input/>').attr({type:'text', id:'txtParentTwoFirstName'});
+	var parentTwoFirstName = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtParentTwoFirstName'});
 	$('#parentTwoDiv').append(parentTwoFirstName);
 	$('#txtParentTwoFirstName').jqxInput({height:20, width:130, theme:getTheme()});
 	
 	$('#parentTwoDiv').append('<label style="margin-left:10px;">Last Name :</label>');
-	var parentTwoLastName = $('<input/>').attr({type:'text', id:'txtParentTwoLastName'});
+	var parentTwoLastName = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtParentTwoLastName'});
 	$('#parentTwoDiv').append(parentTwoLastName);
 	$('#txtParentTwoLastName').jqxInput({height:20, width:130, theme:getTheme()});
 	
 	$('#parentTwoDiv').append('<label style="margin-left:10px;">Relation :</label>');
-	var parentTwoRelation = $('<input/>').attr({type:'text', id:'txtParentTwoRelation'});
+	var parentTwoRelation = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtParentTwoRelation'});
 	$('#parentTwoDiv').append(parentTwoRelation);
-	$('#txtParentTwoRelation').jqxInput({height:20, width:70, theme:getTheme()});
+	$('#txtParentTwoRelation').jqxInput({height:20, width:60, theme:getTheme()});
 	
 	$('#parentTwoDiv').append('<label style="margin-top:10px; margin-left:40px;">Email :</label>');
-	var parentTwoEamil = $('<input style="margin-top:10px;" />').attr({type:'text', id:'txtParentTwoEmail'});
+	var parentTwoEamil = $('<input style="margin-top:10px;margin-left:5px" />').attr({type:'text', id:'txtParentTwoEmail'});
 	$('#parentTwoDiv').append(parentTwoEamil);
-	$('#txtParentTwoEmail').jqxInput({height:20, width:455, theme:getTheme()});
+	$('#txtParentTwoEmail').jqxInput({height:20, width:460, theme:getTheme()});
 	
 	$('#parentTwoDiv').append('<br />');
 	$('#parentTwoDiv').append('<label style="float:left; margin-top:10px; margin-left:8px;">Cell Phone :</label>');
-	var parentTwoCellPhone = $('<div style="float:left; margin-top:10px;" />').attr({id:'minputParentTwoCellPhone'});
+	var parentTwoCellPhone = $('<div style="float:left; margin-top:6px; margin-left:4px" />').attr({id:'minputParentTwoCellPhone'});
 	$('#parentTwoDiv').append(parentTwoCellPhone);
 	$('#minputParentTwoCellPhone').jqxMaskedInput({height:20, width:170, mask:'(###) ### - ####', theme:getTheme()});
 	
 	$('#parentTwoDiv').append('<label style="float:left; margin-top:10px; margin-left:26px;">Work Phone :</label>');
-	var parentTwoWorkPhone = $('<div style="float:left; margin-top:10px;" />').attr({id:'minputParentTwoWorkPhone'});
+	var parentTwoWorkPhone = $('<div style="float:left; margin-top:6px; margin-left:5px" />').attr({id:'minputParentTwoWorkPhone'});
 	$('#parentTwoDiv').append(parentTwoWorkPhone);
 	$('#minputParentTwoWorkPhone').jqxMaskedInput({height:20, width:170, mask:'(###) ### - ####', theme:getTheme()});
+	$('#parentTwoDiv').append('<br />');
+	$('#parentTwoDiv').append('<br />');
 	
-	var editbutton = $('<input style="float:right;margin-top:10px; margin-right:10px"/>').attr({ type: 'button', id:"btnEditStudent", value:"Edit"});
+	var editbutton = $('<input style="float:right;margin-top:10px; margin-right:20px"/>').attr({ type: 'button', id:"btnEditStudent", value:"Edit"});
 	$('#studentPhoneDiv').append(editbutton);
 	$('#btnEditStudent').jqxButton({ width: 60, height: 20, theme:getTheme() });
 
@@ -247,62 +247,62 @@ function createStudentDetailPanel() {
 	$('#btnSaveStudent').jqxButton({ width: 60, height: 20, theme:getTheme()});
 
 	
-	$('#studentDetailContentDiv').jqxDockPanel({ height: 450});
+	$('#studentDetailContentDiv').jqxDockPanel({ height: 430});
 }
 
 function createStudentMedicalPanel() {
 	$('#studentMedicalDetailContentDiv').empty();
 
 	// Medical Insurance Information
-	var medicalDiv = $('<div class="InnerDiv" style="width:600px; height:100px;"></div>').attr({id:'medicalDiv'});
+	var medicalDiv = $('<div class="InnerDiv" style="width:600px; height:85px;border:0px solid;"></div>').attr({id:'medicalDiv'});
 	$('#studentMedicalDetailContentDiv').append(medicalDiv);
 	
 	$('#medicalDiv').append('<h5>Medical Insurance Informatioin</h5>');
 	$('#medicalDiv').append('<label>Insurance Company :</label>');
-	var medicalCompany = $('<input/>').attr({type:'text', id:'txtStudentInsuranceCompany'});
+	var medicalCompany = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtStudentInsuranceCompany'});
 	$('#medicalDiv').append(medicalCompany);
-	$('#txtStudentInsuranceCompany').jqxInput({placeHolder: "Medical Insurance Company Name", height: 20, width: 250, minLength: 1, theme: getTheme()})
+	$('#txtStudentInsuranceCompany').jqxInput({placeHolder: "Medical Insurance Company Name", height: 20, width: 240, minLength: 1, theme: getTheme()})
 //	$('#txtStudentInsuranceCompany').on('textchanged', studentMedicalInfoChange());
 
 	$('#medicalDiv').append('<label style="margin-left:5px;">Policy # :</label>');
-	var policyNumber = $('<input style="marign-left:5px;"/>').attr({type:'text', id:'txtStudentPolicyNumber'});
+	var policyNumber = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtStudentPolicyNumber'});
 	$('#medicalDiv').append(policyNumber);
 	$('#txtStudentPolicyNumber').jqxInput({placeHolder: "Policy #", height: 20, width: 125, minLength: 1, theme: getTheme()});
 	
 	$('#medicalDiv').append('<label style="float:left; margin-top:10px;margin-left:3px;">Pediatrician\'s Name :</label>');
-	var pediatricianName = $('<input style="float:left; margin-top:10px; marign-left:5px;"/>').attr({type:'text', id:'txtStudentPediatricianName'});
+	var pediatricianName = $('<input style="float:left; margin-top:6px; margin-left:5px;"/>').attr({type:'text', id:'txtStudentPediatricianName'});
 	$('#medicalDiv').append(pediatricianName);
-	$('#txtStudentPediatricianName').jqxInput({placeHolder: "Pedictrician's Name", height: 20, width: 200, minLength: 1, theme: getTheme()});
+	$('#txtStudentPediatricianName').jqxInput({placeHolder: "Pedictrician's Name", height: 20, width: 240, minLength: 1, theme: getTheme()});
 	
-	$('#medicalDiv').append('<label style="float:left; margin-top:10px; margin-left:10px;">Phone :</label>');
-	var pediatricianPhone = $('<div style="float:left; margin-top:10px; marign-left:5px;"/>').attr({id:'minputStudentPediatricianPhone'});
+	$('#medicalDiv').append('<label style="float:left; margin-top:10px; margin-left:17px;">Phone :</label>');
+	var pediatricianPhone = $('<div style="float:left; margin-top:6px; margin-left:5px;"/>').attr({id:'minputStudentPediatricianPhone'});
 	$('#medicalDiv').append(pediatricianPhone);
-	$('#minputStudentPediatricianPhone').jqxMaskedInput({height: 20, width: 180, mask:'(###) ###-####', theme:getTheme()});
+	$('#minputStudentPediatricianPhone').jqxMaskedInput({height: 20, width: 125, mask:'(###) ###-####', theme:getTheme()});
 	
 	// Emergency Notification
-	var emergencyDiv = $('<div class="InnerDiv" style="width:600px; height:70px;"></div>').attr({id:'emergencyDiv'});
+	var emergencyDiv = $('<div class="InnerDiv" style="width:600px; height:85px;border:0px solid;"></div>').attr({id:'emergencyDiv'});
 	$('#studentMedicalDetailContentDiv').append(emergencyDiv);
 	
 	$('#emergencyDiv').append('<h5>Emergency Notification</h5>');
-	$('#emergencyDiv').append('<label style="float:left;">Name :</label>');
-	var emergencyName = $('<input style="float:left;"/>').attr({type:'text', id:'txtStudentEmergencyName'});
+	$('#emergencyDiv').append('<label style="margin-left:2px;">Contact Name :</label>');
+	var emergencyName = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtStudentEmergencyName'});
 	$('#emergencyDiv').append(emergencyName);
-	$('#txtStudentEmergencyName').jqxInput({height: 20, width: 150, minLength: 1, theme: getTheme()})
+	$('#txtStudentEmergencyName').jqxInput({height: 20, width: 400, minLength: 1, theme: getTheme()})
 
-	$('#emergencyDiv').append('<label style="float:left; margin-left:5px;">Phone :</label>');
-	var emergencyPhone = $('<div style="float:left; marign-left:5px;"/>').attr({id:'minputStudentEmergencyPhone'});
+	$('#emergencyDiv').append('<label style="float:left; margin-top:10px;">Contact Phone :</label>');
+	var emergencyPhone = $('<div style="float:left; margin-top:6px; margin-left:5px;"/>').attr({id:'minputStudentEmergencyPhone'});
 	$('#emergencyDiv').append(emergencyPhone);
-	$('#minputStudentEmergencyPhone').jqxMaskedInput({height:20, width:100, mask:'(###) ###-####', theme:getTheme()});
+	$('#minputStudentEmergencyPhone').jqxMaskedInput({height:20, width:130, mask:'(###) ###-####', theme:getTheme()});
 	
-	$('#emergencyDiv').append('<label style="float:left; margin-left:5px;">Alternate Phone :</label>');
-	var emergencyAltPhone = $('<div style="float:left; marign-left:5px;"/>').attr({id:'minputStudentEmergencyAltPhone'});
+	$('#emergencyDiv').append('<label style="float:left; margin-top:10px; margin-left:18px;">Alternate Phone :</label>');
+	var emergencyAltPhone = $('<div style="float:left; margin-top:6px; margin-left:5px;"/>').attr({id:'minputStudentEmergencyAltPhone'});
 	$('#emergencyDiv').append(emergencyAltPhone);
-	$('#minputStudentEmergencyAltPhone').jqxMaskedInput({height:20, width:100, mask:'(###) ###-####', theme:getTheme()});
+	$('#minputStudentEmergencyAltPhone').jqxMaskedInput({height:20, width:130, mask:'(###) ###-####', theme:getTheme()});
 	
 	var buttonDiv = $('<div style="width:600px; height:30px;"></div>').attr({id:'buttonDiv'});
 	$('#studentMedicalDetailContentDiv').append(buttonDiv);
 	
-	var editbutton = $('<input style="float:right;margin-top:10px; margin-right:10px"/>').attr({ type: 'button', id:"btnEditMedical", value:"Edit"});
+	var editbutton = $('<input style="float:right;margin-top:10px; margin-right:0px"/>').attr({ type: 'button', id:"btnEditMedical", value:"Edit"});
 	$('#buttonDiv').append(editbutton);
 	$('#btnEditMedical').jqxButton({ width: 60, height: 20, theme:getTheme() });
 
@@ -727,7 +727,6 @@ function handleCompetitionInfoClick() {
 	    null == getCurrentStudent()) {
 	    alert("Please Find student with last name and first name first");
 	} else {
-		$('#studentMainPanel').empty();
 		showStudentCompetitionInfo();
 	}
 

@@ -23,7 +23,12 @@ public class MSDOperationService {
 	
 	public void msdStudentClassOperation(Long sid, Long cid, String operationDescription, String operationtype) {
 		msdClassOperation(cid, operationDescription, null, null, operationtype);
-		msdStudentOperation(cid, operationDescription, null, null, operationtype);
+		msdStudentOperation(sid, operationDescription, null, null, operationtype);
+	}
+	
+	public void msdStudentCompetitionOperation(Long sid, Long cid, String operationDescription, String operationtype) {
+		msdCompetitionOperation(cid, operationDescription, null, null, operationtype);
+		msdStudentOperation(sid, operationDescription, null, null, operationtype);
 	}
 
 	public void msdUserLoginSuccessfully(String username) {

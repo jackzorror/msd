@@ -6,4 +6,9 @@ public interface MSDStudentFeeFacade {
 
 	void removeClassFeeFromStudentFeeByStudentIdAndStudentClassId(Long sid, Long cid);
 
+	void addCompetitionFeeToStudentFeeByStudentIdAndStudentCompetitionId(
+			Long msdStudentId, Long id);
+
+	void removeCompetitionFeeFromStudentFeeByStudentIdAndStudentCompetitionId(Long msdtudentid, Long scid);
+
 }
