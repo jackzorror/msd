@@ -25,7 +25,7 @@ public class MSDClassSummaryDto {
 	public void setSchedule(String schedule) {
 		this.schedule = schedule;
 	}
-	public boolean isIsactive() {
+	public boolean getIsactive() {
 		return isactive;
 	}
 	public void setIsactive(boolean isactive) {

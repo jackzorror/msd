@@ -564,7 +564,7 @@ function studentRegisterClasses (response, request, settings) {
 	console.log(" get student ... ");
 	if (404 == response.code) {
 		alert(" Can't register class ... ");
-	} else if (302 == response.code) {
+	} else if (201 == response.code) {
 		var data = $.parseJSON(response.result);
 		$('#studentMainPanel').empty();
 		showStudentRegisterClass();
@@ -892,18 +892,24 @@ function showClassDetail(data) {
 		}
 	}
 	
-	$('#txtTotalStudent').jqxInput({disabled:true });
+	$('#txtTotalStudentInStudentTab').jqxInput({disabled:true });
 	if (null != data && null != data.totalNumberStudent)
-		$('#txtTotalStudent').jqxInput('val', data.totalNumberStudent);
+		$('#txtTotalStudentInStudentTab').jqxInput('val', data.totalNumberStudent);
 	else 
-		$('#txtTotalStudent').jqxInput('val', "0");
+		$('#txtTotalStudentInStudentTab').jqxInput('val', "0");
 	
-	$('#txtClassFee').jqxInput({disabled:true });
+	$('#txtClassFeeInStudentTab').jqxInput({disabled:true });
 	if (null != data && null != data.totalClassFee)
-		$('#txtClassFee').jqxInput('val', '$ ' + data.totalClassFee);
+		$('#txtClassFeeInStudentTab').jqxInput('val', '$ ' + data.totalClassFee);
 	else 
-		$('#txtClassFee').jqxInput('val', '$ 0');
+		$('#txtClassFeeInStudentTab').jqxInput('val', '$ 0');
 
+	$('#txtTotalClassTimeInStudentTab').jqxInput({disabled:true});
+	if (null != data && null != data.totalClassCount)
+		$('#txtTotalClassTimeInStudentTab').jqxInput('val', data.totalClassCount);
+	else
+		$('#txtTotalClassTimeInStudentTab').jqxInput('val', "0");
+		
 	showClassDetailSchedular(data.classSchedularList);
 	showClassDetailFee(data.classFeeList);
 
@@ -928,26 +934,31 @@ function createClassDetailDiv() {
 	$('#studentclassInformationdiv').append(stime);
 	$('#txtStudentClassStartTime').jqxInput({placeHolder: "Start date", width: 100, height: 20, minLength: 1, theme: getTheme() });
 
-	$('#studentclassInformationdiv').append('<label style="margin-top:10px; margin-left:10px;"> End: </label>');
+	$('#studentclassInformationdiv').append('<label style="margin-top:10px; margin-left:10px;"> End : </label>');
 	var etime = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtStudentClassEndTime'});
 	$('#studentclassInformationdiv').append(etime);
 	$('#txtStudentClassEndTime').jqxInput({placeHolder:"End date", width: 100, height: 20, minLength: 1, theme: getTheme() });
 	
-	var statusLabel = $('<label id="txtStudentClassStatus" name="txtStudentClassStatus" style="margin-top:10px; margin-left:10px;" />');
-	$('#studentclassInformationdiv').append(statusLabel);
+	$('#studentclassInformationdiv').append('<label> Total Class Time : </label>');
+	var ctotalclasstime = $('<input/>').attr({type:'text', id:'txtTotalClassTimeInStudentTab'});
+	$('#studentclassInformationdiv').append(ctotalclasstime);
+	$('#txtTotalClassTimeInStudentTab').jqxInput({placeHolder: "Total Class Time", rtl: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
 
 	$('#classOtherInformationdiv').empty();
 
 	$('#classOtherInformationdiv').append('<label> Total Student : </label>');
-	var ctotalstudent = $('<input/>').attr({type:'text', id:'txtTotalStudent'});
+	var ctotalstudent = $('<input/>').attr({type:'text', id:'txtTotalStudentInStudentTab'});
 	$('#classOtherInformationdiv').append(ctotalstudent);
-	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
+	$('#txtTotalStudentInStudentTab').jqxInput({placeHolder: "Total Student", rtl: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
 	
 	$('#classOtherInformationdiv').append('<label> Total Class Fee : </label>');
-	var cClassFee = $('<input/>').attr({type:'text', id:'txtClassFee'});
+	var cClassFee = $('<input/>').attr({type:'text', id:'txtClassFeeInStudentTab'});
 	$('#classOtherInformationdiv').append(cClassFee);
-	$('#txtClassFee').jqxInput({placeHolder: "$0", rtl: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
+	$('#txtClassFeeInStudentTab').jqxInput({placeHolder: "$0", rtl: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
 	
+	var statusLabel = $('<label id="txtStudentClassStatus" name="txtStudentClassStatus" style="margin-top:10px; margin-left:20px;" />');
+	$('#classOtherInformationdiv').append(statusLabel);
+
 }
 
 function showClassDetailSchedular(data) {

@@ -11,6 +11,7 @@ import com.morningstardance.domain.entity.MSDClass;
 
 @Repository("msdClassRepository")
 public class MSDClassRepository extends MSDBaseRepository<MSDClass> {
+	
 	public MSDClass findById(Long id) {
 		return findById(MSDClass.class, id);
 	}
@@ -22,7 +23,7 @@ public class MSDClassRepository extends MSDBaseRepository<MSDClass> {
 				MSDClass.class);
 		return (List<MSDClass>)query.getResultList();
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<MSDClass> getStudentRegisterClassByStudentId(Long msdstudentid) {
 		Query query = this.getEntityManager().createNativeQuery(

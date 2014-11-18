@@ -147,8 +147,7 @@ function saveCompeitionInformation(response, request, settings) {
 	} else if (302 == response.code) {
 		console.log(" save competition ...");
 		var data = $.parseJSON(response.result);
-		showCompetitionInformation(data);
-		setCurrentCompetitionInCompetitionTab(data);
+		ajaxGetCompetitionDetailById(data.id, getCompetitionDetailById);
 	} else {
 		alert('error');
 	}
@@ -247,22 +246,22 @@ function createCompetitionInformationDiv() {
 	tdiv.append('<label style="float:left; margin-top:3px; margin-left:0px;"> Competition Type: </label>');
 	var ctname = $('<div style="float:left; margin-top:0px; margin-left:5px"/>').attr({id:'ddlCompetitionTypeName'});
 	tdiv.append(ctname);
-	$('#ddlCompetitionTypeName').jqxDropDownList({placeHolder: "Please Select Competition Type", height: 20, width: 150, dropDownHeight: 150, theme: getTheme(), source: getAllCompetitionType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
+	$('#ddlCompetitionTypeName').jqxDropDownList({placeHolder: "Please Select Competition Type", height: 20, width: 100, dropDownHeight: 150, theme: getTheme(), source: getAllCompetitionType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
 
 	tdiv.append('<label style="float:left; margin-top:3px;margin-left:10px;">Total Student : </label>');
 	var totalStudent = $('<input style="float:left; margin-top:0px;margin-left:5px;"/>').attr({type:'text', id:'txtTotalStudent'});
 	tdiv.append(totalStudent);
-	$('#txtTotalStudent').jqxInput({placeHolder: "Total Student", height: 20, width:30, minLength: 1, theme: getTheme() });	
+	$('#txtTotalStudent').jqxInput({rtl: true, disabled:true, height: 20, width:30, minLength: 1, theme: getTheme() });	
 	
 	tdiv.append('<label style="float:left; margin-left:10px;margin-top:3px">Total Fee : </label>');
 	var totalFee = $('<input style="float:left; margin-top:0px;margin-left:5px;"/>').attr({type:'text', id:'txtTotalFee'});
 	tdiv.append(totalFee);
-	$('#txtTotalFee').jqxInput({placeHolder: "Total Fee", height: 20, width:50, minLength: 1, theme: getTheme(), source:ClassLocation });
+	$('#txtTotalFee').jqxInput({rtl: true, disabled:true, height: 20, width:60, minLength: 1, theme: getTheme() });
 
-	var label = $('<label id="competitionstatuslabel" name="competitionstatuslabel" style="float:left; margin-top:3px; margin-left:10px;">Status : </label>');
-	tdiv.append(label);
+//	var label = $('<label id="competitionstatuslabel" name="competitionstatuslabel" style="float:left; margin-top:3px; margin-left:10px;">Status : </label>');
+//	tdiv.append(label);
 
-	var statusLabel = $('<label id="labelCompetitionStatus" name="labelCompetitionStatus" style="float:left; margin-top:3px; margin-left:5px;">N/A</label>');
+	var statusLabel = $('<label id="labelCompetitionStatus" name="labelCompetitionStatus" style="float:left; margin-top:3px; margin-left:15px;">N/A</label>');
 	tdiv.append(statusLabel);
 
 
@@ -472,7 +471,6 @@ function createAddCompetitionFeeDiv() {
 	$('#btnCancelAddCompetitionFee').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
 
-
 function addCompetitionFee (response, request, settings) {
 	if (500 == response.code) {
 		alert("Internal Error, Please check service. ");
@@ -481,6 +479,7 @@ function addCompetitionFee (response, request, settings) {
 	} else {
 		alert('error');
 	}
+	$('#btnSearchCompetition').click();
 }
 
 function deleteCompetitionFee(response, request, settings) {
@@ -491,6 +490,7 @@ function deleteCompetitionFee(response, request, settings) {
 	} else {
 		alert("error to delete Competition fee ... ");
 	}
+	$('#btnSearchCompetition').click();
 }
 
 function bindCompetitionCommonData(data) {
@@ -516,7 +516,32 @@ function bindCompetitionCommonData(data) {
 	} else {
 		$('#ddlCompetitionTypeName').jqxDropDownList({selectedIndex: -1 });
 	}
+	
+	$('#txtTotalFee').jqxInput('val', (null != data && null != data.totalFee ) ? '$ ' + data.totalFee : "$0");
+
+	$('#txtTotalStudent').jqxInput('val', (null != data && null != data.totalStudent) ? data.totalStudent : "0");
+	
+	showCompetitionStatusLabel(data);
 }
+
+function showCompetitionStatusLabel(data) {
+	if (null != data && null != data.competitionStatus) {
+		if ("ACCEPTREGISTER" == data.competitionStatus) {
+			$('#labelCompetitionStatus').text(data.competitionStatus);
+			$('#labelCompetitionStatus').css("color", "green");
+		} else if ("PASSEDREGISTERDEADLINE" == data.competitionStatus || "COMPETITION" == data.competitionStatus) {
+			$('#labelCompetitionStatus').text(data.competitionStatus);
+			$('#labelCompetitionStatus').css("color", "blue");
+		} else {
+			$('#labelCompetitionStatus').text(data.competitionStatus);
+			$('#labelCompetitionStatus').css("color", "red");
+		}
+	} else {
+		$('#labelCompetitionStatus').text("NA");
+		$('#labelCompetitionStatus').css("color", "grey");
+	}
+}
+
 
 var currentFunctionInCompetitionTab;
 function setCurrentFunctionInCompetitionTab(status) {

@@ -125,8 +125,8 @@ public class MSDStudentCheckinController {
 	@RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
     public @ResponseBody ResponseDto studentClassCheckInVer1(@RequestBody MSDStudentCheckinDto studentCheckinDto, HttpServletRequest request, HttpServletResponse response) {
 
-		Long msdstudentid = new Long(studentCheckinDto.getStudentId());
-		Long msdclassid = new Long(studentCheckinDto.getClassId());
+//		Long msdstudentid = new Long(studentCheckinDto.getStudentId());
+//		Long msdclassid = new Long(studentCheckinDto.getClassId());
 //    	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(msdstudentid, msdclassid);
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(studentCheckinDto);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "POST", "OBJECT");

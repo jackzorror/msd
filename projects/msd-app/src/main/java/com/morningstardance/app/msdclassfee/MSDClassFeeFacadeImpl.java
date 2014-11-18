@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdoperation.MSDOperationService;
+import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
 import com.morningstardance.domain.entity.MSDClassFee;
 import com.morningstardance.domain.entity.MSDCostType;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassFeeJPARepository;
@@ -25,6 +26,9 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 	
 	@Resource
 	MSDClassFeeAssembler msdClassFeeAssembler;
+	
+	@Resource
+	MSDStudentFeeFacade msdStudentFeeFacade;
 	
 	@Resource
 	private MSDOperationService msdOperationService;
@@ -77,11 +81,14 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 		if (null == msdClassFeeId || msdClassFeeId.intValue() == 0) return;
 		
 		MSDClassFee entity = msdClassFeeJPARepository.findOne(msdClassFeeId);
-		if (null != entity) {
-			entity.setIsActive((byte) 0);
-			msdClassFeeJPARepository.save(entity);
-			msdOperationService.msdClassOperation(new Long(entity.getMsdClassId()), "De active Class Fee", null, entity.toString(), "DATABASE");
-		}
+		if (null == entity) return;
+		
+		entity.setIsActive((byte) 0);
+		msdClassFeeJPARepository.save(entity);
+		
+		msdOperationService.msdClassOperation(new Long(entity.getMsdClassId()), "De active Class Fee", null, entity.toString(), "DATABASE");
+
+		msdStudentFeeFacade.removeClassFeeFromStudentFeeByClassFeeId(entity.getId());
 	}
 
 	

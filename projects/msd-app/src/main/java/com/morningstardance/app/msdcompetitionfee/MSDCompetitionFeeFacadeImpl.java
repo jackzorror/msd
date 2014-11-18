@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdoperation.MSDOperationService;
+import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
 import com.morningstardance.domain.entity.MSDCompetitionFee;
 import com.morningstardance.domain.entity.MSDCostType;
 import com.morningstardance.domain.springdata.jpa.repository.MSDCompetitionFeeJPARepository;
@@ -25,6 +26,9 @@ public class MSDCompetitionFeeFacadeImpl implements MSDCompetitionFeeFacade {
 	
 	@Resource
 	private MSDCompetitionFeeAssembler msdCompetitionFeeAssembler;
+	
+	@Resource
+	private MSDStudentFeeFacade msdStudentFeeFacade;
 	
 	@Resource
 	private MSDOperationService msdOperationService;
@@ -51,6 +55,8 @@ public class MSDCompetitionFeeFacadeImpl implements MSDCompetitionFeeFacade {
 			msdCompetitionFeeJPARepository.save(entity);
 			
 			msdOperationService.msdCompetitionOperation(new Long(entity.getMsdCompetitionId()), "De active competition fee ", null, entity.toString(), "DATABASE");
+
+			msdStudentFeeFacade.removeCompetitionFeeFromStudentFeeByCompetitionFeeId(entity.getId());
 		}
 		
 	}
@@ -75,6 +81,7 @@ public class MSDCompetitionFeeFacadeImpl implements MSDCompetitionFeeFacade {
 			MSDCompetitionFeeDto competitionFeeDto) {
 		return createCompetitionFee(new Long(competitionFeeDto.getId()), new Long(competitionFeeDto.getMsdCompetitionId()), competitionFeeDto.getFeeName(), new Long(competitionFeeDto.getMsdCostTypeId()), competitionFeeDto.getCost());
 	}
+	
 	@Override
 	public MSDCompetitionFeeDto createCompetitionFee(Long id,
 			Long competitionId, String feeName, Long msdCostTypeId, float cost) {

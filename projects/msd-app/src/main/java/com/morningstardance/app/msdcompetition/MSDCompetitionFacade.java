@@ -2,8 +2,6 @@ package com.morningstardance.app.msdcompetition;
 
 import java.util.List;
 
-import com.morningstardance.app.msdcompetitionfee.MSDCompetitionSummaryDto;
-
 public interface MSDCompetitionFacade {
 
 	List<MSDCompetitionDto> getAllMSDCompetition();
@@ -18,4 +16,12 @@ public interface MSDCompetitionFacade {
 
 	MSDCompetitionDetailDto getMSDCompetitionDetailDtoById(Long msdCompetitionId);
 
+	List<MSDCompetitionSummaryDto> getCompetitionSummaryDtoByStudentIdAndType(
+			Long msdstudentid, String type);
+
+	List<MSDCompetitionSummaryDto> getStudentNonRegisterCompetitionSummaryDtoByStudentId(Long msdstudentid);
+
+	List<MSDCompetitionSummaryDto> getStudentRegisterCompetitionSummaryDtoByStudentId(Long msdstudentid);
+
+	MSDCompetitionDto getMSDCompetitionDtoById(Long msdCompetitionId);
 }

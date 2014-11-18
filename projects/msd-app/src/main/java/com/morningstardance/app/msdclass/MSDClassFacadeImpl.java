@@ -60,7 +60,7 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 	@Override
 	public MSDClassDto getMSDClassById(Long msdclassId) {
 		MSDClass msdclass = msdClassJPARepository.findOne(msdclassId);
-		Long studnetCount = msdStudentClassJPARepository.getTotalCountByClassIdAndIsActive(new Integer(msdclassId.intValue()), (byte) 1);
+		Long studnetCount = msdStudentClassJPARepository.getTotalStudentCountByClassIdAndIsActive(new Integer(msdclassId.intValue()), (byte) 1);
 		BigDecimal totalFee = msdClassFeeJPARepository.getTotalClassFeeByClassIdAndIsActive(new Integer(msdclassId.intValue()), (byte) 1);
 		return msdClassAssembler.createDtoFromEntity(msdclass);
 	}
@@ -133,11 +133,11 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 		List<MSDClassNonClassDate> msdnonclassdates = 
 				(List<MSDClassNonClassDate>) msdClassNonClassDateJPARepository.findByMsdClassId(msdClassId.intValue());
 		
-		Long totalStudentCount = msdStudentClassJPARepository.getTotalCountByClassIdAndIsActive(new Integer(msdClassId.intValue()), (byte)1);
+		Long totalStudentCount = msdStudentClassJPARepository.getTotalStudentCountByClassIdAndIsActive(new Integer(msdClassId.intValue()), (byte)1);
 		BigDecimal totalClassFee = msdClassFeeJPARepository.getTotalClassFeeByClassIdAndIsActive(new Integer(msdClassId.intValue()), (byte)1);
 		int totalClassCount = getTotalClassCount(msdclass, msdclassschedulars, msdnonclassdates);
 
-		return msdClassAssembler.createClassDetailFromEntity(msdclass, msdclassschedulars, msdclassfees, msdnonclassdates, totalStudentCount.intValue(), totalClassFee, totalClassCount);
+		return msdClassAssembler.createClassDetailFromEntity(msdclass, msdclassschedulars, msdclassfees, msdnonclassdates, totalStudentCount, totalClassFee, totalClassCount);
 	}
 
 	private int getTotalClassCount(MSDClass msdclass, List<MSDClassSchedular> msdclassschedulars, List<MSDClassNonClassDate> msdnonclassdates) {

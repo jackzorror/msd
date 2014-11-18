@@ -39,10 +39,10 @@ public class MSDStudentCompetitionFacadeImpl implements
 	@Override
 	public MSDStudentCompetitionDto registerStudentToCompetitionByStudentCompetitionDto(
 			MSDStudentCompetitionDto studentCompetitionDto) {
-		return registerStudentToCompetitionByStudentIdAndClassId(new Long(studentCompetitionDto.getMsdStudentId()), new Long(studentCompetitionDto.getMsdCompetitionId()));
+		return registerStudentToCompetitionByStudentIdAndCompetitionId(new Long(studentCompetitionDto.getMsdStudentId()), new Long(studentCompetitionDto.getMsdCompetitionId()));
 	}
 
-	public MSDStudentCompetitionDto registerStudentToCompetitionByStudentIdAndClassId(Long msdStudentId, Long msdCompetitionId) {
+	public MSDStudentCompetitionDto registerStudentToCompetitionByStudentIdAndCompetitionId(Long msdStudentId, Long msdCompetitionId) {
 		MSDStudentCompetition entity = createStudentCompetitionRecord(msdStudentId, msdCompetitionId);
 		MSDStudentCompetitionDto dto = msdStudentCompetitionAssembler.createDtoFromEntity(entity);
 		return dto;
@@ -62,7 +62,7 @@ public class MSDStudentCompetitionFacadeImpl implements
 		
 		MSDStudentCompetition entity = msdStudentCompetitionJPARepository.findByMsdCompetitionIdAndMsdStudentId(msdCompetitionId.intValue(), msdStudentId.intValue());
 		if (null == entity || entity.getIsActive() == (byte) 0 ) {
-			entity = msdStudentCompetitionJPARepository.saveAndFlush(entity);
+			entity = msdStudentCompetitionJPARepository.saveAndFlush(stduentCompetition);
 			msdOperationService.msdStudentClassOperation(msdStudentId, msdCompetitionId, "Register Student : " + msdStudentId + " to Competition : " + msdCompetitionId, "DATABASE");
 			msdStudentFeeFacade.addCompetitionFeeToStudentFeeByStudentIdAndStudentCompetitionId(msdStudentId, entity.getId());
 		} else {
@@ -76,8 +76,14 @@ public class MSDStudentCompetitionFacadeImpl implements
 	@Override
 	public String registerStudentToCompetitionesByStudentIdAndCompetitionIdList(
 			Long msdstudentid, String msdcompetitionidlist) {
-		// TODO Auto-generated method stub
-		return null;
+		if (null == msdstudentid || msdstudentid.intValue() == 0 || null == msdcompetitionidlist || msdcompetitionidlist.isEmpty()) return null;
+		String [] ids = msdcompetitionidlist.split(",");
+		for (String id : ids) {
+			if (null != id && !(id.isEmpty()))
+				registerStudentToCompetitionByStudentIdAndCompetitionId(msdstudentid, new Long(id));
+		}
+		
+		return "Sucess";
 	}
 
 	@Override
@@ -91,8 +97,14 @@ public class MSDStudentCompetitionFacadeImpl implements
 	@Override
 	public String unRegisterStudentFromCompetitionsByStudentIdAndCompetitionIdList(
 			Long msdstudentid, String msdcompetitionidlist) {
-		// TODO Auto-generated method stub
-		return null;
+		if (null == msdstudentid || msdstudentid.intValue() == 0 || null == msdcompetitionidlist || msdcompetitionidlist.isEmpty()) return null;
+		String [] ids = msdcompetitionidlist.split(",");
+		for (String id : ids) {
+			if (null != id && !(id.isEmpty()))
+				unRegisterStudentFromCompetitionByStudentIdAndCompetitionId(msdstudentid, new Long(id));
+		}
+		
+		return "Sucess";
 	}
 
 	public String unRegisterStudentFromCompetitionByStudentIdAndCompetitionId(Long sid, Long cid) {

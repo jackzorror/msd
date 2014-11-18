@@ -40,7 +40,7 @@ public class MSDStudentClassController {
     @RequestMapping(value="/{msdstudentid}/{msdclassidlist}", method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentRegisterClassesVer1(@PathVariable Long msdstudentid, @PathVariable String msdclassidlist) {
 		String newDto = msdStudentClassFacade.registerStudentToClassesByStudentIdAndClassIdList(msdstudentid, msdclassidlist);
-		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
+		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
 		return responseDto;
 	}
     
@@ -63,8 +63,8 @@ public class MSDStudentClassController {
 
     @RequestMapping(value="/{msdstudentid}/{msdclassidlist}", method=RequestMethod.DELETE, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentDeleteRegisteredClassesVer1(@PathVariable Long msdstudentid, @PathVariable String msdclassidlist) {
-		String newDto = msdStudentClassFacade.unRegisterStudentFromClassesByStudentIdAndClassIdList(msdstudentid, msdclassidlist);
-		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
+		msdStudentClassFacade.unRegisterStudentFromClassesByStudentIdAndClassIdList(msdstudentid, msdclassidlist);
+		ResponseDto responseDto = ResponseDto.createResponseDto(null, "DELETE", "OBJECT");
 		return responseDto;
 	}
     

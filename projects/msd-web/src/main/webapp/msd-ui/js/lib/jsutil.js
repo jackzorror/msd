@@ -7,7 +7,8 @@ function isNotEmpty(str) {
 }
 
 function getFormattedDateToMMDDYYYY(odate) {
-
+	if (null == odate) return "";
+	
 	var value = odate.split(" ");
 	var date = value[0];
 	var value = date.split("-");

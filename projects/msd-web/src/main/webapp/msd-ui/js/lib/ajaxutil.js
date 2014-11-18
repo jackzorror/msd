@@ -222,8 +222,8 @@ function ajaxGetStudentRegisterCompeition(sid, fName) {
 	var ajaxcall = $.ajax({
 		type: "GET",
 		dataType: "json",
-		url: "../msd-app/rs/msdstudent/" + data.id,
-		data: { type: "registercompetition"},
+		url: "../msd-app/rs/msdcompetition",
+		data: { "msdstudentid":sid,"type": "REGISTER"},
 	});
 	
 	ajaxcall.done(fName);
@@ -231,14 +231,42 @@ function ajaxGetStudentRegisterCompeition(sid, fName) {
 	
 }
 
-function ajaxGetStudentNonRegisterCompeition(sid, fName) {
+function ajaxGetStudentNonRegisterCompetition(sid, fName) {
 	var ajaxcall = $.ajax({
 		type: "GET",
 		dataType: "json",
-		url: "../msd-app/rs/msdstudent/" + data.id,
-		data: { type: "nonregistercompetition"},
+		url: "../msd-app/rs/msdcompetition",
+		data: { "msdstudentid":sid,"type": "NONREGISTER"},
 	});
 	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+	
+}
+
+function ajaxAddStudentRegisteredCompetitions(sid, cidList, fName) {
+	var ajaxcall = $.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentcompetition/" + sid + "/" + cidList,
+		processData:false,
+		contentType: "application/json",
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+	
+}
+
+function ajaxDeleteStudentRegisteredCompetitions(sid, cidList, fName) {
+	var ajaxcall = $.ajax({
+		type: "DELETE",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentcompetition/" + sid + "/" + cidList,
+		processData:false,
+		contentType: "application/json",
+	});
+
 	ajaxcall.done(fName);
 	ajaxcall.error(handleAjaxError);
 	
@@ -382,6 +410,7 @@ function ajaxGetCompetitionDetailById(cid, fName) {
 		type: "GET",
 		url: "../msd-app/rs/msdcompetition/" + cid,
 		dataType: "json",
+		data:{type:"DETAIL"},
 		contentType: "application/json"
 	});
 

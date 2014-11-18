@@ -8,12 +8,17 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.morningstardance.app.msdcompetitionfee.MSDCompetitionSummaryDto;
+import com.morningstardance.app.msdcompetitionfee.MSDCompetitionFeeAssembler;
+import com.morningstardance.app.msdcompetitionfee.MSDCompetitionFeeDto;
 import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.domain.entity.MSDCompetition;
 import com.morningstardance.domain.entity.MSDCompetitionFee;
+import com.morningstardance.domain.entity.MSDStudent;
+import com.morningstardance.domain.repository.MSDCompetitionRepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDCompetitionFeeJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDCompetitionJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentCompetitionJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentJPARepository;
 
 @Service("msdCompetitionFacade")
 public class MSDCompetitionFacadeImpl implements MSDCompetitionFacade {
@@ -22,10 +27,22 @@ public class MSDCompetitionFacadeImpl implements MSDCompetitionFacade {
 	private MSDCompetitionJPARepository msdCompetitionJPARepository;
 	
 	@Resource
+	private MSDCompetitionRepository msdCompetitionRepository;
+	
+	@Resource
 	private MSDCompetitionFeeJPARepository msdCompetitionFeeJPARepository;
 	
 	@Resource
+	private MSDStudentCompetitionJPARepository msdStudentCompetitionJPARepository;
+	
+	@Resource
 	private MSDCompetitionAssembler msdCompetitionAssembler;
+	
+	@Resource
+	private MSDCompetitionFeeAssembler msdCompetitionFeeAssembler;
+	
+	@Resource
+	private MSDStudentJPARepository msdStudentJPARepository;
 	
 	@Resource
 	private MSDOperationService msdOperationService;
@@ -96,21 +113,115 @@ public class MSDCompetitionFacadeImpl implements MSDCompetitionFacade {
 
 	@Override
 	public MSDCompetitionSummaryDto getMSDCompetitionSummaryDtoById(Long msdCompetitionId) {
-		// TODO Auto-generated method stub
-		return null;
+		if (null == msdCompetitionId || msdCompetitionId.intValue() == 0) return null;
+		
+		MSDCompetition entity = msdCompetitionJPARepository.findOne(msdCompetitionId);
+		if (null == entity) return null;
+		
+		MSDCompetitionSummaryDto dto = msdCompetitionAssembler.createSummaryDtoFromEntity(entity);
+		
+		return dto;
+	}
+
+	@Override
+	public MSDCompetitionDto getMSDCompetitionDtoById(Long msdCompetitionId) {
+		if (null == msdCompetitionId || msdCompetitionId.intValue() == 0) return null;
+		
+		MSDCompetition entity = msdCompetitionJPARepository.findOne(msdCompetitionId);
+		if (null == entity) return null;
+		
+		MSDCompetitionDto dto = msdCompetitionAssembler.createDtoFromEntity(entity);
+		
+		return dto;
 	}
 
 	@Override
 	public MSDCompetitionDetailDto getMSDCompetitionDetailDtoById(Long msdCompetitionId) {
 		if (null == msdCompetitionId || msdCompetitionId.intValue() == 0) return null;
-		MSDCompetition entity = msdCompetitionJPARepository.findOne(msdCompetitionId);
 		
+		MSDCompetition entity = msdCompetitionJPARepository.findOne(msdCompetitionId);
 		if (null == entity) return null;
+
 		List<MSDCompetitionFee> cfees = msdCompetitionFeeJPARepository.findByMsdCompetitionIdAndIsActive(msdCompetitionId.intValue(), (byte)1);
+		
+		List<MSDCompetitionFeeDto> cfeedtos = new ArrayList<MSDCompetitionFeeDto>();
+		for (MSDCompetitionFee cfee : cfees) {
+			MSDCompetitionFeeDto dto = msdCompetitionFeeAssembler.createDtoFromEntity(cfee);
+			cfeedtos.add(dto);
+		}
+		
 		BigDecimal totalFee = msdCompetitionFeeJPARepository.getTotalCompetitionFeeByCompetitionIdAndIsActive(new Integer(msdCompetitionId.intValue()), (byte)1);
+		Long totalStudent = msdStudentCompetitionJPARepository.getTotalStudentCountByCompetitionIdAndIsActive(new Integer(msdCompetitionId.intValue()), (byte)1); 
+		
+		MSDCompetitionDetailDto dto = msdCompetitionAssembler.createDetailDtoFromEnitty(entity, cfeedtos, totalFee, totalStudent);
 			
-		// TODO Auto-generated method stub
+		return dto;
+	}
+
+	@Override
+	public List<MSDCompetitionSummaryDto> getCompetitionSummaryDtoByStudentIdAndType(Long msdstudentid, String type) {
+		if (null == msdstudentid || msdstudentid.intValue() == 0 || null == type || type.isEmpty()) return null;
+	
+		if (type.equals("REGISTER")) {
+			return getStudentRegisterCompetitionSummaryDtoByStudentId(msdstudentid);
+		} else if (type.equals("NONREGISTER")) {
+			return getStudentNonRegisterCompetitionSummaryDtoByStudentId(msdstudentid);
+		}
+			
 		return null;
+	}
+
+	@Override
+	public List<MSDCompetitionSummaryDto> getStudentNonRegisterCompetitionSummaryDtoByStudentId(
+			Long msdstudentid) {
+		if (null == msdstudentid || msdstudentid.intValue() == 0) return null;
+		
+		MSDStudent s = msdStudentJPARepository.findOne(msdstudentid);
+		if (null == s || s.getIsActive() == (byte)0) return null;
+		
+		List<MSDCompetition> cList = msdCompetitionRepository.findStudentNonRegisterCompetitionByStudentId(msdstudentid);
+		
+		if (null == cList || cList.size() == 0)  return null;
+		
+		List<MSDCompetitionSummaryDto> dtos = new ArrayList<MSDCompetitionSummaryDto>();
+		for(MSDCompetition c : cList) {
+			dtos.add(msdCompetitionAssembler.createSummaryDtoFromEntity(c));
+		}
+		
+		return dtos;
+	}
+
+	@Override
+	public  List<MSDCompetitionSummaryDto> getStudentRegisterCompetitionSummaryDtoByStudentId(
+			Long msdstudentid) {
+		if (null == msdstudentid || msdstudentid.intValue() == 0) return null;
+		
+		MSDStudent s = msdStudentJPARepository.findOne(msdstudentid);
+		if (null == s || s.getIsActive() == (byte)0) return null;
+		
+		List<MSDCompetition> cList = msdCompetitionRepository.findStudentRegisterCompetitionByStudentId(msdstudentid);
+		
+		if (null == cList || cList.size() == 0)  return null;
+		
+		List<MSDCompetitionSummaryDto> dtos = new ArrayList<MSDCompetitionSummaryDto>();
+		for(MSDCompetition c : cList) {
+			dtos.add(msdCompetitionAssembler.createSummaryDtoFromEntity(c));
+		}
+
+		/*
+		List<MSDStudentCompetition> scList = msdStudentCompetitionJPARepository.findByMsdStudentIdAndIsActive(msdstudentid.intValue(), (byte)1);
+		
+		if (null == scList || scList.size() == 0) return null;
+		
+		List<MSDCompetitionSummaryDto> dtos = new ArrayList<MSDCompetitionSummaryDto>();
+		for (MSDStudentCompetition sc : scList) {
+			MSDCompetition entity = msdCompetitionJPARepository.findOne(new Long(sc.getMsdComptitionId()));
+			if (null != sc && sc.getIsActive() == (byte) 1) {
+				dtos.add(msdCompetitionAssembler.createSummaryDtoFromEntity(entity));
+			}
+		}
+		*/
+		return dtos;
 	}
 
 }

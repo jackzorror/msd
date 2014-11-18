@@ -21,5 +21,5 @@ public interface MSDStudentCompetitionJPARepository extends JpaRepository<MSDStu
 	public List<MSDStudentCompetition> findByMsdCompetitionIdAndIsActive(int msdCompetitionId, byte isActive);
 	
 	@Query("SELECT COUNT(*) FROM MSDStudentCompetition c WHERE msdCompetitionId = :msdcompetitionid and isActive = :isactive")
-	public Long getTotalCountByCompetitionIdAndIsActive(@Param("msdcompetitionid") Integer msdCompetitionId, @Param("isactive") byte isactive);
+	public Long getTotalStudentCountByCompetitionIdAndIsActive(@Param("msdcompetitionid") Integer msdCompetitionId, @Param("isactive") byte isactive);
 }

@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.morningstardance.app.msdclassfee.MSDClassFeeDto;
-import com.morningstardance.app.msdcompetition.MSDCompetitionFacade;
 import com.morningstardance.app.msdcompetitionfee.MSDCompetitionFeeDto;
 import com.morningstardance.app.msdcompetitionfee.MSDCompetitionFeeFacade;
 import com.morningstardance.web.ResponseDto;

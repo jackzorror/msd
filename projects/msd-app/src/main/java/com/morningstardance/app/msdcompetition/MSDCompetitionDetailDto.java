@@ -1,5 +1,6 @@
 package com.morningstardance.app.msdcompetition;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.morningstardance.app.msdcompetitionfee.MSDCompetitionFeeDto;
@@ -7,7 +8,7 @@ import com.morningstardance.app.msdcompetitionfee.MSDCompetitionFeeDto;
 public class MSDCompetitionDetailDto extends MSDCompetitionDto {
 
 	private int totalStudent;
-	private float totalFee;
+	private BigDecimal totalFee;
 	private String competitionStatus;
 	
 	private List<MSDCompetitionFeeDto> competitionFeeList;
@@ -18,10 +19,10 @@ public class MSDCompetitionDetailDto extends MSDCompetitionDto {
 	public void setTotalStudent(int totalStudent) {
 		this.totalStudent = totalStudent;
 	}
-	public float getTotalFee() {
+	public BigDecimal getTotalFee() {
 		return totalFee;
 	}
-	public void setTotalFee(float totalFee) {
+	public void setTotalFee(BigDecimal totalFee) {
 		this.totalFee = totalFee;
 	}
 	public String getCompetitionStatus() {

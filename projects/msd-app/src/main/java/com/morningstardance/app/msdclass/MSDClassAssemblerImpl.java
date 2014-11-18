@@ -110,7 +110,7 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 
 	@Override
 	public MSDClassDetailDto createClassDetailFromEntity(MSDClass msdclass,
-			List<MSDClassSchedular> msdclassschedulars, List<MSDClassFee> msdclassfees, List<MSDClassNonClassDate> msdnonclassdates, int totalStudentCount, BigDecimal totalClassFee, int totalClassCount) {
+			List<MSDClassSchedular> msdclassschedulars, List<MSDClassFee> msdclassfees, List<MSDClassNonClassDate> msdnonclassdates, Long totalStudentCount, BigDecimal totalClassFee, int totalClassCount) {
 		MSDClassDetailDto dto = new MSDClassDetailDto();
 		dto.setId(msdclass.getId().intValue());
 		dto.setName(msdclass.getName());
@@ -133,7 +133,7 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 		dto.setClassFeeList(msdClassFeeAssembler.createDtoFromEntity(msdclassfees));
 		dto.setNonClassDateList(msdnonclassdates);
 		
-		dto.setTotalNumberStudent(totalStudentCount);
+		dto.setTotalNumberStudent(null != totalStudentCount ? totalStudentCount.intValue() : 0);
 		dto.setTotalClassFee(totalClassFee);
 		dto.setTotalClassCount(totalClassCount);
 		

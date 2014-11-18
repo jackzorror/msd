@@ -61,7 +61,7 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 
 	@Override
 	public String registerStudentToClassesByStudentIdAndClassIdList(Long msdstudentid, String msdclassidlist) {
-		if (null == msdclassidlist || msdclassidlist.isEmpty()) return null;
+		if (null == msdstudentid || msdstudentid.intValue() == 0 || null == msdclassidlist || msdclassidlist.isEmpty()) return null;
 		String [] ids = msdclassidlist.split(",");
 		for (String id : ids) {
 			if (null != id && !(id.isEmpty()))
@@ -91,7 +91,7 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 
 	@Override
 	public String unRegisterStudentFromClassesByStudentIdAndClassIdList(Long msdstudentid, String msdclassidlist) {
-		if (null == msdclassidlist || msdclassidlist.isEmpty()) return null;
+		if (null == msdstudentid || msdstudentid.intValue() == 0 || null == msdclassidlist || msdclassidlist.isEmpty()) return null;
 		String [] ids = msdclassidlist.split(",");
 		for (String id : ids) {
 			if (null != id && !(id.isEmpty()))

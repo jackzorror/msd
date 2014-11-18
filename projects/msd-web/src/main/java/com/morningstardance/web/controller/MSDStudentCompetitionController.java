@@ -40,7 +40,7 @@ public class MSDStudentCompetitionController {
     @RequestMapping(value="/{msdstudentid}/{msdcompetitionidlist}", method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentRegisterCompetitionsVer1(@PathVariable Long msdstudentid, @PathVariable String msdcompetitionidlist) {
 		String newDto = msdStudentCompetitionFacade.registerStudentToCompetitionesByStudentIdAndCompetitionIdList(msdstudentid, msdcompetitionidlist);
-		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
+		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
 		return responseDto;
 	}
     
@@ -63,8 +63,8 @@ public class MSDStudentCompetitionController {
 
     @RequestMapping(value="/{msdstudentid}/{msdcompetitionidlist}", method=RequestMethod.DELETE, headers="!X-Api-Service-Version=1.0")
 	public @ResponseBody ResponseDto studentDeleteRegisteredCompetitionsVer1(@PathVariable Long msdstudentid, @PathVariable String msdcompetitionidlist) {
-		String newDto = msdStudentCompetitionFacade.unRegisterStudentFromCompetitionsByStudentIdAndCompetitionIdList(msdstudentid, msdcompetitionidlist);
-		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
+		msdStudentCompetitionFacade.unRegisterStudentFromCompetitionsByStudentIdAndCompetitionIdList(msdstudentid, msdcompetitionidlist);
+		ResponseDto responseDto = ResponseDto.createResponseDto(null, "DELETE", "OBJECT");
 		return responseDto;
 	}
 }

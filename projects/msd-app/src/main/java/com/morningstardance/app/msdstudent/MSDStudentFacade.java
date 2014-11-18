@@ -3,6 +3,7 @@ package com.morningstardance.app.msdstudent;
 import java.util.List;
 
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
+import com.morningstardance.app.msdcompetition.MSDCompetitionSummaryDto;
 
 public interface MSDStudentFacade {
 

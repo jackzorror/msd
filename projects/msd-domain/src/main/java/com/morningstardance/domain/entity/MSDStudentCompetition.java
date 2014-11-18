@@ -23,8 +23,8 @@ public class MSDStudentCompetition extends MSDEntityBase implements Serializable
 	@Column(name="is_active")
 	private byte isActive;
 
-	@Column(name="msd_comptition_id")
-	private int msdComptitionId;
+	@Column(name="msd_competition_id")
+	private int msdCompetitionId;
 
 	@Column(name="msd_student_id")
 	private int msdStudentId;
@@ -49,11 +49,11 @@ public class MSDStudentCompetition extends MSDEntityBase implements Serializable
 	}
 
 	public int getMsdComptitionId() {
-		return this.msdComptitionId;
+		return this.msdCompetitionId;
 	}
 
 	public void setMsdComptitionId(int msdComptitionId) {
-		this.msdComptitionId = msdComptitionId;
+		this.msdCompetitionId = msdComptitionId;
 	}
 
 	public int getMsdStudentId() {

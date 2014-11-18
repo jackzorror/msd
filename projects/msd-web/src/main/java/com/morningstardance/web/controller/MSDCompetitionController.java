@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.morningstardance.app.msdclass.MSDClassDetailDto;
-import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.app.msdcompetition.MSDCompetitionDetailDto;
 import com.morningstardance.app.msdcompetition.MSDCompetitionDto;
 import com.morningstardance.app.msdcompetition.MSDCompetitionFacade;
-import com.morningstardance.app.msdcompetitionfee.MSDCompetitionSummaryDto;
+import com.morningstardance.app.msdcompetition.MSDCompetitionSummaryDto;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -24,7 +22,7 @@ import com.morningstardance.web.ResponseDto;
 public class MSDCompetitionController {
 	
 	@Resource
-	private MSDCompetitionFacade msdCOmpetitionFacade;
+	private MSDCompetitionFacade msdCompetitionFacade;
 
 	@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version")
 	public @ResponseBody ResponseDto getAllMSDCompetitionDfltVer() {
@@ -33,7 +31,7 @@ public class MSDCompetitionController {
 	
 	@RequestMapping(method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
 	private ResponseDto getAllMSDCompetitionVer1() {
-		List<MSDCompetitionDto> dtos = msdCOmpetitionFacade.getAllMSDCompetition();
+		List<MSDCompetitionDto> dtos = msdCompetitionFacade.getAllMSDCompetition();
         ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		return responseDto;
 	}
@@ -45,7 +43,7 @@ public class MSDCompetitionController {
 
 	@RequestMapping(value="/{msdCompetitionId}", method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
 	public @ResponseBody ResponseDto getMSDCompetitionByIdVer1(@PathVariable("msdClassId") Long msdCompetitionId) {
-		MSDCompetitionDto dto = msdCOmpetitionFacade.getMSDCompetitionById(msdCompetitionId);
+		MSDCompetitionDto dto = msdCompetitionFacade.getMSDCompetitionById(msdCompetitionId);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		return responseDto;
 	}
@@ -59,13 +57,14 @@ public class MSDCompetitionController {
 	public @ResponseBody ResponseDto getMSDCompetitionByIdAndTypeVer1(@PathVariable("msdCompetitionId") Long msdCompetitionId, String type) {
 		ResponseDto responseDto = null;
 		if ("SUMMARY".equals(type)) {
-			MSDCompetitionSummaryDto dto = msdCOmpetitionFacade.getMSDCompetitionSummaryDtoById(msdCompetitionId);
+			MSDCompetitionSummaryDto dto = msdCompetitionFacade.getMSDCompetitionSummaryDtoById(msdCompetitionId);
 	        responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		} else if ("DETAIL".equals(type)) {
-			MSDCompetitionDetailDto dto = msdCOmpetitionFacade.getMSDCompetitionDetailDtoById(msdCompetitionId);
+			MSDCompetitionDetailDto dto = msdCompetitionFacade.getMSDCompetitionDetailDtoById(msdCompetitionId);
 	        responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		} else {
-			responseDto = ResponseDto.createResponseDto(null, "GET", "OBJECT");
+			MSDCompetitionDto dto = msdCompetitionFacade.getMSDCompetitionDtoById(msdCompetitionId);
+			responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 		}
 		
 		return responseDto;
@@ -78,7 +77,7 @@ public class MSDCompetitionController {
 
     @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
 	public@ResponseBody ResponseDto addCompetitionVer1(@RequestBody MSDCompetitionDto msdcompetitiondto) {
-    	MSDCompetitionDto addedDto = msdCOmpetitionFacade.addCompetition(msdcompetitiondto);
+    	MSDCompetitionDto addedDto = msdCompetitionFacade.addCompetition(msdcompetitiondto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(addedDto, "PUT", "OBJECT");
 		return responseDto;
 	}
@@ -90,8 +89,20 @@ public class MSDCompetitionController {
 
 	@RequestMapping(value="/{msdCompetitionId}", method=RequestMethod.DELETE, headers="!X-Api-service-Version=1.0")
 	public @ResponseBody ResponseDto deleteCompetitionByIdVer1(@PathVariable("msdCompetitionId") Long msdCompetitionId) {
-		msdCOmpetitionFacade.disableCompetitionById(msdCompetitionId);
+		msdCompetitionFacade.disableCompetitionById(msdCompetitionId);
         ResponseDto responseDto = ResponseDto.createResponseDto(null, "DELETE", "OBJECT");
+		return responseDto;
+	}
+
+    @RequestMapping(params={"msdstudentid","type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto studentRegisterClassOldDfltVer(Long msdstudentid, String type) {
+    	return studentRegisterClassOldVer1(msdstudentid, type);
+    }
+
+    @RequestMapping(params={"msdstudentid", "type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto studentRegisterClassOldVer1(Long msdstudentid, String type) {
+		List<MSDCompetitionSummaryDto> dtos = msdCompetitionFacade.getCompetitionSummaryDtoByStudentIdAndType(msdstudentid, type);
+		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		return responseDto;
 	}
 

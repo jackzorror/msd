@@ -15,4 +15,12 @@ public interface MSDClassJPARepository extends JpaRepository<MSDClass, Long> {
 	public MSDClass findByName(String name);
 	
 	public List<MSDClass> findByIsActive (byte isActive);
+	
+	/*
+	@Query("SELECT mc FROM MSDClass mc, MSDStudentClass msc WHERE mc.id = msc.msdClassid, msc.msdStudentId = :msdstudentid AND msc.isActive = 1 AND mc.isActive = 1")
+	public List<MSDClass> findStudentRegisterClassByStudentId(@Param("msdstudentid") Integer msdStudentId);
+	
+	@Query("SELECT mc FROM MSDClass mc WHERE id not in (SELECT msdClassId FROM MSDStudentClass WHERE msdStudentId = :msdstudentid and isActive = 1) and isActive = 1")
+	public List<MSDClass> findStudentNonRegisterClassByStudentId(@Param("msdstudentid") Integer msdStudentId);
+	*/
 }
