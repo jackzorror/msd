@@ -1,5 +1,7 @@
 package com.morningstardance.app.msdstudentcompetition;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -60,14 +62,19 @@ public class MSDStudentCompetitionFacadeImpl implements
 		stduentCompetition.setMsdStudentId(msdStudentId.intValue());
 		stduentCompetition.setMsdComptitionId(msdCompetitionId.intValue());
 		
-		MSDStudentCompetition entity = msdStudentCompetitionJPARepository.findByMsdCompetitionIdAndMsdStudentId(msdCompetitionId.intValue(), msdStudentId.intValue());
-		if (null == entity || entity.getIsActive() == (byte) 0 ) {
+		List<MSDStudentCompetition> entities = msdStudentCompetitionJPARepository.findByMsdCompetitionIdAndMsdStudentIdAndIsActive(msdStudentId.intValue(), msdCompetitionId.intValue(), (byte) 1);
+
+		MSDStudentCompetition entity = null;
+		
+		if (null == entities || entities.size() ==  0) {
 			entity = msdStudentCompetitionJPARepository.saveAndFlush(stduentCompetition);
 			msdOperationService.msdStudentClassOperation(msdStudentId, msdCompetitionId, "Register Student : " + msdStudentId + " to Competition : " + msdCompetitionId, "DATABASE");
 			msdStudentFeeFacade.addCompetitionFeeToStudentFeeByStudentIdAndStudentCompetitionId(msdStudentId, entity.getId());
 		} else {
-			msdOperationService.msdStudentCompetitionOperation(msdStudentId, msdCompetitionId, "Re - Register Student : " + msdStudentId + " to Class : " + msdCompetitionId +
-					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
+			entity = entities.get(0);
+			String msg = "Student already registered to this Competition.";
+			msdOperationService.msdStudentCompetitionOperation(msdStudentId, msdCompetitionId, "Re - Register Student : " + msdStudentId + " to Class : " + msdCompetitionId + " reason: "  +
+					msg + " " +	Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
 		}
 		
 		return entity;
@@ -108,12 +115,15 @@ public class MSDStudentCompetitionFacadeImpl implements
 	}
 
 	public String unRegisterStudentFromCompetitionByStudentIdAndCompetitionId(Long sid, Long cid) {
-		MSDStudentCompetition entity = msdStudentCompetitionJPARepository.findByMsdCompetitionIdAndMsdStudentId(cid.intValue(), sid.intValue());
+		MSDStudentCompetition entity = getActiveStudentRegisterCompetitionByByStudentIdAndCompetitionId(sid, cid);
+		
 		if (null != entity) {
 			unRegisterStudentFromCompetitionById(entity.getId());
-		} else {
-			msdOperationService.msdStudentCompetitionOperation(sid, cid, "Un - Register Student : " + sid + " from Compeition : " + cid + " " + 
-					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
+		} else {			
+			String msg = "Cannot find (or found more than one active) student register competition.";
+			msdOperationService.msdStudentCompetitionOperation(sid, cid, "Un - Register Student : " + sid + " from Compeition : " + cid + " reason: " + msg + " " +  
+					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "ERROR");
+			throw new RuntimeException();
 		}
 		
 		return "success";
@@ -130,6 +140,17 @@ public class MSDStudentCompetitionFacadeImpl implements
 			msdOperationService.msdStudentClassOperation(sid, cid, "Un Register Student : " + sid + " from Competition : " + cid, "DATABASE");
 			msdStudentFeeFacade.removeCompetitionFeeFromStudentFeeByStudentIdAndStudentCompetitionId(sid, msdsc.getId());
 		}
+	}
+	
+	/*
+	 * For each student only have one active registered competition
+	 */
+	private MSDStudentCompetition getActiveStudentRegisterCompetitionByByStudentIdAndCompetitionId(Long sid, Long cid) {
+		List<MSDStudentCompetition> entities = msdStudentCompetitionJPARepository.findByMsdCompetitionIdAndMsdStudentIdAndIsActive(cid.intValue(), sid.intValue(), (byte) 1);
+		if (null != entities && entities.size() == 1)
+			return entities.get(0);
+		
+		return null;
 	}
 
 }

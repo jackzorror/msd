@@ -10,12 +10,14 @@ import com.morningstardance.domain.entity.MSDStudentCompetition;
 
 public interface MSDStudentCompetitionJPARepository extends JpaRepository<MSDStudentCompetition, Long> {
 
-	public MSDStudentCompetition findByMsdCompetitionIdAndMsdStudentId(int msdCompetitionId, int msdStudentId);
+	public List<MSDStudentCompetition> findByMsdCompetitionIdAndMsdStudentId(int msdCompetitionId, int msdStudentId);
+	
+	public List<MSDStudentCompetition> findByMsdCompetitionIdAndMsdStudentIdAndIsActive(int msdCompetitionId, int msdStudentId, byte isActive);
+
+	public List<MSDStudentCompetition> findByMsdStudentId(int msdStudentId);
 	
 	public List<MSDStudentCompetition> findByMsdStudentIdAndIsActive(int msdStudentId, byte isActive);
 	
-	public MSDStudentCompetition findByMsdCompetitionIdAndMsdStudentIdAndIsActive(int msdCompetitionId, int msdStudentId, byte isActive);
-
 	public List<MSDStudentCompetition> findByMsdCompetitionId(int msdCompetitionId);
 	
 	public List<MSDStudentCompetition> findByMsdCompetitionIdAndIsActive(int msdCompetitionId, byte isActive);

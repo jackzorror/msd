@@ -13,10 +13,10 @@ function showStudentRegisterCompetition() {
 	var ccdiv = $('<div class="content" style="background:#e0e9f5;"></div>').attr({id:'studentCompetitionDetailContentDiv'});
 	
 	$('#studentMainPanel').append(cdiv);
-	$('#studentCompetitionDetailDiv').append(ctdiv);
-	$('#studentCompetitionDetailDiv').append(ccdiv);
+	cdiv.append(ctdiv);
+	cdiv.append(ccdiv);
 	
-	$('#studentCompetitionDetailDiv').raaccordion();
+	cdiv.raaccordion();
 	createStudentRegisterCompeitionPanel();	
 	var sid = getCurrentStudent().id;
 	ajaxGetStudentRegisterCompeition(sid, getStudentRegisterCompetition);
@@ -29,34 +29,35 @@ function showStudentNonRegisterCompetition() {
 	var ccdiv = $('<div class="content" style="background:#e0e9f5;"></div>').attr({id:'studentNonCompetitionDetailContentDiv'});
 	
 	$('#studentMainPanel').append(cdiv);
-	$('#studentNonCompetitionDetailDiv').append(ctdiv);
-	$('#studentNonCompetitionDetailDiv').append(ccdiv);
+	cdiv.append(ctdiv);
+	cdiv.append(ccdiv);
 	
-	$('#studentNonCompetitionDetailDiv').raaccordion();
+	cdiv.raaccordion();
 	createStudentNonRegisterCompetitionPanel();	
 	var sid = getCurrentStudent().id;
 	ajaxGetStudentNonRegisterCompetition(sid, getStudentNonRegisterCompetition);
 }
 
 function createStudentRegisterCompeitionPanel() {
-	$('#studentCompetitionDetailContentDiv').empty();
+	var scdcdiv = $('#studentCompetitionDetailContentDiv');
+	scdcdiv.empty();
 	
 	var cdiv = $('<div style="width:600px;"></div>').attr({id:'registeredCompetitionDiv'});
-	$('#studentCompetitionDetailContentDiv').append(cdiv);
+	scdcdiv.append(cdiv);
 }
 
 function createStudentNonRegisterCompetitionPanel() {
-	$('#studentNonCompetitionDetailContentDiv').empty();
+	var sncdcdiv = $('#studentNonCompetitionDetailContentDiv');
+	sncdcdiv.empty();
 	
 	var cdiv = $('<div style="width:600px;"></div>').attr({id:'nonRegisteredCompetitionDiv'});
-	$('#studentNonCompetitionDetailContentDiv').append(cdiv);
+	sncdcdiv.append(cdiv);
 }
 
 function getStudentRegisterCompetition(response, request, settings){
 	console.log(" get student register competition ... ");
 	if (404 == response.code) {
 		console.log(" There is no register competition for this student ... ");
-		$('#compeitionInformation').empty();
 	} else if (302 == response.code) {
 		var data = $.parseJSON(response.result);
 		showRegisterCompetitionInformationByGrid(data);
@@ -69,7 +70,6 @@ function getStudentNonRegisterCompetition(response, request, settings){
 	console.log(" get student non register competition ... ");
 	if (404 == response.code) {
 		console.log(" There is no non register competition for this student ... ");
-		$('#compeitionInformation').empty();
 	} else if (302 == response.code) {
 		var data = $.parseJSON(response.result);
 		showNonRegisterCompetitionInformationByGrid(data);
@@ -79,9 +79,11 @@ function getStudentNonRegisterCompetition(response, request, settings){
 }
 
 function showRegisterCompetitionInformationByGrid(data) {
-	$('#registeredCompetitionDiv').empty();
+	var rcdiv =  $('#registeredCompetitionDiv');
+	
+	rcdiv.empty();
 	var srcdiv = $('<div style="border:0px solid;"/>').attr({id:'studentRegisteredCompetitionGrid'});	
-	$('#registeredCompetitionDiv').append(srcdiv);
+	rcdiv.append(srcdiv);
 	
 	if (null == data || data.length < 1)
 		return;
@@ -98,7 +100,7 @@ function showRegisterCompetitionInformationByGrid(data) {
 	}
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	
-	$('#studentRegisteredCompetitionGrid').jqxGrid(
+	srcdiv.jqxGrid(
 	{
 		theme: getTheme(),
 		source:dataAdapter,
@@ -148,9 +150,11 @@ function showRegisterCompetitionInformationByGrid(data) {
 }
 
 function showNonRegisterCompetitionInformationByGrid(data) {
-	$('#nonRegisteredCompetitionDiv').empty();
+	var nrcdiv = $('#nonRegisteredCompetitionDiv');
+	
+	nrcdiv.empty();
 	var srcdiv = $('<div style="border:0px solid;"/>').attr({id:'studentNonRegisteredCompetitionGrid'});	
-	$('#nonRegisteredCompetitionDiv').append(srcdiv);
+	nrcdiv.append(srcdiv);
 	
 	if (null == data || data.length < 1)
 		return;
@@ -167,7 +171,7 @@ function showNonRegisterCompetitionInformationByGrid(data) {
 	}
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	
-	$('#studentNonRegisteredCompetitionGrid').jqxGrid(
+	srcdiv.jqxGrid(
 	{
 		theme: getTheme(),
 		source:dataAdapter,
@@ -260,17 +264,22 @@ function showCompetitionDetail(data) {
 	console.log(" this will pop up window to show detail about competition ");
 	
 	if (0 == $('#msdcopmetitiondetailpopupdiv').length) {
+	
 	    $('#studentMainPanel').append('<div id="msdcopmetitiondetailpopupdiv" />');
 
-		$('#msdcopmetitiondetailpopupdiv').append('<div >Competition Detail Information</div> <div id="studentcompetitiondetaildiv"></div>');
-		$('#msdcopmetitiondetailpopupdiv').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: 500, width: 500, theme: theme, position: { x: 350, y: 150}});
+		var cdpdiv = $('#msdcopmetitiondetailpopupdiv');
+
+		cdpdiv.append('<div >Competition Detail Information</div> <div id="studentcompetitiondetailpopupdiv"></div>');
+		cdpdiv.jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: 500, width: 500, theme: theme, position: { x: 350, y: 150}});
 	
 		var cdiv = $('<div style = "width:480px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentcompetitionInformationdiv'});
-		$('#studentcompetitiondetaildiv').append(cdiv);
+		$('#studentcompetitiondetailpopupdiv').append(cdiv);
 	}
 	
-	if (false == $('#msdcopmetitiondetailpopupdiv').jqxWindow('isOpen')) {
-		$('#msdcopmetitiondetailpopupdiv').jqxWindow('open');
+	var cdpdiv = $('#msdcopmetitiondetailpopupdiv');
+
+	if (false == cdpdiv.jqxWindow('isOpen')) {
+		cdpdiv.jqxWindow('open');
 	}
 
 	createCompetitionDetailDiv();
@@ -281,13 +290,14 @@ function showCompetitionDetail(data) {
 }
 
 function createCompetitionDetailDiv() {
-	$('#studentcompetitionInformationdiv').empty();
+	var scidiv = $('#studentcompetitionInformationdiv');
+	scidiv.empty();
 
 	var ccdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:5px; border:0px solid; height:140px;"/>').attr({id:'competitionCommondivInStudentTab'});
-	$('#studentcompetitionInformationdiv').append(ccdiv);
+	scidiv.append(ccdiv);
 	
 	var ccdivfee = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'competitionFeeInformationdiv'});
-	$('#studentcompetitionInformationdiv').append(ccdivfee);	
+	scidiv.append(ccdivfee);	
 
 	ccdiv.empty();
 	ccdivfee.empty();
