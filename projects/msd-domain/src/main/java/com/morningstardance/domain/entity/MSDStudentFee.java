@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 import com.morningstardance.domain.base.entity.MSDEntityBase;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -133,4 +134,12 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 		this.msdStudentId = msdStudentId;
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("StudentFee--> id: %d Student id: %d Object Name: %s Object Id: %d");
+		sb.append(" IsActive: %x IsPaid: %x IsWaiver: %x PayTime: %s PayType: %s PayNot: %s");
+		return String.format(sb.toString(), id.intValue(), msdStudentId, msdStudentFeeObjectName, msdStudentFeeObjectId,
+				isActive, isPaid, isWaiver, null != payTime ? new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(payTime) : "n/a", 
+				payType, payNote);
+	}
 }

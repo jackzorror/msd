@@ -1,6 +1,5 @@
 package com.morningstardance.app.msdstudentclass;
 
-import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 
 public interface MSDStudentClassFacade {
 

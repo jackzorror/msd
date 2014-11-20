@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.app.msdcompetition.MSDCompetitionSummaryDto;
-import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 import com.morningstardance.app.msdstudent.MSDStudentDetailDto;
 import com.morningstardance.app.msdstudent.MSDStudentDto;
 import com.morningstardance.app.msdstudent.MSDStudentFacade;
+import com.morningstardance.app.msdstudentclass.MSDStudentClassDto;
 import com.morningstardance.app.msdstudentclass.MSDStudentClassFacade;
 import com.morningstardance.web.ResponseDto;
 

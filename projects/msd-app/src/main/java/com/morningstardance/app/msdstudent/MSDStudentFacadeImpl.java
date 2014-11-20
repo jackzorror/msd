@@ -11,6 +11,7 @@ import com.morningstardance.app.msdclass.MSDClassAssembler;
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.app.msdcompetition.MSDCompetitionSummaryDto;
 import com.morningstardance.app.msdoperation.MSDOperationService;
+import com.morningstardance.app.msdstudentclass.MSDStudentClassDto;
 import com.morningstardance.app.msdstudentclass.MSDStudentClassFacade;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassSchedular;

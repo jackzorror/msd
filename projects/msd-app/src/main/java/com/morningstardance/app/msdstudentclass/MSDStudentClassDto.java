@@ -1,4 +1,4 @@
-package com.morningstardance.app.msdstudent;
+package com.morningstardance.app.msdstudentclass;
 
 public class MSDStudentClassDto {
 

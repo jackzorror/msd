@@ -74,6 +74,8 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 		msdClassFeeJPARepository.save(entity);
 
 		msdOperationService.msdClassOperation(msdClassId, "Add Class Fee", entity.toString(), null, "DATABASE");
+		
+		msdStudentFeeFacade.addClassFeeToStudentFeeByClassFeeId(entity.getId());
 	}
 
 	@Override

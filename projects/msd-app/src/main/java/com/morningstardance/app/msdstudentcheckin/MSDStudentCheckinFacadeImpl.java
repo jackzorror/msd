@@ -155,7 +155,7 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 	@Override
 	public String checkStudentClassRegisteinformation(
 			Long msdclassid, Long msdstudentid) {
-		MSDStudentClass msdsc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(msdclassid.intValue(), msdstudentid.intValue());
+		MSDStudentClass msdsc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentIdAndIsActive(msdclassid.intValue(), msdstudentid.intValue(), (byte) 1);
 		if(null != msdsc) {
 			return "FOUND";
 		}
@@ -229,7 +229,7 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 
 		for (MsdStudentCheckin msc : sclist) {
 			MSDStudentCheckinReportDto dto = null;
-			MSDStudentClass sc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(msc.getMsdClassId(), msc.getMsdStudentId());
+			MSDStudentClass sc = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentIdAndIsActive(msc.getMsdClassId(), msc.getMsdStudentId(), (byte) 1);
 			MSDClass c = msdClassJPARepository.findOne(new Long(msc.getMsdClassId()));
 			
 			if (null == sc || sc.getIsActive() == (byte) 0) {

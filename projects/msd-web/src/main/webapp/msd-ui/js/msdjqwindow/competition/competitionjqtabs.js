@@ -249,9 +249,9 @@ function createCompetitionInformationDiv() {
 	$('#ddlCompetitionTypeName').jqxDropDownList({placeHolder: "Please Select Competition Type", height: 20, width: 100, dropDownHeight: 150, theme: getTheme(), source: getAllCompetitionType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
 
 	tdiv.append('<label style="float:left; margin-top:3px;margin-left:10px;">Total Student : </label>');
-	var totalStudent = $('<input style="float:left; margin-top:0px;margin-left:5px;"/>').attr({type:'text', id:'txtTotalStudent'});
+	var totalStudent = $('<input style="float:left; margin-top:0px;margin-left:5px;"/>').attr({type:'text', id:'txtTotalStudentInCompetition'});
 	tdiv.append(totalStudent);
-	$('#txtTotalStudent').jqxInput({rtl: true, disabled:true, height: 20, width:30, minLength: 1, theme: getTheme() });	
+	$('#txtTotalStudentInCompetition').jqxInput({rtl: true, disabled:true, height: 20, width:30, minLength: 1, theme: getTheme() });	
 	
 	tdiv.append('<label style="float:left; margin-left:10px;margin-top:3px">Total Fee : </label>');
 	var totalFee = $('<input style="float:left; margin-top:0px;margin-left:5px;"/>').attr({type:'text', id:'txtTotalFee'});
@@ -519,7 +519,7 @@ function bindCompetitionCommonData(data) {
 	
 	$('#txtTotalFee').jqxInput('val', (null != data && null != data.totalFee ) ? '$ ' + data.totalFee : "$0");
 
-	$('#txtTotalStudent').jqxInput('val', (null != data && null != data.totalStudent) ? data.totalStudent : "0");
+	$('#txtTotalStudentInCompetition').jqxInput('val', (null != data && null != data.totalStudent) ? data.totalStudent : "0");
 	
 	showCompetitionStatusLabel(data);
 }

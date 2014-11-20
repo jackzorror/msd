@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdoperation.MSDOperationService;
-import com.morningstardance.app.msdstudent.MSDStudentClassDto;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDStudent;
@@ -34,10 +33,14 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	
 	@Override
 	public MSDStudentClassDto registerStudentToClassByStudentClassDto(MSDStudentClassDto studentClassDto) {
+		if (null == studentClassDto) return null;
+		
 		return registerStudentToClassByStudentIdAndClassId(new Long(studentClassDto.getMsdStudentId()), new Long(studentClassDto.getMsdClassId()));
 	}
 	
 	public MSDStudentClassDto registerStudentToClassByStudentIdAndClassId(Long sid, Long cid) {
+		if (null == sid || null == cid) return null;
+		
 		MSDStudentClass entity = registerStudentToClassByStudentIdClassId(sid, cid);
 		
 		MSDStudentClassDto dto = new MSDStudentClassDto();
@@ -47,7 +50,14 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		return dto;
 	}
 
+	/**
+	 * when user un register a student from class, it also de active all class fee
+	 * from student fee 
+	 * @param id
+	 */
 	private void unRegisterStudentFromClassById(Long id) {
+		if (null == id) return;
+		
 		MSDStudentClass msdsc = msdStudentClassJPARepository.findOne(id);
 		if (null != msdsc) {
 			msdsc.setIsActive((byte)0);
@@ -71,19 +81,29 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		return "Sucess";
 	}
 	
+	/**
+	 * when user register student to class, it also add all acitve class fee to
+	 * student fee
+	 * @param sid
+	 * @param cid
+	 * @return
+	 */
 	private MSDStudentClass registerStudentToClassByStudentIdClassId(Long sid, Long cid) {
+		if (null == sid || null == cid) return null;
+		
 		MSDStudentClass studentClass = new MSDStudentClass();
 		studentClass.setMsdClassId(cid.intValue());
 		studentClass.setMsdStudentId(sid.intValue());
 		studentClass.setIsActive((byte)1);
 		MSDStudentClass entity = null;
-		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(), sid.intValue());
-		if (null == entity || entity.getIsActive() == (byte) 0) {
+		entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentIdAndIsActive(cid.intValue(), sid.intValue(), (byte) 1);
+		if (null == entity) {
 			entity = msdStudentClassJPARepository.save(studentClass);
 			msdOperationService.msdStudentClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid, "DATABASE");
 			msdStudentFeeFacade.addClassFeeToStudentFeeByStudentIdAndStudentClassId(sid, entity.getId());
 		} else {
-			msdOperationService.msdStudentClassOperation(sid, cid, "Re - Register Student : " + sid + " to Class : " + cid +
+			String msg = "Student already register to this Class";
+			msdOperationService.msdStudentClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid + " reason : " + msg +
 					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
 		}
 		return entity;
@@ -102,11 +122,14 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	}
 
 	public String unRegisterStudentFromClassByStudentIdAndClassId(Long sid, Long cid) {
-		MSDStudentClass entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentId(cid.intValue(), sid.intValue());
+		if (null == sid || null == cid) return null;
+		
+		MSDStudentClass entity = msdStudentClassJPARepository.findByMsdClassIdAndMsdStudentIdAndIsActive(cid.intValue(), sid.intValue(),(byte) 1);
 		if (null != entity) {
 			unRegisterStudentFromClassById(entity.getId());
 		} else {
-			msdOperationService.msdStudentClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid + " " + 
+			String msg = "Cannot find student register record.";
+			msdOperationService.msdStudentClassOperation(sid, cid, "Un - Register Student : " + sid + " from Class : " + cid + " " + " reason: " + msg + 
 					Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
 		}
 		

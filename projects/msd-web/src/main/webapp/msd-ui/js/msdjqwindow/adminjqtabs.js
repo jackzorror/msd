@@ -485,10 +485,11 @@ function registerClassByStudentIdListAndClassId(response, request, settings) {
 		alert(" Can not registerClassByStudentIdListAndClassId ... ");
 	} else if (201 == response.code) {
 		console.log(" registerClassByStudentIdListAndClassId ");
-		alert ("Successfully register studnets to class ");
+		alert ("Successfully register/unregister studnets to/from class ");
 	} else {
 		alert('error');
 	}
+	$('#btnStudentAdminSearchClass').click();		
 }
 
 function createPopupRegisterClassWindow() {

@@ -112,6 +112,8 @@ public class MSDCompetitionFeeFacadeImpl implements MSDCompetitionFeeFacade {
 		
 		msdOperationService.msdCompetitionOperation(new Long(entity.getMsdCompetitionId()), "Create competition fee ", entity.toString(), null, "DATABASE");
 
+		msdStudentFeeFacade.addCompetitionFeeToStudentFeeByCompetitionFeeId(entity.getId());
+		
 		dto = msdCompetitionFeeAssembler.createDtoFromEntity(entity);
 		
 		return dto;

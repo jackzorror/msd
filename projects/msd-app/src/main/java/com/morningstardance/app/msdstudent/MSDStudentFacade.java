@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
 import com.morningstardance.app.msdcompetition.MSDCompetitionSummaryDto;
+import com.morningstardance.app.msdstudentclass.MSDStudentClassDto;
 
 public interface MSDStudentFacade {
 

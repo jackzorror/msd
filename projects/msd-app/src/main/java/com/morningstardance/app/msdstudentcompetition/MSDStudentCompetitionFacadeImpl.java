@@ -10,7 +10,6 @@ import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
 import com.morningstardance.domain.entity.MSDCompetition;
 import com.morningstardance.domain.entity.MSDStudent;
-import com.morningstardance.domain.entity.MSDStudentClass;
 import com.morningstardance.domain.entity.MSDStudentCompetition;
 import com.morningstardance.domain.springdata.jpa.repository.MSDCompetitionJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentCompetitionJPARepository;
@@ -68,13 +67,19 @@ public class MSDStudentCompetitionFacadeImpl implements
 		
 		if (null == entities || entities.size() ==  0) {
 			entity = msdStudentCompetitionJPARepository.saveAndFlush(stduentCompetition);
-			msdOperationService.msdStudentClassOperation(msdStudentId, msdCompetitionId, "Register Student : " + msdStudentId + " to Competition : " + msdCompetitionId, "DATABASE");
+			msdOperationService.msdStudentCompetitionOperation(msdStudentId, msdCompetitionId, "Register Student : " + msdStudentId + " to Competition : " + msdCompetitionId, "DATABASE");
 			msdStudentFeeFacade.addCompetitionFeeToStudentFeeByStudentIdAndStudentCompetitionId(msdStudentId, entity.getId());
 		} else {
+			String msg = null;
 			entity = entities.get(0);
-			String msg = "Student already registered to this Competition.";
-			msdOperationService.msdStudentCompetitionOperation(msdStudentId, msdCompetitionId, "Re - Register Student : " + msdStudentId + " to Class : " + msdCompetitionId + " reason: "  +
+			msg = "Student already registered to this Competition.";
+			msdOperationService.msdStudentCompetitionOperation(msdStudentId, msdCompetitionId, "Register Student : " + msdStudentId + " to Competition : " + msdCompetitionId + " reason: "  +
 					msg + " " +	Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "WARNING");
+			if (entities.size() > 1) {
+				msg = "Student has more than one active registered Competition.";
+				msdOperationService.msdStudentCompetitionOperation(msdStudentId, msdCompetitionId, "Register Student : " + msdStudentId + " to Competition : " + msdCompetitionId + " reason: "  +
+						msg + " " +	Thread.currentThread().getStackTrace()[1].getMethodName() + " at line : " + Thread.currentThread().getStackTrace()[1].getLineNumber(), "ERROR");
+			}
 		}
 		
 		return entity;
@@ -115,7 +120,7 @@ public class MSDStudentCompetitionFacadeImpl implements
 	}
 
 	public String unRegisterStudentFromCompetitionByStudentIdAndCompetitionId(Long sid, Long cid) {
-		MSDStudentCompetition entity = getActiveStudentRegisterCompetitionByByStudentIdAndCompetitionId(sid, cid);
+		MSDStudentCompetition entity = getOnlyOneActiveStudentRegisterCompetitionByByStudentIdAndCompetitionId(sid, cid);
 		
 		if (null != entity) {
 			unRegisterStudentFromCompetitionById(entity.getId());
@@ -137,7 +142,7 @@ public class MSDStudentCompetitionFacadeImpl implements
 			msdStudentCompetitionJPARepository.saveAndFlush(msdsc);
 			Long sid = new Long(msdsc.getMsdStudentId());
 			Long cid = new Long(msdsc.getMsdComptitionId());
-			msdOperationService.msdStudentClassOperation(sid, cid, "Un Register Student : " + sid + " from Competition : " + cid, "DATABASE");
+			msdOperationService.msdStudentCompetitionOperation(sid, cid, "Un Register Student : " + sid + " from Competition : " + cid, "DATABASE");
 			msdStudentFeeFacade.removeCompetitionFeeFromStudentFeeByStudentIdAndStudentCompetitionId(sid, msdsc.getId());
 		}
 	}
@@ -145,7 +150,7 @@ public class MSDStudentCompetitionFacadeImpl implements
 	/*
 	 * For each student only have one active registered competition
 	 */
-	private MSDStudentCompetition getActiveStudentRegisterCompetitionByByStudentIdAndCompetitionId(Long sid, Long cid) {
+	private MSDStudentCompetition getOnlyOneActiveStudentRegisterCompetitionByByStudentIdAndCompetitionId(Long sid, Long cid) {
 		List<MSDStudentCompetition> entities = msdStudentCompetitionJPARepository.findByMsdCompetitionIdAndMsdStudentIdAndIsActive(cid.intValue(), sid.intValue(), (byte) 1);
 		if (null != entities && entities.size() == 1)
 			return entities.get(0);
