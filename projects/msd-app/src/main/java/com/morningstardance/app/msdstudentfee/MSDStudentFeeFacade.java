@@ -1,5 +1,8 @@
 package com.morningstardance.app.msdstudentfee;
 
+import java.util.Date;
+import java.util.List;
+
 public interface MSDStudentFeeFacade {
 
 	void addClassFeeToStudentFeeByStudentIdAndStudentClassId(Long sid, Long cid);
@@ -17,4 +20,22 @@ public interface MSDStudentFeeFacade {
 	void addClassFeeToStudentFeeByClassFeeId(Long msdClassFeeId);
 	
 	void addCompetitionFeeToStudentFeeByCompetitionFeeId(Long msdCompetitionFeeId);
+
+	List<MSDStudentFeeSummaryDto> getStudentFeeSummarysByStudentId(Long id);
+
+	MSDStudentFeeDetailDto getStudentFeeDetailDtoById(Long msdstudentfeeid);
+
+	MSDStudentFeeDto getStudentFeeDtoById(Long msdstudentfeeid);
+
+	String payStudentFeesByStudentIdAndFeeInfo(Long msdstudentid,
+			String feeidlist, double totalfee, String paytype,
+			Date paytime, String paynote);
+
+	String payStudentFeesByStudentPayDto(MSDStudentFeePayDto msdStudentFeePayDto);
+
+	String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid,
+			String feeidlist, String type);
+
+	String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid,
+			Long feeid, String feenote, String type);
 }

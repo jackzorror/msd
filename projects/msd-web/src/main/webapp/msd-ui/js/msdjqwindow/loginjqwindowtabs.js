@@ -158,6 +158,7 @@ function afterUserLoginProcess() {
 	ajaxGetAllMSDCostType(getAllMSDCostType);
 	ajaxGetAllMSDCompetitionType(getAllMSDCompetitionType);
 	ajaxGetAllCompetition(getAllCompetitionNameIdList);
+	ajaxGetAllGeneralFee(getAllGeneralFeeList);
 	
 	setTimerId(setInterval("timercount()", 60000));
 	
@@ -167,15 +168,16 @@ function hasRole(response) {
 	if (302 == response.code) {
 		var data = $.parseJSON(response.result);
 		if (!data) {
-			if (document.getElementById('msdMainTabs') != null)
-				$('#msdMainTabs').jqxTabs('removeLast'); 
+			var mtabs = $('#msdMainTabs');
+			if (null != mtabs && mtabs.length == 1)
+				var length = mtabs.jqxTabs('length');
+				mtabs.jqxTabs('removeAt', length - 1); 
+				mtabs.jqxTabs('removeAt', length - 2); 
 		}
 	} else {
 		alert(" Can't get unique for " + fieldname + " ... ");
 	}
 }
-
-
 
 function getUniqueFirstNameForStudent(response) {
 	if (302 == response.code) {
@@ -259,6 +261,18 @@ function getAllMSDCompetitionType(response) {
 	}
 }
 
+function getAllGeneralFeeList(response) {
+	if (404 == response.code) {
+		console.log(" Can't get all general fee ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get all general fee list ");
+		setAllGeneralFee(data);
+	} else {
+		alert('error');
+	}
+}
+
 function getAllCompetitionNameIdList(response) {
 	if (404 == response.code) {
 		console.log(" Can't get active all competition ... ");
@@ -304,6 +318,14 @@ function getActiveClassNameList() {
 }
 function setActiveClassNameList(data) {
 	activeClassNameList = data;
+}
+
+var allGeneralFee;
+function setAllGeneralFee(data) {
+	allGeneralFee = data;
+}
+function getAllGeneralFee() {
+	return allGeneralFee;
 }
 
 var allCostType;

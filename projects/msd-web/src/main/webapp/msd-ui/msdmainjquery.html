@@ -127,8 +127,10 @@
     <script type="text/javascript" src="js/msdjqwindow/adminjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/competition/competitionjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/student/studentCompetition.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/student/studentFinance.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/admin/competition/adminCompetitionjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/admin/competition/YAGPCompetition.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/finance/financejqtabs.js"></script>
     
     <script type="text/javascript" src="js/lib/messageutil.js"></script>
     <script type="text/javascript" src="js/lib/ajaxutil.js"></script>
@@ -165,6 +167,7 @@
 			addCompetitionTabsEventListeners();    
 			addAdminTabsEventListeners();
 			addCompetitionAdminTabsEventListeners();
+			addFinanceTabsEventListeners();
         }
         
         function createElements(theme) {
@@ -199,6 +202,7 @@
 			$('#classDockPanel').jqxDockPanel({width: 750, height:550});
 			$('#competitionDockPanel').jqxDockPanel({width: 750, height:550});
 			$('#adminDockPanel').jqxDockPanel({width: 750, height:550});
+			$('#financeDockPanel').jqxDockPanel({width: 750, height:550});
 			document.getElementById('msdMainTabs').style.visibility= 'hidden' ;
 
            $('#msdMainTabs').on('selected', function (event) {
@@ -211,6 +215,7 @@
             initClassTab();
             initCompetitionTab();
             initAdminTab();
+            initFinanceTab();
             
             $(this).mousemove(function(e){
             	idleTime=0;
@@ -236,13 +241,14 @@
 	    			<li>Student</li>
 					<li>Class</li>
 					<li>Competition</li>
-					<li>Admin</li>		
+					<li>Admin</li>
+					<li>Finance</li>
 				</ul>
   				<div id="tabs-Student">
   					<div id='studentDockPanel'>
 					    <div id='studentSearchPanel' dock='top' style='height: 30px;'></div>
 					    <div id='studentControlPanel' dock='left' style='width:110px;'></div>
-					    <div id='studentMainPanel' dock='right'></div>
+					    <div id='studentMainPanel' style='background:#e0e9f5' dock='right'></div>
   					</div>
   				</div>
   				<div id="tabs-Class" style='background:#e0e9f5'>
@@ -261,6 +267,12 @@
   					<div id='adminDockPanel'>
   						<div id='adminControlPanel' dock='left' style='width: 110px;'>control</div>
   						<div id='adminMainPanel' style='background:#e0e9f5;'></div>
+  					</div>
+  				</div>
+  				<div id="tabs-Finance">
+  					<div id='financeDockPanel'>
+  						<div id='financeControlPanel' dock='left' style='width: 110px;'>control</div>
+  						<div id='financeMainPanel' style='background:#e0e9f5;'></div>
   					</div>
   				</div>
 			</div>

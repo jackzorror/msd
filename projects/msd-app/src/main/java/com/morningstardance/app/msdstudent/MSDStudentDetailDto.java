@@ -20,14 +20,8 @@ public class MSDStudentDetailDto extends MSDStudentDto {
 	private List<MSDStudentParentDto> msdStudentParentDtos;
 	
 	private MSDStudentMedicalInfoDto msdStudentMedicalInfoDto;
-//	private int msdStudentMedicalInfoId;
-//	private String emergencyName;
-//	private String emergencyPhone;
-//	private String emergencyPhoneAlt;
-//	private String insuranceCompany;
-//	private String pediatricianName;
-//	private String phone;
-//	private String policyNumber;
+	
+	private double balance;
 	
 	public int getId() {
 		return id;
@@ -96,54 +90,6 @@ public class MSDStudentDetailDto extends MSDStudentDto {
 			List<MSDStudentParentDto> msdStudentParentDtos) {
 		this.msdStudentParentDtos = msdStudentParentDtos;
 	}
-//	public int getMsdStudentMedicalInfoId() {
-//		return msdStudentMedicalInfoId;
-//	}
-//	public void setMsdStudentMedicalInfoId(int msdStudentMedicalInfoId) {
-//		this.msdStudentMedicalInfoId = msdStudentMedicalInfoId;
-//	}
-//	public String getEmergencyName() {
-//		return emergencyName;
-//	}
-//	public void setEmergencyName(String emergencyName) {
-//		this.emergencyName = emergencyName;
-//	}
-//	public String getEmergencyPhone() {
-//		return emergencyPhone;
-//	}
-//	public void setEmergencyPhone(String emergencyPhone) {
-//		this.emergencyPhone = emergencyPhone;
-//	}
-//	public String getEmergencyPhoneAlt() {
-//		return emergencyPhoneAlt;
-//	}
-//	public void setEmergencyPhoneAlt(String emergencyPhoneAlt) {
-//		this.emergencyPhoneAlt = emergencyPhoneAlt;
-//	}
-//	public String getInsuranceCompany() {
-//		return insuranceCompany;
-//	}
-//	public void setInsuranceCompany(String insuranceCompany) {
-//		this.insuranceCompany = insuranceCompany;
-//	}
-//	public String getPediatricianName() {
-//		return pediatricianName;
-//	}
-//	public void setPediatricianName(String pediatricianName) {
-//		this.pediatricianName = pediatricianName;
-//	}
-//	public String getPhone() {
-//		return phone;
-//	}
-//	public void setPhone(String phone) {
-//		this.phone = phone;
-//	}
-//	public String getPolicyNumber() {
-//		return policyNumber;
-//	}
-//	public void setPolicyNumber(String policyNumber) {
-//		this.policyNumber = policyNumber;
-//	}
 	public Date getDob() {
 		return dob;
 	}
@@ -163,6 +109,10 @@ public class MSDStudentDetailDto extends MSDStudentDto {
 	public void setIsActive(byte isActive) {
 		this.isActive = isActive;
 	}
-	
-
+	public double getBalance() {
+		return balance;
+	}
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
 }

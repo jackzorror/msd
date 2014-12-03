@@ -256,7 +256,6 @@ function showSelectedStudents(data) {
             $('#btnCancelRegisterClass').on('click', function () {
 				console.log(" cancel Register class ...");
 				$("#popupRegisterClassWindow").jqxWindow('hide');
-				
             });
 				                
             $('#btnRegisterClass').on('click', function () {

@@ -415,7 +415,6 @@ function showClassSchedularInformation(data) {
 		width: 600,
 	    source: dataAdapter,
                 
-    	pageable: false,
 	    editable: false,
 	    selectionMode: 'singleRow',
     	showToolbar: true,

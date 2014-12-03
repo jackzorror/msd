@@ -32,31 +32,31 @@ public class MSDStudentClass extends MSDEntityBase implements Serializable {
 	public MSDStudentClass() {
 	}
 
-
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("StudentClass--> id: %d Student id: %d  Class id: %d IsActive: %x");
+		return String.format(sb.toString(), id.intValue(), msdStudentId, msdClassId, isActive);
+	}
+	
 	public Long getId() {
 		return id;
 	}
-
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-
 	public int getMsdStudentId() {
 		return msdStudentId;
 	}
-
 
 	public void setMsdStudentId(int msdStudentId) {
 		this.msdStudentId = msdStudentId;
 	}
 
-
 	public int getMsdClassId() {
 		return msdClassId;
 	}
-
 
 	public void setMsdClassId(int msdClassId) {
 		this.msdClassId = msdClassId;
@@ -69,5 +69,4 @@ public class MSDStudentClass extends MSDEntityBase implements Serializable {
 	public void setIsActive(byte isActive) {
 		this.isActive = isActive;
 	}
-
 }

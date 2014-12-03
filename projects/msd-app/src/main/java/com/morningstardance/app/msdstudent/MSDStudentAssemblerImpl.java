@@ -8,9 +8,19 @@ import javax.annotation.Resource;
 import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
+import com.morningstardance.domain.entity.MSDClassFee;
+import com.morningstardance.domain.entity.MSDCompetitionFee;
+import com.morningstardance.domain.entity.MSDGeneralFee;
 import com.morningstardance.domain.entity.MSDStudent;
+import com.morningstardance.domain.entity.MSDStudentCredit;
+import com.morningstardance.domain.entity.MSDStudentFee;
 import com.morningstardance.domain.entity.MSDStudentMedicalInfo;
 import com.morningstardance.domain.entity.MSDStudentParent;
+import com.morningstardance.domain.springdata.jpa.repository.MSDClassFeeJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDCompetitionFeeJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDGeneralFeeJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentCreditJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDStudentFeeJPARepository;
 
 @Service("msdStudentAssembler")
 public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
@@ -18,6 +28,21 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
     @Resource(name="mapper")
     protected Mapper mapper;
 
+    @Resource
+    MSDStudentFeeJPARepository msdStudentFeeJPARepository;
+    
+    @Resource
+    MSDClassFeeJPARepository msdClassFeeJPARepository;
+    
+    @Resource
+    MSDCompetitionFeeJPARepository msdCompetitionFeeJPARepository;
+    
+    @Resource
+    MSDGeneralFeeJPARepository msdGeneralFeeJPARepository;
+    
+    @Resource
+    MSDStudentCreditJPARepository msdStudentCreditJPARepository;
+    
 	@Override
 	public List<MSDStudentDto> createDtoFromEntity(List<MSDStudent> msdStudents) {
 		List<MSDStudentDto> dtos = new ArrayList<MSDStudentDto>();
@@ -45,7 +70,42 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 		MSDStudentMedicalInfoDto mdto = createStudentMedicalInfoDtoFromEntity(msdStudent.getMsdStudentMedicalInfo());
 		dto.setMsdStudentMedicalInfoDto(mdto);
 		
+		dto.setBalance(getStudentBalanceById(msdStudent.getId()));
 		return dto;
+	}
+
+	@Override
+	public double getStudentBalanceById(Long id) {
+		if (null == id || id.intValue() == 0) return 0;
+		
+		double totalFees = 0.0;
+		List<MSDStudentFee> fees = msdStudentFeeJPARepository.findByMsdStudentIdAndIsActive(id.intValue(), (byte) 1);
+		for(MSDStudentFee fee : fees) {
+			if (fee.getIsPaid() == (byte) 1 || fee.getIsWaiver() == (byte) 1) continue;
+			
+			if (fee.getMsdStudentFeeObjectName().equals(MSDClassFee.class.getSimpleName())) {
+				MSDClassFee cfee = msdClassFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
+				if (cfee.getIsActive() == (byte) 1)
+					totalFees += cfee.getCost().doubleValue();
+			} else if (fee.getMsdStudentFeeObjectName().equals(MSDCompetitionFee.class.getSimpleName())) {
+				MSDCompetitionFee cfee = msdCompetitionFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
+				if (cfee.getIsActive() == (byte) 1)
+					totalFees += cfee.getCost().doubleValue();
+			} else if (fee.getMsdStudentFeeObjectName().equals(MSDGeneralFee.class.getSimpleName())) {
+				MSDGeneralFee gfee = msdGeneralFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
+				if (gfee.getIsActive() == (byte) 1)
+					totalFees += gfee.getCost().doubleValue();
+			}
+		}
+		double totalCredit = 0.0;
+		List<MSDStudentCredit> credits = msdStudentCreditJPARepository.findByMsdStudentIdAndIsActive(id.intValue(), (byte) 1);
+		for (MSDStudentCredit credit : credits) {
+			if (credit.getIsConsumed() == (byte) 1) continue;
+			
+			totalCredit += credit.getCredit().doubleValue();
+		}
+		
+		return totalFees - totalCredit;
 	}
 
 	private MSDStudentMedicalInfoDto createStudentMedicalInfoDtoFromEntity(

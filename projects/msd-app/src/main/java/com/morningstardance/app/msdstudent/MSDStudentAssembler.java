@@ -16,4 +16,5 @@ public interface MSDStudentAssembler {
 	
 	List<MSDStudentDetailDto> createDetailDtoFromEntity(List<MSDStudent> msdStudents);
 
+	double getStudentBalanceById(Long id);
 }

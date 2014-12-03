@@ -15,4 +15,8 @@ public interface MSDStudentFeeJPARepository extends JpaRepository<MSDStudentFee,
 
 	List<MSDStudentFee> findByMsdStudentFeeObjectIdAndMsdStudentFeeObjectNameAndIsActive
 		(int msdStudentFeeObjectId, String msdStudentFeeObjectName, byte isActive);
+	
+	List<MSDStudentFee> findByMsdStudentId(int msdStudentId);
+	
+	List<MSDStudentFee> findByMsdStudentIdAndIsActive(int msdStudentId, byte isActive);
 }

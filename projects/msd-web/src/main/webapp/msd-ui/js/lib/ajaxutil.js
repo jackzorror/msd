@@ -162,6 +162,20 @@ function ajaxAddNewFee(classfee, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxAddGeneralFee(generalfee, fName) {
+	var ajaxcall = $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdgeneralfee",
+		data: JSON.stringify(generalfee),
+		contentType: "application/json",
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxSaveClassInformation(id, cname, clocation, sdate, edate, isactive, fName) {
 	var classInfo = {"id":id, "name":cname, "location":clocation, "classStartTime":sdate, "classEndTime":edate, "isactive":isactive};
 
@@ -388,6 +402,20 @@ function ajaxGetAllMSDCompetitionType (fName) {
 	ajaxcall.error(handleAjaxError);
 };
 
+function ajaxGetAllGeneralFee(fName) {
+	console.log(" call get all General Fee ... ");
+		
+	ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdgeneralfee",
+		dataType: "json",
+		contentType: "application/json"
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxGetClassDetailSchedularByClassId(cid, fName) {
 	console.log(" in get class schedular by id ... ");
 
@@ -447,6 +475,18 @@ function ajaxAddCompetitionFee(competitionfee, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxAddGeneralFeeToStudentFee(sid, fid, fnote, fName) {
+	var ajaxcall = $.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentfee",
+		data: {'msdstudentid':sid, 'feeid':fid, 'feenote':fnote, 'type':'GENERALFEE'},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxDeleteCcompetitionFee(id, fName) {
 	console.log(" delete competition fee ");
 	
@@ -486,3 +526,123 @@ function ajaxDeleteNonClassDate(id, fName) {
 	ajaxcall.done(fName);
 	ajaxcall.error(handleAjaxError);
 }
+
+function ajaxGetStudentFeeByStudentId(id, fName) {
+	console.log(" get student fee in ajax ");
+	
+	var ajaxcall =  $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdstudentfee",
+		dataType: "json",
+		contentType: "application/json",
+		data: { "id": id, "type": "ByStudentId"},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetStudentCreditByStudentId(id, fName) {
+	console.log(" get student credite in ajax ");
+	
+	var ajaxcall =  $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdstudentcredit",
+		dataType: "json",
+		contentType: "application/json",
+		data: { "id": id, "type": "ByStudentId"},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxAddStudentCredit(sid, credit, note, fName) {
+	console.log(" add student credite in ajax ");
+	var dto = {"msdStudentId":sid,"credit":credit,"creditNote":note};
+	var ajaxcall =  $.ajax({
+		type: "POST",
+		url: "../msd-app/rs/msdstudentcredit",
+		dataType: "json",
+		data:{msdstudentid:sid, creditnote:note, credit:credit}
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetStudentFinanceBalance(id, fName) {
+	console.log(" get student balance in ajax ");
+	
+	var ajaxcall =  $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdstudent/" + id + "/FINANCEBALANCE",
+		dataType: "json",
+		contentType: "application/json",
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetStudentFeeDetailById(id, fName) {
+	console.log(" get student fee detail ajax ");
+	
+	var ajaxcall =  $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdstudentfee/" + id,
+		dataType: "json",
+		contentType: "application/json",
+		data:{type:"DETAIL"},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetStudentCreditDetailById(id, fName) {
+	console.log(" get student credit detail ajax ");
+	
+	var ajaxcall =  $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdstudentcredit/" + id,
+		dataType: "json",
+		contentType: "application/json",
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxPayStudentFees(sid, feeidlist, totalfee, paytype, paytime, paynote, fName) {
+	console.log(" pay student fees ");
+	var dto = {"msdStudentId":sid, "feeIdList":feeidlist, "totalFee":totalfee, "payType":paytype,"payTime":paytime,"payNote":paynote};
+	
+	var ajaxcall =  $.ajax({
+		type: "POST",
+		url: "../msd-app/rs/msdstudentfee",
+		dataType: "json",
+		contentType: "application/json",
+		data:JSON.stringify(dto),
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxConsumeStudentCredits(sid, feeidlist, consumetime, consumenote, fName){
+	console.log(" consume student credits ");
+	var dto = {"msdStudentId":sid, "creditIdList":feeidlist, "consumeTime":consumetime,"consumeNote":consumenote};
+	
+	var ajaxcall =  $.ajax({
+		type: "POST",
+		url: "../msd-app/rs/msdstudentcredit",
+		dataType: "json",
+		data:{"msdStudentId":sid, "creditIdList":feeidlist, "consumeTime":consumetime,"consumeNote":consumenote},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+

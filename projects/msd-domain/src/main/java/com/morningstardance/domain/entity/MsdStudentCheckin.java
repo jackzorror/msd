@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 import com.morningstardance.domain.base.entity.MSDEntityBase;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -47,6 +48,15 @@ public class MsdStudentCheckin extends MSDEntityBase implements Serializable {
 	public MsdStudentCheckin() {
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("StudentCheckIn--> id: %d Student id: %d  Class id: %d checkin time: %s note: %s)"); 
+		sb.append(" isMakeup: %x isFivehoursmore %x isOther %x");
+		return String.format(sb.toString(), id.intValue(), msdStudentId, msdClassId, 
+				null != checkinTime ? new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(checkinTime) : "n/a",
+				note, isMakeup, isFivehoursmore, isOther);
+	}
+	
 	public Long getId() {
 		return id;
 	}

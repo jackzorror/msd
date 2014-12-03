@@ -38,6 +38,10 @@ function initStudentTab() {
 	$('#studentControlPanel').append(cbutton);
 	$('#btnCompetitionInfo').jqxButton({width:'100', theme: getTheme() });
 	
+	var fbutton = $('<input style="float:left; margin-top:10px; margin-left:3px;" />').attr({type:'button', id:'btnFinanceInfo', value:'Finance'});
+	$('#studentControlPanel').append(fbutton);
+	fbutton.jqxButton({width:'100', theme: getTheme() });
+	
 	var abutton = $('<input style="float:left; margin-top:10px; margin-left:3px;" />').attr({type:'button', id:'btnAddStudent', value:'New Student'});
 	$('#studentControlPanel').append(abutton);
 	$('#btnAddStudent').jqxButton({ width: '100', theme: getTheme() });
@@ -619,6 +623,7 @@ function addStudentTabsEventListeners() {
 	$(document).on('click', '#btnStudentInfo', handleStudentInfoClick);
 	$(document).on('click', '#btnRegistClass', handleRegistClassClick);
 	$(document).on('click', '#btnCompetitionInfo', handleCompetitionInfoClick);
+	$(document).on('click', '#btnFinanceInfo', handleFinanceInfoClick);
 	$(document).on('click', '#btnAddStudent', handleStudentAddClick);
 	
 	$(document).on('keypress', '#txtStudentSearchFirstName', handleSearchFirstNameKeypress);
@@ -731,6 +736,23 @@ function handleCompetitionInfoClick() {
 	}
 
 	setCurrentFunction("COMPETITION");
+}
+
+function handleFinanceInfoClick() {
+	console.log(" Finance Information ... ");
+	
+	var fname = $.trim($('#txtStudentSearchFirstName').val());
+	var lname = $.trim($('#txtStudentSearchLastName').val());
+
+	if ((null == fname || fname.length == 0) ||
+	    (null == lname || lname.length == 0) ||
+	    null == getCurrentStudent()) {
+	    alert("Please Find student with last name and first name first");
+	} else {
+		showStudentFinanceInfo();
+	}
+
+	setCurrentFunction("FINANCE");
 }
 
 function showStudentRegisterClass() {

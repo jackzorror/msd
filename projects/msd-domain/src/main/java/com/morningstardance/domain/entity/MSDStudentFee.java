@@ -51,6 +51,9 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 	@Column(name="msd_student_id")
 	private int msdStudentId;
 	
+	@Column(name="fee_note")
+	private String feeNote;
+
 	public MSDStudentFee() {
 	}
 
@@ -134,12 +137,20 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 		this.msdStudentId = msdStudentId;
 	}
 
+	public String getFeeNote() {
+		return feeNote;
+	}
+
+	public void setFeeNote(String feeNote) {
+		this.feeNote = feeNote;
+	}
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("StudentFee--> id: %d Student id: %d Object Name: %s Object Id: %d");
-		sb.append(" IsActive: %x IsPaid: %x IsWaiver: %x PayTime: %s PayType: %s PayNot: %s");
+		sb.append(" IsActive: %x IsPaid: %x IsWaiver: %x PayTime: %s PayType: %s PayNot: %s FeeNot: %s");
 		return String.format(sb.toString(), id.intValue(), msdStudentId, msdStudentFeeObjectName, msdStudentFeeObjectId,
 				isActive, isPaid, isWaiver, null != payTime ? new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(payTime) : "n/a", 
-				payType, payNote);
+				payType, payNote, feeNote);
 	}
 }

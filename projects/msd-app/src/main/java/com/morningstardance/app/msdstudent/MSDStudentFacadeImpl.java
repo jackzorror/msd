@@ -9,15 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdclass.MSDClassAssembler;
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
-import com.morningstardance.app.msdcompetition.MSDCompetitionSummaryDto;
 import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.app.msdstudentclass.MSDStudentClassDto;
 import com.morningstardance.app.msdstudentclass.MSDStudentClassFacade;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassSchedular;
-import com.morningstardance.domain.entity.MSDCompetition;
 import com.morningstardance.domain.entity.MSDStudent;
-import com.morningstardance.domain.entity.MSDStudentClass;
 import com.morningstardance.domain.msdclass.MSDClassRepository;
 import com.morningstardance.domain.msdstudent.MSDStudentRepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassJPARepository;
@@ -198,4 +195,13 @@ public class MSDStudentFacadeImpl implements MSDStudentFacade {
 		return msdtos;
 	}
 
+	@Override
+	public MSDStudentBalanceDto getStudentFinanceBalanceByStudentId(Long msdstudentid) {
+		double balance =  msdStudentAssembler.getStudentBalanceById(msdstudentid);
+		MSDStudentBalanceDto dto = new MSDStudentBalanceDto();
+		dto.setMsdStudentId(msdstudentid.intValue());
+		dto.setBalance(balance);
+		
+		return dto;
+	}
 }

@@ -37,4 +37,6 @@ public interface MSDStudentFacade {
 
 	List<MSDStudentDto> getAllStudentSummaryDtoByClassId(Long msdclassid);
 
+	MSDStudentBalanceDto getStudentFinanceBalanceByStudentId(Long msdstudentid);
+
 }

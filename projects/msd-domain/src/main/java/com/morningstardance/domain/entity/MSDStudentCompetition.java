@@ -1,6 +1,8 @@
 package com.morningstardance.domain.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+
 import javax.persistence.*;
 
 import com.morningstardance.domain.base.entity.MSDEntityBase;
@@ -32,6 +34,12 @@ public class MSDStudentCompetition extends MSDEntityBase implements Serializable
 	public MSDStudentCompetition() {
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("StudentCompetition--> id: %d Student id: %d  Competition id: %d IsActive: %x");
+		return String.format(sb.toString(), id.intValue(), msdStudentId, msdCompetitionId, isActive);
+	}
+	
 	public Long getId() {
 		return this.id;
 	}

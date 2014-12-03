@@ -5,8 +5,6 @@ import javax.persistence.*;
 
 import com.morningstardance.domain.base.entity.MSDEntityBase;
 
-import java.util.List;
-
 
 /**
  * The persistent class for the msd_cost_type database table.
@@ -27,6 +25,12 @@ public class MSDCostType extends MSDEntityBase implements Serializable {
 	public MSDCostType() {
 	}
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("CostType--> id: %d name: %s");
+		return String.format(sb.toString(), id.intValue(), name);
+	}
+	
 	public Long getId() {
 		return this.id;
 	}
