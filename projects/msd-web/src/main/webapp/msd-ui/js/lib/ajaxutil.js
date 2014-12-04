@@ -559,12 +559,24 @@ function ajaxGetStudentCreditByStudentId(id, fName) {
 
 function ajaxAddStudentCredit(sid, credit, note, fName) {
 	console.log(" add student credite in ajax ");
-	var dto = {"msdStudentId":sid,"credit":credit,"creditNote":note};
 	var ajaxcall =  $.ajax({
 		type: "POST",
 		url: "../msd-app/rs/msdstudentcredit",
 		dataType: "json",
 		data:{msdstudentid:sid, creditnote:note, credit:credit}
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxAddStudentCreditToStudents(sidList, credit, note, fName) {
+	console.log(" add student credite in ajax ");
+	var ajaxcall =  $.ajax({
+		type: "POST",
+		url: "../msd-app/rs/msdstudentcredit",
+		dataType: "json",
+		data:{msdstudentidlist:sidList, creditnote:note, credit:credit}
 	});
 
 	ajaxcall.done(fName);
@@ -645,4 +657,19 @@ function ajaxConsumeStudentCredits(sid, feeidlist, consumetime, consumenote, fNa
 	ajaxcall.done(fName);
 	ajaxcall.error(handleAjaxError);
 }
+
+function ajaxCheckinClassByStudentIdListAndClassId (cid, checkintime, sidList, fName) {
+	console.log(" checkin students to class ");
+	
+	var ajaxcall =  $.ajax({
+		type: "POST",
+		url: "../msd-app/msdstudentcheckin",
+		dataType: "json",
+		data:{"msdclassid":cid, "checkintime":checkintime, "msdstudentidlist":sidList},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 

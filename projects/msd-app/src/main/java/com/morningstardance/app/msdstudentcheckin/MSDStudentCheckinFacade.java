@@ -1,5 +1,6 @@
 package com.morningstardance.app.msdstudentcheckin;
 
+import java.util.Date;
 import java.util.List;
 
 public interface MSDStudentCheckinFacade {
@@ -26,4 +27,7 @@ public interface MSDStudentCheckinFacade {
 
 	List<MSDStudentCheckinReportDto> getStudentAllCheckinReportByStudentId(
 			Long msdstudentid);
+
+	String checkinStudentsToClass(Long msdclassid, Date checkintime,
+			String msdstudentidlist);
 }

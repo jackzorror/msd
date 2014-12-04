@@ -132,4 +132,17 @@ public class MSDStudentCreditFacadeImpl implements MSDStudentCreditFacade {
 		
 	}
 
+	@Override
+	public String addStudentCreditToStudents(String msdstudentidlist,String creditnote, Double credit) {
+		if (null == msdstudentidlist || msdstudentidlist.isEmpty()) return null;
+		
+		if (null == credit || credit.doubleValue() == 0) return null;
+		
+		String [] sidlist = msdstudentidlist.split(",");
+		for (String id : sidlist) {
+			addStudentCredit(new Long(id), creditnote, credit);
+		}
+		return "successfully";
+	}
+
 }

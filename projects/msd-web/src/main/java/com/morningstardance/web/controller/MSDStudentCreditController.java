@@ -65,6 +65,18 @@ public class MSDStudentCreditController {
 		return responseDto;
 	}
 
+    @RequestMapping(params={"msdstudentidlist", "creditnote", "credit"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto addStudentCreditToStudentsDfltVer(String msdstudentidlist,String creditnote,Double credit) {
+    	return addStudentCreditToStudentsVer1(msdstudentidlist, creditnote, credit);
+    }
+
+    @RequestMapping(params={"msdstudentidlist", "creditnote", "credit"}, method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+	public@ResponseBody ResponseDto addStudentCreditToStudentsVer1(String msdstudentidlist,String creditnote,Double credit) {
+    	String result = msdStudentCreditFacade.addStudentCreditToStudents(msdstudentidlist, creditnote, new Double(credit));
+		ResponseDto responseDto = ResponseDto.createResponseDto(result, "POST", "OBJECT");
+		return responseDto;
+	}
+    
     @RequestMapping(params={"msdStudentId", "creditIdList", "consumeTime", "consumeNote"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto consumeStudentCreditsDfltVer(Long msdStudentId,String creditIdList, Date consumeTime, String consumeNote) {
     	return consumeStudentCreditsVer1(msdStudentId, creditIdList, consumeTime, consumeNote);

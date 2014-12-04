@@ -17,4 +17,7 @@ public interface MSDStudentCreditFacade {
 	String consumeStudentCredits(Long msdStudentId, String creditIdList,
 			Date consumeTime, String consumeNote);
 
+	String addStudentCreditToStudents(String msdstudentidlist,
+			String creditnote, Double double1);
+
 }

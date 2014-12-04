@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -60,8 +59,6 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 	@Override
 	public MSDClassDto getMSDClassById(Long msdclassId) {
 		MSDClass msdclass = msdClassJPARepository.findOne(msdclassId);
-		Long studnetCount = msdStudentClassJPARepository.getTotalStudentCountByClassIdAndIsActive(new Integer(msdclassId.intValue()), (byte) 1);
-		BigDecimal totalFee = msdClassFeeJPARepository.getTotalClassFeeByClassIdAndIsActive(new Integer(msdclassId.intValue()), (byte) 1);
 		return msdClassAssembler.createDtoFromEntity(msdclass);
 	}
 

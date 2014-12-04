@@ -258,4 +258,31 @@ public class MSDStudentCheckinFacadeImpl implements MSDStudentCheckinFacade {
 		
 		return dto;
 	}
+
+	@Override
+	public String checkinStudentsToClass(Long msdclassid, Date checkintime, String msdstudentidlist) {
+		if (null == msdclassid || msdclassid.intValue() == 0) return null;
+		
+		if (null == msdstudentidlist || msdstudentidlist.isEmpty()) return null;
+		
+		if (null == checkintime) checkintime = new Date();
+		
+		MSDClass c = msdClassJPARepository.findOne(msdclassid);
+		if (null == c) return null;
+		
+		String [] sidlist = msdstudentidlist.split(",");
+		for (String id : sidlist) {
+			MSDStudent s = msdStudentJPARepository.findOne(new Long(id));
+			if (null == s) continue;
+			
+			MSDStudentCheckinDto dto = new MSDStudentCheckinDto();
+			dto.setStudentId(s.getId().intValue());
+			dto.setClassId(c.getId().intValue());
+			dto.setCheckInTime(checkintime);
+
+			studentClassCheckin(dto);
+		}
+		
+		return "successfully";
+	}
 }

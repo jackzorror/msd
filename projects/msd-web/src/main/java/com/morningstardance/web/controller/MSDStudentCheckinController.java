@@ -1,5 +1,6 @@
 package com.morningstardance.web.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -125,12 +126,21 @@ public class MSDStudentCheckinController {
 	@RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
     public @ResponseBody ResponseDto studentClassCheckInVer1(@RequestBody MSDStudentCheckinDto studentCheckinDto, HttpServletRequest request, HttpServletResponse response) {
 
-//		Long msdstudentid = new Long(studentCheckinDto.getStudentId());
-//		Long msdclassid = new Long(studentCheckinDto.getClassId());
-//    	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(msdstudentid, msdclassid);
     	MSDStudentCheckinDto dto = msdStudentCheckinFacade.studentClassCheckin(studentCheckinDto);
         ResponseDto responseDto = ResponseDto.createResponseDto(dto, "POST", "OBJECT");
         
 		return responseDto;
     }
+
+    @RequestMapping(params={"msdclassid", "checkintime", "msdstudentidlist"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto checkinStudentsToClassDfltVer(Long msdclassid, Date checkintime, String msdstudentidlist) {
+    	return checkinStudentsToClassVer1(msdclassid, checkintime, msdstudentidlist);
+    }
+    @RequestMapping(params={"msdclassid", "checkintime", "msdstudentid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+    public @ResponseBody ResponseDto checkinStudentsToClassVer1(Long msdclassid, Date checkintime, String msdstudentidlist) {
+    	String result = msdStudentCheckinFacade.checkinStudentsToClass(msdclassid, checkintime,  msdstudentidlist);
+        ResponseDto responseDto = ResponseDto.createResponseDto(result, "POST", "OBJECT");
+		return responseDto;
+	}
+    
 }
