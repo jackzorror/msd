@@ -1,9 +1,16 @@
-CREATE  TABLE IF NOT EXISTS `msd`.`msd_class` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `name` VARCHAR(45) NOT NULL ,
-  `location` VARCHAR(45) NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+delimiter $$
+
+CREATE TABLE IF NOT EXISTS `msd`.`msd_class` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `location` varchar(45) DEFAULT NULL,
+  `class_start_time` datetime DEFAULT NULL,
+  `class_end_time` datetime DEFAULT NULL,
+  `class_status` varchar(10) DEFAULT NULL,
+  `is_active` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1$$
+
 
 DELIMITER $$
 CREATE PROCEDURE sp_alterTable()
