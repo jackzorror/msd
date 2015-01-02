@@ -46,16 +46,34 @@ function initStudentTab() {
 	$('#studentControlPanel').append(abutton);
 	$('#btnAddStudent').jqxButton({ width: '100', theme: getTheme() });
 	
+	$('#btnStudentInfo').jqxButton({disabled:true});
+	$('#btnRegistClass').jqxButton({disabled:true});
+	$('#btnCompetitionInfo').jqxButton({disabled:true});
+	$('#btnFinanceInfo').jqxButton({disabled:true});
+	$('#btnAddStudent').jqxButton({disabled:false});
 };
+function disableButton(disable) {
+	$('#btnStudentInfo').jqxButton({disabled:disable});
+	$('#btnRegistClass').jqxButton({disabled:disable});
+	$('#btnCompetitionInfo').jqxButton({disabled:disable});
+	$('#btnFinanceInfo').jqxButton({disabled:disable});
+	$('#btnAddStudent').jqxButton({disabled:false});
+}
 
 function showStudentInformation(data) {
+	if (null != data) {
+		disableButton(false);
+	} else {
+		disableButton(true);
+	}
+	
 	createStudentPanel();
 	
 	bindStudentDetailInfo(data);
 	disableEditStudentDetailInfo(true);
 
 	$('#btnEditStudent').jqxButton('val', "Edit");
-	$('#btnSaveStudent').jqxButton('val', "Save")
+	$('#btnSaveStudent').jqxButton('val', "Save");
 	$('#btnSaveStudent').jqxButton('disabled', true);
 
 	setCurrentFunction("SEARCH");
@@ -414,8 +432,7 @@ function showRegisterClassInformationByGrid(data) {
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	
 	if ("REGISTER" == getCurrentFunction()) {
-		$('#studentRegisteredClassGrid').jqxGrid(
-		{
+		$('#studentRegisteredClassGrid').jqxGrid({
 			theme: getTheme(),
 			source:dataAdapter,
 			height: 350,
@@ -427,6 +444,28 @@ function showRegisterClassInformationByGrid(data) {
 				toolbar.append(container);
 	        	container.append('<input style="margin-left: 5px;" id="removeRegisteredClass" type="button" value="Remove" />');
 		        $("#removeRegisteredClass").jqxButton({theme: getTheme()});
+		        $('#removeRegisteredClass').jqxButton({disabled:true});
+		        
+		        $('#studentRegisteredClassGrid').on('rowselect', function (event) {
+					var selectedIndex = $('#studentRegisteredClassGrid').jqxGrid('getselectedrowindexes');
+					if (selectedIndex.length < 1) {
+				        $('#removeRegisteredClass').jqxButton({disabled:true});
+					} else {
+				        $('#removeRegisteredClass').jqxButton({disabled:false});
+					}
+		        	
+		        });
+		        
+		        $('#studentRegisteredClassGrid').on('rowunselect', function (event) {
+					var selectedIndex = $('#studentRegisteredClassGrid').jqxGrid('getselectedrowindexes');
+					if (selectedIndex.length < 1) {
+				        $('#removeRegisteredClass').jqxButton({disabled:true});
+					} else {
+				        $('#removeRegisteredClass').jqxButton({disabled:false});
+					}
+		        	
+		        });
+		        
 	        	$("#removeRegisteredClass").on('click', function () {
 					console.log("Remove registered class ... ");
 					var selectedIndex = $('#studentRegisteredClassGrid').jqxGrid('getselectedrowindexes');
@@ -516,6 +555,28 @@ function showNonRegisterClassInformationByGrid(data) {
 			toolbar.append(container);
         	container.append('<input style="margin-left: 5px;" id="addNonRegisteredClass" type="button" value="Register" />');
 	        $("#addNonRegisteredClass").jqxButton({theme: getTheme()});
+	        $('#addNonRegisteredClass').jqxButton({disabled:true});
+		        
+	        $('#studentNonRegisteredClassGrid').on('rowselect', function (event) {
+				var selectedIndex = $('#studentNonRegisteredClassGrid').jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+			        $('#addNonRegisteredClass').jqxButton({disabled:true});
+				} else {
+			        $('#addNonRegisteredClass').jqxButton({disabled:false});
+				}
+		        	
+	        });
+		        
+	        $('#studentNonRegisteredClassGrid').on('rowunselect', function (event) {
+				var selectedIndex = $('#studentNonRegisteredClassGrid').jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+			        $('#addNonRegisteredClass').jqxButton({disabled:true});
+				} else {
+			        $('#addNonRegisteredClass').jqxButton({disabled:false});
+				}
+		        	
+	        });
+		        
         	$("#addNonRegisteredClass").on('click', function () {
 				console.log("Add Non registered class ... ");
 				var selectedIndex = $('#studentNonRegisteredClassGrid').jqxGrid('getselectedrowindexes');
@@ -615,11 +676,6 @@ function addStudentTabsEventListeners() {
 	$(document).on('click', '#btnEditMedical', handleEditMedicalClick);
 	$(document).on('click', '#btnSaveMedical', handleMedicalSaveClick);
 	
-//	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnDeleteRegisterClass"]', handleDeleteRegisterClassClick);
-//	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnRegisterClass"]', handleRegisterClassClick);
-//	$(document).on('click', '#studentNonClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
-//	$(document).on('click', '#studentClassDetailContentDiv :button[id^="btnClassDetail"]', handleClassDetailClick);
-	
 	$(document).on('click', '#btnStudentInfo', handleStudentInfoClick);
 	$(document).on('click', '#btnRegistClass', handleRegistClassClick);
 	$(document).on('click', '#btnCompetitionInfo', handleCompetitionInfoClick);
@@ -664,6 +720,7 @@ function handleStudentClearClick() {
     $( '#txtStudentSearchLastName' ).jqxInput({ source: getLastNameList() });
     $( '#txtStudentSearchFirstName' ).focus();
 
+	disableButton(true);
 }
 
 function handleStudentSearchClick() {
@@ -863,7 +920,7 @@ function showClassDetail(data) {
 	    $('#studentMainPanel').append('<div id="msdclassdetailpopupdiv" />');
 
 		$('#msdclassdetailpopupdiv').append('<div >Class Detail Information</div> <div id="studentclassdetaildiv"></div>');
-		$('#msdclassdetailpopupdiv').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: 500, width: 500, theme: theme, position: { x: 350, y: 150}});
+		$('#msdclassdetailpopupdiv').jqxWindow({showCollapseButton: false, isModal: true, resizable: false, height: 500, width: 500, theme: theme, position: { x: 250, y: 150}});
 	
 		var cdiv = $('<div style = "width:480px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentclassInformationdiv'});
 		$('#studentclassdetaildiv').append(cdiv);
@@ -954,14 +1011,14 @@ function createClassDetailDiv() {
 	$('#studentclassInformationdiv').append('<label style="margin-top:10px;"> Start : </label>');
 	var stime = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtStudentClassStartTime'});
 	$('#studentclassInformationdiv').append(stime);
-	$('#txtStudentClassStartTime').jqxInput({placeHolder: "Start date", width: 100, height: 20, minLength: 1, theme: getTheme() });
+	$('#txtStudentClassStartTime').jqxInput({placeHolder: "Start date", width: 90, height: 20, minLength: 1, theme: getTheme() });
 
 	$('#studentclassInformationdiv').append('<label style="margin-top:10px; margin-left:10px;"> End : </label>');
 	var etime = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtStudentClassEndTime'});
 	$('#studentclassInformationdiv').append(etime);
-	$('#txtStudentClassEndTime').jqxInput({placeHolder:"End date", width: 100, height: 20, minLength: 1, theme: getTheme() });
+	$('#txtStudentClassEndTime').jqxInput({placeHolder:"End date", width: 90, height: 20, minLength: 1, theme: getTheme() });
 	
-	$('#studentclassInformationdiv').append('<label> Total Class Time : </label>');
+	$('#studentclassInformationdiv').append('<label> Total Class : </label>');
 	var ctotalclasstime = $('<input/>').attr({type:'text', id:'txtTotalClassTimeInStudentTab'});
 	$('#studentclassInformationdiv').append(ctotalclasstime);
 	$('#txtTotalClassTimeInStudentTab').jqxInput({placeHolder: "Total Class Time", rtl: true, height: 20, width:40, minLength: 1, theme: getTheme() });	

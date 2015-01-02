@@ -10,4 +10,6 @@ public interface MSDClassNonClassDateJPARepository extends JpaRepository<MSDClas
 
 	public List<MSDClassNonClassDate> findByMsdClassId(int msdClassId);
 	
+//	public MSDClassNonClassDate findByMsdClassIdNonClassDate(int msdClassId, Date nonClassDate);
+	
 }

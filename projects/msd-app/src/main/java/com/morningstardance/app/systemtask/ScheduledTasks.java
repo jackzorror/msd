@@ -9,25 +9,39 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class ScheduledTasks {
 
-    private static final SimpleDateFormat dateFormat1 = new SimpleDateFormat("HH:mm:ss");
-    private static final SimpleDateFormat dateFormat2 = new SimpleDateFormat("YYYYmmdd_HHmmss");
+//    private static final SimpleDateFormat dateFormat1 = new SimpleDateFormat("HH:mm:ss");
+    private static final SimpleDateFormat dateFormat2 = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
     /*
     @Scheduled(fixedRate = 5000)
     public void reportCurrentTime() {
         //System.out.println("The time is now " + dateFormat.format(new Date()));
     }
 	*/
-    @Scheduled(cron="0 0 * * * *")
-    public void runCurrentTime() {
-        System.out.println("The time is now " + dateFormat1.format(new Date()));
-        System.out.println("The time is now " + dateFormat2.format(new Date()));
+    @Scheduled(cron="0 * * * * *")
+    public void runCurrentTimeOne() {
+        System.out.println("The time One is: " + dateFormat2.format(new Date()));
     }
-    /*
-    @Scheduled(cron="")
+    
+    @Scheduled(cron="0 */5 * * * *")
+    public void runCurrentTimeTwo() {
+        System.out.println("The time Two is: " + dateFormat2.format(new Date()));
+    }
+    
+    @Scheduled(cron="0 */30 * * * *")
+    public void runCurrentTimeThree() {
+        System.out.println("The time Three is: " + dateFormat2.format(new Date()));
+    }
+    
+    @Scheduled(cron="0 0 * * * *")
+    public void runCurrentTimeFour() {
+        System.out.println("The time Four is: " + dateFormat2.format(new Date()));
+    }
+    
+    @Scheduled(cron="0 0 1 * * ?")
     public void backupDatabase() {
-        String path = "~/test/msd_backup_" + new SimpleDateFormat("YYYYmmdd_HHmmss").format(new Date()) + ".sql";
+        String path = "~/test/msd_backup_" + new SimpleDateFormat("YYYYMMdd_HHmmss").format(new Date()) + ".sql";
+        System.out.println(" Backup database to " + path);
         String username = "root";
-        //String password = "";
         String dbname = "msd";
         String executeCmd = "/usr/local/mysql/bin/mysqldump --opt -u" + username + "  " + dbname + " > " + path;
         Process runtimeProcess;
@@ -45,5 +59,4 @@ public class ScheduledTasks {
             ex.printStackTrace();
         }
     }
-    */
 }

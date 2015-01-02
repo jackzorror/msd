@@ -12,7 +12,7 @@ function initAdminTab() {
 	var abutton = $('<input />').attr({type:'button', id:'btnStudentAdmin', value:'Student'});
 	btnholddiv.append(abutton);
 	$('#btnStudentAdmin').jqxButton({ width: '100', theme: getTheme() });
-	
+/*	
 	var cbutton = $('<input style="margin-top:10px;" />').attr({type:'button', id:'btnClassAdmin', value:'Class'});
 	btnholddiv.append(cbutton);
 	$('#btnClassAdmin').jqxButton({width:'100', theme: getTheme() });
@@ -27,7 +27,7 @@ function initAdminTab() {
     $("#btnCompetitionAdminTree").jqxTree({ width: 150, theme:getTheme() });	
    	$("#btnCompetitionAdmin").jqxDropDownButton('setContent', 'Competition');
 	$('#adminMainPanel').empty();
-
+*/
 };
 
 function addAdminTabsEventListeners() {
@@ -52,8 +52,6 @@ function handleCompetitionAdminClick() {
 
 function handleStudentAdminClick() {
 	console.log(' in Sudent admin click ... ');
-   	$("#btnCompetitionAdmin").jqxDropDownButton('setContent', 'Competition');
-
 	$('#adminMainPanel').empty();
 	
 	var sdiv = $('<div id="studentAdminSearchDockPanel" style="height:550;"/>');
@@ -171,7 +169,7 @@ function showSelectedStudents(data) {
 	sagdiv.append(p5div);
 	p5div.append('<div >Add Student Credit</div> <div id="popupAddStudentCreditDivInAdminTab"></div>');
     p5div.jqxWindow({
-    	width: 400, height:200, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 410, height:200, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 	
 		
@@ -240,12 +238,21 @@ function showSelectedStudents(data) {
     	    $("#studentCheckin").jqxButton({theme:getTheme(), width:150});
 			$("#studentCheckin").jqxTooltip({ theme: getTheme(), content: 'Selected Student Check in to Class', position: 'mouse', name: 'movieTooltip'});
 
+   		    $("#createEmailAddress").jqxButton({disabled: true });
+    	    $("#registerNewClass").jqxButton({disabled:true});
+   		    $("#changeRegisterClass").jqxButton({disabled: true });
+    	    $("#allAttendentReport").jqxButton({disabled:true});
+   		    $("#addStudentCredit").jqxButton({disabled:true});
+    	    $("#classAttendentReport").jqxButton({disabled:true});
+   		    $("#removeRegisterClass").jqxButton({disabled:true});
+    	    $("#studentCheckin").jqxButton({disabled:true});
+/*
 			if ((null == cid || cid == 0)) {
     		    $("#changeRegisterClass").jqxButton({disabled: true });
 	    	    $("#classAttendentReport").jqxButton({disabled:true});
 	    	    $("#removeRegisterClass").jqxButton({disabled:true});
 			}
-			
+*/			
 			createPopupRegisterClassWindow();
 			createPopupCheckinClassWindow();
 			createPopupCheckinReportWindow();
@@ -257,6 +264,82 @@ function showSelectedStudents(data) {
 			$("#popupCheckinReportWindow").jqxWindow({ position: { x: parseInt(offset.left) - 40, y:parseInt(offset.top) - 60} });
 			$("#popupAllCheckinReportWindow").jqxWindow({ position: { x: parseInt(offset.left) - 40, y:parseInt(offset.top) - 60} });
 			$("#popupAddStudentCreitWindowInAdminTab").jqxWindow({ position: { x: parseInt(offset.left) - 40, y:parseInt(offset.top) - 60} });
+
+			$("#studentAdminGrid").on('rowselect', function (event) {
+				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
+
+				if (selectedIndex.length == 1) {
+	    		    $("#createEmailAddress").jqxButton({disabled: false });
+		    	    $("#registerNewClass").jqxButton({disabled:false});
+	    		    $("#changeRegisterClass").jqxButton({disabled: false });
+		    	    $("#allAttendentReport").jqxButton({disabled:false});
+	    		    $("#addStudentCredit").jqxButton({disabled:false});
+		    	    $("#classAttendentReport").jqxButton({disabled:false});
+	    		    $("#removeRegisterClass").jqxButton({disabled:false});
+		    	    $("#studentCheckin").jqxButton({disabled:false});
+				} else {
+	    		    $("#createEmailAddress").jqxButton({disabled: false });
+		    	    $("#registerNewClass").jqxButton({disabled:false});
+	    		    $("#changeRegisterClass").jqxButton({disabled: false });
+		    	    $("#allAttendentReport").jqxButton({disabled:true});
+	    		    $("#addStudentCredit").jqxButton({disabled:false});
+		    	    $("#classAttendentReport").jqxButton({disabled:true});
+	    		    $("#removeRegisterClass").jqxButton({disabled:false});
+		    	    $("#studentCheckin").jqxButton({disabled:false});
+				}
+			
+				var item = $("#ddlStudentAdminClassSearchName").jqxDropDownList('getSelectedItem');
+				var cid = null!= item ? item.value : 0;
+			
+				if ((null == cid || cid == 0)) {
+    			    $("#changeRegisterClass").jqxButton({disabled: true });
+	    		    $("#classAttendentReport").jqxButton({disabled:true});
+	    		    $("#removeRegisterClass").jqxButton({disabled:true});
+				}
+			});
+
+			$("#studentAdminGrid").on('rowunselect', function (event) {
+				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
+
+				if (selectedIndex.length == 0) {
+	    		    $("#createEmailAddress").jqxButton({disabled: true });
+		    	    $("#registerNewClass").jqxButton({disabled:true});
+	    		    $("#changeRegisterClass").jqxButton({disabled: true });
+		    	    $("#allAttendentReport").jqxButton({disabled:true});
+	    		    $("#addStudentCredit").jqxButton({disabled:true});
+		    	    $("#classAttendentReport").jqxButton({disabled:true});
+	    		    $("#removeRegisterClass").jqxButton({disabled:true});
+		    	    $("#studentCheckin").jqxButton({disabled:true});
+				} else if (selectedIndex.length == 1) {
+	    		    $("#createEmailAddress").jqxButton({disabled: false });
+		    	    $("#registerNewClass").jqxButton({disabled:false});
+	    		    $("#changeRegisterClass").jqxButton({disabled: false });
+		    	    $("#allAttendentReport").jqxButton({disabled:false});
+	    		    $("#addStudentCredit").jqxButton({disabled:false});
+		    	    $("#classAttendentReport").jqxButton({disabled:false});
+	    		    $("#removeRegisterClass").jqxButton({disabled:false});
+		    	    $("#studentCheckin").jqxButton({disabled:false});
+				} else {
+	    		    $("#createEmailAddress").jqxButton({disabled: false });
+		    	    $("#registerNewClass").jqxButton({disabled:false});
+	    		    $("#changeRegisterClass").jqxButton({disabled: false });
+		    	    $("#allAttendentReport").jqxButton({disabled:true});
+	    		    $("#addStudentCredit").jqxButton({disabled:false});
+		    	    $("#classAttendentReport").jqxButton({disabled:true});
+	    		    $("#removeRegisterClass").jqxButton({disabled:false});
+		    	    $("#studentCheckin").jqxButton({disabled:false});
+				}
+			
+				var item = $("#ddlStudentAdminClassSearchName").jqxDropDownList('getSelectedItem');
+				var cid = null!= item ? item.value : 0;
+			
+				if ((null == cid || cid == 0)) {
+    			    $("#changeRegisterClass").jqxButton({disabled: true });
+	    		    $("#classAttendentReport").jqxButton({disabled:true});
+	    		    $("#removeRegisterClass").jqxButton({disabled:true});
+				}
+			});
+
 
         	$("#createEmailAddress").on('click', function () {
 				console.log("create selected student email address list ... ");
@@ -319,8 +402,6 @@ function showSelectedStudents(data) {
 					var row = $('#studentAdminGrid').jqxGrid('getrowdata', selectedIndex[i]);
 					if (isNotEmpty(row.id)) 
 						sidList += row.id + ",";
-                    var id = $("#studentAdminGrid").jqxGrid('getrowid', selectedIndex[1]);
-                    var commit = $("#studentAdminGrid").jqxGrid('deleterow', id);				
                 } 
                 
                 $('#studentAdminGrid').jqxGrid('clearselection');
@@ -774,7 +855,7 @@ function createPopupAddStudentsCreditWindow() {
 	tdiv.append(cost);
 	cost.jqxNumberInput({ width: '260px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
-	var fnote = $('<input style="margin-top:5px;margin-left:0px;"/>').attr({type:'text', id:'txtNewStudentCreditNoteInAdminTab'});
+	var fnote = $('<input style="float:right; margin-top:5px;margin-left:0px;"/>').attr({type:'text', id:'txtNewStudentCreditNoteInAdminTab'});
 	psfdiv.append(fnote);
 	fnote.jqxInput({placeHolder: "Enter Credit Note", height: 20, width:390, minLength:1, theme:getTheme() });
 

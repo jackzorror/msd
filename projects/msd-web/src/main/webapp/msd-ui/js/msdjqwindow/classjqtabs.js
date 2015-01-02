@@ -12,7 +12,7 @@ function initClassTab() {
 	scpdiv.append(ddldiv);
 	scpdiv.append(btndiv);
 	
-	ddldiv.append('<label style="float:left; margin-top:8px; margin-left:20px">Please Select class name : </label>');
+	ddldiv.append('<label style="float:left; margin-top:8px; margin-left:20px">Please Select name : </label>');
 	var cname = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlClassSearchName'});
 	ddldiv.append(cname);
 	$('#ddlClassSearchName').jqxDropDownList({placeHolder: "Please Select Class Name", height: 20, width: 300, dropDownHeight: 150, theme: getTheme()});
@@ -219,10 +219,10 @@ function createClassInformationDiv() {
 	$('#classCommondiv').append(cname);
 	$('#txtClassName').jqxInput({placeHolder: "Class Name", height: 20, width:200, minLength: 1, theme: getTheme() });	
 	
-	$('#classCommondiv').append('<label style="margin-left:10px;margin-top:10px">Location : </label>');
+	$('#classCommondiv').append('<label style="margin-left:10px;margin-top:10px">Semester : </label>');
 	var location = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtLocation'});
 	$('#classCommondiv').append(location);
-	$('#txtLocation').jqxInput({placeHolder: "Class Location", height: 20, width:220, minLength: 1, theme: getTheme(), source:ClassLocation });
+	$('#txtLocation').jqxInput({placeHolder: "Class Semester", height: 20, width:220, minLength: 1, theme: getTheme(), source:ClassLocation });
 
 	var tmpdiv = $('<div class="InnerDiv" style = "float:left; margin-top:5px; border:0px solid;"/>').attr({id:'tmpdiv'});
 	$('#classCommondiv').append(tmpdiv);
@@ -262,6 +262,7 @@ function createClassInformationDiv() {
 			var offset = $("#classCommondiv").offset();
 			$("#addNonClassDatePopupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 130, y: parseInt(offset.top) - 20 } });
             $("#addNonClassDatePopupWindow").jqxWindow('open');
+            $("#divNewNonClassDate").jqxDateTimeInput('focus');
 			
    		}
         $('#btnCancelAddNonClassDate').on('click', function () {
@@ -728,7 +729,7 @@ function createAddClassSchedularDiv() {
 	var stime = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtStartTime'});
 	tdiv.append(stime);
 	$('#txtStartTime').jqxInput({rtl: true, placeHolder: "Start Time", height: 20, width:100, minLength: 1, theme: getTheme() });
-	$('#txtStartTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
+	$('#txtStartTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:22} });
 
 	// end time
 	var tdiv = $('<div style="margin-top:5px; width:180px;border:0px solid;" align="right" />');
@@ -737,7 +738,7 @@ function createAddClassSchedularDiv() {
 	var etime = $('<input style="margin-left:5px;"/>').attr({type:'text', id:'txtEndTime'});
 	tdiv.append(etime);
 	$('#txtEndTime').jqxInput({rtl: true, placeHolder: "End Time", height: 20, width:100, minLength: 1, theme: getTheme() });
-	$('#txtEndTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:21} });
+	$('#txtEndTime').timepicker({showAnim:'blind', minuteText:'Min', minutes: {interval:15}, hours:{starts:8, ends:22} });
 	
 	$('#addClassSchedulerdiv').append('<br/>');
 
@@ -869,8 +870,10 @@ function loadClassNameDropDownListDataSource(data) {
 	$('#ddlClassSearchName').jqxDropDownList({source:activedataadapter, displayMember: "text", valueMember: "value"});
 	
 		if (getCurrentFunctionInClassTab() == 'ADD') {
-			$('#ddlClassSearchName').jqxDropDownList({selectedIndex: getActiveClassNameList().length });
-			$('#btnSearchClass').click();
+			if (null != getActiveClassNameList() && getActiveClassNameList().length > 0) {
+				$('#ddlClassSearchName').jqxDropDownList({selectedIndex: getActiveClassNameList().length });
+				$('#btnSearchClass').click();
+			}
 		} else if (getCurrentFunctionInClassTab() == 'SEARCH') {
 			$('#btnSearchClass').click();
 		}

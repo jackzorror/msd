@@ -92,7 +92,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 				String msg = "Cannot find (or found more than one active) student fee.";
 				msdOperationService.msdStudentOperation(sid, "Remove Class Fee From Student Fee", msg, "Class Fee: " + cfee.toString(), "ERROR");
 
-				throw new RuntimeException();
+//				throw new RuntimeException();
 			}
 		}
 	}
@@ -160,7 +160,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 				String msg = "Cannot find (or found more than one active) student fee.";
 				msdOperationService.msdStudentOperation(msdStudentId, "Remove Competition Fee From Student Fee", msg, "Competition Fee: " + cfee.toString(), "ERROR");
 
-				throw new RuntimeException();
+//				throw new RuntimeException();
 				
 			}
 		}

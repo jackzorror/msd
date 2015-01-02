@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.morningstardance.app.misc.MSDCompetitionTypeDto;
 import com.morningstardance.app.misc.MSDCostTypeDto;
 import com.morningstardance.app.misc.MSDMiscFacade;
+import com.morningstardance.app.misc.MSDTypeDto;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -32,10 +33,10 @@ public class MSDMiscController {
     	if (null == miscname || miscname.isEmpty())
     		responseDto = null;
     	else if (miscname.equals("COST_TYPE")) {
-    		List<MSDCostTypeDto> dtos = msdMiscFacade.getCostType();
+    		List<MSDTypeDto> dtos = msdMiscFacade.getCostType();
     		responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
     	} else if (miscname.equals("COMPETITION_TYPE")) {
-    		List<MSDCompetitionTypeDto> dtos = msdMiscFacade.getCompetitionType();
+    		List<MSDTypeDto> dtos = msdMiscFacade.getCompetitionType();
     		responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
     	}
 		return responseDto;

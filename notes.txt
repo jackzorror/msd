@@ -16,3 +16,10 @@ config:
 	config tomcat server;
 
 cp -r projects/msd-web/src/main/webapp/msd-ui app_home/deploy/msd-web/.
+
+/usr/local/mysql/bin/mysqldump --opt -u root msd > ~/test/db_without_data.sql
+/usr/local/mysql/bin/mysql mad < ~/test/db_without_data.sql
+
+
+
+

@@ -112,7 +112,28 @@ function showRegisterCompetitionInformationByGrid(data) {
 			var container = $("<div style = 'float: right; margins: 0px;'></div>");
 			toolbar.append(container);
         	container.append('<input style="margin-left: 5px;" id="removeRegisteredCompetition" type="button" value="Remove" />');
-	        $("#removeRegisteredCompetition").jqxButton({theme: getTheme()});
+	        $("#removeRegisteredCompetition").jqxButton({theme: getTheme(), disabled:true});
+	        
+	        srcdiv.on('rowselect', function (event) {
+				var selectedIndex = srcdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+			        $('#removeRegisteredCompetition').jqxButton({disabled:true});
+				} else {
+			        $('#removeRegisteredCompetition').jqxButton({disabled:false});
+				}
+		        	
+	        });
+		        
+	        srcdiv.on('rowunselect', function (event) {
+				var selectedIndex = srcdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+			        $('#removeRegisteredCompetition').jqxButton({disabled:true});
+				} else {
+			        $('#removeRegisteredCompetition').jqxButton({disabled:false});
+				}
+		        	
+	        });
+		        
         	$("#removeRegisteredCompetition").on('click', function () {
 				console.log("Remove registered competition ... ");
 				var selectedIndex = $('#studentRegisteredCompetitionGrid').jqxGrid('getselectedrowindexes');
@@ -183,7 +204,28 @@ function showNonRegisterCompetitionInformationByGrid(data) {
 			var container = $("<div style = 'float: right; margins: 0px;'></div>");
 			toolbar.append(container);
         	container.append('<input style="margin-left: 5px;" id="addRegisteredCompetition" type="button" value="Register" />');
-	        $("#addRegisteredCompetition").jqxButton({theme: getTheme()});
+	        $("#addRegisteredCompetition").jqxButton({theme: getTheme(), disabled:true});
+
+	        srcdiv.on('rowselect', function (event) {
+				var selectedIndex = srcdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+			        $('#addRegisteredCompetition').jqxButton({disabled:true});
+				} else {
+			        $('#addRegisteredCompetition').jqxButton({disabled:false});
+				}
+		        	
+	        });
+		        
+	        srcdiv.on('rowunselect', function (event) {
+				var selectedIndex = srcdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+			        $('#addRegisteredCompetition').jqxButton({disabled:true});
+				} else {
+			        $('#addRegisteredCompetition').jqxButton({disabled:false});
+				}
+		        	
+	        });
+		        
         	$("#addRegisteredCompetition").on('click', function () {
 				console.log("Add registered competition ... ");
 				var selectedIndex = $('#studentNonRegisteredCompetitionGrid').jqxGrid('getselectedrowindexes');
@@ -270,7 +312,7 @@ function showCompetitionDetail(data) {
 		var cdpdiv = $('#msdcopmetitiondetailpopupdiv');
 
 		cdpdiv.append('<div >Competition Detail Information</div> <div id="studentcompetitiondetailpopupdiv"></div>');
-		cdpdiv.jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: 500, width: 500, theme: theme, position: { x: 350, y: 150}});
+		cdpdiv.jqxWindow({showCollapseButton: false, isModal: true, resizable: false, height: 500, width: 500, theme: theme, position: { x: 250, y: 150}});
 	
 		var cdiv = $('<div style = "width:480px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentcompetitionInformationdiv'});
 		$('#studentcompetitiondetailpopupdiv').append(cdiv);

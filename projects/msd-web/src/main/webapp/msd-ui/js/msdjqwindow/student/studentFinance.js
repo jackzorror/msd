@@ -90,7 +90,7 @@ function showStudentFeeGridDiv(data) {
 	ccdiv.append(pdiv);
 	pdiv.append('<div >Pay Student Fee</div> <div id="popupPayStudentFeeDiv"></div>');
     pdiv.jqxWindow({
-    	width: 400, height:250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 400, height:250, resizable: false,  draggable: true, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 
 	//Create pop up waive panel
@@ -98,7 +98,7 @@ function showStudentFeeGridDiv(data) {
 	ccdiv.append(pdiv);
 	pdiv.append('<div >Waive Student Fee</div> <div id="popupWaiveStudentFeeDiv"></div>');
     pdiv.jqxWindow({
-    	width: 400, height:250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 400, height:250, resizable: false, draggable: true, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 
 	//Create pop up Add Student Fee panel
@@ -106,7 +106,7 @@ function showStudentFeeGridDiv(data) {
 	ccdiv.append(pdiv);
 	pdiv.append('<div >Add Student Fee</div> <div id="popupAddStudentFeeDiv"></div>');
     pdiv.jqxWindow({
-    	width: 600, height:500, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 600, height:500, resizable: false,  draggable: true, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 	
 	var sfgdiv = $('<div style="border:0px solid;"/>').attr({id:'studentFeeGrid'});
@@ -141,18 +141,42 @@ function showStudentFeeGridDiv(data) {
         	container.append('<input style="margin-left: 5px; margin-top:0px; margin-right:10px;" id="payStudentFeebtn" type="button" value="Pay Fee" />');
         	container.append('<input style="margin-left: 5px; margin-top:0px; margin-right:10px;" id="waiveStudentFeebtn" type="button" value="Waive Fee" />');
         	container.append('<input style="margin-left: 5px; margin-top:0px; margin-right:5px;" id="addStudentFeebtn" type="button" value="Add Fee" />');
-	        $("#payStudentFeebtn").jqxButton({theme: getTheme()});
-	        $("#waiveStudentFeebtn").jqxButton({theme: getTheme()});
-	        $('#addStudentFeebtn').jqxButton({theme:getTheme()});
+	        $("#payStudentFeebtn").jqxButton({theme: getTheme(), disabled:true});
+	        $("#waiveStudentFeebtn").jqxButton({theme: getTheme(), disabled:true});
+	        $('#addStudentFeebtn').jqxButton({theme:getTheme(), disabled:false});
 
 		    var offset = sfgdiv.offset();
 			$("#popupStudentFeePayWindow").jqxWindow({ position: { x: parseInt(offset.left) + 100, y: parseInt(offset.top) - 20 } });
 	        createPayPopupPanel();
 			$("#popupStudentFeeWaiveWindow").jqxWindow({ position: { x: parseInt(offset.left) + 100, y: parseInt(offset.top) - 20 } });
 	        createWaivePopupPanel();
-			$("#popupAddStudentFeeWindow").jqxWindow({ position: { x: parseInt(offset.left) + 100, y: parseInt(offset.top) - 20 } });
+			$("#popupAddStudentFeeWindow").jqxWindow({ position: { x: parseInt(offset.left) - 50, y: parseInt(offset.top) - 30 } });
 	        createAddStudentFeePopupPanel();
 	        
+	        sfgdiv.on('rowselect', function (event) {
+				var selectedIndex = sfgdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+			        $("#payStudentFeebtn").jqxButton({theme: getTheme(), disabled:true});
+	    		    $("#waiveStudentFeebtn").jqxButton({theme: getTheme(), disabled:true});
+				} else {
+			        $("#payStudentFeebtn").jqxButton({theme: getTheme(), disabled:false});
+	    		    $("#waiveStudentFeebtn").jqxButton({theme: getTheme(), disabled:false});
+				}
+		        	
+	        });
+		        
+	        sfgdiv.on('rowunselect', function (event) {
+				var selectedIndex = sfgdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+			        $("#payStudentFeebtn").jqxButton({theme: getTheme(), disabled:true});
+	    		    $("#waiveStudentFeebtn").jqxButton({theme: getTheme(), disabled:true});
+				} else {
+			        $("#payStudentFeebtn").jqxButton({theme: getTheme(), disabled:false});
+	    		    $("#waiveStudentFeebtn").jqxButton({theme: getTheme(), disabled:false});
+				}
+		        	
+	        });
+		        
         	$("#payStudentFeebtn").on('click', function () {
 				console.log("Pay student fee ... ");
 				var selectedIndex = sfgdiv.jqxGrid('getselectedrowindexes');
@@ -409,7 +433,7 @@ function showAddStudentFeePopupPanel(data) {
 	asfdiv.append(pdiv);
 	pdiv.append('<div >Add New Student Fee</div> <div id="popupAddNewStudentFeeDiv"></div>');
     pdiv.jqxWindow({
-    	width: 400, height:160, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 410, height:200, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 	
 	
@@ -449,17 +473,37 @@ function showAddStudentFeePopupPanel(data) {
         	container.append('<input style="margin-left: 5px; margin-top:5px; margin-right:10px;" id="selectNewGeneralFeebtn" type="button" value="Add" />');
 
 		    var offset = fdiv.offset();
-			$("#popupAddGeneralFeeWindow").jqxWindow({ position: { x: parseInt(offset.left) - 300, y: parseInt(offset.top) - 80 } });
+			$("#popupAddGeneralFeeWindow").jqxWindow({ position: { x: parseInt(offset.left), y: parseInt(offset.top) - 80 } });
 			createAddGeneralFeePopupWindow();
 
-			$("#popupAddNewStudentFeeWindow").jqxWindow({ position: { x: parseInt(offset.left) - 300, y: parseInt(offset.top) - 80 } });
+			$("#popupAddNewStudentFeeWindow").jqxWindow({ position: { x: parseInt(offset.left), y: parseInt(offset.top) - 80 } });
 			createAddNewStudentFeePopupWindow();
 
         	var addBtn = $("#addNewGeneralFeebtn");
         	var selectBtn = $('#selectNewGeneralFeebtn');
-	        addBtn.jqxButton({theme: getTheme(), width:60});
-	        selectBtn.jqxButton({theme: getTheme(), width:60});
+	        addBtn.jqxButton({theme: getTheme(), width:60, disabled:false});
+	        selectBtn.jqxButton({theme: getTheme(), width:60, disabled:true});
 
+	        fdiv.on('rowselect', function (event) {
+				var selectedIndex = fdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length == 1) {
+	    		    $("#selectNewGeneralFeebtn").jqxButton({theme: getTheme(), disabled:false});
+				} else {
+	    		    $("#selectNewGeneralFeebtn").jqxButton({theme: getTheme(), disabled:true});
+				}
+		        	
+	        });
+		        
+	        fdiv.on('rowunselect', function (event) {
+				var selectedIndex = fdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length == 1) {
+	    		    $("#selectNewGeneralFeebtn").jqxButton({theme: getTheme(), disabled:false});
+				} else {
+	    		    $("#selectNewGeneralFeebtn").jqxButton({theme: getTheme(), disabled:true});
+				}
+		        	
+	        });
+		        
             addBtn.click(function (event) {
 				$("#popupAddGeneralFeeWindow").jqxWindow('open');
             });
@@ -607,7 +651,7 @@ function showStudentFeeDetailPopup(data) {
 		var cdpdiv = $('#msdStudentFeeDetailPopupPanel');
 
 		cdpdiv.append('<div >Student Fee Detail Information</div> <div id="studentFeeDetailPopupDiv"></div>');
-		cdpdiv.jqxWindow({showCollapseButton: false, draggable:true,  resizable: false, height: 400, width: 400, theme: theme, position: { x: 350, y: 150}});
+		cdpdiv.jqxWindow({showCollapseButton: false, isModal: true, draggable:true,  resizable: false, height: 400, width: 400, theme: theme, position: { x: 350, y: 150}});
 	
 		var cdiv = $('<div style = "width:480px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentFeeDetailInformationDiv'});
 		$('#studentFeeDetailPopupDiv').append(cdiv);
@@ -752,7 +796,7 @@ function createAddNewStudentFeePopupWindow() {
 	tdiv.append(cost);
 	cost.jqxNumberInput({ width: '260px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
-	var fnote = $('<input style="margin-top:5px;margin-left:0px;"/>').attr({type:'text', id:'txtNewStudentFeeNote'});
+	var fnote = $('<input style="float:right; margin-top:5px;margin-left:0px;"/>').attr({type:'text', id:'txtNewStudentFeeNote'});
 	psfdiv.append(fnote);
 	fnote.jqxInput({placeHolder: "Enter Fee Note", height: 20, width:390, minLength:1, theme:getTheme() });
 
@@ -835,7 +879,7 @@ function showStudentCrediteGridDiv(data) {
 	ccdiv.append(pdiv);
 	pdiv.append('<div >Add Student Credit</div> <div id="popupAddStudentCreditDiv"></div>');
     pdiv.jqxWindow({
-    	width: 400, height:200, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 410, height:200, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 	
 	var sfgdiv = $('<div style="border:0px solid;"/>').attr({id:'studentCreditGrid'});
@@ -867,8 +911,8 @@ function showStudentCrediteGridDiv(data) {
 			toolbar.append(container);
         	container.append('<input style="margin-left: 5px; margin-top:0px; margin-right:10px;" id="consumeStudentCreditbtn" type="button" value="Consume Credit" />');
         	container.append('<input style="margin-left: 5px; margin-top:0px; margin-right:5px;" id="addStudentCreditbtn" type="button" value="Add Credit" />');
-	        $("#consumeStudentCreditbtn").jqxButton({theme: getTheme()});
-	        $('#addStudentCreditbtn').jqxButton({theme:getTheme()});
+	        $("#consumeStudentCreditbtn").jqxButton({theme: getTheme(), disabled:true});
+	        $('#addStudentCreditbtn').jqxButton({theme:getTheme(), disabled:false});
 
 		    var offset = sfgdiv.offset();
 			$("#popupStudentCreditConsumeWindow").jqxWindow({ position: { x: parseInt(offset.left) + 100, y: parseInt(offset.top) - 20 } });
@@ -876,6 +920,26 @@ function showStudentCrediteGridDiv(data) {
 			$("#popupAddStudentCreitWindow").jqxWindow({ position: { x: parseInt(offset.left) + 100, y: parseInt(offset.top) - 20 } });
 	        createAddCreditPopupPanel();
 	        
+	        sfgdiv.on('rowselect', function (event) {
+				var selectedIndex = sfgdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+	    		    $("#consumeStudentCreditbtn").jqxButton({theme: getTheme(), disabled:true});
+				} else {
+			        $("#consumeStudentCreditbtn").jqxButton({theme: getTheme(), disabled:false});
+				}
+		        	
+	        });
+		        
+	        sfgdiv.on('rowunselect', function (event) {
+				var selectedIndex = sfgdiv.jqxGrid('getselectedrowindexes');
+				if (selectedIndex.length < 1) {
+	    		    $("#consumeStudentCreditbtn").jqxButton({theme: getTheme(), disabled:true});
+				} else {
+			        $("#consumeStudentCreditbtn").jqxButton({theme: getTheme(), disabled:false});
+				}
+		        	
+	        });
+		        
         	$("#consumeStudentCreditbtn").on('click', function () {
 				console.log("Consume student Credit ... ");
 				var selectedIndex = sfgdiv.jqxGrid('getselectedrowindexes');
@@ -1039,7 +1103,7 @@ function createAddCreditPopupPanel() {
 	tdiv.append(cost);
 	cost.jqxNumberInput({ width: '260px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
-	var fnote = $('<input style="margin-top:5px;margin-left:0px;"/>').attr({type:'text', id:'txtNewStudentCreditNote'});
+	var fnote = $('<input style="float:right; margin-top:5px;margin-left:0px;"/>').attr({type:'text', id:'txtNewStudentCreditNote'});
 	psfdiv.append(fnote);
 	fnote.jqxInput({placeHolder: "Enter Credit Note", height: 20, width:390, minLength:1, theme:getTheme() });
 
@@ -1090,7 +1154,7 @@ function showStudentCreditDetailPopup(data) {
 		var cdpdiv = $('#msdStudentCreditDetailPopupPanel');
 
 		cdpdiv.append('<div >Student Credit Detail Information</div> <div id="studentCreditDetailPopupDiv"></div>');
-		cdpdiv.jqxWindow({showCollapseButton: false, draggable:true,  resizable: false, height: 400, width: 400, theme: theme, position: { x: 350, y: 150}});
+		cdpdiv.jqxWindow({showCollapseButton: false, isModal: true, draggable:true,  resizable: false, height: 400, width: 400, theme: theme, position: { x: 350, y: 150}});
 	
 		var cdiv = $('<div style = "width:480px; margin-left:10px; margin-top:10px; border:0px solid;"/>').attr({id:'studentCreditDetailInformationDiv'});
 		$('#studentCreditDetailPopupDiv').append(cdiv);

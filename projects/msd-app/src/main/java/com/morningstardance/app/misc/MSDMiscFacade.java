@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface MSDMiscFacade {
 
-	List<MSDCostTypeDto> getCostType();
+	List<MSDTypeDto> getCostType();
 
-	List<MSDCompetitionTypeDto> getCompetitionType();
+	List<MSDTypeDto> getCompetitionType();
 
 }

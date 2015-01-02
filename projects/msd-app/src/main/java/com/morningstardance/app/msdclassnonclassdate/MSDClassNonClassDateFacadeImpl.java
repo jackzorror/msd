@@ -1,5 +1,6 @@
 package com.morningstardance.app.msdclassnonclassdate;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -51,6 +52,15 @@ public class MSDClassNonClassDateFacadeImpl implements MSDClassNonClassDateFacad
 		
 		MSDClass cEntity = msdClassJPARepository.findOne(new Long(date.getMsdClassId()));
 		if (null == cEntity) return null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyymmdd");
+		String dateStr = sdf.format(date.getNonClassDate());
+		
+		List<MSDClassNonClassDate> dates = msdClassNonClassDateJPARepository.findByMsdClassId(date.getMsdClassId());
+		for (MSDClassNonClassDate d : dates) {
+			String dstr = sdf.format(d.getNonClassDate());
+			if (dstr.equals(dateStr))
+				return d;
+		}
 		
 		msdClassNonClassDateJPARepository.save(date);
 		

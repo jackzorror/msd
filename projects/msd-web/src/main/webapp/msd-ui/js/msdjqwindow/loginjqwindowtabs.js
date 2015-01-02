@@ -24,7 +24,7 @@ function handleShowLoginWindowClick() {
 	    	theme = getTheme();
     		$('#loginWindow').append('<div >MSD System Login</div> <div id="msdlogindiv"> test </div>');
 	    	initLogin();
-			$('#loginWindow').jqxWindow({showCollapseButton: false, draggable:false,  resizable: false, height: '220px', width: '340px', theme: theme, position: { x: (offset.left + 230), y: offset.top + 40} });
+			$('#loginWindow').jqxWindow({showCollapseButton: false, isModal: true, draggable:false,  resizable: false, height: '220px', width: '340px', theme: theme, position: { x: (offset.left + 230), y: offset.top + 40} });
 			$('#txtUserName').focus();
 		}
 	}
@@ -186,7 +186,7 @@ function getUniqueFirstNameForStudent(response) {
     	$( '#txtStudentSearchFirstName' ).jqxInput({ source: data });
     	setFirstNameList(data);
 	} else {
-		alert(" Can't get unique for " + fieldname + " ... ");
+		alert(" Can't get unique for First Name ... ");
 	}
 }
 
@@ -197,7 +197,7 @@ function getUniqueLasstNameForStudent(response) {
 	    $( '#txtStudentSearchLastName' ).jqxInput({ source: data });
 	    setLastNameList(data);
 	} else {
-		alert(" Can't get unique for " + fieldname + " ... ");
+		alert(" Can't get unique for Last Name ... ");
 	}
 }
 

@@ -24,9 +24,9 @@
     </http>
 
     <!--
-    Usernames/Passwords are
-        agent10/Password1  password1="y+DNaMvKOGglDAulRcSAMvQ+sOil5rq2A9EJJRSG93qR5GoxRtiH43QWxr22y+cBvVFN53hXPJsAaEg8HGJq7A=="
- 						   password2="IH9kgliPgCG9cKEz0EesMSQX1SGRdgl+5t+z/28XrX3dt4lIdtlPQ4KyJa+9hETyvdEZgYlslL2MZHtxUrry6g=="       
+ 		password1="y+DNaMvKOGglDAulRcSAMvQ+sOil5rq2A9EJJRSG93qR5GoxRtiH43QWxr22y+cBvVFN53hXPJsAaEg8HGJq7A=="
+ 		password2="IH9kgliPgCG9cKEz0EesMSQX1SGRdgl+5t+z/28XrX3dt4lIdtlPQ4KyJa+9hETyvdEZgYlslL2MZHtxUrry6g=="     
+ 		YourName ="SgScZoypJ+YmKtMvfkAv93wPCT2JW1oqTKbUq0M767IVVxn9COZhEAMgx0hwv0Ihg7Lvx0sqxdsJEOVxr6atJw=="  
     -->
     <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
      	<beans:constructor-arg name="strength" value="512" />

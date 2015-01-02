@@ -1,4 +1,4 @@
-package com.morningstardance.domain.entity;
+package com.morningstardance.batch.student;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,8 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.morningstardance.domain.base.entity.MSDEntityBase;
-
 
 /**
  * The persistent class for the msd_student database table.
@@ -25,7 +23,7 @@ import com.morningstardance.domain.base.entity.MSDEntityBase;
  */
 @Entity
 @Table(name="msd_student")
-public class MSDStudent extends MSDEntityBase implements Serializable {
+public class MSDStudent implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
