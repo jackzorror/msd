@@ -619,7 +619,7 @@ function showClassFeeInformation(data) {
         		if (!addButton.jqxButton('disabled')) {
 					createAddClassFeeDiv();
 				    var offset = $("#classFeeDataTable").offset();
-					$("#addClassFeePopupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 130, y: parseInt(offset.top) - 20 } });
+					$("#addClassFeePopupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 130, y: parseInt(offset.top) - 200 } });
                     $("#addClassFeePopupWindow").jqxWindow('open');
                     
                     $('#btnCancelAddFee').on('click', function () {
