@@ -115,11 +115,12 @@ function showStudentFeeGridDiv(data) {
 	var source = {
 		datafields:[
 			{ name: 'id', type: 'int'},
-			{ name: 'feeObjectName', type: 'string'},
-			{ name: 'feeName', type: 'string'},
-			{ name: 'cost', type: 'number'},
 			{ name: 'isPaid', type: 'bool'},
 			{ name: 'isWaiver', type: 'bool'},
+			{ name: 'feeName', type: 'string'},
+			{ name: 'cost', type: 'number'},
+			{ name: 'feeNote', type: 'string'},
+			{ name: 'payType', type: 'string'},
 			{ name: 'payTime', type: 'date'}
 		],
 		datatype:'json',
@@ -279,11 +280,12 @@ function showStudentFeeGridDiv(data) {
     	altrows: true,
 		columns:[
 			{text: 'ID', datafield:'id', hidden:'true'}
-        	,{ text: 'Object Name', datafield: 'feeObjectName'}
-        	,{ text: 'Name', datafield: 'feeName', width:150 }
+			,{text: 'IsPaid', datafield:'isPaid', hidden:'true'}
+			,{text: 'IsWaiver', datafield:'isWaiver', hidden:'true'}
+        	,{ text: 'Name', datafield: 'feeName', width:100 }
         	,{ text: 'Fee', datafield: 'cost', width:80, cellsalign: 'right', cellsformat: 'c2' }
-        	,{ text: 'Paid', datafield: 'isPaid', columntype: 'checkbox', width: 60, cellsalign: 'center', align: 'center' }
-    	    ,{ text: 'Waiver', datafield: 'isWaiver', columntype: 'checkbox', width: 60, cellsalign: 'center', align: 'center' }
+        	,{ text: 'PayType', datafield: 'payType', width:80 }
+    	    ,{ text: 'FeeNote', datafield: 'feeNote' }
 			,{ text: 'Detail', datafield: 'Detail',width: 65,  columntype:'button', cellsrenderer:function(){
 					return "Detail";
 				}, buttonclick:function(row) {

@@ -82,6 +82,8 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setIsPaid(sfee.getIsPaid() == (byte) 1);
 		dto.setIsWaiver(sfee.getIsWaiver() == (byte) 1);
 		dto.setPayTime(sfee.getPayTime());
+		dto.setPayType(sfee.getPayType());
+		dto.setFeeNote(sfee.getFeeNote());
 		getStudentFeeGroupAndName(dto, sfee);
 		
 		return dto;

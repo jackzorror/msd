@@ -8,4 +8,6 @@ public interface MSDMiscFacade {
 
 	List<MSDTypeDto> getCompetitionType();
 
+	MSDFileNameDto createStudentNameListFile(String string);
+
 }

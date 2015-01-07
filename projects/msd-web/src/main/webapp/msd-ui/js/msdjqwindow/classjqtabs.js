@@ -153,12 +153,12 @@ function showClassInformation(data) {
 		$('#txtTotalStudent').jqxInput('val', data.totalNumberStudent);
 	else
 		$('#txtTotalStudent').jqxInput('val', "0");
-
+/*
 	if (null != data && null != data.totalClassFee)
 		$('#txtTotalClassFee').jqxInput('val', '$ ' + data.totalClassFee);
 	else
 		$('#txtTotalClassFee').jqxInput('val', "$0");
-	
+*/	
 	if (null != data && null != data.totalClassCount)
 		$('#txtTotalClassTime').jqxInput('val', data.totalClassCount);
 	else
@@ -172,7 +172,8 @@ function showClassInformation(data) {
 			$('#ddlNonClassDateList').jqxDropDownList({selectedIndex:0});
 
 		showClassSchedularInformation(data.classSchedularList);
-		showClassFeeInformation(data.classFeeList)
+// 20150106 remove class fee 		
+//		showClassFeeInformation(data.classFeeList)
 	}
 	
 }
@@ -310,17 +311,17 @@ function createClassInformationDiv() {
 	tmpdiv.append('<label style=" margin-top:0px;"> Total Student : </label>');
 	var totalStudent = $('<input style="margin-top:0px; margin-left:5px"/>').attr({type:'text', id:'txtTotalStudent'});
 	tmpdiv.append(totalStudent);
-	$('#txtTotalStudent').jqxInput({rtl: true, disabled: true, height: 20, width:20, minLength: 1, theme: getTheme() });	
-	
+	$('#txtTotalStudent').jqxInput({rtl: true, disabled: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
+/*	
 	tmpdiv.append('<label style="margin-top:0px; margin-left:10px"> Total Class Fee : </label>');
 	var totalClassFee = $('<input style="margin-top:0px; margin-left:5px;"/>').attr({type:'text', id:'txtTotalClassFee'});
 	tmpdiv.append(totalClassFee);
 	$('#txtTotalClassFee').jqxInput({rtl: true, disabled: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
-	
+*/	
 	tmpdiv.append('<label style="margin-top:0px; margin-left:10px"> Total Class Time : </label>');
 	var totalClassTime = $('<input style="margin-top:0px; margin-left:5px;"/>').attr({type:'text', id:'txtTotalClassTime'});
 	tmpdiv.append(totalClassTime);
-	$('#txtTotalClassTime').jqxInput({rtl: true, disabled: true, height: 20, width:20, minLength: 1, theme: getTheme() });	
+	$('#txtTotalClassTime').jqxInput({rtl: true, disabled: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
 	
 	var label = $('<label id="statuslabel" name="statuslabel" style="margin-top:0px; margin-left:10px;">Class Status : </label>');
 	tmpdiv.append(label);
@@ -531,7 +532,7 @@ function showClassSchedularInformation(data) {
 
 	$('#schedularInformationdiv').append('<br/>');
 }
-
+/*
 function showClassFeeInformation(data) {
 	console.log(" in show class Fee information .. ");
 	
@@ -677,7 +678,7 @@ function showClassFeeInformation(data) {
 
 	$('#costInformationdiv').append('<br/>');
 }
-
+*/
 function deleteClassSchedular(response, request, settings) {
 	if (404 == response.code) {
 		alert(" Can't delete class schedular ... ");
@@ -688,7 +689,7 @@ function deleteClassSchedular(response, request, settings) {
 	}
 	$('#btnSearchClass').click();
 }
-
+/*
 function deleteClassFee(response, request, settings) {
 	if (404 == response.code) {
 		alert(" Can't delete class fee ... ");
@@ -699,7 +700,7 @@ function deleteClassFee(response, request, settings) {
 	}
 	$('#btnSearchClass').click();
 }
-
+*/
 function deleteNonClassDate(response, request, settings) {
 	if (404 == response.code) {
 		alert(" Can't delete non class date ... ");
@@ -752,7 +753,7 @@ function createAddClassSchedularDiv() {
 	tdiv.append(btncancel);
 	$('#btnCancelAddSchedular').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
-
+/*
 function createAddClassFeeDiv() {
 	$('#addClassFeediv').empty();
 	
@@ -789,7 +790,7 @@ function createAddClassFeeDiv() {
 	atdiv.append(btncancel);
 	$('#btnCancelAddFee').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
-
+*/
 function createAddNonClassDateDiv() {
 	$('#addNonClassDatediv').empty();
 
@@ -821,7 +822,7 @@ function addNewSchedulars(response, request, settings) {
 	}
 	$('#btnSearchClass').click();
 }
-
+/*
 function addNewFee(response, request, settings) {
 	if (500 == response.code) {
 		alert("Internal Error, Please check service. ");
@@ -832,7 +833,7 @@ function addNewFee(response, request, settings) {
 	}
 	$('#btnSearchClass').click();
 }
-
+*/
 function addNewNonClassDate(response, request, settings) {
 	if (500 == response.code) {
 		alert("Internal Error, Please check service. ");
@@ -881,7 +882,7 @@ function loadClassNameDropDownListDataSource(data) {
 
 function initClassLabelInformation() {
 	$('#txtTotalStudent').jqxInput('val', "0");
-	$('#txtTotalClassFee').jqxInput('val', "$0");
+//	$('#txtTotalClassFee').jqxInput('val', "$0");
 	$('#txtTotalClassTime').jqxInput('val', "0");
 	$('#labelClassStatus').text('N/A');
 }

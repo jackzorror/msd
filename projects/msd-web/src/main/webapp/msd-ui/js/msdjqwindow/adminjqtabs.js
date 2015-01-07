@@ -181,6 +181,8 @@ function showSelectedStudents(data) {
 			{ name: 'id',   type: 'int'}, 
 			{ name: 'firstName',  type: 'string'},
 			{ name: 'lastName', type: 'string'},
+			{ name: 'balance', type: 'string'},
+			{ name: 'phone', type: 'string'},
 			{ name: 'emailAddress', type: 'string'}
 		],
 		datatype:'json',
@@ -188,6 +190,15 @@ function showSelectedStudents(data) {
 	}
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	
+            var cellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
+                if (value > 0 ) {
+                    return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: #ff0000;"> $' + value + '</span>';
+                }
+                else {
+                    return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: #008000;"> $' + value + '</span>';
+                }
+            }
+/* allAttendentReport */
 	$("#studentAdminGrid").jqxGrid({
 		theme: getTheme(),
     	width: 640,
@@ -205,13 +216,13 @@ function showSelectedStudents(data) {
         	container1.append('<input style="margin-left: 5px;" id="registerNewClass" type="button" value="Register Class" />');
         	container1.append('<input style="margin-left: 5px;" id="changeRegisterClass" type="button" value="Upgreat Class" />');
         	container1.append('<input style="margin-left: 5px;" id="removeRegisterClass" type="button" value="Remove Class" />');
-        	container2.append('<input style="margin-left: 5px;" id="allAttendentReport" type="button" value="Attendent Report(all)" />');
+        	container2.append('<input style="margin-left: 5px;" id="createNameList" type="button" value="Print Name List" />');
         	container2.append('<input style="margin-left: 5px;" id="classAttendentReport" type="button" value="Attendent Report" />');
         	container2.append('<input style="margin-left: 5px;" id="addStudentCredit" type="button" value="Add Credit" />');
         	container2.append('<input style="margin-left: 5px;" id="studentCheckin" type="button" value="Check In" />');
 
 			var item = $("#ddlStudentAdminClassSearchName").jqxDropDownList('getSelectedItem');
-			var cid = null!= item ? item.value : 0;
+			var cid = null != item ? item.value : 0;
 			var cname = null != item ? item.label : "";
 
 	        $("#createEmailAddress").jqxButton({theme: getTheme(), width:150});
@@ -229,8 +240,8 @@ function showSelectedStudents(data) {
     	    $("#addStudentCredit").jqxButton({theme:getTheme(), width:150});
 			$("#addStudentCredit").jqxTooltip({ theme: getTheme(), content: 'Add Credit for Selected Student from System', position: 'mouse', name: 'movieTooltip'});
     	    
-    	    $("#allAttendentReport").jqxButton({theme: getTheme(), width:150});
-			$("#allAttendentReport").jqxTooltip({ theme: getTheme(), content: 'Show Selected Student Attendent Report for all Class', position: 'mouse', name: 'movieTooltip'});
+    	    $("#createNameList").jqxButton({theme: getTheme(), width:150});
+			$("#createNameList").jqxTooltip({ theme: getTheme(), content: 'Create Name List file for class or all student', position: 'mouse', name: 'movieTooltip'});
     	    
     	    $("#classAttendentReport").jqxButton({theme:getTheme(), width:150});
 			$("#classAttendentReport").jqxTooltip({ theme: getTheme(), content: 'Show Selected Student Attendent Report for Class :' + cname, position: 'mouse', name: 'movieTooltip'});
@@ -241,7 +252,7 @@ function showSelectedStudents(data) {
    		    $("#createEmailAddress").jqxButton({disabled: true });
     	    $("#registerNewClass").jqxButton({disabled:true});
    		    $("#changeRegisterClass").jqxButton({disabled: true });
-    	    $("#allAttendentReport").jqxButton({disabled:true});
+    	    $("#createNameList").jqxButton({disabled:false});
    		    $("#addStudentCredit").jqxButton({disabled:true});
     	    $("#classAttendentReport").jqxButton({disabled:true});
    		    $("#removeRegisterClass").jqxButton({disabled:true});
@@ -272,7 +283,7 @@ function showSelectedStudents(data) {
 	    		    $("#createEmailAddress").jqxButton({disabled: false });
 		    	    $("#registerNewClass").jqxButton({disabled:false});
 	    		    $("#changeRegisterClass").jqxButton({disabled: false });
-		    	    $("#allAttendentReport").jqxButton({disabled:false});
+		    	    $("#createNameList").jqxButton({disabled:false});
 	    		    $("#addStudentCredit").jqxButton({disabled:false});
 		    	    $("#classAttendentReport").jqxButton({disabled:false});
 	    		    $("#removeRegisterClass").jqxButton({disabled:false});
@@ -281,7 +292,7 @@ function showSelectedStudents(data) {
 	    		    $("#createEmailAddress").jqxButton({disabled: false });
 		    	    $("#registerNewClass").jqxButton({disabled:false});
 	    		    $("#changeRegisterClass").jqxButton({disabled: false });
-		    	    $("#allAttendentReport").jqxButton({disabled:true});
+		    	    $("#createNameList").jqxButton({disabled:false});
 	    		    $("#addStudentCredit").jqxButton({disabled:false});
 		    	    $("#classAttendentReport").jqxButton({disabled:true});
 	    		    $("#removeRegisterClass").jqxButton({disabled:false});
@@ -305,7 +316,7 @@ function showSelectedStudents(data) {
 	    		    $("#createEmailAddress").jqxButton({disabled: true });
 		    	    $("#registerNewClass").jqxButton({disabled:true});
 	    		    $("#changeRegisterClass").jqxButton({disabled: true });
-		    	    $("#allAttendentReport").jqxButton({disabled:true});
+		    	    $("#createNameList").jqxButton({disabled:false});
 	    		    $("#addStudentCredit").jqxButton({disabled:true});
 		    	    $("#classAttendentReport").jqxButton({disabled:true});
 	    		    $("#removeRegisterClass").jqxButton({disabled:true});
@@ -314,7 +325,7 @@ function showSelectedStudents(data) {
 	    		    $("#createEmailAddress").jqxButton({disabled: false });
 		    	    $("#registerNewClass").jqxButton({disabled:false});
 	    		    $("#changeRegisterClass").jqxButton({disabled: false });
-		    	    $("#allAttendentReport").jqxButton({disabled:false});
+		    	    $("#createNameList").jqxButton({disabled:false});
 	    		    $("#addStudentCredit").jqxButton({disabled:false});
 		    	    $("#classAttendentReport").jqxButton({disabled:false});
 	    		    $("#removeRegisterClass").jqxButton({disabled:false});
@@ -323,7 +334,7 @@ function showSelectedStudents(data) {
 	    		    $("#createEmailAddress").jqxButton({disabled: false });
 		    	    $("#registerNewClass").jqxButton({disabled:false});
 	    		    $("#changeRegisterClass").jqxButton({disabled: false });
-		    	    $("#allAttendentReport").jqxButton({disabled:true});
+		    	    $("#createNameList").jqxButton({disabled:false});
 	    		    $("#addStudentCredit").jqxButton({disabled:false});
 		    	    $("#classAttendentReport").jqxButton({disabled:true});
 	    		    $("#removeRegisterClass").jqxButton({disabled:false});
@@ -339,7 +350,6 @@ function showSelectedStudents(data) {
 	    		    $("#removeRegisterClass").jqxButton({disabled:true});
 				}
 			});
-
 
         	$("#createEmailAddress").on('click', function () {
 				console.log("create selected student email address list ... ");
@@ -419,18 +429,11 @@ function showSelectedStudents(data) {
 	        	$("#popupAddStudentCreitWindowInAdminTab").jqxWindow('open');
 	        });
 
-	        $("#allAttendentReport").on('click', function() {
-				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
-				if (selectedIndex.length != 1) {
-					alert('Please only select one student from the list ...');
-					return;
-				}
-	        	
-				var selectedIndex = $('#studentAdminGrid').jqxGrid('getselectedrowindexes');
-				var row = $('#studentAdminGrid').jqxGrid('getrowdata', selectedIndex[0]);
-				var sid = row.id;
-
-				ajaxGetAllStudentCheckinReportByStudentId(sid, getAllStudentCheckinReportByStudentId);
+	        $("#createNameList").on('click', function() {
+				var item = $("#ddlStudentAdminClassSearchName").jqxDropDownList('getSelectedItem');
+				var cid = null != item ? item.value : 0;
+				
+				ajaxCreateStudentNameListFile(cid, createStudentNameListFile);
 	        });
 
 	        $("#classAttendentReport").on('click', function() {
@@ -589,9 +592,11 @@ function showSelectedStudents(data) {
     	pagesizeoptions:['10', '15', '20'],
 	    columns: [
 			{text: 'ID', datafield:'id', hidden:'true'},
-        	{ text: 'First Name', datafield: 'firstName', width: 180 },
-	        { text: 'Last Name', datafield: 'lastName', width: 180 },
-    	    { text: 'Email Address', datafield: 'emailAddress'}
+        	{ text: 'First Name', datafield: 'firstName', width: 100 },
+	        { text: 'Last Name', datafield: 'lastName', width: 100 },
+    	    { text: 'Balance', datafield: 'balance', width: 80, cellsalign: 'right', cellsformat: 'c2', cellsrenderer: cellsrenderer},
+    	    { text: 'Phone', datafield: 'phone'},
+    	    { text: 'Email Address', datafield: 'emailAddress', hidden:'true'}
 	    ]
     });
 }
@@ -727,6 +732,19 @@ function createPopupAllCheckinReportWindow() {
 	var btncancel = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnCancelAllCheckinReport', value:'Close'});
 	tdiv.append(btncancel);
 	$('#btnCancelAllCheckinReport').jqxButton({ width: '60', height: 20, theme: getTheme() });
+}
+
+function createStudentNameListFile(response, request, settings) {
+	if (404 == response.code) {
+		console.log(" Can't createStudentNameListFile ... ");
+		alert(" Can not createStudentNameListFile ... ");
+	} else if (302 == response.code) {
+		console.log(" createStudentNameListFile ");
+		var data = $.parseJSON(response.result);
+		alert("Please check the following file : " + data.fileName);
+	} else {
+		alert('error');
+	}
 }
 
 function getStudentCheckinReportByStudentIdAndClassId(response, request, settings) {

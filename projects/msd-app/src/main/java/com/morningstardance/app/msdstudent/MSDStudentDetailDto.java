@@ -2,7 +2,6 @@ package com.morningstardance.app.msdstudent;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public class MSDStudentDetailDto extends MSDStudentDto {
 	private int id;
@@ -20,8 +19,6 @@ public class MSDStudentDetailDto extends MSDStudentDto {
 	private List<MSDStudentParentDto> msdStudentParentDtos;
 	
 	private MSDStudentMedicalInfoDto msdStudentMedicalInfoDto;
-	
-	private double balance;
 	
 	public int getId() {
 		return id;
@@ -108,11 +105,5 @@ public class MSDStudentDetailDto extends MSDStudentDto {
 	}
 	public void setIsActive(byte isActive) {
 		this.isActive = isActive;
-	}
-	public double getBalance() {
-		return balance;
-	}
-	public void setBalance(double balance) {
-		this.balance = balance;
 	}
 }

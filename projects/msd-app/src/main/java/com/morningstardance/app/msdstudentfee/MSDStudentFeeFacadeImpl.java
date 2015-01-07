@@ -49,10 +49,11 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 	@Resource
 	private MSDStudentFeeAssembler msdStudentFeeAssembler;
 	
-	@Override
 	/**
 	 * when user register student to class, the system will add all
 	 * the active class fee to this student fee table
+	 * 
+	 * 2015/01/06 remove class fee from system, this function will not be used
 	 */
 	public void addClassFeeToStudentFeeByStudentIdAndStudentClassId(Long sid, Long scid) {
 		if (null == sid || null == scid) return;
@@ -70,10 +71,11 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		}
 	}
 
-	@Override
 	/**
 	 * when user un register student from class, the system will de active all
 	 * the student fee which link to un register class' class fees
+	 * 
+	 * 2015/01/06 remove class fee from system, this function will not be used
 	 */
 	public void removeClassFeeFromStudentFeeByStudentIdAndStudentClassId(Long sid, Long scid) {
 		MSDStudentClass sc = msdStudentClassJPARepository.findOne(scid);
@@ -97,11 +99,12 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		}
 	}
 	
-	@Override
 	/**
 	 * when user delete class fee under class UI, the system will
 	 * de active this class fee in all active student fee table with same
 	 * class fee id
+	 * 
+	 * 2015/01/06 remove class fee from system, this function will not be used
 	 */
 	public void removeClassFeeFromStudentFeeByClassFeeId(Long id) {
 		if (null == id || id.intValue() == 0) return;
@@ -185,7 +188,6 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		}
 	}
 
-	@Override
 	/**
 	 * when user add class fee under class UI, the system will
 	 * add this new class fee to all student whose register to

@@ -344,6 +344,21 @@ function ajaxCheckinStudent(schechin, fName) {
 		
 };
 
+function ajaxCreateStudentNameListFile(cid, fName) {
+	console.log(" call create student Name list ... ");
+		
+	ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdmisc",
+		dataType: "json",
+		contentType: "application/json",
+		data:{miscname: 'CREATE_NAME_LIST_FILE' + '-' + cid}
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxGetStudentCheckinReportByStudentIdAndClassId(sid, cid, fName) {
 	console.log(" call get student check in report ... ");
 		

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.morningstardance.app.misc.MSDCompetitionTypeDto;
 import com.morningstardance.app.misc.MSDCostTypeDto;
+import com.morningstardance.app.misc.MSDFileNameDto;
 import com.morningstardance.app.misc.MSDMiscFacade;
 import com.morningstardance.app.misc.MSDTypeDto;
 import com.morningstardance.web.ResponseDto;
@@ -38,8 +39,11 @@ public class MSDMiscController {
     	} else if (miscname.equals("COMPETITION_TYPE")) {
     		List<MSDTypeDto> dtos = msdMiscFacade.getCompetitionType();
     		responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+    	} else if (miscname.contains("CREATE_NAME_LIST_FILE")) {
+    		String [] fields = miscname.split("-");
+    		MSDFileNameDto dto = msdMiscFacade.createStudentNameListFile(fields[1]);
+    		responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
     	}
 		return responseDto;
 	}
-
 }

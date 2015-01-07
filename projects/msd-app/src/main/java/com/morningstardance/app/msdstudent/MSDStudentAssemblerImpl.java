@@ -57,7 +57,46 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 		if (null == msdStudent) 
 			return null;
 		MSDStudentDto dto = mapper.map(msdStudent, MSDStudentDto.class);
+		dto.setBalance(getStudentBalanceById(msdStudent.getId()));
+		dto.setPhone(getStudentTopTwoPhone(msdStudent));
 		return dto;
+	}
+
+	private String getStudentTopTwoPhone(MSDStudent msdStudent) {
+		if (null == msdStudent) return null;
+		int done = 2;
+		String phone = "";
+		if (done != 0 && null != msdStudent.getMsdStudentParents() && msdStudent.getMsdStudentParents().size() > 0) {
+			if (null != msdStudent.getMsdStudentParents().get(0).getCellPhone() &&
+					!msdStudent.getMsdStudentParents().get(0).getCellPhone().isEmpty()) {
+				phone += msdStudent.getMsdStudentParents().get(0).getCellPhone() + "(pc) ";
+				done--;
+			} else if (null != msdStudent.getMsdStudentParents().get(0).getWorkPhone() &&
+					!msdStudent.getMsdStudentParents().get(0).getWorkPhone().isEmpty()) {
+				phone += msdStudent.getMsdStudentParents().get(0).getWorkPhone() + "(pw) ";
+				done--;
+			}
+		}
+		if (done != 0 && null != msdStudent.getMsdStudentParents() && msdStudent.getMsdStudentParents().size() > 1) {
+			if (null != msdStudent.getMsdStudentParents().get(1).getCellPhone() &&
+					!msdStudent.getMsdStudentParents().get(1).getCellPhone().isEmpty()) {
+				phone += msdStudent.getMsdStudentParents().get(1).getCellPhone() + "(pc) ";
+				done--;
+			} else if (null != msdStudent.getMsdStudentParents().get(1).getWorkPhone() &&
+					!msdStudent.getMsdStudentParents().get(1).getWorkPhone().isEmpty()) {
+				phone += msdStudent.getMsdStudentParents().get(1).getWorkPhone() + "(pw) ";
+				done--;
+			}
+		}
+		if (done != 0 && null != msdStudent.getHomePhone() && !msdStudent.getHomePhone().isEmpty()) {
+			phone += msdStudent.getHomePhone() + "(h) ";
+			done--;
+		}
+		if (done != 0 && null != msdStudent.getCellPhone() && !msdStudent.getCellPhone().isEmpty()) {
+			phone += msdStudent.getCellPhone() + "(c)";
+			done--;
+		}
+		return phone;
 	}
 
 	@Override
