@@ -34,8 +34,5 @@ public interface MSDStudentFeeFacade {
 	String payStudentFeesByStudentPayDto(MSDStudentFeePayDto msdStudentFeePayDto);
 
 	String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid,
-			String feeidlist, String type);
-
-	String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid,
-			Long feeid, String feenote, String type);
+			Long feeid, String feenote, String type, double fee);
 }

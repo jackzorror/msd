@@ -15,4 +15,5 @@ CREATE TABLE IF NOT EXISTS `msd`.`msd_class_fee` (
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1$$
 
 ALTER TABLE `msd`.`msd_class_fee` CHANGE COLUMN `cost` `cost` DECIMAL(8,2) NOT NULL  ;
+ALTER TABLE `msd`.`msd_class_fee` CHANGE COLUMN `name` `name` VARCHAR(256) NOT NULL  ;
 

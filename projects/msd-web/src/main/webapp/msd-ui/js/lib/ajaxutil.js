@@ -490,12 +490,12 @@ function ajaxAddCompetitionFee(competitionfee, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxAddGeneralFeeToStudentFee(sid, fid, fnote, fName) {
+function ajaxAddGeneralFeeToStudentFee(sid, fid, fnote, tcost, fName) {
 	var ajaxcall = $.ajax({
 		type: "POST",
 		dataType: "json",
 		url: "../msd-app/rs/msdstudentfee",
-		data: {'msdstudentid':sid, 'feeid':fid, 'feenote':fnote, 'type':'GENERALFEE'},
+		data: {'msdstudentid':sid, 'feeid':fid, 'feenote':fnote, 'type':'GENERALFEE', 'fee':tcost},
 	});
 
 	ajaxcall.done(fName);
@@ -641,9 +641,9 @@ function ajaxGetStudentCreditDetailById(id, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxPayStudentFees(sid, feeidlist, totalfee, paytype, paytime, paynote, fName) {
+function ajaxPayStudentFees(sid, feeidlist, totalfee, creditidlist, totalcredit, paytype, paytime, paynote, fName) {
 	console.log(" pay student fees ");
-	var dto = {"msdStudentId":sid, "feeIdList":feeidlist, "totalFee":totalfee, "payType":paytype,"payTime":paytime,"payNote":paynote};
+	var dto = {"msdStudentId":sid, "feeIdList":feeidlist, "totalFee":totalfee, "creditIdList":creditidlist, "totalCredit":totalcredit, "payType":paytype,"payTime":paytime,"payNote":paynote};
 	
 	var ajaxcall =  $.ajax({
 		type: "POST",

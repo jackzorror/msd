@@ -282,21 +282,21 @@ function showSelectedStudents(data) {
 				if (selectedIndex.length == 1) {
 	    		    $("#createEmailAddress").jqxButton({disabled: false });
 		    	    $("#registerNewClass").jqxButton({disabled:false});
-	    		    $("#changeRegisterClass").jqxButton({disabled: false });
+//	    		    $("#changeRegisterClass").jqxButton({disabled: false });
 		    	    $("#createNameList").jqxButton({disabled:false});
-	    		    $("#addStudentCredit").jqxButton({disabled:false});
-		    	    $("#classAttendentReport").jqxButton({disabled:false});
-	    		    $("#removeRegisterClass").jqxButton({disabled:false});
-		    	    $("#studentCheckin").jqxButton({disabled:false});
+//	    		    $("#addStudentCredit").jqxButton({disabled:false});
+//		    	    $("#classAttendentReport").jqxButton({disabled:false});
+//	    		    $("#removeRegisterClass").jqxButton({disabled:false});
+//		    	    $("#studentCheckin").jqxButton({disabled:false});
 				} else {
 	    		    $("#createEmailAddress").jqxButton({disabled: false });
 		    	    $("#registerNewClass").jqxButton({disabled:false});
-	    		    $("#changeRegisterClass").jqxButton({disabled: false });
+//	    		    $("#changeRegisterClass").jqxButton({disabled: false });
 		    	    $("#createNameList").jqxButton({disabled:false});
-	    		    $("#addStudentCredit").jqxButton({disabled:false});
-		    	    $("#classAttendentReport").jqxButton({disabled:true});
-	    		    $("#removeRegisterClass").jqxButton({disabled:false});
-		    	    $("#studentCheckin").jqxButton({disabled:false});
+//	    		    $("#addStudentCredit").jqxButton({disabled:false});
+//		    	    $("#classAttendentReport").jqxButton({disabled:true});
+//	    		    $("#removeRegisterClass").jqxButton({disabled:false});
+//		    	    $("#studentCheckin").jqxButton({disabled:false});
 				}
 			
 				var item = $("#ddlStudentAdminClassSearchName").jqxDropDownList('getSelectedItem');
@@ -315,30 +315,30 @@ function showSelectedStudents(data) {
 				if (selectedIndex.length == 0) {
 	    		    $("#createEmailAddress").jqxButton({disabled: true });
 		    	    $("#registerNewClass").jqxButton({disabled:true});
-	    		    $("#changeRegisterClass").jqxButton({disabled: true });
+//	    		    $("#changeRegisterClass").jqxButton({disabled: true });
 		    	    $("#createNameList").jqxButton({disabled:false});
-	    		    $("#addStudentCredit").jqxButton({disabled:true});
-		    	    $("#classAttendentReport").jqxButton({disabled:true});
-	    		    $("#removeRegisterClass").jqxButton({disabled:true});
-		    	    $("#studentCheckin").jqxButton({disabled:true});
+//	    		    $("#addStudentCredit").jqxButton({disabled:true});
+//		    	    $("#classAttendentReport").jqxButton({disabled:true});
+//	    		    $("#removeRegisterClass").jqxButton({disabled:true});
+//		    	    $("#studentCheckin").jqxButton({disabled:true});
 				} else if (selectedIndex.length == 1) {
 	    		    $("#createEmailAddress").jqxButton({disabled: false });
 		    	    $("#registerNewClass").jqxButton({disabled:false});
-	    		    $("#changeRegisterClass").jqxButton({disabled: false });
+//	    		    $("#changeRegisterClass").jqxButton({disabled: false });
 		    	    $("#createNameList").jqxButton({disabled:false});
-	    		    $("#addStudentCredit").jqxButton({disabled:false});
-		    	    $("#classAttendentReport").jqxButton({disabled:false});
-	    		    $("#removeRegisterClass").jqxButton({disabled:false});
-		    	    $("#studentCheckin").jqxButton({disabled:false});
+//	    		    $("#addStudentCredit").jqxButton({disabled:false});
+//		    	    $("#classAttendentReport").jqxButton({disabled:false});
+//	    		    $("#removeRegisterClass").jqxButton({disabled:false});
+//		    	    $("#studentCheckin").jqxButton({disabled:false});
 				} else {
 	    		    $("#createEmailAddress").jqxButton({disabled: false });
 		    	    $("#registerNewClass").jqxButton({disabled:false});
-	    		    $("#changeRegisterClass").jqxButton({disabled: false });
+//	    		    $("#changeRegisterClass").jqxButton({disabled: false });
 		    	    $("#createNameList").jqxButton({disabled:false});
-	    		    $("#addStudentCredit").jqxButton({disabled:false});
-		    	    $("#classAttendentReport").jqxButton({disabled:true});
-	    		    $("#removeRegisterClass").jqxButton({disabled:false});
-		    	    $("#studentCheckin").jqxButton({disabled:false});
+//	    		    $("#addStudentCredit").jqxButton({disabled:false});
+//		    	    $("#classAttendentReport").jqxButton({disabled:true});
+//	    		    $("#removeRegisterClass").jqxButton({disabled:false});
+//		    	    $("#studentCheckin").jqxButton({disabled:false});
 				}
 			
 				var item = $("#ddlStudentAdminClassSearchName").jqxDropDownList('getSelectedItem');

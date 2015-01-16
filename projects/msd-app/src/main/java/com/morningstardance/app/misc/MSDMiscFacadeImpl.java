@@ -64,7 +64,7 @@ public class MSDMiscFacadeImpl implements MSDMiscFacade {
 		}
 		return types;
 	}
-
+/*
 	private List<MSDTypeDto> getTypesByType(String type) {
 		List<MSDTypeDto> types = new ArrayList<MSDTypeDto>();
 		List<MSDType> ts = msdTypeJPARepository.findByType(type);
@@ -73,11 +73,10 @@ public class MSDMiscFacadeImpl implements MSDMiscFacade {
 		}
 		return types;
 	}
-
-	@SuppressWarnings("resource")
+*/
 	@Override
 	public MSDFileNameDto createStudentNameListFile(String cid) {
-		String fpath="./";
+		String fpath="./../";
 		String fname = "StudentNameList";
 		String firstLine = "Student Name List for ";
 		List<MSDStudentDto> sList = null; 

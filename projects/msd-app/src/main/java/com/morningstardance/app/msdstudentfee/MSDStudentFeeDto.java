@@ -14,7 +14,8 @@ public class MSDStudentFeeDto {
 	private Date payTime;
 	private String payType;
 	private int msdStudentId;
-	private String FeeNote;
+	private String feeNote;
+	private double fee;
 	
 	public int getId() {
 		return id;
@@ -77,10 +78,16 @@ public class MSDStudentFeeDto {
 		this.msdStudentId = msdStudentId;
 	}
 	public String getFeeNote() {
-		return FeeNote;
+		return feeNote;
 	}
 	public void setFeeNote(String feeNote) {
-		FeeNote = feeNote;
+		this.feeNote = feeNote;
+	}
+	public double getFee() {
+		return fee;
+	}
+	public void setFee(double fee) {
+		this.fee = fee;
 	}
 	
 }

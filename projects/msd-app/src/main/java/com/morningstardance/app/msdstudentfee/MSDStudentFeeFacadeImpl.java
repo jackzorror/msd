@@ -1,5 +1,6 @@
 package com.morningstardance.app.msdstudentfee;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.morningstardance.app.msdoperation.MSDOperationService;
+import com.morningstardance.app.msdstudentcredit.MSDStudentCreditFacade;
 import com.morningstardance.domain.entity.MSDClassFee;
 import com.morningstardance.domain.entity.MSDCompetitionFee;
 import com.morningstardance.domain.entity.MSDGeneralFee;
@@ -49,6 +51,9 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 	@Resource
 	private MSDStudentFeeAssembler msdStudentFeeAssembler;
 	
+	@Resource
+	private MSDStudentCreditFacade msdStudentCreditFacade;
+	
 	/**
 	 * when user register student to class, the system will add all
 	 * the active class fee to this student fee table
@@ -67,7 +72,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 			if (cfee.getIsActive() == (byte) 0)
 				continue;
 			
-			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, cfee.getId(), MSDClassFee.class.getSimpleName(), null);
+			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, cfee.getId(), MSDClassFee.class.getSimpleName(), null, cfee.getCost().doubleValue());
 		}
 	}
 
@@ -140,7 +145,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		for (MSDCompetitionFee cfee : cfees) {
 			if (cfee.getIsActive() == (byte) 0) 
 				continue;
-			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, cfee.getId(), MSDCompetitionFee.class.getSimpleName(), null);
+			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, cfee.getId(), MSDCompetitionFee.class.getSimpleName(), null, cfee.getCost().doubleValue());
 		}
 	}
 
@@ -203,7 +208,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		// only find active MSDStudentClass record
 		List<MSDStudentClass> scs = msdStudentClassJPARepository.findByMsdClassIdAndIsActive(cfee.getMsdClassId(), (byte) 1);
 		for (MSDStudentClass cs : scs) {
-			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(new Long(cs.getMsdStudentId()), cfee.getId(), MSDClassFee.class.getSimpleName(), null);
+			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(new Long(cs.getMsdStudentId()), cfee.getId(), MSDClassFee.class.getSimpleName(), null, cfee.getCost().doubleValue());
 		}
 	}
 
@@ -222,12 +227,12 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		
 		List<MSDStudentCompetition> scs = msdStudentCompetitionJPARepository.findByMsdCompetitionIdAndIsActive(cfee.getMsdCompetitionId(), (byte) 1);
 		for (MSDStudentCompetition cs : scs) {
-			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(new Long(cs.getMsdStudentId()), cfee.getId(), MSDCompetitionFee.class.getSimpleName(), null);
+			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(new Long(cs.getMsdStudentId()), cfee.getId(), MSDCompetitionFee.class.getSimpleName(), null, cfee.getCost().doubleValue());
 		}
 	}
 	
 	private void addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(
-			Long sid, Long id, String simpleName, String feeNote) {
+			Long sid, Long id, String simpleName, String feeNote, double fee) {
 		if (null == sid || null == id || null == simpleName) return;
 		
 		MSDStudentFee sfee = getOnlyOneActiveStudentFeeByStudentIdANdFeeObjectIdAndFeeObjectId(sid.intValue(), id.intValue(), simpleName);
@@ -242,6 +247,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 			nfee.setMsdStudentFeeObjectName(simpleName);
 			nfee.setMsdStudentId(sid.intValue());
 			nfee.setFeeNote(feeNote);
+			nfee.setFee(new BigDecimal(fee));
 			msdStudentFeeJPARepository.save(nfee);
 			msdOperationService.msdStudentOperation(sid, "Add " + simpleName +" Fee to Student Fee", nfee.toString(), null, "DATABASE");
 		} else {
@@ -345,43 +351,26 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 	public String payStudentFeesByStudentPayDto(
 			MSDStudentFeePayDto dto) {
 		if (null == dto) return null;
+		
+		msdStudentCreditFacade.consumeStudentCredits(new Long(dto.getMsdStudentId()), dto.getCreditIdList(), dto.getPayTime(), dto.getPayNote());
+		
 		return payStudentFeesByStudentIdAndFeeInfo(new Long(dto.getMsdStudentId()), dto.getFeeIdList(), dto.getTotalFee(),
 				dto.getPayType(), dto.getPayTime(), dto.getPayNote());
 	}
 
-	@Override
-	public String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid, String feeidlist, String type) {
-		if (null == msdstudentid || msdstudentid.intValue() == 0) return null;
-		
-		if (null == feeidlist || feeidlist.isEmpty()) return null;
-		
-		if (null == type || type.isEmpty()) return null;
-		
-		MSDStudent s = msdStudentJPARepository.findOne(msdstudentid);
-		
-		if (s == null || s.getIsActive() == (byte) 0) return null;
-		
-		String [] idlist = feeidlist.split(",");
-		for (String id : idlist) {
-			if (null != id && !(id.isEmpty()))
-				addFeeToStudentFeeByStudentIdAndFeeIdAndType(msdstudentid, new Long(id), type, null);
-		}
-		return "Success";
-	}
-
-	private void addFeeToStudentFeeByStudentIdAndFeeIdAndType(Long sid, Long fid, String type, String note) {
+	private void addFeeToStudentFeeByStudentIdAndFeeIdAndType(Long sid, Long fid, String type, String note, double fee) {
 		if (null == sid || sid.intValue() == 0) return;
 		if (null == fid || fid.intValue() == 0) return;
 		if (null == type || type.isEmpty()) return;
 		
 		if (type.equals("GENERALFEE")) {
-			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, fid, MSDGeneralFee.class.getSimpleName(), note);
+			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, fid, MSDGeneralFee.class.getSimpleName(), note, fee);
 		}
 		
 	}
 
 	@Override
-	public String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid, Long feeid, String feenote, String type) {
+	public String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid, Long feeid, String feenote, String type, double fee) {
 		if (null == msdstudentid || msdstudentid.intValue() == 0) return null;
 		
 		if (null == feeid || feeid.intValue() == 0) return null;
@@ -392,7 +381,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		
 		if (s == null || s.getIsActive() == (byte) 0) return null;
 
-		addFeeToStudentFeeByStudentIdAndFeeIdAndType(msdstudentid, feeid, type, feenote);
+		addFeeToStudentFeeByStudentIdAndFeeIdAndType(msdstudentid, feeid, type, feenote, fee);
 		
 		return "Success";
 	}

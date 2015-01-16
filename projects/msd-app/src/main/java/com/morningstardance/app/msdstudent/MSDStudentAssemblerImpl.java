@@ -122,19 +122,7 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 		for(MSDStudentFee fee : fees) {
 			if (fee.getIsPaid() == (byte) 1 || fee.getIsWaiver() == (byte) 1) continue;
 			
-			if (fee.getMsdStudentFeeObjectName().equals(MSDClassFee.class.getSimpleName())) {
-				MSDClassFee cfee = msdClassFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
-				if (cfee.getIsActive() == (byte) 1)
-					totalFees += cfee.getCost().doubleValue();
-			} else if (fee.getMsdStudentFeeObjectName().equals(MSDCompetitionFee.class.getSimpleName())) {
-				MSDCompetitionFee cfee = msdCompetitionFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
-				if (cfee.getIsActive() == (byte) 1)
-					totalFees += cfee.getCost().doubleValue();
-			} else if (fee.getMsdStudentFeeObjectName().equals(MSDGeneralFee.class.getSimpleName())) {
-				MSDGeneralFee gfee = msdGeneralFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
-				if (gfee.getIsActive() == (byte) 1)
-					totalFees += gfee.getCost().doubleValue();
-			}
+			totalFees += fee.getFee().doubleValue();
 		}
 		double totalCredit = 0.0;
 		List<MSDStudentCredit> credits = msdStudentCreditJPARepository.findByMsdStudentIdAndIsActive(id.intValue(), (byte) 1);

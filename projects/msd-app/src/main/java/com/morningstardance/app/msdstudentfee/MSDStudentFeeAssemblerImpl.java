@@ -58,6 +58,7 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setPayTime(sfee.getPayTime());
 		dto.setPayType(sfee.getPayType());
 		dto.setFeeNote(sfee.getFeeNote());
+		dto.setFee(sfee.getFee().doubleValue());
 		
 		return dto;
 	}
@@ -84,6 +85,7 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setPayTime(sfee.getPayTime());
 		dto.setPayType(sfee.getPayType());
 		dto.setFeeNote(sfee.getFeeNote());
+		dto.setFee(sfee.getFee().doubleValue());
 		getStudentFeeGroupAndName(dto, sfee);
 		
 		return dto;
@@ -151,6 +153,7 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setPayNote(sfee.getPayNote());
 		dto.setPayType(sfee.getPayType());
 		dto.setFeeNote(sfee.getFeeNote());
+		dto.setFee(sfee.getFee().doubleValue());
 		getStudentFeeGroupAndName(dto, sfee);
 		
 		return dto;

@@ -7,6 +7,8 @@ public class MSDStudentFeePayDto {
 	private int msdStudentId;
 	private String feeIdList;
 	private double totalFee;
+	private String creditIdList;
+	private double totalCredit;
 	private String payType;
 	private Date payTime;
 	private String payNote;
@@ -28,6 +30,18 @@ public class MSDStudentFeePayDto {
 	}
 	public void setTotalFee(double totalFee) {
 		this.totalFee = totalFee;
+	}
+	public String getCreditIdList() {
+		return creditIdList;
+	}
+	public void setCreditIdList(String creditIdList) {
+		this.creditIdList = creditIdList;
+	}
+	public double getTotalCredit() {
+		return totalCredit;
+	}
+	public void setTotalCredit(double totalCredit) {
+		this.totalCredit = totalCredit;
 	}
 	public String getPayType() {
 		return payType;
