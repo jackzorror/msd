@@ -102,12 +102,12 @@ function showStudentFeeGridDiv(data) {
     	width: 400, height:250, resizable: false, draggable: true, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 
-	//Create pop up Add Student Fee panel
-	var pdiv = $('<div/>').attr({id:'popupAddStudentFeeWindow'});
+	// Create pop up add new Student fee panel
+	var pdiv = $('<div/>').attr({id:'popupAddNewStudentFeeWindow'});
 	ccdiv.append(pdiv);
-	pdiv.append('<div >Add Student Fee</div> <div id="popupAddStudentFeeDiv"></div>');
+	pdiv.append('<div >Add New Student Fee</div> <div id="popupAddNewStudentFeeDiv"></div>');
     pdiv.jqxWindow({
-    	width: 600, height:500, resizable: false,  draggable: true, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 500, height:300, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 	
 	var sfgdiv = $('<div style="border:0px solid;"/>').attr({id:'studentFeeGrid'});
@@ -152,8 +152,8 @@ function showStudentFeeGridDiv(data) {
 	        createPayPopupPanel();
 			$("#popupStudentFeeWaiveWindow").jqxWindow({ position: { x: parseInt(offset.left) + 100, y: parseInt(offset.top) - 20 } });
 	        createWaivePopupPanel();
-			$("#popupAddStudentFeeWindow").jqxWindow({ position: { x: parseInt(offset.left) - 50, y: parseInt(offset.top) - 30 } });
-	        createAddStudentFeePopupPanel();
+			$("#popupAddNewStudentFeeWindow").jqxWindow({ position: { x: parseInt(offset.left) - 50, y: parseInt(offset.top) - 30 } });
+	        createAddNewStudentFeePopupWindow();
 	        
 	        sfgdiv.on('rowselect', function (event) {
 				var selectedIndex = sfgdiv.jqxGrid('getselectedrowindexes');
@@ -221,9 +221,36 @@ function showStudentFeeGridDiv(data) {
     	    });
         	$("#addStudentFeebtn").on('click', function () {
 				console.log("Add student fee ... ");
-				showAddStudentFeePopupPanel(getAllGeneralFee());
-				$('#popupAddStudentFeeWindow').jqxWindow('open');
+				bindAddNewStudentFeePopupWindow(null);
+				$('#ddlGeneralFee').jqxDropDownList('selectIndex',-1);
+				$("#popupAddNewStudentFeeWindow").jqxWindow('open');
     	    });
+            $('#btnCancelAddNewStudentFee').on('click', function () {
+            	console.log(" Cancel add New Student Fee ... ");
+				$("#popupAddNewStudentFeeWindow").jqxWindow('hide');
+				bindAddNewStudentFeePopupWindow(null);
+            });
+            $('#btnAddNewStudentFee').on('click', function () {
+				var fnote = $('#txtNewStudentFeeNote').val();
+				var tcost = $('#txtNewStudentFeeTotalCost').val();
+				
+				if (null == fnote || fnote.length < 1) {
+					alert("please provide fee note ");
+					return;
+				}
+				if (null == tcost || tcost == 0) {
+					alert("please check the total fee ");
+					return;
+				}
+				$("#popupAddNewStudentFeeWindow").jqxWindow('hide');
+
+				var row = $('#ddlGeneralFee').jqxDropDownList('getSelectedItem');
+				
+				var sid = getCurrentStudent().id;
+				
+				ajaxAddGeneralFeeToStudentFee(sid, row.value, fnote, tcost, addGeneralFeeToStuentFee);
+				
+            });
     	    
     	    $('#btnCancelPayStudentFee').on('click', function () {
 				$('#popupStudentFeePayWindow').jqxWindow('hide');
@@ -457,7 +484,7 @@ function showAddStudentFeePopupPanel(data) {
 	asfdiv.append(pdiv);
 	pdiv.append('<div >Add New Student Fee</div> <div id="popupAddNewStudentFeeDiv"></div>');
     pdiv.jqxWindow({
-    	width: 410, height:250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 500, height:300, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 	
 	
@@ -577,6 +604,7 @@ function showAddStudentFeePopupPanel(data) {
             $('#btnCancelAddGeneralFee').on('click', function () {
 				console.log(" cancel add Fee ...");
 				$("#popupAddGeneralFeeWindow").jqxWindow('hide');
+				bindAddNewStudentFeePopupWindow(null);
             });
             
             $('#btnAddGeneralFee').on('click', function () {
@@ -597,6 +625,7 @@ function showAddStudentFeePopupPanel(data) {
 					var generalfee = {"id":0, "feeName":name, "cost":cost, "feeTypeName":null, "costTypeId":type};
 					ajaxAddGeneralFee(generalfee, addGeneralFee);
                 }
+                bindAddNewStudentFeePopupWindow(null);
             });
   	    },
     	columns: [
@@ -813,42 +842,62 @@ function createAddNewStudentFeePopupWindow() {
 	
 	var tdiv = $('<div style="float:right; margin-top:10px; border:0px solid;"/>');
 	psfdiv.append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">Select Fee :</label>');
+	var feelist = $('<div style="margin-left:5px"/>').attr({id:'ddlGeneralFee'});
+	tdiv.append(feelist);
+	feelist.jqxDropDownList({placeHolder: "Please Select Fee", height: 20, width: 350, dropDownHeight: 150, theme: getTheme()});
+
+	var feelistsource = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'label',  type: 'string'},
+		],
+		datatype:'json',
+		localdata:getGeneralFeeList()
+	}
+	var feelistsourceadapter = new $.jqx.dataAdapter(feelistsource);
+	
+	feelist.jqxDropDownList({source:feelistsourceadapter, displayMember: "label", valueMember: "id"});
+
+
+	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+	psfdiv.append(tdiv);
 	tdiv.append('<label style="margin-top:2px;">New Fee Name :</label>');
 	var name = $('<input/>').attr({type:'text',id:'txtNewStudentFeeName'});
 	tdiv.append(name);
-	name.jqxInput({placeHolder: "Enter Fee Name", height: 20, width: 260, minLength: 1, theme: getTheme() });
+	name.jqxInput({placeHolder: "Enter Fee Name", height: 20, width: 300, minLength: 1, theme: getTheme() });
 	
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
 	psfdiv.append(tdiv);
 	tdiv.append('<label style="float:left; margin-top:2px;">New Fee:</label>');
 	var cost = $('<div/>').attr({id:'txtNewStudentFeeCost'});
 	tdiv.append(cost);
-	cost.jqxNumberInput({ width: '260px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+	cost.jqxNumberInput({ width: '300px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
 	psfdiv.append(tdiv);
 	tdiv.append('<label style="float:left; margin-top:2px;">Class Times:</label>');
 	var times = $('<div/>').attr({id:'txtStudentFeeTimes'});
 	tdiv.append(times);
-	times.jqxNumberInput({ width: '260px', height: '20px', min: 1, max: 999, digits:3, decimalDigits: 0, spinButtons: true, theme: getTheme()});
+	times.jqxNumberInput({ width: '300px', height: '20px', min: 1, max: 999, digits:3, decimalDigits: 0, spinButtons: true, theme: getTheme()});
 
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
 	psfdiv.append(tdiv);
 	tdiv.append('<label style="float:left; margin-top:2px;">Discount:</label>');
 	var discount = $('<div/>').attr({id:'txtStudentFeeDiscount'});
 	tdiv.append(discount);
-	discount.jqxNumberInput({ width: '260px', height: '20px', min: 0, max: 99, symbolPosition: 'right', spinButtons: true, digits:2, symbol: '%', decimalDigits: 0, theme: getTheme()});
+	discount.jqxNumberInput({ width: '300px', height: '20px', min: 0, max: 99, symbolPosition: 'right', spinButtons: true, digits:2, symbol: '%', decimalDigits: 0, theme: getTheme()});
 
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
 	psfdiv.append(tdiv);
 	tdiv.append('<label style="float:left; margin-top:2px;">Total Fee:</label>');
 	var totalFee = $('<div/>').attr({id:'txtNewStudentFeeTotalCost'});
 	tdiv.append(totalFee);
-	totalFee.jqxNumberInput({ width: '260px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+	totalFee.jqxNumberInput({ width: '300px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
 	var fnote = $('<input style="float:right; margin-top:5px;margin-left:0px;"/>').attr({type:'text', id:'txtNewStudentFeeNote'});
 	psfdiv.append(fnote);
-	fnote.jqxInput({placeHolder: "Enter Fee Note", height: 20, width:390, minLength:1, theme:getTheme() });
+	fnote.jqxInput({placeHolder: "Enter Fee Note", height: 20, width:450, minLength:1, theme:getTheme() });
 
 	psfdiv.append('<br/>');
 
@@ -861,6 +910,20 @@ function createAddNewStudentFeePopupWindow() {
 	var btncancel = $('<input style="margin-right:0px;"/>').attr({type:'button', id:'btnCancelAddNewStudentFee', value:'Cancel'});
 	atdiv.append(btncancel);
 	btncancel.jqxButton({ width: '60', height: 20, theme: getTheme() });
+	
+	$('#ddlGeneralFee').on('change', function (event) {     
+    	var args = event.args;
+	    if (args) {
+
+	    	var index = args.index;
+    		var item = args.item;
+
+    		var id = item.value;
+	    	var label = item.label;
+	    	var feerecord = getGeneralFeeById(id);
+	    	bindAddNewStudentFeePopupWindow(feerecord);
+		} 
+	});
 	
 	$('#txtStudentFeeTimes').on('change', function () 
 	{
@@ -879,11 +942,11 @@ function updateTotalNewStudentFee() {
 }
 
 function bindAddNewStudentFeePopupWindow(data) {
-	$('#txtNewStudentFeeName').jqxInput('val', data.feeName);
-	$('#txtNewStudentFeeCost').jqxNumberInput('val', data.cost);
+	$('#txtNewStudentFeeName').jqxInput('val', null != data ? data.feeName : '');
+	$('#txtNewStudentFeeCost').jqxNumberInput('val', null != data ? data.cost : 0);
 	$('#txtStudentFeeTimes').jqxNumberInput('val', 1);
 	$('#txtStudentFeeDiscount').jqxNumberInput('val', 0);
-	$('#txtNewStudentFeeTotalCost').jqxNumberInput('val', data.cost * $('#txtStudentFeeTimes').val()*(1 - $('#txtStudentFeeDiscount').val()));
+	$('#txtNewStudentFeeTotalCost').jqxNumberInput('val', null != data ? data.cost * $('#txtStudentFeeTimes').val()*(1 - $('#txtStudentFeeDiscount').val()) : 0);
 }
 
 function addGeneralFeeToStuentFee(response, request, settings) {
@@ -1284,6 +1347,31 @@ function createStduentCreditDetailDiv(data) {
 		pnote.jqxInput({ disabled:true, height: 20, width:330, minLength:1, theme:getTheme() });
 		pnote.jqxInput('val', "This Credit is not consume");
 		pnote.css("color", "green");
+	}
+}
+
+var generalFeeList;
+function createDropDownGeneralGeeList() {
+	var data = getAllGeneralFee();
+	var tempList = [];
+	for (index in data) {
+		tempList.push({id:data[index].id, label:('$ '  + data[index].cost + ' -- ' + data[index].feeName)});
+	}
+	
+	generalFeeList = tempList;
+}
+function getGeneralFeeList() {
+	if (null == generalFeeList)
+		createDropDownGeneralGeeList();
+
+	return generalFeeList;
+}
+
+function getGeneralFeeById(id) {
+	var data = getAllGeneralFee();
+	for (index in data) {
+		if (data[index].id == id)
+			return data[index];
 	}
 }
 
