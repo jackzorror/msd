@@ -502,6 +502,18 @@ function ajaxAddGeneralFeeToStudentFee(sid, fid, fnote, tcost, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxUpdateGeneralFeeNameByID(fid, fnote, fName) {
+	var ajaxcall = $.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "../msd-app/rs/msdgeneralfee",
+		data: {'generalfeeid':fid, 'feename':fnote},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxDeleteCcompetitionFee(id, fName) {
 	console.log(" delete competition fee ");
 	

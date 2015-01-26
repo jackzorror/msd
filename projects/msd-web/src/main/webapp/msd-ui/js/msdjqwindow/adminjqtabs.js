@@ -11,7 +11,13 @@ function initAdminTab() {
 	
 	var abutton = $('<input />').attr({type:'button', id:'btnStudentAdmin', value:'Student'});
 	btnholddiv.append(abutton);
-	$('#btnStudentAdmin').jqxButton({ width: '100', theme: getTheme() });
+	abutton.jqxButton({ width: '100', theme: getTheme() });
+	
+	var fbutton = $('<input style="margin-top:10px" />').attr({type:'button', id:'btnFinanceAdmin', value:'Finance'});
+	btnholddiv.append(fbutton);
+	fbutton.jqxButton({ width: '100', theme: getTheme() });
+	
+	
 /*	
 	var cbutton = $('<input style="margin-top:10px;" />').attr({type:'button', id:'btnClassAdmin', value:'Class'});
 	btnholddiv.append(cbutton);
@@ -33,11 +39,19 @@ function initAdminTab() {
 function addAdminTabsEventListeners() {
 	$(document).on('click', '#btnStudentAdmin', handleStudentAdminClick);
 	$(document).on('click', '#btnClassAdmin', handleClassAdminClick);
+	$(document).on('click', '#btnFinanceAdmin', handleFinanceAdminClick);
 
 	$(document).on('keypress', '#ddlStudentAdminClassSearchName', handleStudentAdminClassSearchNameKeypress);
 	$(document).on('click', '#btnStudentAdminClearClass', handleStudentAdminClearClassClick);
 	$(document).on('click', '#btnStudentAdminSearchClass', handleStudentAdminSearchClassClick);
 }
+
+function handleFinanceAdminClick() {
+	console.log(' in Finance admin click ... ');
+	$('#adminMainPanel').empty();
+	showFinanceAdminPanel();
+}
+
 function handleClassAdminClick() {
 	console.log(' in Class admin click ... ');
    	$("#btnCompetitionAdmin").jqxDropDownButton('setContent', 'Competition');
