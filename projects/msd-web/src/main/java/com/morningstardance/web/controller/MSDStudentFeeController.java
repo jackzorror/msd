@@ -70,14 +70,14 @@ public class MSDStudentFeeController {
 		return responseDto;
 	}
 
-    @RequestMapping(params={"msdstudentid", "feeid", "feenote", "type"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
-    public @ResponseBody ResponseDto addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeDfltVer(Long msdstudentid, Long feeid, String feenote, String type) {
-    	return addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeVer1(msdstudentid, feeid, feenote, type);
+    @RequestMapping(params={"msdstudentid", "feeid", "feenote", "type", "fee"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeDfltVer(Long msdstudentid, Long feeid, String feenote, String type, double fee) {
+    	return addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeVer1(msdstudentid, feeid, feenote, type,fee);
     }
 
-    @RequestMapping(params={"msdstudentid", "feeid", "feenote", "type"}, method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeVer1(Long msdstudentid, Long feeid, String feenote, String type) {
-		String newDto = msdStudentFeeFacade.addFeeToStudentFeeByStudentIdAndFeeIdListAndType(msdstudentid, feeid, feenote, type);
+    @RequestMapping(params={"msdstudentid", "feeid", "feenote", "type", "fee"}, method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeVer1(Long msdstudentid, Long feeid, String feenote, String type, double fee) {
+		String newDto = msdStudentFeeFacade.addFeeToStudentFeeByStudentIdAndFeeIdListAndType(msdstudentid, feeid, feenote, type,fee);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto; 
 	}

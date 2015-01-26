@@ -57,7 +57,46 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 		if (null == msdStudent) 
 			return null;
 		MSDStudentDto dto = mapper.map(msdStudent, MSDStudentDto.class);
+		dto.setBalance(getStudentBalanceById(msdStudent.getId()));
+		dto.setPhone(getStudentTopTwoPhone(msdStudent));
 		return dto;
+	}
+
+	private String getStudentTopTwoPhone(MSDStudent msdStudent) {
+		if (null == msdStudent) return null;
+		int done = 2;
+		String phone = "";
+		if (done != 0 && null != msdStudent.getMsdStudentParents() && msdStudent.getMsdStudentParents().size() > 0) {
+			if (null != msdStudent.getMsdStudentParents().get(0).getCellPhone() &&
+					!msdStudent.getMsdStudentParents().get(0).getCellPhone().isEmpty()) {
+				phone += msdStudent.getMsdStudentParents().get(0).getCellPhone() + "(pc) ";
+				done--;
+			} else if (null != msdStudent.getMsdStudentParents().get(0).getWorkPhone() &&
+					!msdStudent.getMsdStudentParents().get(0).getWorkPhone().isEmpty()) {
+				phone += msdStudent.getMsdStudentParents().get(0).getWorkPhone() + "(pw) ";
+				done--;
+			}
+		}
+		if (done != 0 && null != msdStudent.getMsdStudentParents() && msdStudent.getMsdStudentParents().size() > 1) {
+			if (null != msdStudent.getMsdStudentParents().get(1).getCellPhone() &&
+					!msdStudent.getMsdStudentParents().get(1).getCellPhone().isEmpty()) {
+				phone += msdStudent.getMsdStudentParents().get(1).getCellPhone() + "(pc) ";
+				done--;
+			} else if (null != msdStudent.getMsdStudentParents().get(1).getWorkPhone() &&
+					!msdStudent.getMsdStudentParents().get(1).getWorkPhone().isEmpty()) {
+				phone += msdStudent.getMsdStudentParents().get(1).getWorkPhone() + "(pw) ";
+				done--;
+			}
+		}
+		if (done != 0 && null != msdStudent.getHomePhone() && !msdStudent.getHomePhone().isEmpty()) {
+			phone += msdStudent.getHomePhone() + "(h) ";
+			done--;
+		}
+		if (done != 0 && null != msdStudent.getCellPhone() && !msdStudent.getCellPhone().isEmpty()) {
+			phone += msdStudent.getCellPhone() + "(c)";
+			done--;
+		}
+		return phone;
 	}
 
 	@Override
@@ -83,19 +122,7 @@ public class MSDStudentAssemblerImpl implements MSDStudentAssembler {
 		for(MSDStudentFee fee : fees) {
 			if (fee.getIsPaid() == (byte) 1 || fee.getIsWaiver() == (byte) 1) continue;
 			
-			if (fee.getMsdStudentFeeObjectName().equals(MSDClassFee.class.getSimpleName())) {
-				MSDClassFee cfee = msdClassFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
-				if (cfee.getIsActive() == (byte) 1)
-					totalFees += cfee.getCost().doubleValue();
-			} else if (fee.getMsdStudentFeeObjectName().equals(MSDCompetitionFee.class.getSimpleName())) {
-				MSDCompetitionFee cfee = msdCompetitionFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
-				if (cfee.getIsActive() == (byte) 1)
-					totalFees += cfee.getCost().doubleValue();
-			} else if (fee.getMsdStudentFeeObjectName().equals(MSDGeneralFee.class.getSimpleName())) {
-				MSDGeneralFee gfee = msdGeneralFeeJPARepository.findOne(new Long(fee.getMsdStudentFeeObjectId()));
-				if (gfee.getIsActive() == (byte) 1)
-					totalFees += gfee.getCost().doubleValue();
-			}
+			totalFees += fee.getFee().doubleValue();
 		}
 		double totalCredit = 0.0;
 		List<MSDStudentCredit> credits = msdStudentCreditJPARepository.findByMsdStudentIdAndIsActive(id.intValue(), (byte) 1);

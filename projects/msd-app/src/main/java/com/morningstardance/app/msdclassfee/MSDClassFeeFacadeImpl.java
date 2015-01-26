@@ -55,6 +55,9 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 	}
 
 	@Override
+	/*
+	 * 2015/01/06 remove class fee from system
+	 */
 	public void addClassFee(Long id, Long msdClassId, String name, Long msdCostTypeId, float cost) {
 		MSDClassFee entity = null;
 		MSDCostType type = msdCostTypeJPARepository.findOne(msdCostTypeId);
@@ -74,11 +77,12 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 		msdClassFeeJPARepository.save(entity);
 
 		msdOperationService.msdClassOperation(msdClassId, "Add Class Fee", entity.toString(), null, "DATABASE");
-		
-		msdStudentFeeFacade.addClassFeeToStudentFeeByClassFeeId(entity.getId());
 	}
 
 	@Override
+	/*
+	 * 2015/01/06 remove class fee from system
+	 */
 	public void deleteClassFeeById(Long msdClassFeeId) {
 		if (null == msdClassFeeId || msdClassFeeId.intValue() == 0) return;
 		
@@ -89,9 +93,5 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 		msdClassFeeJPARepository.save(entity);
 		
 		msdOperationService.msdClassOperation(new Long(entity.getMsdClassId()), "De active Class Fee", null, entity.toString(), "DATABASE");
-
-		msdStudentFeeFacade.removeClassFeeFromStudentFeeByClassFeeId(entity.getId());
 	}
-
-	
 }

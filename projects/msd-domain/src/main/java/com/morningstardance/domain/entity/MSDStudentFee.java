@@ -1,6 +1,8 @@
 package com.morningstardance.domain.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 import javax.persistence.*;
 
 import com.morningstardance.domain.base.entity.MSDEntityBase;
@@ -53,6 +55,8 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 	
 	@Column(name="fee_note")
 	private String feeNote;
+
+	private BigDecimal fee;
 
 	public MSDStudentFee() {
 	}
@@ -143,6 +147,14 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 
 	public void setFeeNote(String feeNote) {
 		this.feeNote = feeNote;
+	}
+
+	public BigDecimal getFee() {
+		return fee;
+	}
+
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
 	}
 
 	public String toString() {

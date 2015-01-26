@@ -5,19 +5,19 @@ import java.util.List;
 
 public interface MSDStudentFeeFacade {
 
-	void addClassFeeToStudentFeeByStudentIdAndStudentClassId(Long sid, Long cid);
+//	void addClassFeeToStudentFeeByStudentIdAndStudentClassId(Long sid, Long cid);
 
 	void addCompetitionFeeToStudentFeeByStudentIdAndStudentCompetitionId(Long msdStudentId, Long id);
 
-	void removeClassFeeFromStudentFeeByStudentIdAndStudentClassId(Long sid, Long cid);
+//	void removeClassFeeFromStudentFeeByStudentIdAndStudentClassId(Long sid, Long cid);
 
 	void removeCompetitionFeeFromStudentFeeByStudentIdAndStudentCompetitionId(Long msdtudentid, Long scid);
 
-	void removeClassFeeFromStudentFeeByClassFeeId(Long msdClassFeeId);
+//	void removeClassFeeFromStudentFeeByClassFeeId(Long msdClassFeeId);
 
 	void removeCompetitionFeeFromStudentFeeByCompetitionFeeId(Long msdCompetitionFeeId);
 
-	void addClassFeeToStudentFeeByClassFeeId(Long msdClassFeeId);
+//	void addClassFeeToStudentFeeByClassFeeId(Long msdClassFeeId);
 	
 	void addCompetitionFeeToStudentFeeByCompetitionFeeId(Long msdCompetitionFeeId);
 
@@ -34,8 +34,5 @@ public interface MSDStudentFeeFacade {
 	String payStudentFeesByStudentPayDto(MSDStudentFeePayDto msdStudentFeePayDto);
 
 	String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid,
-			String feeidlist, String type);
-
-	String addFeeToStudentFeeByStudentIdAndFeeIdListAndType(Long msdstudentid,
-			Long feeid, String feenote, String type);
+			Long feeid, String feenote, String type, double fee);
 }

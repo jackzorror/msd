@@ -17,3 +17,6 @@ CREATE TABLE IF NOT EXISTS `msd`.`msd_student_fee` (
   CONSTRAINT `fk_student_fee_student` FOREIGN KEY (`msd_student_id`) REFERENCES `msd_student` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=196 DEFAULT CHARSET=latin1$$
 
+ALTER TABLE `msd`.`msd_student_fee` CHANGE COLUMN `pay_note` `pay_note` VARCHAR(512) NULL DEFAULT NULL  , CHANGE COLUMN `fee_note` `fee_note` VARCHAR(512) NULL DEFAULT NULL  ;
+
+ALTER TABLE `msd`.`msd_student_fee` ADD COLUMN `fee` DECIMAL(8,2) NOT NULL  AFTER `fee_note` ;

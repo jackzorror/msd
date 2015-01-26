@@ -8,4 +8,6 @@ public interface MSDGeneralFeeFacade {
 
 	MSDGeneralFeeDto createGeneralFee(MSDGeneralFeeDto dto);
 
+	String updateGeneralFeeNameByID(Long generalfeeid, String feename);
+
 }

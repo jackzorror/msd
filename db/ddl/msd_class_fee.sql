@@ -14,3 +14,6 @@ CREATE TABLE IF NOT EXISTS `msd`.`msd_class_fee` (
   CONSTRAINT `fk_class_cost` FOREIGN KEY (`cost_type_id`) REFERENCES `msd_cost_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1$$
 
+ALTER TABLE `msd`.`msd_class_fee` CHANGE COLUMN `cost` `cost` DECIMAL(8,2) NOT NULL  ;
+ALTER TABLE `msd`.`msd_class_fee` CHANGE COLUMN `name` `name` VARCHAR(256) NOT NULL  ;
+

@@ -48,4 +48,18 @@ public class MSDGeneralFeeFacadeImpl implements MSDGeneralFeeFacade {
 		return msdGeneralFeeAssembler.createDtoFromEntity(entity);
 	}
 
+	@Override
+	public String updateGeneralFeeNameByID(Long generalfeeid, String feename) {
+		if (null == generalfeeid || feename.isEmpty()) return "";
+		
+		MSDGeneralFee entity = msdGeneralFeeJPARepository.findOne(generalfeeid);
+		if (null == entity) return "";
+		
+		entity.setName(feename);
+		
+		msdGeneralFeeJPARepository.saveAndFlush(entity);
+		
+		return "successfully";
+	}
+
 }

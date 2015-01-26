@@ -54,6 +54,8 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	 * when user un register a student from class, it also de active all class fee
 	 * from student fee 
 	 * @param id
+	 * 
+	 * 2015/01/06 remove class fee from system
 	 */
 	private void unRegisterStudentFromClassById(Long id) {
 		if (null == id) return;
@@ -65,7 +67,6 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 			Long sid = new Long(msdsc.getMsdStudentId());
 			Long cid = new Long(msdsc.getMsdClassId());
 			msdOperationService.msdStudentClassOperation(sid, cid, "Un Register Student : " + sid + " from Class : " + cid, "DATABASE");
-			msdStudentFeeFacade.removeClassFeeFromStudentFeeByStudentIdAndStudentClassId(sid, msdsc.getId());
 		}
 	}
 
@@ -87,6 +88,8 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 	 * @param sid
 	 * @param cid
 	 * @return
+	 * 
+	 * 2015/01/06 remove class fee from system
 	 */
 	private MSDStudentClass registerStudentToClassByStudentIdClassId(Long sid, Long cid) {
 		if (null == sid || null == cid) return null;
@@ -100,7 +103,6 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		if (null == entity) {
 			entity = msdStudentClassJPARepository.save(studentClass);
 			msdOperationService.msdStudentClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid, "DATABASE");
-			msdStudentFeeFacade.addClassFeeToStudentFeeByStudentIdAndStudentClassId(sid, entity.getId());
 		} else {
 			String msg = "Student already register to this Class";
 			msdOperationService.msdStudentClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid + " reason : " + msg +

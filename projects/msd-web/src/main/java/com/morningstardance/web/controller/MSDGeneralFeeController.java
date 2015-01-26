@@ -45,4 +45,16 @@ public class MSDGeneralFeeController {
 		return responseDto;
 	}
 
+    @RequestMapping(params={"generalfeeid", "feename"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto updateGeneralFeeNameByIDAndNameDfltVer(Long generalfeeid, String feename) {
+    	return updateGeneralFeeNameByIDAndNameVer1(generalfeeid, feename);
+    }
+
+    @RequestMapping(params={"generalfeeid", "feename"}, method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto updateGeneralFeeNameByIDAndNameVer1(Long generalfeeid, String feename) {
+		String newDto = msdGeneralFeeFacade.updateGeneralFeeNameByID(generalfeeid, feename);
+		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
+		return responseDto; 
+	}
+
 }

@@ -15,3 +15,10 @@ CREATE TABLE IF NOT EXISTS `msd`.`msd_student_credit` (
   CONSTRAINT `fk_student_credit_student` FOREIGN KEY (`msd_student_id`) REFERENCES `msd_student` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1$$
 
+ALTER TABLE `msd`.`msd_student_credit` CHANGE COLUMN `consume_note` `consume_note` VARCHAR(512) NULL DEFAULT NULL  ;
+
+ALTER TABLE `msd`.`msd_student_credit` CHANGE COLUMN `credit_note` `credit_note` VARCHAR(512) NULL DEFAULT NULL  ;
+
+ALTER TABLE `msd`.`msd_student_credit` CHANGE COLUMN `credit` `credit` DECIMAL(8,2) NOT NULL  ;
+
+
