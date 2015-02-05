@@ -3,7 +3,6 @@ package com.morningstardance.app.msdstudent;
 import java.util.List;
 
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
-import com.morningstardance.app.msdcompetition.MSDCompetitionSummaryDto;
 import com.morningstardance.app.msdstudentclass.MSDStudentClassDto;
 
 public interface MSDStudentFacade {
@@ -38,5 +37,11 @@ public interface MSDStudentFacade {
 	List<MSDStudentDto> getAllStudentSummaryDtoByClassId(Long msdclassid);
 
 	MSDStudentBalanceDto getStudentFinanceBalanceByStudentId(Long msdstudentid);
+
+	List<MSDClassSummaryDto> getStudentRegisterClassByStudentIdAndSemesterId(
+			Long msdstudentid, Long semesterid);
+
+	List<MSDClassSummaryDto> getStudentNonRegisterClassByStudentIdSemesterId(
+			Long msdstudentid, Long semesterid);
 
 }

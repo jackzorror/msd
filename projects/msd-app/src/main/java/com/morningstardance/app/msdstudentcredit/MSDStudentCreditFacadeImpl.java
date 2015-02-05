@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.morningstardance.app.misc.MSDMiscFacade;
 import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.domain.entity.MSDStudent;
 import com.morningstardance.domain.entity.MSDStudentCredit;
@@ -28,6 +29,9 @@ public class MSDStudentCreditFacadeImpl implements MSDStudentCreditFacade {
 	
 	@Resource
 	MSDOperationService msdOperationService;
+	
+	@Resource
+	MSDMiscFacade msdMiscFacade;
 
 	@Override
 	public List<MSDStudentCreditSummaryDto> getStudentCreditSummarysByStudentId(Long id) {
@@ -143,6 +147,24 @@ public class MSDStudentCreditFacadeImpl implements MSDStudentCreditFacade {
 			addStudentCredit(new Long(id), creditnote, credit);
 		}
 		return "successfully";
+	}
+
+	@Override
+	public List<MSDStudentCreditSummaryDto> getStudentCreditSummarysByStudentIdAndSemesterId(
+			Long studentid, Long semesterid) {
+		if (null == studentid || studentid.intValue() == 0) return null;
+		
+		if (null == semesterid || semesterid.intValue() == 0) 
+			semesterid = new Long (msdMiscFacade.getCurrentSemester().getId());
+		
+		MSDStudent s = msdStudentJPARepository.findOne(studentid);
+		if (null == s) return null;
+		
+		List<MSDStudentCredit> sfees = msdStudentCreditJPARepository.findByMsdStudentIdAndSemesterAndIsActive(studentid.intValue(), semesterid.intValue(), (byte) 1);
+		
+		List<MSDStudentCreditSummaryDto> dtos = msdStudentCreditAssembler.createSummaryDtoFromEntity(sfees);
+		
+		return dtos;
 	}
 
 }

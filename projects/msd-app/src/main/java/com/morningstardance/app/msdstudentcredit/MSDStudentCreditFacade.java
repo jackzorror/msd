@@ -20,4 +20,7 @@ public interface MSDStudentCreditFacade {
 	String addStudentCreditToStudents(String msdstudentidlist,
 			String creditnote, Double double1);
 
+	List<MSDStudentCreditSummaryDto> getStudentCreditSummarysByStudentIdAndSemesterId(
+			Long studentid, Long semesterid);
+
 }

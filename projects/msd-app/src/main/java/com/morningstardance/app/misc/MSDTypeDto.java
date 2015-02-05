@@ -3,10 +3,12 @@ package com.morningstardance.app.misc;
 public class MSDTypeDto {
 	private int id;
 	private String name;
+	private String type;
 	
-	public MSDTypeDto(int id, String name) {
+	public MSDTypeDto(int id, String name, String type) {
 		this.setId(id);
 		this.setName(name);
+		this.setType(type);
 	}
 	
 	public int getId() {
@@ -20,5 +22,13 @@ public class MSDTypeDto {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

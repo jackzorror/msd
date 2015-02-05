@@ -151,14 +151,31 @@ function afterUserLoginProcess() {
 
 	$('#txtStudentSearchFirstName').focus();
 		
+	ajaxGetCurrentSemester(getCurrentSemesterObject);
+}
+
+function getCurrentSemesterObject(response) {
+	if (404 == response.code) {
+		console.log(" Can't get current semester ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get current semester ");
+		setCurrentSemester(data);
+		getAllResource(data);
+	} else {
+		alert('error');
+	}
+
+}
+
+function getAllResource(data) {
 	ajaxGetUniqueName("FIRSTNAME", getUniqueFirstNameForStudent);
 	ajaxGetUniqueName("LASTNAME",getUniqueLasstNameForStudent);
-	ajaxGetAllClass(getAllClass);
-//	ajaxGetAllClassName(getAllClassName);
-	ajaxGetAllMSDCostType(getAllMSDCostType);
-	ajaxGetAllMSDCompetitionType(getAllMSDCompetitionType);
+	ajaxGetAllClassForCurrentSemester(data.id, getAllClass);
 	ajaxGetAllCompetition(getAllCompetitionNameIdList);
 	ajaxGetAllGeneralFee(getAllGeneralFeeList);
+	ajaxGetAllMSDTypes(getAllMSDTypes);
+	ajaxGetSemesterList(getSemesterArrayList);
 	
 	setTimerId(setInterval("timercount()", 60000));
 	
@@ -204,6 +221,9 @@ function getUniqueLasstNameForStudent(response) {
 function getAllClass(response) {
 	if (404 == response.code) {
 		console.log(" Can't get active summary class ... ");
+		loadClassNameDropDownListDataSource(null);
+		setAllClassNameList(null);
+		setActiveClassNameList(null);
 	} else if (302 == response.code) {
 		var data = $.parseJSON(response.result);
 		console.log(" get active summary class  list ");
@@ -237,28 +257,59 @@ function getAllClassName(response) {
 	}
 }
 
-function getAllMSDCostType(response) {
+function getAllMSDTypes(response) {
 	if (404 == response.code) {
-		console.log(" Can't get all cost type ... ");
+		console.log(" Can't get all type ... ");
 	} else if (302 == response.code) {
 		var data = $.parseJSON(response.result);
-		console.log(" get all cost type list ");
-		setAllCostType(data);
+		console.log(" get all type list ");
+		setAllType(data);
+		var feeType = [];
+		var classType = [];
+		var studentType = [];
+		for (index in data) {
+			if (data[index].type == 'FEE_TYPE') 
+				feeType.push(data[index]);
+			else if (data[index].type == 'CLASS_TYPE')
+				classType.push(data[index]);
+			else if (data[index].type == 'STUDENT_TYPE')
+				studentType.push(data[index]);
+		}
+		setAllFeeType(feeType);
+		setAllClassType(classType);		
+		setAllStudentType(studentType);
 	} else {
 		alert('error');
 	}
 }
 
-function getAllMSDCompetitionType(response) {
-	if (404 == response.code) {
-		console.log(" Can't get all competition type ... ");
-	} else if (302 == response.code) {
-		var data = $.parseJSON(response.result);
-		console.log(" get all competition type list ");
-		setAllCompetitionType(data);
-	} else {
-		alert('error');
-	}
+var allType;
+function setAllType(data) {
+	allType = data;
+}
+function getAllType() {
+	return allType;
+}
+var allFeeType;
+function setAllFeeType(data) {
+	allFeeType = data;
+}
+function getAllFeeType() {
+	return allFeeType;
+}
+var allClassType;
+function setAllClassType(data) {
+	allClassType = data;
+}
+function getAllClassType() {
+	return allClassType;
+}
+var allStudentType;
+function setAllStudentType(data) {
+	allStudentType = data;
+}
+function getAllStudentType() {
+	return allStudentType;
 }
 
 function getAllGeneralFeeList(response) {
@@ -294,6 +345,19 @@ function getAllCompetitionNameIdList(response) {
 		alert('error');
 	}
 
+}
+
+function getSemesterArrayList(response) {
+	if (404 == response.code) {
+		console.log(" Can't get semester List ... ");
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get semester list ");
+		setSemesterList(data);
+		loadClassTabSemesterDropDownListDataSource(data);		
+	} else {
+		alert('error');
+	}
 }
 
 var timerId;
@@ -360,3 +424,18 @@ function getActiveCompetitionNameList() {
 	return activeCompetitionNameList;
 }
 
+var semesterList;
+function setSemesterList(slist) {
+	semesterList = slist;
+}
+function getSemesterList() {
+	return semesterList;
+}
+
+var currentSemester;
+function setCurrentSemester(s) {
+	currentSemester = s;
+}
+function getCurrentSemester() {
+	return currentSemester;
+}

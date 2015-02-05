@@ -11,6 +11,8 @@ public class MSDClassDto {
 	protected String classStatus;
 	protected String nonClassDates;
 	protected boolean isactive;
+	protected int semester;
+	protected String semesterName;
 	
 	public int getId() {
 		return id;
@@ -59,5 +61,17 @@ public class MSDClassDto {
 	}
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
+	}
+	public int getSemester() {
+		return semester;
+	}
+	public void setSemester(int semester) {
+		this.semester = semester;
+	}
+	public String getSemesterName() {
+		return semesterName;
+	}
+	public void setSemesterName(String semesterName) {
+		this.semesterName = semesterName;
 	}
 }

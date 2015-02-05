@@ -21,4 +21,6 @@ ALTER TABLE `msd`.`msd_student_credit` CHANGE COLUMN `credit_note` `credit_note`
 
 ALTER TABLE `msd`.`msd_student_credit` CHANGE COLUMN `credit` `credit` DECIMAL(8,2) NOT NULL  ;
 
+ALTER TABLE `msd`.`msd_student_credit` ADD COLUMN `semester` INT(11) NOT NULL  AFTER `credit_date` ;
+
 

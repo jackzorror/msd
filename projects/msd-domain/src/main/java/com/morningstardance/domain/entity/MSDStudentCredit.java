@@ -48,6 +48,8 @@ public class MSDStudentCredit extends MSDEntityBase implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="credit_date")
 	private Date creditDate;
+	
+	private int semester;
 
 	public MSDStudentCredit() {
 	}
@@ -55,11 +57,11 @@ public class MSDStudentCredit extends MSDEntityBase implements Serializable {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("StudentCredit--> id: %d Student id: %d  IsActive: %x IsConsumed: %x");
-		sb.append(" creditNote: %s creditDate: %s consumeNote: %s consumeDate: %s credit: %f");
+		sb.append(" creditNote: %s creditDate: %s consumeNote: %s consumeDate: %s credit: %f semester: %d");
 		return String.format(sb.toString(), id.intValue(), msdStudentId, isActive, isConsumed, 
 				creditNote, null != creditDate ? new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(creditDate) : "n/a",
 				consumeNote, null != consumedDate ? new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(consumedDate) : "n/a",
-				credit.floatValue());
+				credit.floatValue(), semester);
 	}
 	
 	public Long getId() {
@@ -132,6 +134,14 @@ public class MSDStudentCredit extends MSDEntityBase implements Serializable {
 
 	public void setCreditDate(Date creditDate) {
 		this.creditDate = creditDate;
+	}
+
+	public int getSemester() {
+		return semester;
+	}
+
+	public void setSemester(int semester) {
+		this.semester = semester;
 	}
 
 }

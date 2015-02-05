@@ -7,27 +7,43 @@ function initClassTab() {
 	var scpdiv = $('<div style="border:0px solid;"/>').attr({id:'classControldiv'});
 	$('#classControlPanel').append(scpdiv);
 
-	var ddldiv = $('<div dock="left" style="margin-top:10px; border:0px solid  #ccc; height:20px; width:500px;"/>');
+	var ddldiv = $('<div dock="left" style="margin-top:10px; border:0px solid  #ccc; height:20px; width:530px;"/>');
 	var btndiv = $('<div dock="right" style="margin-top:10px; border:0px solid  #ccc; height:20px;"/>');
 	scpdiv.append(ddldiv);
 	scpdiv.append(btndiv);
 	
-	ddldiv.append('<label style="float:left; margin-top:8px; margin-left:20px">Please Select name : </label>');
+	var indiv = $('<div style="border:0px solid;"/>').attr({id:'insideClassCOntroldiv'});
+	ddldiv.append(indiv);
+
+	var sdiv = $('<div dock="left" style="width: 100px;  border: 0px solid #ccc;"/>');
+	var cdiv = $('<div dock="right" style="border: 0px solid #ccc;"/>');
+
+	indiv.append(sdiv);
+	indiv.append(cdiv);
+	
+	indiv.jqxDockPanel({height: 40, width:530});
+	
+	sdiv.append('<label style="float:left; margin-top:8px; margin-left:5px">Semester : </label>');
+	var sname = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlSemesterSearchName'});
+	sdiv.append(sname);
+	$('#ddlSemesterSearchName').jqxDropDownList({placeHolder: "Select Semester", height: 20, width: 120, dropDownHeight: 100, theme: getTheme()});
+
+	cdiv.append('<label style="float:left; margin-top:8px; margin-left:10px">Class : </label>');
 	var cname = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlClassSearchName'});
-	ddldiv.append(cname);
-	$('#ddlClassSearchName').jqxDropDownList({placeHolder: "Please Select Class Name", height: 20, width: 300, dropDownHeight: 150, theme: getTheme()});
+	cdiv.append(cname);
+	$('#ddlClassSearchName').jqxDropDownList({placeHolder: "Please Select Class Name", height: 20, width: 240, dropDownHeight: 200, theme: getTheme()});
 
 	var abutton = $('<input style="float:right;margin-top:5px; margin-left:3px; margin-right:10px" />').attr({type:'button', id:'btnAddClass', value:'Add'});
 	btndiv.append(abutton);
-	$('#btnAddClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
+	$('#btnAddClass').jqxButton({ width: '65', height: 20, theme: getTheme() });
 	
 	var cbutton = $('<input style="float:right;margin-top:5px; margin-left:3px" />').attr({type:'button', id:'btnClearClass', value:'Clear'});
 	btndiv.append(cbutton);
-	$('#btnClearClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
+	$('#btnClearClass').jqxButton({ width: '65', height: 20, theme: getTheme() });
 	
 	var sbutton = $('<input style="float:right; margin-top:5px;" />').attr({type:'button', id:'btnSearchClass', value:'Search'});
 	btndiv.append(sbutton);
-	$('#btnSearchClass').jqxButton({ width: '75', height: 20, theme: getTheme() });
+	$('#btnSearchClass').jqxButton({ width: '65', height: 20, theme: getTheme() });
 	
 	$('#classControldiv').jqxDockPanel({height: 40});
 
@@ -43,6 +59,9 @@ function addClassTabsEventListeners() {
 	
 	$(document).on('click', '#btnEditClassInformation', handleEditClassClick);
 	$(document).on('click', '#btnSaveClassInformation', handleSaveClassClick);
+	
+	$(document).on('change', '#ddlSemesterSearchName', handleSemesterSearchNameDropdownChange);
+	
 }
 
 // Event handle
@@ -858,6 +877,11 @@ function saveClassInformation(response, request, settings) {
 }
 
 function loadClassNameDropDownListDataSource(data) {
+	if (null == data) {
+		$('#ddlClassSearchName').jqxDropDownList({source:null});
+		return;
+	}
+	
 	var activesource = {
 		datafields:[
 			{ name: 'value',   type: 'int'}, 
@@ -869,7 +893,7 @@ function loadClassNameDropDownListDataSource(data) {
 	var activedataadapter = new $.jqx.dataAdapter(activesource);
 	
 	$('#ddlClassSearchName').jqxDropDownList({source:activedataadapter, displayMember: "text", valueMember: "value"});
-	
+/*	
 		if (getCurrentFunctionInClassTab() == 'ADD') {
 			if (null != getActiveClassNameList() && getActiveClassNameList().length > 0) {
 				$('#ddlClassSearchName').jqxDropDownList({selectedIndex: getActiveClassNameList().length });
@@ -878,8 +902,40 @@ function loadClassNameDropDownListDataSource(data) {
 		} else if (getCurrentFunctionInClassTab() == 'SEARCH') {
 			$('#btnSearchClass').click();
 		}
+*/
 } 
 
+function loadClassTabSemesterDropDownListDataSource(data) {
+	var activesource = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'name',  type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var activedataadapter = new $.jqx.dataAdapter(activesource);
+	
+	$('#ddlSemesterSearchName').jqxDropDownList({source:activedataadapter, displayMember: "name", valueMember: "id"});
+	
+	var sid = getCurrentSemester().id;
+	
+	$('#ddlSemesterSearchName').jqxDropDownList('selectItem',sid);
+} 
+
+function handleSemesterSearchNameDropdownChange(event) {
+    var args = event.args;
+    if (args) {
+	    var item = args.item;
+
+    	var label = item.label;
+	    var value = item.value;
+	    
+    	$('classMainPanel').empty();
+		$('#ddlClassSearchName').jqxDropDownList({selectedIndex: -1});
+	    ajaxGetAllClassForCurrentSemester(value, getAllClass);
+    }
+}
 function initClassLabelInformation() {
 	$('#txtTotalStudent').jqxInput('val', "0");
 //	$('#txtTotalClassFee').jqxInput('val', "$0");

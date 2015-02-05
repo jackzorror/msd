@@ -48,6 +48,18 @@ public class MSDClassController {
 			return responseDto;
 		}
 
+		@RequestMapping(params={"classstatus", "semesterid"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
+		public @ResponseBody ResponseDto getAllMSDClassByStatusAndSemesterIdDfltVer(String classstatus, Long semesterid) {
+			return getAllMSDClassByStatusAndSemesterIdVer1(classstatus, semesterid);
+		}
+		
+		@RequestMapping(params={"classstatus", "semesterid"}, method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
+		private ResponseDto getAllMSDClassByStatusAndSemesterIdVer1(String classstatus, Long semesterid) {
+			List<MSDClassSummaryDto> dtos = msdClassFacade.getAllMSDClassByStatusAndSemesterId(classstatus, semesterid);
+	        ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+			return responseDto;
+		}
+
 		@RequestMapping(value="/{msdClassId}", method=RequestMethod.GET, headers="!X-Api-service-Version")
 		public @ResponseBody ResponseDto getMSDClassByIdDfltVer(@PathVariable("msdClassId") Long msdClassId) {
 			return getMSDClassByIdVer1(msdClassId);

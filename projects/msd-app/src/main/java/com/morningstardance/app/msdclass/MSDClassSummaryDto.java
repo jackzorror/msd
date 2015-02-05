@@ -6,6 +6,7 @@ public class MSDClassSummaryDto {
 	private String name;
 	private String schedule;
 	private boolean isactive;
+	private int semesterid;
 	
 	public int getId() {
 		return id;
@@ -30,6 +31,12 @@ public class MSDClassSummaryDto {
 	}
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
+	}
+	public int getSemesterid() {
+		return semesterid;
+	}
+	public void setSemesterid(int semesterid) {
+		this.semesterid = semesterid;
 	}
 
 }

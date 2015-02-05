@@ -26,6 +26,20 @@ function ajaxGetAllClass(fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxGetAllClassForCurrentSemester(sid, fName) {
+	console.log(" get all class for current Semester ... ");
+	var ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdclass",
+		dataType: "json",
+		contentType: "application/json",
+		data: { classstatus: "ALL", semesterid:sid}
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxGetAllClassName(fName) {
 	console.log(" get all class name ... ");
 	var ajaxcall = $.ajax({
@@ -76,6 +90,32 @@ function ajaxHasRole(role, fName) {
 		dataType: "json",
 	});
 
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetStudentRegisteredClassesByStudentIdSemesterId(studentid, semesterid, fName) {
+
+	var ajaxcall = $.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent/" + studentid,
+		data: { type: "registerclass", semesterid:semesterid},
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetStudentUnRegisteredClassesByStudentIdSemesterId(studentid, semesterid, fName) {
+
+	var ajaxcall = $.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent/" + studentid,
+		data: { type: "nonregisterclass", semesterid:semesterid},
+	});
+	
 	ajaxcall.done(fName);
 	ajaxcall.error(handleAjaxError);
 }
@@ -330,7 +370,7 @@ function ajaxregisterClassByStudentIdListAndClassId(cid, sidList, rtype, ocid,fN
 function ajaxCheckinStudent(schechin, fName) {
 	console.log(" call student check in ... ");
 		
-	ajaxcall = $.ajax({
+	var ajaxcall = $.ajax({
 		type: "POST",
 		url: "../msd-app/msdstudentcheckin",
 		dataType: "json",
@@ -347,7 +387,7 @@ function ajaxCheckinStudent(schechin, fName) {
 function ajaxCreateStudentNameListFile(cid, fName) {
 	console.log(" call create student Name list ... ");
 		
-	ajaxcall = $.ajax({
+	var ajaxcall = $.ajax({
 		type: "GET",
 		url: "../msd-app/rs/msdmisc",
 		dataType: "json",
@@ -359,10 +399,25 @@ function ajaxCreateStudentNameListFile(cid, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxGetAllMSDTypes(fName) {
+	console.log(" call get all type ... ");
+		
+	var ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdmisc",
+		dataType: "json",
+		contentType: "application/json",
+		data:{miscname: 'ALL_TYPE'}
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxGetStudentCheckinReportByStudentIdAndClassId(sid, cid, fName) {
 	console.log(" call get student check in report ... ");
 		
-	ajaxcall = $.ajax({
+	var ajaxcall = $.ajax({
 		type: "GET",
 		url: "../msd-app/msdstudentcheckin/" + sid + "/" + cid,
 		dataType: "json",
@@ -376,7 +431,7 @@ function ajaxGetStudentCheckinReportByStudentIdAndClassId(sid, cid, fName) {
 function ajaxGetAllStudentCheckinReportByStudentId(sid, fName) {
 	console.log(" call get student all check in report ... ");
 		
-	ajaxcall = $.ajax({
+	var ajaxcall = $.ajax({
 		type: "GET",
 		url: "../msd-app/msdstudentcheckin/" + sid ,
 		dataType: "json",
@@ -387,30 +442,70 @@ function ajaxGetAllStudentCheckinReportByStudentId(sid, fName) {
 	ajaxcall.error(handleAjaxError);
 };
 
-function ajaxGetAllMSDCostType(fName) {
-	console.log(" call get all cost type ... ");
+function ajaxAddSemester(dto, fName) {
+	var ajaxcall = $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdsemester",
+		data:JSON.stringify(dto),
+		contentType: "application/json",
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxAddMSDType(dto, fName) {
+	var ajaxcall = $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdmisc",
+		data:JSON.stringify(dto),
+		contentType: "application/json",
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxUpdateSemester(dto, fName) {
+	var ajaxcall = $.ajax({
+		type: "POST",
+		url: "../msd-app/rs/msdsemester",
+		dataType: "json",
+		contentType: "application/json",
+		data:JSON.stringify(dto),
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+
+function ajaxGetSemesterList (fName) {
+	console.log(" call get Semester List ... ");
 		
 	ajaxcall = $.ajax({
 		type: "GET",
-		url: "../msd-app/rs/msdmisc",
+		url: "../msd-app/rs/msdsemester",
 		dataType: "json",
-		contentType: "application/json",
-		data:{miscname: 'COST_TYPE'}
+		contentType: "application/json"
 	});
 
 	ajaxcall.done(fName);
 	ajaxcall.error(handleAjaxError);
 };
 
-function ajaxGetAllMSDCompetitionType (fName) {
-	console.log(" call get all competition type ... ");
+function ajaxGetCurrentSemester (fName) {
+	console.log(" call get current semester ... ");
 		
 	ajaxcall = $.ajax({
 		type: "GET",
-		url: "../msd-app/rs/msdmisc",
-		dataType: "json",
-		contentType: "application/json",
-		data:{miscname: 'COMPETITION_TYPE'}
+		url: "../msd-app/rs/msdsemester/CURRENT_SEMESTER",
+		dataType: "json"
 	});
 
 	ajaxcall.done(fName);
@@ -490,12 +585,12 @@ function ajaxAddCompetitionFee(competitionfee, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxAddGeneralFeeToStudentFee(sid, fid, fnote, tcost, fName) {
+function ajaxAddGeneralFeeToStudentFee(sid, fid, fnote, tcost, semesterid, fName) {
 	var ajaxcall = $.ajax({
 		type: "POST",
 		dataType: "json",
 		url: "../msd-app/rs/msdstudentfee",
-		data: {'msdstudentid':sid, 'feeid':fid, 'feenote':fnote, 'type':'GENERALFEE', 'fee':tcost},
+		data: {'msdstudentid':sid, 'feeid':fid, 'feenote':fnote, 'type':'GENERALFEE', 'fee':tcost, 'semesterid':semesterid},
 	});
 
 	ajaxcall.done(fName);
@@ -554,7 +649,7 @@ function ajaxDeleteNonClassDate(id, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxGetStudentFeeByStudentId(id, fName) {
+function ajaxGetStudentFeeByStudentIdSemesterId(id, sid, fName) {
 	console.log(" get student fee in ajax ");
 	
 	var ajaxcall =  $.ajax({
@@ -562,14 +657,14 @@ function ajaxGetStudentFeeByStudentId(id, fName) {
 		url: "../msd-app/rs/msdstudentfee",
 		dataType: "json",
 		contentType: "application/json",
-		data: { "id": id, "type": "ByStudentId"},
+		data: { "studentid": id, "semesterid": sid},
 	});
 
 	ajaxcall.done(fName);
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxGetStudentCreditByStudentId(id, fName) {
+function ajaxGetStudentCreditByStudentIdSemesterId(id, sid, fName) {
 	console.log(" get student credite in ajax ");
 	
 	var ajaxcall =  $.ajax({
@@ -577,7 +672,7 @@ function ajaxGetStudentCreditByStudentId(id, fName) {
 		url: "../msd-app/rs/msdstudentcredit",
 		dataType: "json",
 		contentType: "application/json",
-		data: { "id": id, "type": "ByStudentId"},
+		data: { "studentid": id, "semesterid": sid},
 	});
 
 	ajaxcall.done(fName);
@@ -653,6 +748,34 @@ function ajaxGetStudentCreditDetailById(id, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxPayStudentFeeByDto(dto, fName) {
+	var ajaxcall =  $.ajax({
+		type: "PUT",
+		url: "../msd-app/rs/msdstudentfee",
+		dataType: "json",
+		contentType: "application/json",
+		data:JSON.stringify(dto),
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxPayStudentFeeByDtoList(dtoList, fName) {
+	var ajaxcall =  $.ajax({
+		type: "PUT",
+		url: "../msd-app/rs/msdstudentfee",
+		dataType: "json",
+		contentType: "application/json",
+		data:JSON.stringify(dtoList),
+		processData:false
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxPayStudentFees(sid, feeidlist, totalfee, creditidlist, totalcredit, paytype, paytime, paynote, fName) {
 	console.log(" pay student fees ");
 	var dto = {"msdStudentId":sid, "feeIdList":feeidlist, "totalFee":totalfee, "creditIdList":creditidlist, "totalCredit":totalcredit, "payType":paytype,"payTime":paytime,"payNote":paynote};
@@ -698,5 +821,3 @@ function ajaxCheckinClassByStudentIdListAndClassId (cid, checkintime, sidList, f
 	ajaxcall.done(fName);
 	ajaxcall.error(handleAjaxError);
 }
-
-

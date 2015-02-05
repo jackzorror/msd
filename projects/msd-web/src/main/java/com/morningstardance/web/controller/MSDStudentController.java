@@ -172,19 +172,19 @@ public class MSDStudentController {
 		return responseDto;
 	}
     
-    @RequestMapping(value="/{msdstudentid}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
-	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdDfltVer(@PathVariable Long msdstudentid, String type) {
-		return getStudentRegisteredClassByStudentIdVer1(msdstudentid, type);
+    @RequestMapping(value="/{msdstudentid}", params={"type","semesterid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdDfltVer(@PathVariable Long msdstudentid, String type, Long semesterid) {
+		return getStudentRegisteredClassByStudentIdVer1(msdstudentid, type, semesterid);
 	}
 
-    @RequestMapping(value="/{msdstudentid}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdVer1(@PathVariable Long msdstudentid, String type) {
+    @RequestMapping(value="/{msdstudentid}", params={"type","semesterid"}, method=RequestMethod.GET, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto getStudentRegisteredClassByStudentIdVer1(@PathVariable Long msdstudentid, String type,  Long semesterid) {
     	if ("registerclass".equals(type)) {
-    		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentRegisterClassByStudentId(msdstudentid);
+    		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentRegisterClassByStudentIdAndSemesterId(msdstudentid, semesterid);
     		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
     		return responseDto;
     	} else if ("nonregisterclass".equals(type)) {
-    		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentNonRegisterClassByStudentId(msdstudentid);
+    		List<MSDClassSummaryDto> dtos = msdStudentFacade.getStudentNonRegisterClassByStudentIdSemesterId(msdstudentid, semesterid);
     		ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
     		return responseDto;
     	} 

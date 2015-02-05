@@ -1,5 +1,7 @@
 package com.morningstardance.web.controller;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.morningstardance.app.msdstudentfee.MSDPayStudentFeeDto;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeDetailDto;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeDto;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
@@ -53,31 +56,29 @@ public class MSDStudentFeeController {
 		
 		return responseDto;
 	}
-	
-	@RequestMapping(params={"id", "type"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
-	public @ResponseBody ResponseDto getMSDStudentFeeByIdAndTypeDfltVer(Long id, String type) {
-		return getMSDStudentFeeByIdAndTypeVer1(id, type);
+
+	@RequestMapping(params={"studentid", "semesterid"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
+	public @ResponseBody ResponseDto getMSDStudentFeeByStudentIdAndSemesterIdDfltVer(Long studentid, Long semesterid) {
+		return getMSDStudentFeeByStudentIdAndSemesterIdVer1(studentid, semesterid);
 	}
 
-	@RequestMapping(params={"id", "type"},method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
-	public @ResponseBody ResponseDto getMSDStudentFeeByIdAndTypeVer1(Long id, String type) {
+	@RequestMapping(params={"studentid", "semesterid"},method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
+	public @ResponseBody ResponseDto getMSDStudentFeeByStudentIdAndSemesterIdVer1(Long studentid, Long semesterid) {
 		ResponseDto responseDto = null;
-		if ("ByStudentId".equals(type)) {
-			List<MSDStudentFeeSummaryDto> dtos = msdStudentFeeFacade.getStudentFeeSummarysByStudentId(id);
-	        responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
-		} 
+		List<MSDStudentFeeSummaryDto> dtos = msdStudentFeeFacade.getStudentFeeSummarysByStudentIdAndSemesterId(studentid, semesterid);
+        responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		
 		return responseDto;
 	}
 
-    @RequestMapping(params={"msdstudentid", "feeid", "feenote", "type", "fee"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
-    public @ResponseBody ResponseDto addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeDfltVer(Long msdstudentid, Long feeid, String feenote, String type, double fee) {
-    	return addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeVer1(msdstudentid, feeid, feenote, type,fee);
+    @RequestMapping(params={"msdstudentid", "feeid", "feenote", "type", "fee", "semesterid"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeDfltVer(Long msdstudentid, Long feeid, String feenote, String type, double fee, Long semesterid) {
+    	return addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeVer1(msdstudentid, feeid, feenote, type,fee,semesterid);
     }
 
-    @RequestMapping(params={"msdstudentid", "feeid", "feenote", "type", "fee"}, method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeVer1(Long msdstudentid, Long feeid, String feenote, String type, double fee) {
-		String newDto = msdStudentFeeFacade.addFeeToStudentFeeByStudentIdAndFeeIdListAndType(msdstudentid, feeid, feenote, type,fee);
+    @RequestMapping(params={"msdstudentid", "feeid", "feenote", "type", "fee", "semesterid"}, method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto addFeeToStudentFeeByStudentIdAndFeeIdListAndTypeVer1(Long msdstudentid, Long feeid, String feenote, String type, double fee, Long semesterid) {
+		String newDto = msdStudentFeeFacade.addFeeToStudentFeeByStudentIdAndFeeIdListAndType(msdstudentid, feeid, feenote, type, fee, semesterid);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto; 
 	}
@@ -91,6 +92,20 @@ public class MSDStudentFeeController {
 	public @ResponseBody ResponseDto payStudentFeeByStudentFeePayDtoVer1(@RequestBody MSDStudentFeePayDto msdStudentFeePayDto) {
 		String newDto = msdStudentFeeFacade.payStudentFeesByStudentPayDto(msdStudentFeePayDto);
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
+		return responseDto;
+	}
+    
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto payStudentFeeDfltVer(@RequestBody List<LinkedHashMap> dtos) {
+    	return payStudentFeeVer1(dtos);
+    }
+
+    @SuppressWarnings("rawtypes")
+	@RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto payStudentFeeVer1(@RequestBody List<LinkedHashMap> dtos) {
+		String newDto = msdStudentFeeFacade.payStudentFees(dtos);
+		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "PUT", "OBJECT");
 		return responseDto;
 	}
     

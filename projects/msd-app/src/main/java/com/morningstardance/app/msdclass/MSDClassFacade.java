@@ -24,4 +24,7 @@ public interface MSDClassFacade {
 
 	List<MSDClassSummaryDto> getAllMSDClassByStatus(String classstatus);
 
+	List<MSDClassSummaryDto> getAllMSDClassByStatusAndSemesterId(
+			String classstatus, Long semesterid);
+
 }

@@ -20,3 +20,7 @@ CREATE TABLE IF NOT EXISTS `msd`.`msd_student_fee` (
 ALTER TABLE `msd`.`msd_student_fee` CHANGE COLUMN `pay_note` `pay_note` VARCHAR(512) NULL DEFAULT NULL  , CHANGE COLUMN `fee_note` `fee_note` VARCHAR(512) NULL DEFAULT NULL  ;
 
 ALTER TABLE `msd`.`msd_student_fee` ADD COLUMN `fee` DECIMAL(8,2) NOT NULL  AFTER `fee_note` ;
+
+ALTER TABLE `msd`.`msd_student_fee` ADD COLUMN `paid_fee` DECIMAL(8,2) NULL  AFTER `fee_note` ;
+
+ALTER TABLE `msd`.`msd_student_fee` ADD COLUMN `semester` INT(11) NOT NULL  AFTER `paid_fee` ;

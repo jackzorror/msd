@@ -86,6 +86,7 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setPayType(sfee.getPayType());
 		dto.setFeeNote(sfee.getFeeNote());
 		dto.setFee(sfee.getFee().doubleValue());
+		dto.setPaidFee(null == sfee.getPaidFee() ? 0 : sfee.getPaidFee().doubleValue());
 		getStudentFeeGroupAndName(dto, sfee);
 		
 		return dto;
@@ -154,6 +155,7 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setPayType(sfee.getPayType());
 		dto.setFeeNote(sfee.getFeeNote());
 		dto.setFee(sfee.getFee().doubleValue());
+		dto.setPaidFee(null == sfee.getPaidFee() ? 0 : sfee.getPaidFee().doubleValue());
 		getStudentFeeGroupAndName(dto, sfee);
 		
 		return dto;

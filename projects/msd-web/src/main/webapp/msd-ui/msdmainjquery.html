@@ -128,9 +128,11 @@
     <script type="text/javascript" src="js/msdjqwindow/competition/competitionjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/student/studentCompetition.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/student/studentFinance.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/student/studentClass.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/admin/competition/adminCompetitionjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/admin/competition/YAGPCompetition.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/admin/finance/adminFinancejqtabs.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/admin/misc/adminMiscjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/finance/financejqtabs.js"></script>
     
     <script type="text/javascript" src="js/lib/messageutil.js"></script>
@@ -198,13 +200,13 @@
             var theme = $.data(document.body, 'theme', theme);
             if (theme == undefined) theme = 'energyblue';
 
-			$('#msdMainTabs').jqxTabs({ width: 750, height: 600, position: 'top', theme: theme, animationType: 'fade', scrollable:true, selectionTracker: true });
-			$('#studentDockPanel').jqxDockPanel({ width: 750, height: 550});	
-			$('#classDockPanel').jqxDockPanel({width: 750, height:550});
-			$('#competitionDockPanel').jqxDockPanel({width: 750, height:550});
-			$('#adminDockPanel').jqxDockPanel({width: 750, height:550});
+			$('#msdMainTabs').jqxTabs({ width: 750, height: 1000, position: 'top', theme: theme, animationType: 'fade', scrollable:true, selectionTracker: true });
+			$('#studentDockPanel').jqxDockPanel({ width: 750, height: 950});	
+			$('#classDockPanel').jqxDockPanel({width: 750, height:950});
+			$('#competitionDockPanel').jqxDockPanel({width: 750, height:950});
+			$('#adminDockPanel').jqxDockPanel({width: 750, height:950});
 // will add new dock later			
-//			$('#financeDockPanel').jqxDockPanel({width: 750, height:550});
+//			$('#financeDockPanel').jqxDockPanel({width: 750, height:950});
 			document.getElementById('msdMainTabs').style.visibility= 'hidden' ;
 
            $('#msdMainTabs').on('selected', function (event) {

@@ -198,4 +198,19 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 		
 		return dtos;
 	}
+
+	@Override
+	public List<MSDClassSummaryDto> getAllMSDClassByStatusAndSemesterId(
+			String classstatus, Long semesterid) {
+		List<MSDClassSummaryDto> dtos = null;
+		List<MSDClassSummaryDto> tempdtos = getAllMSDClassByStatus(classstatus);
+		if (null != tempdtos && tempdtos.size() > 0) {
+			dtos = new ArrayList<MSDClassSummaryDto>();
+			for (MSDClassSummaryDto dto : tempdtos) {
+				if (dto.getSemesterid() == semesterid)
+					dtos.add(dto);
+			}
+		}
+		return dtos;
+	}
 }

@@ -1,20 +1,21 @@
 function showStudentFinanceInfo() {
 	console.log(" In Show Student Finance Information ... ");
+	var smp = $('#studentMainPanel');
+	
+	smp.empty();
 
-	$('#studentMainPanel').empty();
-
-	var sfbdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:10px; margin-top:5px; border:0px solid; height:30px;"/>').attr({id:'studentFinanceInfoDiv'});
-	$('#studentMainPanel').append(sfbdiv);
+	var sfbdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:10px; margin-top:5px; border:0px solid; height:40px;"/>').attr({id:'studentFinanceInfoDiv'});
+	smp.append(sfbdiv);
 	
 	var sfidiv = $('<div style = "margin-left:5px; margin-right:10px; margin-top:5px; border:0px solid;"/>').attr({id:'studentFeeInfoDiv'});
-	$('#studentMainPanel').append(sfidiv);
+	smp.append(sfidiv);
 	
 	var scidiv = $('<div style = "margin-left:5px; margin-right:10px; margin-top:5px; border:0px solid;"/>').attr({id:'studentCreditInfoDiv'});
-	$('#studentMainPanel').append(scidiv);
+	smp.append(scidiv);
 	
 	showStudentFinanceButtonPanel();
-	showStudentFeeInformationPanel();
-	showStudentCreditInformationPanel();
+	showStudentFeeInformationPanel(getCurrentSemester().id);
+	showStudentCreditInformationPanel(getCurrentSemester().id);
 }
 
 function showStudentFinanceButtonPanel() {
@@ -22,18 +23,67 @@ function showStudentFinanceButtonPanel() {
 	var sfbdiv = $('#studentFinanceInfoDiv');
 	sfbdiv.empty();
 
-	var sbalance = $('<input style="float:right; margin-top:5px; margin-right:10px"/>').attr({type:'text', id:'txtStudentBalance'});
-	sfbdiv.append(sbalance);
-	sbalance.jqxInput({placeHolder: "Student Balance", disabled:true, rtl:true, height: 20, width:150, minLength: 1, theme: getTheme() });	
-	sfbdiv.append('<label style="float:right;margin-top:8px; margin-right:5px" > Student Balance : </label>');
+	var scpdiv = $('<div style="border:0px solid;"/>').attr({id:'studentFinanceInfoDockPanel'});
+	sfbdiv.append(scpdiv);
+
+	var ddldiv = $('<div dock="left" style="margin-top:5px; border:0px solid  #ccc; height:20px; width:200px;"/>');
+	var btndiv = $('<div dock="right" style="margin-top:5px; border:0px solid  #ccc; height:20px;"/>');
+	scpdiv.append(ddldiv);
+	scpdiv.append(btndiv);
 	
+	ddldiv.append('<label style="float:left; margin-top:5px; margin-left:5px">Semester : </label>');
+	var sname = $('<div style="margin-top:2px; margin-left:5px"/>').attr({id:'ddlSemesterSearchNameForStudentFinance'});
+	ddldiv.append(sname);
+	sname.jqxDropDownList({placeHolder: "Select Semester", height: 20, width: 120, dropDownHeight: 100, theme: getTheme()});
+
+	var data = getSemesterList();
+	var activesource = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'name',  type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var activedataadapter = new $.jqx.dataAdapter(activesource);
+	sname.jqxDropDownList({source:activedataadapter, displayMember: "name", valueMember: "id"});
+	var sid = getCurrentSemester().id;
+	sname.jqxDropDownList('selectItem',sid);
+	
+	$(document).on('change', '#ddlSemesterSearchNameForStudentFinance', handleSemesterSearchNameDropdownForStudentFinanceChange);
+
+	var sCredit = $('<input style="float:right; margin-top:2px; margin-right:5px"/>').attr({type:'text', id:'txtStudentCredit'});
+	btndiv.append(sCredit);
+	sCredit.jqxInput({placeHolder: "Credit", disabled:true, rtl:true, height: 20, width:100, minLength: 1, theme: getTheme() });	
+	btndiv.append('<label style="float:right; margin-top:8px; margin-right:5px" > Credit : </label>');
+	
+	var sbalance = $('<input style="float:right; margin-top:2px; margin-right:10px"/>').attr({type:'text', id:'txtStudentBalance'});
+	btndiv.append(sbalance);
+	sbalance.jqxInput({placeHolder: "UnPaid", disabled:true, rtl:true, height: 20, width:100, minLength: 1, theme: getTheme() });	
+	btndiv.append('<label style="float:right; margin-top:8px; margin-right:5px" > UnPaid : </label>');
+	
+	scpdiv.jqxDockPanel({height: 40});
 	ajaxGetStudentFinanceBalance(getCurrentStudent().id, getStudentFinanceBalance);
+}
+
+function handleSemesterSearchNameDropdownForStudentFinanceChange(event) {
+    var args = event.args;
+    if (args) {
+	    var item = args.item;
+
+    	var label = item.label;
+	    var value = item.value;
+	    
+	    setCurrentSemesterForStudentFinanceId(value);
+		showStudentFeeInformationPanel(getCurrentSemesterForStudentFinanceId());
+		showStudentCreditInformationPanel(getCurrentSemesterForStudentFinanceId());
+    }
 }
 
 function getStudentFinanceBalance(response, request, settings){
 	console.log(" get student finance balance ... ");
 	if (404 == response.code) {
-		console.log(" There is balance for this student ... ");
+		console.log(" There is no balance for this student ... ");
 	} else if (302 == response.code) {
 		var data = $.parseJSON(response.result);
 		var sbalance = $('#txtStudentBalance');
@@ -49,25 +99,22 @@ function getStudentFinanceBalance(response, request, settings){
 	}
 }
 
-function showStudentFeeInformationPanel() {
+function showStudentFeeInformationPanel(semesterid) {
 	console.log(" show student Fee panel ");
 	var sfidiv = $('#studentFeeInfoDiv');
 	sfidiv.empty();
 
-	var cdiv = $('<div class="accord"/>').attr({id:'studentFeeInformationDiv'});
-	var ctdiv = $('<div class="title">Student Fee Information </div>').attr({id:'studentFeeInformationTitleDiv'});
-	var ccdiv = $('<div class="content" style="background:#e0e9f5;"/>').attr({id:'studentFeeInformationContentDiv'});
+	var ctdiv = $('<div style="height:30px;" />').attr({id:'studentFeeInformationTitleDiv'});
+	ctdiv.append('<label style="float:left; margin-top:10px; margin-right:5px;"><b>Student Fee Information </b></label>');
 	
-	sfidiv.append(cdiv);
-	cdiv.append(ctdiv);
-	cdiv.append(ccdiv);
-	
-	cdiv.raaccordion();
+	var ccdiv = $('<div style="background:#e0e9f5;"/>').attr({id:'studentFeeInformationContentDiv'});
+	sfidiv.append(ctdiv);
+	sfidiv.append(ccdiv);
 
-	ajaxGetStudentFeeByStudentId(getCurrentStudent().id, getStudentFeeByStudentId);
+	ajaxGetStudentFeeByStudentIdSemesterId(getCurrentStudent().id, semesterid, getStudentFeeByStudentIdSemesterId);
 }
 
-function getStudentFeeByStudentId(response, request, settings){
+function getStudentFeeByStudentIdSemesterId(response, request, settings){
 	console.log(" get student fee ... ");
 	var data = null;
 	if (404 == response.code) {
@@ -107,7 +154,7 @@ function showStudentFeeGridDiv(data) {
 	ccdiv.append(pdiv);
 	pdiv.append('<div >Add New Student Fee</div> <div id="popupAddNewStudentFeeDiv"></div>');
     pdiv.jqxWindow({
-    	width: 500, height:300, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 500, height:310, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 	
 	var sfgdiv = $('<div style="border:0px solid;"/>').attr({id:'studentFeeGrid'});
@@ -120,6 +167,7 @@ function showStudentFeeGridDiv(data) {
 			{ name: 'isWaiver', type: 'bool'},
 			{ name: 'feeName', type: 'string'},
 			{ name: 'fee', type: 'number'},
+			{ name: 'paidFee', type: 'number'},
 			{ name: 'feeNote', type: 'string'},
 			{ name: 'payType', type: 'string'},
 			{ name: 'payTime', type: 'date'}
@@ -130,12 +178,55 @@ function showStudentFeeGridDiv(data) {
 	
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	
+	var FeeCellsRenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
+	    var column = sfgdiv.jqxGrid('getcolumn', columnfield);
+        if (column.cellsformat != '') {
+        	if ($.jqx.dataFormat) {
+            	value = $.jqx.dataFormat.formatnumber(value, column.cellsformat);
+        	}
+        }
+       	if (sfgdiv.jqxGrid('getrowdata', row).isPaid ||  sfgdiv.jqxGrid('getrowdata', row).isWaiver) {
+           	return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: Green;">' + value + '</span>';
+        } else {
+           	return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: Red;">' + value + '</span>';
+        }
+    }
+
+	var PaidFeeCellsRenderer = function (row, columnfield, value, defaulthtml, columnproperties) {
+	    var column = sfgdiv.jqxGrid('getcolumn', columnfield);
+	    if (null != value && value == 0.0) 
+	    	return '';
+	    
+        if (column.cellsformat != '') {
+        	if ($.jqx.dataFormat) {
+            	value = $.jqx.dataFormat.formatnumber(value, column.cellsformat);
+        	}
+        }
+       	return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: Green;">' + value + '</span>';
+    }
+
+ 	sfgdiv.on('rowselect', function (event) {
+ 		var rowitem = sfgdiv.jqxGrid('getrowdata',event.args.rowindex);	
+		if (rowitem.isPaid || rowitem.isWaiver) {
+			sfgdiv.jqxGrid('unselectrow', event.args.rowindex);
+		}
+	});
+ 
+	sfgdiv.on('cellbeginedit', function (event) {
+ 		var rowIndexes = sfgdiv.jqxGrid('getselectedrowindexes');
+		if (rowIndexes.indexOf(event.args.rowindex) < 0) {
+			sfgdiv.jqxGrid('endcelledit', event.args.rowindex, "paidFee", true);
+			sfgdiv.jqxGrid('endcelledit', event.args.rowindex, "payType", true);
+		}
+ 	});
+ 	
 	sfgdiv.jqxGrid({
 		theme: getTheme(),
 		source:dataAdapter,
     	width: 610,
-		pageable: true,
-		pagesizeoptions: ['10'],
+		editable: true,
+		pageable: false,
+	    autoHeight: true,
 		showtoolbar:true,
 		rendertoolbar:function (toolbar) {
 			var container = $("<div style = 'float: right; margins-right: 0px; border:0px solid;'></div>");
@@ -188,9 +279,15 @@ function showStudentFeeGridDiv(data) {
 				}
 				var totalFee = 0.0;
 				var fidList = "";
+				var paytype = "";
 				for(i = 0; i < selectedIndex.length; i++) {
 					var row = sfgdiv.jqxGrid('getrowdata', selectedIndex[i]);
-					totalFee += row.fee;
+					if (null == row.paidFee || 0.0 == row.paidFee)
+						totalFee += row.fee;
+					else 
+						totalFee += row.paidFee;
+					if (null != row.payType && "" != row.payType) 
+						paytype = row.payType;
 					fidList += row.id + ",";
 					if (row.isPaid || row.isWaiver) {
 						alert('Please select one without paid or waived fee to process');
@@ -198,7 +295,7 @@ function showStudentFeeGridDiv(data) {
 					}
 				} 
 
-				showPayPopupPanel(totalFee, getTotalUnConsumeCredit());
+				showPayPopupPanel(paytype, totalFee, getTotalUnConsumeCredit());
 				$('#popupStudentFeePayWindow').jqxWindow('open');
 				
     	    });
@@ -222,17 +319,17 @@ function showStudentFeeGridDiv(data) {
         	$("#addStudentFeebtn").on('click', function () {
 				console.log("Add student fee ... ");
 				bindAddNewStudentFeePopupWindow(null);
-					var feelistsource = {
-		datafields:[
-			{ name: 'id',   type: 'int'}, 
-			{ name: 'label',  type: 'string'},
-		],
-		datatype:'json',
-		localdata:getGeneralFeeList()
-	}
-	var feelistsourceadapter = new $.jqx.dataAdapter(feelistsource);
+				var feelistsource = {
+					datafields:[
+						{ name: 'id',   type: 'int'}, 
+						{ name: 'label',  type: 'string'},
+					],
+					datatype:'json',
+					localdata:getGeneralFeeList()
+				}
+				var feelistsourceadapter = new $.jqx.dataAdapter(feelistsource);
 	
-	$('#ddlGeneralFee').jqxDropDownList({source:feelistsourceadapter, displayMember: "label", valueMember: "id"});
+				$('#ddlGeneralFee').jqxDropDownList({source:feelistsourceadapter, displayMember: "label", valueMember: "id"});
 
 				$('#ddlGeneralFee').jqxDropDownList('selectIndex',-1);
 				
@@ -267,13 +364,16 @@ function showStudentFeeGridDiv(data) {
 				var row = $('#ddlGeneralFee').jqxDropDownList('getSelectedItem');
 				
 				var sid = getCurrentStudent().id;
+				var semester = $('#ddlSemesterSearchNameForStudentFinance').jqxDropDownList('getSelectedItem');
 				
-				ajaxAddGeneralFeeToStudentFee(sid, row.value, fnote, tcost, addGeneralFeeToStuentFee);
+				ajaxAddGeneralFeeToStudentFee(sid, row.value, fnote, tcost, semester.value, addGeneralFeeToStuentFee);
 				
             });
     	    
     	    $('#btnCancelPayStudentFee').on('click', function () {
 				$('#popupStudentFeePayWindow').jqxWindow('hide');
+				showStudentFeeInformationPanel(getCurrentSemesterForStudentFinanceId());
+				showStudentCreditInformationPanel(getCurrentSemesterForStudentFinanceId());
     	    });
     	    $('#btnCancelWaiveStudentFee').on('click', function() {
 				$('#popupStudentFeeWaiveWindow').jqxWindow('hide');
@@ -282,26 +382,15 @@ function showStudentFeeGridDiv(data) {
     	    	console.log(" Pay student fee click ... ");
 				var selectedIndex = sfgdiv.jqxGrid('getselectedrowindexes');
 				var totalfee = 0.0;
-				var feeidlist = "";
 				for(i = 0; i < selectedIndex.length; i++) {
 					var row = sfgdiv.jqxGrid('getrowdata', selectedIndex[i]);
-					totalfee += row.fee;
-					feeidlist += row.id + ",";
+					if (null == row.paidFee || 0.0 == row.paidFee)
+						totalfee += row.fee;
+					else 
+						totalfee += row.paidFee;
 				} 
-				var totalcredit = 0.0;
-				var creditidlist = "";
-				if (null != getStudentCreditList() && getStudentCreditList().length > 0) {
-					for (i = 0; i < getStudentCreditList().length; i++) {
-						var row = getStudentCreditList()[i];
-						if (!(row.isConsumed) && row.isActive) {
-							totalcredit += row.credit;
-							creditidlist += row.id + ",";
-						}
-					}
-				}
-
 				var tfee = $('#txtTotalPayCost').jqxNumberInput('val');	    	
-				if (tfee != totalfee - totalcredit) {
+				if (tfee != totalfee) {
 					alert(" total fee are not match ... ");
 					return;
 				}
@@ -315,8 +404,20 @@ function showStudentFeeGridDiv(data) {
 				}
 				var paytime = $('#paydatetimediv').jqxDateTimeInput('getDate');
 				var paynote = $('#txtPayNote1').jqxInput('val') + ' ' + $('#txtPayNote2').jqxInput('val');
-
-				ajaxPayStudentFees(getCurrentStudent().id, feeidlist, totalfee, creditidlist, totalcredit, paytype, paytime, paynote, payStudentFees);
+				var dtos = [];
+				for(i = 0; i < selectedIndex.length; i++) {
+					var row = sfgdiv.jqxGrid('getrowdata', selectedIndex[i]);
+					var sid = getCurrentStudent().id;
+					var feeid = row.id;
+					var paidFee = row.fee;
+					var fee = row.fee;
+					if (0.0 != row.paidFee)
+						paidFee = row.paidFee;
+						
+					var dto = {"msdStudentId":sid, "studentFeeId":feeid, "payType":paytype,"payTime":getFormatDateToYYYYMMDDHHMMSS(paytime),"payNote":paynote,"fee":fee.toString(),"paidFee":paidFee.toString()};
+					dtos.push(dto);
+				} 
+				ajaxPayStudentFeeByDtoList(dtos, payStudentFees);
 				
     	    });
     	    $('#btnWaiveStudentFee').on('click', function () {
@@ -342,13 +443,14 @@ function showStudentFeeGridDiv(data) {
 		selectionmode: 'checkbox',
     	altrows: true,
 		columns:[
-			{text: 'ID', datafield:'id', hidden:'true'}
-			,{text: 'IsPaid', datafield:'isPaid', hidden:'true'}
-			,{text: 'IsWaiver', datafield:'isWaiver', hidden:'true'}
-        	,{ text: 'Name', datafield: 'feeName', width:100 }
-        	,{ text: 'Fee', datafield: 'fee', width:80, cellsalign: 'right', cellsformat: 'c2' }
-        	,{ text: 'PayType', datafield: 'payType', width:80 }
-    	    ,{ text: 'FeeNote', datafield: 'feeNote' }
+			{ text: 'ID', datafield:'id', hidden:'true'}
+			,{ text: 'IsPaid', datafield:'isPaid', hidden:'true'}
+			,{ text: 'IsWaiver', datafield:'isWaiver', hidden:'true'}
+        	,{ text: 'Name', datafield: 'feeName', width:100, editable: false, }
+        	,{ text: 'Fee', datafield: 'fee', width:80, cellsalign: 'right', editable: false, cellsformat: 'c2', cellsrenderer: FeeCellsRenderer }
+        	,{ text: 'Paid Fee', datafield: 'paidFee', width:80, editable: true, cellsalign: 'right', cellsformat: 'c2', cellsrenderer: PaidFeeCellsRenderer}
+        	,{ text: 'PayType', datafield: 'payType', editable: true, width:60 }
+    	    ,{ text: 'FeeNote', datafield: 'feeNote', editable: false }
 			,{ text: 'Detail', datafield: 'Detail',width: 65,  columntype:'button', cellsrenderer:function(){
 					return "Detail";
 				}, buttonclick:function(row) {
@@ -460,12 +562,12 @@ function showWaivePopupPanel(totalcost) {
 	$('#txtWaiveNote2').jqxInput('value', null);
 }
 
-function showPayPopupPanel(totalcost, totalCredit) {
+function showPayPopupPanel(paytype, totalcost, totalCredit) {
 	if (null != totalCredit)
 		totalcost -= totalCredit;
 		
 	$('#txtTotalPayCost').jqxNumberInput('val', totalcost);
-	$('#txtPayType').jqxInput('val', null);
+	$('#txtPayType').jqxInput('val', paytype);
 	$('#paydatetimediv').jqxDateTimeInput('setDate', new Date());
 	if (null != totalCredit && 0 != totalCredit)
 		$('#txtPayNote1').jqxInput('value', 'This Payment include credit : ' + totalCredit);
@@ -478,12 +580,13 @@ function payStudentFees(response, request, settings){
 	console.log(" return from pay student fees ... ");
 	if (404 == response.code) {
 		console.log(" Error to pay student fees ... ");
-	} else if (201 == response.code) {
+	} else if (302 == response.code) {
 		console.log("successfully pay student fees ... ");
 	} else {
 		alert("error to pay student fees ... ");
 	}
-	showStudentFinanceInfo();
+	showStudentFeeInformationPanel(getCurrentSemesterForStudentFinanceId());
+	showStudentCreditInformationPanel(getCurrentSemesterForStudentFinanceId());
 }
 
 function waiveStudentFee(response, request, settings){
@@ -495,7 +598,8 @@ function waiveStudentFee(response, request, settings){
 	} else {
 		alert("error to waive student fee ... ");
 	}
-	showStudentFinanceInfo();
+	showStudentFeeInformationPanel(getCurrentSemesterForStudentFinanceId());
+	showStudentCreditInformationPanel(getCurrentSemesterForStudentFinanceId());
 }
 
 function getStudentFeeDetailByIdInStudentTab(response, request, settings){
@@ -560,6 +664,13 @@ function createStduentFeeDetailDiv(data) {
 	fcost.jqxInput('val', '$ ' + data.fee);
 	
 	sfddiv.append('<br/>');
+	sfddiv.append('<label style="margin-top:5px">Actual Paid : </label>');
+	var apaid = $('<input style="margin-top:5px; margin-left:40px; margin-botton:20px;"/>').attr({type:'text'});
+	sfddiv.append(apaid);
+	apaid.jqxInput({disabled:true, height: 20, width: 200, rtl:true, minLength:1, theme:getTheme() });
+	apaid.jqxInput('val', '$ ' + data.paidFee);
+	
+	sfddiv.append('<br/>');
 	if (data.isPaid == true || data.isWaiver == true) {
 		if (data.isPaid == true) {
 			sfddiv.append('<label style="margin-top:5px">Paid at : </label>');
@@ -612,13 +723,36 @@ function createStduentFeeDetailDiv(data) {
 function createAddNewStudentFeePopupWindow() {
 	var psfdiv = $('#popupAddNewStudentFeeDiv');
 	psfdiv.empty();
+
+	var tdiv = $('<div style="float:right; margin-top:10px; border:0px solid;"/>');
+	psfdiv.append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">Select Semester :</label>');
+	var semesterlist = $('<div style="margin-left:5px"/>').attr({id:'ddlSemesterForAddStudentFee'});
+	tdiv.append(semesterlist);
+	semesterlist.jqxDropDownList({placeHolder: "Please Select Semester", height: 20, width: 300, dropDownHeight: 150, theme: getTheme()});
+
+	var semesterlistsource = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'name',  type: 'string'}
+		],
+		datatype:'json',
+		localdata:getSemesterList()
+	}
+	var semesterlistsourceadapter = new $.jqx.dataAdapter(semesterlistsource);
+	
+	semesterlist.jqxDropDownList({source:semesterlistsourceadapter, displayMember: "name", valueMember: "id"});
+
+	var semester = $('#ddlSemesterSearchNameForStudentFinance').jqxDropDownList('getSelectedItem');
+	semesterlist.jqxDropDownList('selectItem',semester);
+	semesterlist.jqxDropDownList({ disabled: true });
 	
 	var tdiv = $('<div style="float:right; margin-top:10px; border:0px solid;"/>');
 	psfdiv.append(tdiv);
 	tdiv.append('<label style="float:left; margin-top:2px;">Select Fee :</label>');
 	var feelist = $('<div style="margin-left:5px"/>').attr({id:'ddlGeneralFee'});
 	tdiv.append(feelist);
-	feelist.jqxDropDownList({placeHolder: "Please Select Fee", height: 20, width: 350, dropDownHeight: 150, theme: getTheme()});
+	feelist.jqxDropDownList({placeHolder: "Please Select Fee", height: 20, width: 300, dropDownHeight: 150, theme: getTheme()});
 
 	var feelistsource = {
 		datafields:[
@@ -631,7 +765,6 @@ function createAddNewStudentFeePopupWindow() {
 	var feelistsourceadapter = new $.jqx.dataAdapter(feelistsource);
 	
 	feelist.jqxDropDownList({source:feelistsourceadapter, displayMember: "label", valueMember: "id"});
-
 
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
 	psfdiv.append(tdiv);
@@ -731,28 +864,27 @@ function addGeneralFeeToStuentFee(response, request, settings) {
 	} else {
 		alert("error to delete student registered competition ... ");
 	}
-	showStudentFinanceInfo();
+
+	showStudentFeeInformationPanel(getCurrentSemesterForStudentFinanceId());
+	showStudentCreditInformationPanel(getCurrentSemesterForStudentFinanceId());
 }
 
-function showStudentCreditInformationPanel() {
+function showStudentCreditInformationPanel(semesterid) {
 	console.log(" show student Credit panel ");
 	var scidiv = $('#studentCreditInfoDiv');
 	scidiv.empty();
 
-	var cdiv = $('<div class="accord"/>').attr({id:'studentCreditInformationDiv'});
-	var ctdiv = $('<div class="title">Student Credit Information </div>').attr({id:'studentCreditInformationTitleDiv'});
-	var ccdiv = $('<div class="content" style="background:#e0e9f5;"/>').attr({id:'studentCreditInformationContentDiv'});
-	
-	scidiv.append(cdiv);
-	cdiv.append(ctdiv);
-	cdiv.append(ccdiv);
-	
-	cdiv.raaccordion();
+	var ctdiv = $('<div style="height:30px;" />').attr({id:'studentCreditInformationTitleDiv'});
+	ctdiv.append('<label style="float:left; margin-top:10px; margin-right:5px;"><b>Student Credit Information </b></label>');
+	scidiv.append(ctdiv);
 
-	ajaxGetStudentCreditByStudentId(getCurrentStudent().id, getStudentCreditByStudentId);
+	var ccdiv = $('<div style="background:#e0e9f5;"/>').attr({id:'studentCreditInformationContentDiv'});
+	scidiv.append(ccdiv);
+
+	ajaxGetStudentCreditByStudentIdSemesterId(getCurrentStudent().id, semesterid, getStudentCreditByStudentIdSemesterId);
 }
 
-function getStudentCreditByStudentId(response, request, settings){
+function getStudentCreditByStudentIdSemesterId(response, request, settings){
 	console.log(" get student credit ... ");
 	var data = null;
 	if (404 == response.code) {
@@ -809,8 +941,8 @@ function showStudentCrediteGridDiv(data) {
 		theme: getTheme(),
 		source:dataAdapter,
     	width: 610,
-		pageable: true,
-		pagesizeoptions: ['10'],
+		pageable: false,
+	    autoHeight: true,
 		showtoolbar:true,
 		rendertoolbar:function (toolbar) {
 			var container = $("<div style = 'float: right; margins-right: 0px; border:0px solid;'></div>");
@@ -947,7 +1079,8 @@ function ConsumeStudentCredits(response, request, settings){
 	} else {
 		alert("error to consume student credits ... ");
 	}
-	showStudentFinanceInfo();
+	showStudentFeeInformationPanel(getCurrentSemesterForStudentFinanceId());
+	showStudentCreditInformationPanel(getCurrentSemesterForStudentFinanceId());
 }
 
 function createConsumeCreditPopupPanel() {
@@ -1035,7 +1168,8 @@ function addStudentCredit(response, request, settings) {
 	} else {
 		alert("error add student credit ... ");
 	}
-	showStudentFinanceInfo();
+	showStudentFeeInformationPanel(getCurrentSemesterForStudentFinanceId());
+	showStudentCreditInformationPanel(getCurrentSemesterForStudentFinanceId());
 }
 
 function getStudentCreditDetailByIdInStudentTab(response, request, settings){
@@ -1161,6 +1295,14 @@ function getStudentCreditList() {
 }
 function setStudentCreditList(data) {
 	studentCreditList = data;
+}
+
+var currentSemesterForStudentFinanceId;
+function setCurrentSemesterForStudentFinanceId(data) {
+	currentSemesterForStudentFinanceId = data;
+}
+function getCurrentSemesterForStudentFinanceId() {
+	return currentSemesterForStudentFinanceId;
 }
 
 var totalUnConsumeCredit

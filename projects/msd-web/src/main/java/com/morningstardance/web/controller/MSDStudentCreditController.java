@@ -37,18 +37,16 @@ public class MSDStudentCreditController {
 		return responseDto;
 	}
 	
-	@RequestMapping(params={"id", "type"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
-	public @ResponseBody ResponseDto getMSDStudentCreditByIdAndTypeDfltVer(Long id, String type) {
-		return getMSDStudentCreditByIdAndTypeVer1(id, type);
+	@RequestMapping(params={"studentid", "semesterid"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
+	public @ResponseBody ResponseDto getMSDStudentCreditByStudentIdAndSemesterIdDfltVer(Long studentid, Long semesterid) {
+		return getMSDStudentCreditByStudentIdAndSemesterIdVer1(studentid, semesterid);
 	}
 
-	@RequestMapping(params={"id", "type"},method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
-	public @ResponseBody ResponseDto getMSDStudentCreditByIdAndTypeVer1(Long id, String type) {
+	@RequestMapping(params={"studentid", "semesterid"},method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
+	public @ResponseBody ResponseDto getMSDStudentCreditByStudentIdAndSemesterIdVer1(Long studentid, Long semesterid) {
 		ResponseDto responseDto = null;
-		if ("ByStudentId".equals(type)) {
-			List<MSDStudentCreditSummaryDto> dtos = msdStudentCreditFacade.getStudentCreditSummarysByStudentId(id);
-	        responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
-		} 
+		List<MSDStudentCreditSummaryDto> dtos = msdStudentCreditFacade.getStudentCreditSummarysByStudentIdAndSemesterId(studentid, semesterid);
+        responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		
 		return responseDto;
 	}

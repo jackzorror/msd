@@ -1,3 +1,4 @@
+
 function showFinanceAdminPanel() {
 	console.log(' in Finance admin Panel ... ');
 	$('#adminMainPanel').empty();
@@ -77,16 +78,13 @@ function showGeneralFeeGird(data) {
 	{
 		theme: getTheme(),
 		width: 560,
-		height: 400,
 	    source: dataAdapter,
                 
         selectionmode:'checkbox',
-	    autoRowHeight: false,
+	    autoHeight: true,
     	showToolbar: true,
-    	pageable:true,
 		editable: true,
         editmode: 'click',    	
-        pagesize:10,
 	    altrows: true,
     	ready: function(){},
     	renderToolbar: function(toolBar){
@@ -205,7 +203,7 @@ function createAddGeneralFeePopupWindow() {
 	tdiv.append('<label style="float:left; margin-top:2px;">Type :</label>');
 	var costType = $('<div/>').attr({id:'GeneralFeeType'});
 	tdiv.append(costType);
-	costType.jqxDropDownList({selectedIndex: 1, width: '180', height: '20', theme: getTheme(), source: getAllCostType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
+	costType.jqxDropDownList({selectedIndex: 1, width: '180', height: '20', theme: getTheme(), source: getAllFeeType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
 
 	psfdiv.append('<br/>');
 

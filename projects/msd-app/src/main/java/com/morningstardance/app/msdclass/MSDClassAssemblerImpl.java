@@ -18,6 +18,8 @@ import com.morningstardance.domain.entity.MSDClassFee;
 import com.morningstardance.domain.entity.MSDClassNonClassDate;
 import com.morningstardance.domain.entity.MSDClassSchedular;
 import com.morningstardance.domain.entity.MSDClassStatus;
+import com.morningstardance.domain.entity.MSDSemester;
+import com.morningstardance.domain.springdata.jpa.repository.MSDSemesterJPARepository;
 
 @Service("msdClassAssembler")
 public class MSDClassAssemblerImpl implements MSDClassAssembler {
@@ -30,6 +32,9 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
     
     @Resource
     private MSDClassFeeAssembler msdClassFeeAssembler;
+    
+    @Resource
+    private MSDSemesterJPARepository msdSemesterJPARepository;
     
 /*
 	@Override
@@ -53,7 +58,8 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 	public MSDClassSummaryDto createSummaryDtoFromEntity(MSDClass msdclass, List<MSDClassSchedular> msdclassschedulars) {
 		MSDClassSummaryDto dto = new MSDClassSummaryDto();
 		dto.setId(msdclass.getId().intValue());
-		dto.setName(msdclass.getName() + " - " + msdclass.getLocation());
+		dto.setName(msdclass.getName() + " - " + getSemesterNameById(msdclass.getSemester()));
+		dto.setSemesterid(msdclass.getSemester());
 		dto.setIsactive((byte)1 == msdclass.getIsActive());
 		StringBuffer schedular = new StringBuffer();
 		for (MSDClassSchedular s : msdclassschedulars) {
@@ -72,7 +78,7 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 		else 
 			entity.setId(null);
 		entity.setName(dto.getName());
-		entity.setLocation(dto.getLocation());
+		entity.setSemester(dto.getSemester());
 		entity.setClassStartTime(dto.getClassStartTime());
 		entity.setClassEndTime(dto.getClassEndTime());
 		if (dto.isIsactive()) {
@@ -105,6 +111,9 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 		dto.setClassStartTime(msdclass.getClassStartTime());
 		dto.setClassEndTime(msdclass.getClassEndTime());
 		dto.setIsactive((byte)1 == msdclass.getIsActive());
+		dto.setSemester(msdclass.getSemester());
+		dto.setSemesterName(getSemesterNameById(msdclass.getSemester()));
+		
 		return dto;
 	}
 
@@ -125,6 +134,9 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 			dto.setClassStatus(MSDClassStatus.EXPIRED.name());
 		}
 		
+		dto.setSemester(msdclass.getSemester());
+		dto.setSemesterName(getSemesterNameById(msdclass.getSemester()));
+
 		dto.setClassStartTime(msdclass.getClassStartTime());
 		dto.setClassEndTime(msdclass.getClassEndTime());
 		dto.setIsactive((byte)1 == msdclass.getIsActive());
@@ -138,6 +150,16 @@ public class MSDClassAssemblerImpl implements MSDClassAssembler {
 		dto.setTotalClassCount(totalClassCount);
 		
 		return dto;
+	}
+
+	private String getSemesterNameById(int semesterid) {
+		if (semesterid != 0) {
+			MSDSemester s = msdSemesterJPARepository.findOne(new Long(semesterid));
+			if(null != s) 
+				return s.getName();
+		}
+		
+		return null;
 	}
 
 }

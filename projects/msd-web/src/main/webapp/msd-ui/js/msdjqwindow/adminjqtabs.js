@@ -17,6 +17,10 @@ function initAdminTab() {
 	btnholddiv.append(fbutton);
 	fbutton.jqxButton({ width: '100', theme: getTheme() });
 	
+	var mbutton = $('<input style="margin-top:10px" />').attr({type:'button', id:'btnMiscAdmin', value:'Misc'});
+	btnholddiv.append(mbutton);
+	mbutton.jqxButton({ width: '100', theme: getTheme() });
+	
 	
 /*	
 	var cbutton = $('<input style="margin-top:10px;" />').attr({type:'button', id:'btnClassAdmin', value:'Class'});
@@ -40,10 +44,17 @@ function addAdminTabsEventListeners() {
 	$(document).on('click', '#btnStudentAdmin', handleStudentAdminClick);
 	$(document).on('click', '#btnClassAdmin', handleClassAdminClick);
 	$(document).on('click', '#btnFinanceAdmin', handleFinanceAdminClick);
+	$(document).on('click', '#btnMiscAdmin', handleMiscAdminClick);
 
 	$(document).on('keypress', '#ddlStudentAdminClassSearchName', handleStudentAdminClassSearchNameKeypress);
 	$(document).on('click', '#btnStudentAdminClearClass', handleStudentAdminClearClassClick);
 	$(document).on('click', '#btnStudentAdminSearchClass', handleStudentAdminSearchClassClick);
+}
+
+function handleMiscAdminClick() {
+	console.log(' in Misc admin click ... ');
+	$('#adminMainPanel').empty();
+	showMiscAdminPanel();
 }
 
 function handleFinanceAdminClick() {
@@ -216,7 +227,8 @@ function showSelectedStudents(data) {
 	$("#studentAdminGrid").jqxGrid({
 		theme: getTheme(),
     	width: 640,
-    	height:500,
+	 	autoHeight: true,
+//    	height:500,
     	toolbarheight: 60,
         source: dataAdapter,
         showtoolbar: true,
@@ -601,9 +613,9 @@ function showSelectedStudents(data) {
 		},
 	    selectionmode: 'checkbox',
     	altrows: true,
-        pageable:true,
-    	pagesize: 15,
-    	pagesizeoptions:['10', '15', '20'],
+        pageable:false,
+//    	pagesize: 15,
+//    	pagesizeoptions:['10', '15', '20'],
 	    columns: [
 			{text: 'ID', datafield:'id', hidden:'true'},
         	{ text: 'First Name', datafield: 'firstName', width: 100 },

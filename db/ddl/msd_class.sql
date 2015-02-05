@@ -11,6 +11,11 @@ CREATE TABLE IF NOT EXISTS `msd`.`msd_class` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1$$
 
+ALTER TABLE `msd`.`msd_class` CHANGE COLUMN `location` `semester` VARCHAR(45) NOT NULL  , ADD COLUMN `class_type` INT NOT NULL  AFTER `is_active` ;
+
+ALTER TABLE `msd`.`msd_class` CHANGE COLUMN `semester` `location` VARCHAR(45) NOT NULL  ;
+
+ALTER TABLE `msd`.`msd_class` ADD COLUMN `semester` INT(11) NOT NULL  AFTER `class_type` ;
 
 DELIMITER $$
 CREATE PROCEDURE sp_alterTable()

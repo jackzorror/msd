@@ -35,12 +35,34 @@ public class MSDClassRepository extends MSDBaseRepository<MSDClass> {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<MSDClass> getStudentRegisterClassByStudentIdAndSemesterId(Long msdstudentid, Long semesterid) {
+		Query query = this.getEntityManager().createNativeQuery(
+				"SELECT mc.* FROM msd_class AS mc JOIN msd_student_class msc ON mc.id = msc.msd_class_id " +
+				"WHERE msc.msd_student_id = :msdstudentid AND mc.semester = :semesterid AND msc.is_active = 1 AND mc.is_active = 1",
+				MSDClass.class);
+		query.setParameter("msdstudentid", msdstudentid);
+		query.setParameter("semesterid", semesterid);
+		return (List<MSDClass>)query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<MSDClass> getStudentNonRegisterClassByStudentId(Long msdstudentid) {
 		Query query = this.getEntityManager().createNativeQuery(
 				"SELECT * FROM msd_class WHERE id not in (SELECT msd_class_id FROM msd_student_class " +
 				"WHERE msd_student_id = :msdstudentid and is_active = 1) and is_active = 1",
 				MSDClass.class);
 		query.setParameter("msdstudentid", msdstudentid);
+		return (List<MSDClass>)query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MSDClass> getStudentNonRegisterClassByStudentIdAndSemesterId(Long msdstudentid,  Long semesterid) {
+		Query query = this.getEntityManager().createNativeQuery(
+				"SELECT * FROM msd_class WHERE id not in (SELECT msd_class_id FROM msd_student_class " +
+				"WHERE msd_student_id = :msdstudentid and is_active = 1) and is_active = 1 AND semester = :semesterid",
+				MSDClass.class);
+		query.setParameter("msdstudentid", msdstudentid);
+		query.setParameter("semesterid", semesterid);
 		return (List<MSDClass>)query.getResultList();
 	}
 }

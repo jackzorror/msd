@@ -29,10 +29,12 @@ public class MSDClass extends MSDEntityBase implements Serializable {
 	@Column(name="id", unique=true, nullable=false, columnDefinition = "int")
 	private Long id;
 
-	private String location;
+	private int semester;
 
 	private String name;
 
+	private String location;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="class_start_time")
 	private Date classStartTime;
@@ -46,6 +48,9 @@ public class MSDClass extends MSDEntityBase implements Serializable {
 	
 	@Column(name="is_active")
 	private byte isActive;
+	
+	@Column(name="class_type")
+	private int classType;
 
 	public MSDClass() {
 	}
@@ -56,14 +61,6 @@ public class MSDClass extends MSDEntityBase implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getLocation() {
-		return this.location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public String getName() {
@@ -106,14 +103,40 @@ public class MSDClass extends MSDEntityBase implements Serializable {
 		this.isActive = isActive;
 	}
 
+	public int getClassType() {
+		return classType;
+	}
+
+	public void setClassType(int classType) {
+		this.classType = classType;
+	}
+
+	public int getSemester() {
+		return semester;
+	}
+
+	public void setSemester(int semester) {
+		this.semester = semester;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		return sb.append("MSDClass ID: " + getId())
 				 .append(" Name: " + getName())
+				 .append("Semester: " + getSemester())
 				 .append(" Location: " + getLocation())
 				 .append(" Start: " + getClassStartTime())
 				 .append(" End: " + getClassEndTime())
 				 .append(" Status:" + getClassStatus())
+				 .append(" Class Type: " + getClassType())
 				 .append(" IsActive: " + getIsActive()).toString();
 	}
 }

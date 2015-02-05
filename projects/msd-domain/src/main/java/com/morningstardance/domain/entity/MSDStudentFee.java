@@ -58,6 +58,11 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 
 	private BigDecimal fee;
 
+	private int semester;
+	
+	@Column(name="paid_fee")
+	private BigDecimal paidFee;
+	
 	public MSDStudentFee() {
 	}
 
@@ -157,12 +162,28 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 		this.fee = fee;
 	}
 
+	public int getSemester() {
+		return semester;
+	}
+
+	public void setSemester(int semester) {
+		this.semester = semester;
+	}
+
+	public BigDecimal getPaidFee() {
+		return paidFee;
+	}
+
+	public void setPaidFee(BigDecimal paidFee) {
+		this.paidFee = paidFee;
+	}
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("StudentFee--> id: %d Student id: %d Object Name: %s Object Id: %d");
-		sb.append(" IsActive: %x IsPaid: %x IsWaiver: %x PayTime: %s PayType: %s PayNot: %s FeeNot: %s");
+		sb.append(" IsActive: %x IsPaid: %x IsWaiver: %x PayTime: %s PayType: %s PayNot: %s FeeNot: %s Fee: %f Semester: %d PaidFee: %f");
 		return String.format(sb.toString(), id.intValue(), msdStudentId, msdStudentFeeObjectName, msdStudentFeeObjectId,
 				isActive, isPaid, isWaiver, null != payTime ? new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(payTime) : "n/a", 
-				payType, payNote, feeNote);
+				payType, payNote, feeNote, fee, semester, paidFee);
 	}
 }

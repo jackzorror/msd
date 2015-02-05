@@ -15,6 +15,7 @@ public class MSDStudentFeeSummaryDto {
 	private String feeNote;
 	private String payType;
 	private double fee;
+	private double paidFee;
 	
 	public int getId() {
 		return id;
@@ -81,5 +82,11 @@ public class MSDStudentFeeSummaryDto {
 	}
 	public void setFee(double fee) {
 		this.fee = fee;
+	}
+	public double getPaidFee() {
+		return paidFee;
+	}
+	public void setPaidFee(double paidFee) {
+		this.paidFee = paidFee;
 	}
 }
