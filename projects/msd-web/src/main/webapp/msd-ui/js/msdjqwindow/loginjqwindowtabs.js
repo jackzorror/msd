@@ -171,11 +171,11 @@ function getCurrentSemesterObject(response) {
 function getAllResource(data) {
 	ajaxGetUniqueName("FIRSTNAME", getUniqueFirstNameForStudent);
 	ajaxGetUniqueName("LASTNAME",getUniqueLasstNameForStudent);
-	ajaxGetAllClassForCurrentSemester(data.id, getAllClass);
+	ajaxGetSemesterList(getSemesterArrayList);
+//	ajaxGetClassBySemesterIdAndStatus(data.id, "ALL", getAllClassByCurrentSemesterId);
 	ajaxGetAllCompetition(getAllCompetitionNameIdList);
 	ajaxGetAllGeneralFee(getAllGeneralFeeList);
 	ajaxGetAllMSDTypes(getAllMSDTypes);
-	ajaxGetSemesterList(getSemesterArrayList);
 	
 	setTimerId(setInterval("timercount()", 60000));
 	
@@ -218,7 +218,7 @@ function getUniqueLasstNameForStudent(response) {
 	}
 }
 
-function getAllClass(response) {
+function getAllClassByCurrentSemesterId(response) {
 	if (404 == response.code) {
 		console.log(" Can't get active summary class ... ");
 		loadClassNameDropDownListDataSource(null);
@@ -236,7 +236,7 @@ function getAllClass(response) {
 				activeClassName.push({text:data[index].name, value:data[index].id});
 			}
 		}
-		loadClassNameDropDownListDataSource(activeClassName);
+		loadClassTabClassDropDownListDataSource(activeClassName);
 		setAllClassNameList(allClassName);
 		setActiveClassNameList(activeClassName);
 	} else {
@@ -276,8 +276,9 @@ function getAllMSDTypes(response) {
 				studentType.push(data[index]);
 		}
 		setAllFeeType(feeType);
-		setAllClassType(classType);		
+		setAllClassType(classType);
 		setAllStudentType(studentType);
+		loadClassTabTypeDropDownListDataSource(classType);
 	} else {
 		alert('error');
 	}
@@ -382,6 +383,22 @@ function getActiveClassNameList() {
 }
 function setActiveClassNameList(data) {
 	activeClassNameList = data;
+}
+
+var firstNameList;
+function setFirstNameList(fnlist) {
+	firstNameList = fnlist
+}
+function getFirstNameList() {
+	return firstNameList;
+}
+
+var lastNameList;
+function setLastNameList(lnlist) {
+	lastNameList = lnlist
+}
+function getLastNameList() {
+	return lastNameList;
 }
 
 var allGeneralFee;

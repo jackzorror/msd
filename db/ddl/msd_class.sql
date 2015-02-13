@@ -17,6 +17,10 @@ ALTER TABLE `msd`.`msd_class` CHANGE COLUMN `semester` `location` VARCHAR(45) NO
 
 ALTER TABLE `msd`.`msd_class` ADD COLUMN `semester` INT(11) NOT NULL  AFTER `class_type` ;
 
+ALTER TABLE `msd`.`msd_class` CHANGE COLUMN `class_type` `class_type_id` INT(11) NOT NULL  ;
+
+ALTER TABLE `msd`.`msd_class` CHANGE COLUMN `semester` `semester_id` INT(11) NOT NULL  ;
+
 DELIMITER $$
 CREATE PROCEDURE sp_alterTable()
 BEGIN

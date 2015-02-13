@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.morningstardance.app.msdstudent.MSDStudentDto;
 import com.morningstardance.app.msdstudent.MSDStudentFacade;
 import com.morningstardance.domain.entity.MSDClass;
-import com.morningstardance.domain.entity.MSDClassNonClassDate;
 import com.morningstardance.domain.entity.MSDSemester;
 import com.morningstardance.domain.entity.MSDType;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassJPARepository;
@@ -80,7 +79,7 @@ public class MSDMiscFacadeImpl implements MSDMiscFacade {
 			sList = msdStudentFacade.getAllStudentSummaryDtoByClassId(new Long(cid));
 			MSDClass c = msdClssJPARepository.findOne(new Long(cid));
 			if (null != c) 
-				firstLine += "Class " + c.getName() + "-" + c.getSemester() + "\n";
+				firstLine += "Class " + c.getName() + "-" + c.getSemesterId() + "\n";
 			fname += "_" + c.getName() + "_";
 		} else {
 			fname += "_ALL_";

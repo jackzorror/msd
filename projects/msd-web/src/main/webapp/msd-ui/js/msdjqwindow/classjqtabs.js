@@ -2,96 +2,86 @@
 function initClassTab() {
 	console.log(" init class tab ... ");
 
-	$('#classControlPanel').empty();
+	var ccp = $('#classControlPanel');
+	ccp.empty();
 	
 	var scpdiv = $('<div style="border:0px solid;"/>').attr({id:'classControldiv'});
-	$('#classControlPanel').append(scpdiv);
+	ccp.append(scpdiv);
 
-	var ddldiv = $('<div dock="left" style="margin-top:10px; border:0px solid  #ccc; height:20px; width:530px;"/>');
-	var btndiv = $('<div dock="right" style="margin-top:10px; border:0px solid  #ccc; height:20px;"/>');
+	var ddldiv = $('<div style="margin-top:0px; border:0px solid  #ccc; height:30px;"/>');
+	var btndiv = $('<div style="margin-top:0px; border:0px solid  #ccc; height:20px;"/>');
 	scpdiv.append(ddldiv);
 	scpdiv.append(btndiv);
-	
-	var indiv = $('<div style="border:0px solid;"/>').attr({id:'insideClassCOntroldiv'});
-	ddldiv.append(indiv);
 
-	var sdiv = $('<div dock="left" style="width: 100px;  border: 0px solid #ccc;"/>');
-	var cdiv = $('<div dock="right" style="border: 0px solid #ccc;"/>');
+	var sddldiv = $('<div style="width: 200px; border: 0px solid #ccc;"/>');
+	var tddldiv = $('<div style="width: 220px; border: 0px solid #ccc;"/>');
+	var nddldiv = $('<div style="border: 0px solid #ccc;"/>');
+	ddldiv.append(sddldiv);
+	ddldiv.append(tddldiv);
+	ddldiv.append(nddldiv);
 
-	indiv.append(sdiv);
-	indiv.append(cdiv);
-	
-	indiv.jqxDockPanel({height: 40, width:530});
-	
-	sdiv.append('<label style="float:left; margin-top:8px; margin-left:5px">Semester : </label>');
-	var sname = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlSemesterSearchName'});
-	sdiv.append(sname);
-	$('#ddlSemesterSearchName').jqxDropDownList({placeHolder: "Select Semester", height: 20, width: 120, dropDownHeight: 100, theme: getTheme()});
+	sddldiv.append('<label style="float:left; margin-top:8px; margin-left:5px">Semester : </label>');
+	var snameddl = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlSemesterNameInClassTab'});
+	sddldiv.append(snameddl);
+	snameddl.jqxDropDownList({placeHolder: "Select Semester", height: 20, width: 120, dropDownHeight: 100, theme: getTheme()});
 
-	cdiv.append('<label style="float:left; margin-top:8px; margin-left:10px">Class : </label>');
-	var cname = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlClassSearchName'});
-	cdiv.append(cname);
-	$('#ddlClassSearchName').jqxDropDownList({placeHolder: "Please Select Class Name", height: 20, width: 240, dropDownHeight: 200, theme: getTheme()});
+	tddldiv.append('<label style="float:left; margin-top:8px; margin-left:5px">Class Type : </label>');
+	var tnameddl = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlClassTypeNameInClassTab'});
+	tddldiv.append(tnameddl);
+	tnameddl.jqxDropDownList({placeHolder: "Select Type", height: 20, width: 120, dropDownHeight: 100, theme: getTheme()});
 
-	var abutton = $('<input style="float:right;margin-top:5px; margin-left:3px; margin-right:10px" />').attr({type:'button', id:'btnAddClass', value:'Add'});
+	nddldiv.append('<label style="float:left; margin-top:8px; margin-left:10px">Class Name : </label>');
+	var cnameddl = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlClassNameInClassTab'});
+	nddldiv.append(cnameddl);
+	cnameddl.jqxDropDownList({placeHolder: "Select Class Name", height: 20, width: 220, dropDownHeight: 200, theme: getTheme()});
+
+	var abutton = $('<input style="float:right;margin-top:0px; margin-left:3px; margin-right:10px" />').attr({type:'button', id:'btnAddClass', value:'Add'});
 	btndiv.append(abutton);
 	$('#btnAddClass').jqxButton({ width: '65', height: 20, theme: getTheme() });
 	
-	var cbutton = $('<input style="float:right;margin-top:5px; margin-left:3px" />').attr({type:'button', id:'btnClearClass', value:'Clear'});
+	var cbutton = $('<input style="float:right;margin-top:0px; margin-left:3px" />').attr({type:'button', id:'btnClearClass', value:'Clear'});
 	btndiv.append(cbutton);
 	$('#btnClearClass').jqxButton({ width: '65', height: 20, theme: getTheme() });
-	
-	var sbutton = $('<input style="float:right; margin-top:5px;" />').attr({type:'button', id:'btnSearchClass', value:'Search'});
-	btndiv.append(sbutton);
-	$('#btnSearchClass').jqxButton({ width: '65', height: 20, theme: getTheme() });
-	
-	$('#classControldiv').jqxDockPanel({height: 40});
+
+	ddldiv.jqxDockPanel({height: 40});
+	sddldiv.attr('dock', 'left');
+	tddldiv.attr('dock', 'left');
+	nddldiv.attr('dock', 'left');
 
 	$('classMainPanel').empty();
 
+	addClassTabsEventListeners();
 };
 
 function addClassTabsEventListeners() {
-	$(document).on('click', '#btnSearchClass', handleSearchClassClick);
-	$(document).on('keypress', '#ddlClassSearchName', handleClassSearchNameKeypress);
 	$(document).on('click', '#btnClearClass', handleClearClassClick);
 	$(document).on('click', '#btnAddClass', handleAddClassClick);
 	
 	$(document).on('click', '#btnEditClassInformation', handleEditClassClick);
 	$(document).on('click', '#btnSaveClassInformation', handleSaveClassClick);
 	
-	$(document).on('change', '#ddlSemesterSearchName', handleSemesterSearchNameDropdownChange);
-	
+	$(document).on('change', '#ddlSemesterNameInClassTab', handleSemesterSearchNameDropdownChange);
+	$(document).on('change', '#ddlClassTypeNameInClassTab', handleClassTypeSearchNameDropdownChange);
+	$(document).on('change', '#ddlClassNameInClassTab', handleClassearchNameDropdownChange);
 }
 
 // Event handle
-function handleSearchClassClick() {
+function handleClassearchNameDropdownChange() {
 	console.log(" in handle search ... ");
+	if ($('#ddlClassNameInClassTab').jqxDropDownList('selectedIndex') == -1) return;
 
-	var item = $('#ddlClassSearchName').jqxDropDownList('getSelectedItem');
-
-	if (null == item) {
-	    alert("Please select class name from list ... ");
-	} else {
-		console.log (" call ajax to get class ... ");
-		var cid = item.value;
-		if (null == cid || cid == 0) 
-			alert("Please select class from list ... ");
-		else 
-			ajaxGetClassDetailById(cid, getClassDetailById);
-	}
+	var item = $('#ddlClassNameInClassTab').jqxDropDownList('getSelectedItem');
 
 	setCurrentFunctionInClassTab("SEARCH");
-};
 
-function handleClassSearchNameKeypress(e) {
-	if (e.which == 13)
-		$('#btnSearchClass').click();
-}
+	ajaxGetClassDetailById(item.value, getClassDetailById);
+};
 
 function handleClearClassClick() {
 	$('#classMainPanel').empty();
-	$('#ddlClassSearchName').jqxDropDownList({selectedIndex:-1});
+	$('#ddlSemesterNameInClassTab').jqxDropDownList('val', getCurrentSemester().id);
+	$('#ddlClassTypeNameInClassTab').jqxDropDownList({selectedIndex:0});
+	$('#ddlClassNameInClassTab').jqxDropDownList({selectedIndex:-1});
 }
 
 function handleEditClassClick() {
@@ -112,31 +102,43 @@ function handleEditClassClick() {
 };
 
 function handleSaveClassClick() {
-	var id = (null != getCurrentClassInClassTab() ? getCurrentClassInClassTab().id : null);
+	var id = (null != getCurrentClassInClassTab() ? getCurrentClassInClassTab().id : 0);
 	var isActive = (null != getCurrentClassInClassTab() ? getCurrentClassInClassTab().isactive : true);
 	var cname = $('#txtClassName').val();
-	var clocation  = $('#txtLocation').val();
 	var sdate = $('#divStartTime').jqxDateTimeInput('value');
 	var edate = $('#divEndTime').jqxDateTimeInput('value');
 	var ncdate = $("#ddlNonClassDateList").jqxDropDownList('getItems'); 
-	var ncdatestr = "";
-	for (i in ncdate) {
-		if (null != ncdate[i] && ncdate[i].value.length > 0) {
-			ncdatestr += ncdate[i].value + ",";
-		}
-	}	
-	console.log(" new class : " + cname + " -> " + clocation + " time : " + sdate  + " ~ " + edate + " - " + ncdatestr);
-	ajaxSaveClassInformation(id, cname, clocation, sdate, edate, isActive, saveClassInformation);
+	var sid = 0;
+	var tid = 0;
+	if ("ADD" == getCurrentFunctionInClassTab()) {
+		var semester = $('#ddlSemesterNameInClassTabForAdd').jqxDropDownList('getSelectedItem');
+		sid = null != semester ? semester.value : 0; 
+		var type = $('#ddlClassTypeNameInClassTabForAdd').jqxDropDownList('getSelectedItem');
+		tid = null != type ? type.value : 0; 
+		id = 0;
+	} else {
+		sid = getCurrentClassInClassTab().semester;
+		tid = getCurrentClassInClassTab().typeid;
+	}
+	if (null == sid || sid == 0) {
+		alert("Please select semester from this list");
+		return;
+	}
+	if (null == tid || tid == 0) {
+		alert("Please select class type from this list");
+		return;
+	}
+	ajaxSaveClassInformation(id, cname, sid, tid, sdate, edate, isActive, saveClassInformation);
 }
 
 function handleAddClassClick() {
 	console.log(" in handle add ... ");
-	
+
 	setCurrentFunctionInClassTab("ADD");
 	showClassInformation(null);
 	setCurrentClassInClassTab(null);
 	enableEditClassInformation();
-	$('#ddlClassSearchName').jqxDropDownList({selectedIndex: -1});
+	$('#ddlClassNameInClassTab').jqxDropDownList({selectedIndex: -1});
 	$('#txtClassName').focus();
 	$('#btnEditClassInformation').val("Cancel");
 
@@ -148,7 +150,18 @@ function showClassInformation(data) {
 	createClassInformationDiv();
 
 	$('#txtClassName').jqxInput('val', null != data ? data.name : "");
-	$('#txtLocation').jqxInput('val', null != data ? data.location : "");
+	if ("SEARCH" == getCurrentFunctionInClassTab()) {
+		$('#txtSemesterName').jqxInput('val', null != data ? data.semesterName : "");
+		$('#txtClassTypeName').jqxInput('val', null != data ? data.typeName : "");
+	} else {
+		var semester = $('#ddlSemesterNameInClassTab').jqxDropDownList('getSelectedItem');
+		$('#ddlSemesterNameInClassTabForAdd').jqxDropDownList('val', null != semester ? semester.value : -1);
+		var type = $('#ddlClassTypeNameInClassTab').jqxDropDownList('getSelectedItem');
+		$('#ddlClassTypeNameInClassTabForAdd').jqxDropDownList('val', null != type ? type.value : -1);
+		$('#btnEditClassInformation').val("Cancel");
+		$('#ddlClassTypeNameInClassTabForAdd').jqxDropDownList({ disabled: true });
+		$('#ddlSemesterNameInClassTabForAdd').jqxDropDownList({ disabled: true });
+	}
 	$('#divStartTime').val(null != data && null != data.classStartTime ? data.classStartTime : null);
 	$('#divEndTime').val(null != data && null != data.classEndTime ? data.classEndTime : null);
 
@@ -172,12 +185,12 @@ function showClassInformation(data) {
 		$('#txtTotalStudent').jqxInput('val', data.totalNumberStudent);
 	else
 		$('#txtTotalStudent').jqxInput('val', "0");
-/*
+
 	if (null != data && null != data.totalClassFee)
 		$('#txtTotalClassFee').jqxInput('val', '$ ' + data.totalClassFee);
 	else
 		$('#txtTotalClassFee').jqxInput('val', "$0");
-*/	
+
 	if (null != data && null != data.totalClassCount)
 		$('#txtTotalClassTime').jqxInput('val', data.totalClassCount);
 	else
@@ -191,34 +204,36 @@ function showClassInformation(data) {
 			$('#ddlNonClassDateList').jqxDropDownList({selectedIndex:0});
 
 		showClassSchedularInformation(data.classSchedularList);
-// 20150106 remove class fee 		
-//		showClassFeeInformation(data.classFeeList)
+		if (data.typeid != 10)
+
+		showClassFeeInformation(data.classFeeList)
 	}
 	
 }
 
 function createClassInformationDiv() {
 
-	$('#classMainPanel').empty();
+	var cmp = $('#classMainPanel')
+	cmp.empty();
 
 	var ccdiv = $('<div class="InnerDiv" style = "margin-left:5px; margin-right:5px; margin-top:10px; border:0px solid; height:120px;"/>').attr({id:'classCommondiv'});
-	$('#classMainPanel').append(ccdiv);
+	cmp.append(ccdiv);
 	
-	var sdiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'schedularInformationdiv'});
-	$('#classMainPanel').append(sdiv);	
+	var sidiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'schedularInformationdiv'});
+	cmp.append(sidiv);	
 
-	var ccdiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'costInformationdiv'});
-	$('#classMainPanel').append(ccdiv);	
+	var fidiv = $('<div class="InnerDiv" style = "margin-top: 10px; margin-left:5px; margin-right:5px; border:0px solid;"/>').attr({id:'feeInformationdiv'});
+	cmp.append(fidiv);	
 
-	$('#classCommondiv').empty();
-	$('#schedularInformationdiv').empty();
-	$('#costInformationdiv').empty();
+	ccdiv.empty();
+	sidiv.empty();
+	fidiv.empty();
 	
 	var tmpdiv = $('<div class="InnerDiv" style = "margin-top:5px; border:0px solid;"/>');
-	$('#classCommondiv').append(tmpdiv);
+	ccdiv.append(tmpdiv);
 
-	var ldiv = $('<div dock="left" style="margin-top:5px; border:0px solid  #ccc; width:500px;"/>');
-	var btndiv = $('<div dock="right" style="margin-top:5px; border:0px solid  #ccc; height:20px;"/>');
+	var ldiv = $('<div style="margin-top:5px; border:0px solid  #ccc; width:500px;"/>');
+	var btndiv = $('<div style="margin-top:5px; border:0px solid  #ccc; height:20px;"/>');
 	tmpdiv.append(ldiv);
 	tmpdiv.append(btndiv);
 
@@ -233,19 +248,79 @@ function createClassInformationDiv() {
 	$('#btnEditClassInformation').jqxButton({ width: '60', height: 20, theme: getTheme() });
 
 	tmpdiv.jqxDockPanel({height: 25});
+	ldiv.attr('dock', 'left');
+	btndiv.attr('dock', 'left');
 
-	$('#classCommondiv').append('<label style="margin-top:10px;"> Class Name : </label>');
-	var cname = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtClassName'});
-	$('#classCommondiv').append(cname);
-	$('#txtClassName').jqxInput({placeHolder: "Class Name", height: 20, width:200, minLength: 1, theme: getTheme() });	
+	if ("SEARCH" == getCurrentFunctionInClassTab()) {
+		ccdiv.append('<label style="margin-top:10px;"> Class Name : </label>');
+		var cname = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtClassName'});
+		ccdiv.append(cname);
+		cname.jqxInput({placeHolder: "Class Name", height: 20, width:150, minLength: 1, theme: getTheme() });	
 	
-	$('#classCommondiv').append('<label style="margin-left:10px;margin-top:10px">Semester : </label>');
-	var location = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtLocation'});
-	$('#classCommondiv').append(location);
-	$('#txtLocation').jqxInput({placeHolder: "Class Semester", height: 20, width:220, minLength: 1, theme: getTheme(), source:ClassLocation });
+		ccdiv.append('<label style="margin-left:10px;margin-top:10px">Semester : </label>');
+		var semesterName = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtSemesterName'});
+		ccdiv.append(semesterName);
+		semesterName.jqxInput({disabled:true, placeHolder: "Class Semester", height: 20, width:120, minLength: 1, theme: getTheme() });
 
+		ccdiv.append('<label style="margin-left:10px;margin-top:10px">Class Type : </label>');
+		var typeName = $('<input style="margin-top:10px;"/>').attr({type:'text', id:'txtClassTypeName'});
+		ccdiv.append(typeName);
+		typeName.jqxInput({disabled:true, placeHolder: "Class Type", height: 20, width:120, minLength: 1, theme: getTheme() });
+	} else {
+		var ddldiv = $('<div style="margin-top:0px; border:0px solid  #ccc;"/>');
+		ccdiv.append(ddldiv);
+
+		var sddldiv = $('<div style="width: 200px; border: 0px solid #ccc;"/>');
+		var tddldiv = $('<div style="width: 220px; border: 0px solid #ccc;"/>');
+		var nddldiv = $('<div style="border: 0px solid #ccc;"/>');
+		ddldiv.append(sddldiv);
+		ddldiv.append(tddldiv);
+		ddldiv.append(nddldiv);
+
+		sddldiv.append('<label style="float:left; margin-top:10px; margin-left:5px">Semester : </label>');
+		var snameddl = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlSemesterNameInClassTabForAdd'});
+		sddldiv.append(snameddl);
+		snameddl.jqxDropDownList({placeHolder: "Select Semester", height: 20, width: 120, dropDownHeight: 100, theme: getTheme()});
+		var activesource = {
+			datafields:[
+				{ name: 'id',   type: 'int'}, 
+				{ name: 'name',  type: 'string'}
+			],
+			datatype:'json',
+			localdata:getSemesterList()
+		}
+		var activedataadapter = new $.jqx.dataAdapter(activesource);
+		snameddl.jqxDropDownList({source:activedataadapter, displayMember: "name", valueMember: "id"});
+
+		tddldiv.append('<label style="float:left; margin-top:10px; margin-left:5px">Class Type : </label>');
+		var tnameddl = $('<div style="margin-top:5px; margin-left:5px"/>').attr({id:'ddlClassTypeNameInClassTabForAdd'});
+		tddldiv.append(tnameddl);
+		tnameddl.jqxDropDownList({placeHolder: "Select Type", height: 20, width: 120, dropDownHeight: 100, theme: getTheme()});
+		var activesource = {
+			datafields:[
+				{ name: 'id',   type: 'int'}, 
+				{ name: 'name',  type: 'string'}
+			],
+			datatype:'json',
+			localdata:getAllClassType()
+		}
+		var activedataadapter = new $.jqx.dataAdapter(activesource);
+		tnameddl.jqxDropDownList({source:activedataadapter, displayMember: "name", valueMember: "id"});
+
+		nddldiv.append('<label style="float:left; margin-top:10px; margin-left:10px">Class Name : </label>');
+		var cname = $('<input style="margin-top:5px;"/>').attr({type:'text', id:'txtClassName'});
+		nddldiv.append(cname);
+		cname.jqxInput({placeHolder: "Class Name", height: 20, width:200, minLength: 1, theme: getTheme() });	
+
+		ddldiv.jqxDockPanel({height: 30});
+		sddldiv.attr('dock', 'left');
+		tddldiv.attr('dock', 'left');
+		nddldiv.attr('dock', 'left');
+
+	}
+	
 	var tmpdiv = $('<div class="InnerDiv" style = "float:left; margin-top:5px; border:0px solid;"/>').attr({id:'tmpdiv'});
-	$('#classCommondiv').append(tmpdiv);
+	ccdiv.append(tmpdiv);
 
 	$('#tmpdiv').append('<label style="float:left; margin-top:5px;"> Start : </label>');
 	var stime = $('<div style="float: left; margin-top:0px; margin-left:10px;"/>').attr({id:'divStartTime'});
@@ -325,18 +400,18 @@ function createClassInformationDiv() {
    	});
 
 	var tmpdiv = $('<div class="InnerDiv" style = "float:left; margin-top:5px; border:0px solid;"/>');
-	$('#classCommondiv').append(tmpdiv);
+	ccdiv.append(tmpdiv);
 
 	tmpdiv.append('<label style=" margin-top:0px;"> Total Student : </label>');
 	var totalStudent = $('<input style="margin-top:0px; margin-left:5px"/>').attr({type:'text', id:'txtTotalStudent'});
 	tmpdiv.append(totalStudent);
 	$('#txtTotalStudent').jqxInput({rtl: true, disabled: true, height: 20, width:40, minLength: 1, theme: getTheme() });	
-/*	
+
 	tmpdiv.append('<label style="margin-top:0px; margin-left:10px"> Total Class Fee : </label>');
 	var totalClassFee = $('<input style="margin-top:0px; margin-left:5px;"/>').attr({type:'text', id:'txtTotalClassFee'});
 	tmpdiv.append(totalClassFee);
 	$('#txtTotalClassFee').jqxInput({rtl: true, disabled: true, height: 20, width:100, minLength: 1, theme: getTheme() });	
-*/	
+
 	tmpdiv.append('<label style="margin-top:0px; margin-left:10px"> Total Class Time : </label>');
 	var totalClassTime = $('<input style="margin-top:0px; margin-left:5px;"/>').attr({type:'text', id:'txtTotalClassTime'});
 	tmpdiv.append(totalClassTime);
@@ -349,18 +424,19 @@ function createClassInformationDiv() {
 	tmpdiv.append(statusLabel);
 
 	var pdiv = $('<div/>').attr({id:'addNonClassDatePopupWindow'});
-	$('#classCommondiv').append(pdiv);
+	ccdiv.append(pdiv);
 	$('#addNonClassDatePopupWindow').append('<div >Add Non Class Date</div> <div style="height:70px; width:300px;" id="addNonClassDatediv"></div>');
     var offset = $("#classCommondiv").offset();
     $("#addNonClassDatePopupWindow").jqxWindow({
     	width: 300, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 
-	$('#classCommondiv').append('<br />');
+	ccdiv.append('<br />');
 
 }
 
 function getClassDetailById(response, request, settings) {
+
 	if (404 == response.code) {
 		console.log(" Can't get class detail by class name ... ");
 	} else if (302 == response.code) {
@@ -376,7 +452,8 @@ function getClassDetailById(response, request, settings) {
 function cancelUpdateClassInformation() {
 	var data = getCurrentClassInClassTab();
 	$('#txtClassName').jqxInput('val', data.name);
-	$('#txtLocation').jqxInput('val', data.location);
+	$('#txtSemesterName').jqxInput('val', data.semesterName);
+	$('#txtClassTypeName').jqxInput('val', data.typeName);
 	if (null != data.classStartTime) {
 		$('#divStartTime').val(data.classStartTime);
 	}
@@ -405,15 +482,17 @@ function cancelUpdateClassInformation() {
 
 function showClassSchedularInformation(data) {
 	console.log(" in show class schedular information .. ");
-	$('#schedularInformationdiv').empty();
-	$('#schedularInformationdiv').append('<br/>');
-	var csdiv = $('<div class="InnerDiv" style="margin-left:80px; border:0px solid;"/>').attr({id:'classSchedularDataTable'});	
-	$('#schedularInformationdiv').append(csdiv);
+	var sidiv = $('#schedularInformationdiv');
+	sidiv.empty();
+	
+	sidiv.append('<br/>');
+	var csdiv = $('<div class="InnerDiv" style="margin-left:80px; border:0px solid;"/>').attr({id:'classSchedularGrid'});	
+	sidiv.append(csdiv);
 	var pdiv = $('<div/>').attr({id:'addClassSchedularPopupWindow'});
-	$('#schedularInformationdiv').append(pdiv);
+	sidiv.append(pdiv);
 	$('#addClassSchedularPopupWindow').append('<div >Add Weekday Class Scheduler</div> <div style="height:130px; width:220px;" id="addClassSchedulerdiv"></div>');
 
-    var offset = $("#classSchedularDataTable").offset();
+    var offset = csdiv.offset();
     $("#addClassSchedularPopupWindow").jqxWindow({
     	width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
@@ -431,18 +510,16 @@ function showClassSchedularInformation(data) {
 	}
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	
-    $("#classSchedularDataTable").jqxDataTable({
+    csdiv.jqxGrid({
 		theme: getTheme(),
 		width: 600,
 	    source: dataAdapter,
-                
 	    editable: false,
-	    selectionMode: 'singleRow',
+	    selectionMode: 'singlerow',
     	showToolbar: true,
-    	pageable:true,
-    	pagesize:3,
+    	pageable:false,
+    	autoHeight:true,
 	    altrows: true,
-    	ready: function(){},
 	    toolbarHeight: 25,
     	renderToolbar: function(toolBar){
     		var toTheme = function (className) {
@@ -460,34 +537,14 @@ function showClassSchedularInformation(data) {
 	        addButton.jqxButton({cursor: "pointer", enableDefault: false,  height: 25, width: 25 });
     	    addButton.find('div:first').addClass(toTheme('jqx-icon-plus'));
         	addButton.jqxTooltip({ position: 'bottom', content: "Add"});
-	        deleteButton.jqxButton({ cursor: "pointer", disabled: true, enableDefault: false,  height: 25, width: 25 });
+	        deleteButton.jqxButton({ cursor: "pointer", disabled: false, enableDefault: false,  height: 25, width: 25 });
     	    deleteButton.find('div:first').addClass(toTheme('jqx-icon-delete'));
         	deleteButton.jqxTooltip({ position: 'bottom', content: "Delete"});
-	        var updateButtons = function (action) {
-    	    	switch (action) {
-        	    	case "Select":
-            	    	addButton.jqxButton({ disabled: false });
-                	    deleteButton.jqxButton({ disabled: false });
-                    	break;
-	                case "Unselect":
-    	                addButton.jqxButton({ disabled: false });
-        	            deleteButton.jqxButton({ disabled: true });
-            	        break;
-            	}
-        	}
-	        var rowIndex = null;
-    	    $("#classSchedularDataTable").on('rowSelect', function (event) {
-        		var args = event.args;
-            	rowIndex = args.index;
-	            updateButtons('Select');
-    	    });
-        	$("#classSchedularDataTable").on('rowUnselect', function (event) {
-        		updateButtons('Unselect');
-	        });
+
     	    addButton.click(function (event) {
         		if (!addButton.jqxButton('disabled')) {
 					createAddClassSchedularDiv();
-				    var offset = $("#classSchedularDataTable").offset();
+				    var offset = csdiv.offset();
 					$("#addClassSchedularPopupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 130, y: parseInt(offset.top) - 20 } });
                     $("#addClassSchedularPopupWindow").jqxWindow('open');
                     
@@ -497,7 +554,7 @@ function showClassSchedularInformation(data) {
                     });
                     $('#btnAddSchedular').on('click', function () {
 						console.log(" add new scheduler ...");
-                        $("#classSchedularDataTable").jqxDataTable('unselectRow', 0);
+                        csdiv.jqxGrid('unselectRow', 0);
 						
 						var weekdays = $('#weekdaydiv').jqxDropDownList('getCheckedItems');
 						console.log(" selected weekday count : " + weekdays.length);
@@ -514,10 +571,9 @@ function showClassSchedularInformation(data) {
 						} else {
 							$.each(weekdays, function (index) {
 								weekday = this.label;
-	                            $("#classSchedularDataTable").jqxDataTable('addRow', null, { weekdayStr:weekday, startTime:stime, endTime:etime }, 'first');
 								weekdaystrs.push(weekday);
 							});
-                            $("#classSchedularDataTable").jqxDataTable('selectRow', 0);
+                            csdiv.jqxGrid('selectRow', 0);
 							$("#addClassSchedularPopupWindow").jqxWindow('hide');
 
 							newschedular = {"id":0, "msdClassId":getCurrentClassInClassTab().id, "startTime":stime, "endTime":etime, "weekdays":weekdaystrs};
@@ -525,47 +581,47 @@ function showClassSchedularInformation(data) {
 							ajaxDddNewSchedulars(newschedular, addNewSchedulars);
 						}
                     });
-                    
-                	updateButtons('add');
 	            }
     	    });
         	deleteButton.click(function () {
         		if (!deleteButton.jqxButton('disabled')) {
-     				var deleterow = $("#classSchedularDataTable").jqxDataTable('getSelection');
-             		$("#classSchedularDataTable").jqxDataTable('deleteRow', rowIndex);
-	                updateButtons('delete');
-	            	$("#classSchedularDataTable").jqxDataTable('unselectRow', rowIndex);
-
-	                ajaxDeleteClassSchedular(deleterow[0].id, deleteClassSchedular);
+     				var deleterowindex = csdiv.jqxGrid('getselectedrowindex');
+     				if (deleterowindex < 0) {
+     					alert("Please select one to delete");
+     					return;
+     				}
+	            	var deleterow = csdiv.jqxGrid('getrowdata', deleterowindex);
+	                ajaxDeleteClassSchedular(deleterow.id, deleteClassSchedular);
     	        }
         	});
 	    },
     	columns: [
 			{text: 'Class ID', datafield:'msdClassId', hidden:'true'},
 			{text: 'ID', datafield:'id', hidden:'true'},
-			{text: 'Weekday', datafield: 'weekdayStr', width: 200},
-			{text: 'Start Time', datafield: 'startTime', width:200},
-			{text: 'End Time', datafield: 'endTime', width:200}
+			{text: 'Weekday', datafield: 'weekdayStr'},
+			{text: 'Start Time', datafield: 'startTime', width:180},
+			{text: 'End Time', datafield: 'endTime', width:180}
 		]
     });
 
-	$('#schedularInformationdiv').append('<br/>');
+	sidiv.append('<br/>');
 }
-/*
+
 function showClassFeeInformation(data) {
 	console.log(" in show class Fee information .. ");
+	var fidiv = $('#feeInformationdiv');
 	
-	$('#costInformationdiv').empty();
-	$('#costInformationdiv').append('<br/>');
-	var csdiv = $('<div class="InnerDiv" style="margin-left:80px; border:0px solid;"/>').attr({id:'classFeeDataTable'});	
-	$('#costInformationdiv').append(csdiv);
+	fidiv.empty();
+	fidiv.append('<br/>');
+	var cfdiv = $('<div class="InnerDiv" style="margin-left:80px; border:0px solid;"/>').attr({id:'classFeeGrid'});	
+	fidiv.append(cfdiv);
 	var pdiv = $('<div/>').attr({id:'addClassFeePopupWindow'});
-	$('#costInformationdiv').append(pdiv);
-	$('#addClassFeePopupWindow').append('<div >Add Class Fee</div> <div style="height:130px; width:220px;" id="addClassFeediv"></div>');
+	fidiv.append(pdiv);
+	$('#addClassFeePopupWindow').append('<div >Add Class Fee</div> <div style="height:230px; width:350px;" id="addClassFeediv"></div>');
 
-    var offset = $("#classFeeDataTable").offset();
+    var offset = cfdiv.offset();
     $("#addClassFeePopupWindow").jqxWindow({
-    	width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 350, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 
 	var source = {
@@ -581,7 +637,7 @@ function showClassFeeInformation(data) {
 	}
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	
-    $("#classFeeDataTable").jqxDataTable({
+    cfdiv.jqxGrid({
 		theme: getTheme(),
 		width: 600,
 	    source: dataAdapter,
@@ -590,8 +646,7 @@ function showClassFeeInformation(data) {
 	    editable: false,
 	    selectionMode: 'singleRow',
     	showToolbar: true,
-    	pageable:true,
-    	pagesize:2,
+		autoHeight: true,
 	    altrows: true,
     	ready: function(){},
 	    toolbarHeight: 25,
@@ -611,34 +666,15 @@ function showClassFeeInformation(data) {
 	        addButton.jqxButton({cursor: "pointer", enableDefault: false,  height: 25, width: 25 });
     	    addButton.find('div:first').addClass(toTheme('jqx-icon-plus'));
         	addButton.jqxTooltip({ position: 'bottom', content: "Add"});
-	        deleteButton.jqxButton({ cursor: "pointer", disabled: true, enableDefault: false,  height: 25, width: 25 });
+	        deleteButton.jqxButton({ cursor: "pointer", disabled: false, enableDefault: false,  height: 25, width: 25 });
     	    deleteButton.find('div:first').addClass(toTheme('jqx-icon-delete'));
         	deleteButton.jqxTooltip({ position: 'bottom', content: "Delete"});
-	        var updateButtons = function (action) {
-    	    	switch (action) {
-        	    	case "Select":
-            	    	addButton.jqxButton({ disabled: false });
-                	    deleteButton.jqxButton({ disabled: false });
-                    	break;
-	                case "Unselect":
-    	                addButton.jqxButton({ disabled: false });
-        	            deleteButton.jqxButton({ disabled: true });
-            	        break;
-            	}
-        	}
 	        var rowIndex = null;
-    	    $("#classFeeDataTable").on('rowSelect', function (event) {
-        		var args = event.args;
-            	rowIndex = args.index;
-	            updateButtons('Select');
-    	    });
-        	$("#classFeeDataTable").on('rowUnselect', function (event) {
-        		updateButtons('Unselect');
-	        });
+
     	    addButton.click(function (event) {
         		if (!addButton.jqxButton('disabled')) {
 					createAddClassFeeDiv();
-				    var offset = $("#classFeeDataTable").offset();
+				    var offset = cfdiv.offset();
 					$("#addClassFeePopupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 130, y: parseInt(offset.top) - 200 } });
                     $("#addClassFeePopupWindow").jqxWindow('open');
                     
@@ -648,7 +684,7 @@ function showClassFeeInformation(data) {
                     });
                     $('#btnAddFee').on('click', function () {
 						console.log(" add new scheduler ...");
-                        $("#classFeeDataTable").jqxDataTable('unselectRow', 0);
+                        cfdiv.jqxDataTable('unselectRow', 0);
                         
                         var name = $('#txtFeeName').val();
                         var cost = $('#txtCost').val();
@@ -663,26 +699,24 @@ function showClassFeeInformation(data) {
                         } else if (null == type || type < 1) {
                         	alert("please select one type from list ");
                         } else {
-                            $("#classFeeDataTable").jqxDataTable('selectRow', 0);
+                            cfdiv.jqxDataTable('selectRow', 0);
 							$("#addClassFeePopupWindow").jqxWindow('hide');
 
 							var classfee = {"id":0, "msdClassId":getCurrentClassInClassTab().id, "feeName":name, "cost":cost, "feeTypeName":null, "msdCostTypeId":type};
 							ajaxAddNewFee(classfee, addNewFee);
-                            $("#classFeeDataTable").jqxDataTable('addRow', null, {"id":0, "msdClassId":getCurrentClassInClassTab().id, "feeName":name, "cost":cost, "feeTypeName":typename}, 'first');
                         }
                     });
-                    
-                	updateButtons('add');
 	            }
     	    });
         	deleteButton.click(function () {
         		if (!deleteButton.jqxButton('disabled')) {
-     				var deleterow = $("#classFeeDataTable").jqxDataTable('getSelection');
-             		$("#classFeeDataTable").jqxDataTable('deleteRow', rowIndex);
-	                updateButtons('delete');
-	            	$("#classFeeDataTable").jqxDataTable('unselectRow', rowIndex);
-
-	                ajaxDeleteClassFee(deleterow[0].id, deleteClassFee);
+     				var deleterowindex = cfdiv.jqxGrid('getselectedrowindex');
+     				if (deleterowindex < 0) {
+     					alert("Please select one to delete");
+     					return;
+     				}
+	            	var deleterow = cfdiv.jqxGrid('getrowdata', deleterowindex);
+	                ajaxDeleteClassFee(deleterow.id, deleteClassFee);
     	        }
         	});
 	    },
@@ -695,9 +729,9 @@ function showClassFeeInformation(data) {
 		]
     });
 
-	$('#costInformationdiv').append('<br/>');
+	fidiv.append('<br/>');
 }
-*/
+
 function deleteClassSchedular(response, request, settings) {
 	if (404 == response.code) {
 		alert(" Can't delete class schedular ... ");
@@ -706,9 +740,9 @@ function deleteClassSchedular(response, request, settings) {
 	} else {
 		alert("error to delete class schedule ... ");
 	}
-	$('#btnSearchClass').click();
+	ajaxGetClassDetailById(getCurrentClassInClassTab().id, getClassDetailById);
 }
-/*
+
 function deleteClassFee(response, request, settings) {
 	if (404 == response.code) {
 		alert(" Can't delete class fee ... ");
@@ -717,9 +751,9 @@ function deleteClassFee(response, request, settings) {
 	} else {
 		alert("error to delete class fee ... ");
 	}
-	$('#btnSearchClass').click();
+	ajaxGetClassDetailById(getCurrentClassInClassTab().id, getClassDetailById);
 }
-*/
+
 function deleteNonClassDate(response, request, settings) {
 	if (404 == response.code) {
 		alert(" Can't delete non class date ... ");
@@ -728,7 +762,7 @@ function deleteNonClassDate(response, request, settings) {
 	} else {
 		alert("error to delete non class date ... ");
 	}
-	$('#btnSearchClass').click();
+	ajaxGetClassDetailById(getCurrentClassInClassTab().id, getClassDetailById);
 }
 
 function createAddClassSchedularDiv() {
@@ -772,36 +806,45 @@ function createAddClassSchedularDiv() {
 	tdiv.append(btncancel);
 	$('#btnCancelAddSchedular').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
-/*
+
 function createAddClassFeeDiv() {
 	$('#addClassFeediv').empty();
 	
+	if (getCurrentClassInClassTab().typeName == 'Private Class')
+		createAddPrivateClassFeeDiv();
+	else
+		createAddGroupClassFeeDiv();
+}
+
+function createAddPrivateClassFeeDiv() {
+	var acfdiv = $('#addClassFeediv');
+	
 	var tdiv = $('<div style="float:right; margin-top:10px; border:0px solid;"/>');
-	$('#addClassFeediv').append(tdiv);
-	tdiv.append('<label style="margin-top:2px;">Name :</label>');
+	acfdiv.append(tdiv);
+	tdiv.append('<label style="margin-top:2px;">Class Fee Name :</label>');
 	var name = $('<input/>').attr({type:'text',id:'txtFeeName'});
 	tdiv.append(name);
 	$('#txtFeeName').jqxInput({placeHolder: "Enter Fee Name", height: 20, width: 180, minLength: 1, theme: getTheme() });
 	
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
-	$('#addClassFeediv').append(tdiv);
+	acfdiv.append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">Private Class Fee:</label>');
+	var privateClassFee = $('<div/>').attr({id:'privateClassFee'});
+	tdiv.append(privateClassFee);
+	privateClassFee.jqxDropDownList({selectedIndex: 1, width: '180', height: '20', theme: getTheme(), source: getAllFeeType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
+
+	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+	acfdiv.append(tdiv);
 	tdiv.append('<label style="float:left; margin-top:2px;">Fee :</label>');
 	var cost = $('<div/>').attr({id:'txtCost'});
 	tdiv.append(cost);
 	$('#txtCost').jqxNumberInput({ width: '180px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
-	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
-	$('#addClassFeediv').append(tdiv);
-	tdiv.append('<label style="float:left; margin-top:2px;">Type :</label>');
-	var costType = $('<div/>').attr({id:'costType'});
-	tdiv.append(costType);
-	$('#costType').jqxDropDownList({selectedIndex: 1, width: '180', height: '20', theme: getTheme(), source: getAllCostType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
-
-	$('#addClassFeediv').append('<br/>');
+	acfdiv.append('<br/>');
 
 	// action button
 	var atdiv = $('<div style="float:right; margin-top:20px; border:0px solid;" />');
-	$('#addClassFeediv').append(atdiv);
+	acfdiv.append(atdiv);
 	var btnadd = $('<input style="margin-right:10px;"/>').attr({type:'button', id:'btnAddFee', value:'Add'});
 	atdiv.append(btnadd);
 	$('#btnAddFee').jqxButton({ width: '60', height: 20, theme: getTheme() });
@@ -809,7 +852,10 @@ function createAddClassFeeDiv() {
 	atdiv.append(btncancel);
 	$('#btnCancelAddFee').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
-*/
+
+function createAddGroupClassFeeDiv() {
+}
+
 function createAddNonClassDateDiv() {
 	$('#addNonClassDatediv').empty();
 
@@ -839,9 +885,9 @@ function addNewSchedulars(response, request, settings) {
 	} else {
 		alert('error');
 	}
-	$('#btnSearchClass').click();
+	ajaxGetClassDetailById(getCurrentClassInClassTab().id, getClassDetailById);
 }
-/*
+
 function addNewFee(response, request, settings) {
 	if (500 == response.code) {
 		alert("Internal Error, Please check service. ");
@@ -850,18 +896,20 @@ function addNewFee(response, request, settings) {
 	} else {
 		alert('error');
 	}
-	$('#btnSearchClass').click();
+	ajaxGetClassDetailById(getCurrentClassInClassTab().id, getClassDetailById);
 }
-*/
+
 function addNewNonClassDate(response, request, settings) {
+	var data = null;
 	if (500 == response.code) {
 		alert("Internal Error, Please check service. ");
 	} else if (302 == response.code) {
 		console.log(" add non class date successfully ... ");
+		data = $.parseJSON(response.result);
 	} else {
 		alert('error');
 	}
-	$('#btnSearchClass').click();
+	ajaxGetClassDetailById(getCurrentClassInClassTab().id, getClassDetailById);
 }
 
 function saveClassInformation(response, request, settings) {
@@ -870,15 +918,30 @@ function saveClassInformation(response, request, settings) {
 	} else if (302 == response.code) {
 		console.log(" add class successfully ... ");
 		data = $.parseJSON(response.result);
-		ajaxGetAllClass(getAllClass);
+	    var sid = $('#ddlSemesterNameInClassTab').jqxDropDownList('getSelectedItem').value;
+	    var tid = $('#ddlClassTypeNameInClassTab').jqxDropDownList('getSelectedItem').value;
+	    if 	("ADD" == getCurrentFunctionInClassTab()) {
+
+		    var sources = $('#ddlClassNameInClassTab').jqxDropDownList('source');
+		    if (null != sources) { 
+		    	var index = $('#ddlClassNameInClassTab').jqxDropDownList('source').records.length;
+		    	$('#ddlClassNameInClassTab').jqxDropDownList('insertAt', {text:data.name + ' - ' + data.semesterName, value:data.id}, index - 1);
+				$('#ddlClassNameInClassTab').jqxDropDownList('val', data.id);
+			}
+		} else {
+			$('#ddlClassNameInClassTab').jqxDropDownList('updateItem', {text:data.name + ' - ' + data.semesterName, value:data.id}, data.id);
+	    }
+		setCurrentFunctionInClassTab("SEARCH");
+		ajaxGetClassDetailById(data.id, getClassDetailById);
 	} else {
 		alert('error');
 	}
+	
 }
 
-function loadClassNameDropDownListDataSource(data) {
+function loadClassTabClassDropDownListDataSource(data) {
 	if (null == data) {
-		$('#ddlClassSearchName').jqxDropDownList({source:null});
+		$('#ddlClassNameInClassTab').jqxDropDownList({source:null});
 		return;
 	}
 	
@@ -892,17 +955,7 @@ function loadClassNameDropDownListDataSource(data) {
 	}
 	var activedataadapter = new $.jqx.dataAdapter(activesource);
 	
-	$('#ddlClassSearchName').jqxDropDownList({source:activedataadapter, displayMember: "text", valueMember: "value"});
-/*	
-		if (getCurrentFunctionInClassTab() == 'ADD') {
-			if (null != getActiveClassNameList() && getActiveClassNameList().length > 0) {
-				$('#ddlClassSearchName').jqxDropDownList({selectedIndex: getActiveClassNameList().length });
-				$('#btnSearchClass').click();
-			}
-		} else if (getCurrentFunctionInClassTab() == 'SEARCH') {
-			$('#btnSearchClass').click();
-		}
-*/
+	$('#ddlClassNameInClassTab').jqxDropDownList({source:activedataadapter, displayMember: "text", valueMember: "value"});
 } 
 
 function loadClassTabSemesterDropDownListDataSource(data) {
@@ -916,29 +969,92 @@ function loadClassTabSemesterDropDownListDataSource(data) {
 	}
 	var activedataadapter = new $.jqx.dataAdapter(activesource);
 	
-	$('#ddlSemesterSearchName').jqxDropDownList({source:activedataadapter, displayMember: "name", valueMember: "id"});
+	$('#ddlSemesterNameInClassTab').jqxDropDownList({source:activedataadapter, displayMember: "name", valueMember: "id"});
 	
 	var sid = getCurrentSemester().id;
 	
-	$('#ddlSemesterSearchName').jqxDropDownList('selectItem',sid);
+	$('#ddlSemesterNameInClassTab').jqxDropDownList('selectItem',sid);
 } 
+
+function loadClassTabTypeDropDownListDataSource(data) {
+	var activesource = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'name',  type: 'string'}
+		],
+		datatype:'json',
+		localdata:data
+	}
+	var activedataadapter = new $.jqx.dataAdapter(activesource);
+	
+	$('#ddlClassTypeNameInClassTab').jqxDropDownList({source:activedataadapter, displayMember: "name", valueMember: "id"});
+	$('#ddlClassTypeNameInClassTab').jqxDropDownList('selectIndex', 0 );
+}
 
 function handleSemesterSearchNameDropdownChange(event) {
     var args = event.args;
     if (args) {
 	    var item = args.item;
 
-    	var label = item.label;
-	    var value = item.value;
+		if (null != item) {
+	    	var label = item.label;
+		    var value = item.value;
 	    
-    	$('classMainPanel').empty();
-		$('#ddlClassSearchName').jqxDropDownList({selectedIndex: -1});
-	    ajaxGetAllClassForCurrentSemester(value, getAllClass);
+    		$('#classMainPanel').empty();
+			$('#ddlClassNameInClassTab').jqxDropDownList({selectedIndex: -1});
+			$('#ddlClassTypeNameInClassTab').jqxDropDownList({selectedIndex: 0});
+	    }
     }
 }
+
+function handleClassTypeSearchNameDropdownChange(event) {
+    var args = event.args;
+    if (args) {
+	    var item = args.item;
+
+		if (null != item) {
+			if (null == item) return;
+		
+    		var label = item.label;
+	    	var tid = item.value;
+		    var sid = $('#ddlSemesterNameInClassTab').jqxDropDownList('getSelectedItem').value;
+	    
+    		$('#classMainPanel').empty();
+			$('#ddlClassNameInClassTab').jqxDropDownList({selectedIndex: -1});
+		    ajaxGetClassBySemesterIdAndTypeIdAndStatus(sid, tid, 'ALL', getAllClassForClassTab);
+	    }
+    }
+}
+
+function getAllClassForClassTab(response, request, settings) {
+	if (404 == response.code) {
+		console.log(" Can't get all summary class by smemseter id ... ");
+		loadClassTabClassDropDownListDataSource(null);
+		setAllClassNameList(null);
+		setActiveClassNameList(null);
+	} else if (302 == response.code) {
+		var data = $.parseJSON(response.result);
+		console.log(" get active summary class  list by semester id  ");
+		var activeClassName = [];
+		var allClassName = [];
+		var newDataSource = [];
+		for (index in data) {
+			allClassName.push({text:data[index].name, value:data[index].id});
+			if (data[index].isactive) {
+				activeClassName.push({text:data[index].name, value:data[index].id});
+			}
+		}
+		loadClassTabClassDropDownListDataSource(activeClassName);
+		setAllClassNameListInClassTab(allClassName);
+		setActiveClassNameListInClassTab(activeClassName);
+	} else {
+		alert('error');
+	}
+}
+
 function initClassLabelInformation() {
 	$('#txtTotalStudent').jqxInput('val', "0");
-//	$('#txtTotalClassFee').jqxInput('val', "$0");
+	$('#txtTotalClassFee').jqxInput('val', "$0");
 	$('#txtTotalClassTime').jqxInput('val', "0");
 	$('#labelClassStatus').text('N/A');
 }
@@ -953,12 +1069,9 @@ function disableEditClassInformation() {
 
 function setupEditClassInformation(edit) {
 	$('#txtClassName').jqxInput({disabled:edit });
-	$('#txtLocation').jqxInput({disabled:edit });
 	$('#divStartTime').jqxDateTimeInput({ disabled: edit });
 	$('#divEndTime').jqxDateTimeInput({ disabled: edit });
 	$('#btnSaveClassInformation').jqxButton('disabled', edit);
-//	$('#btnAddNonClassDate').jqxButton('disabled', edit);
-//	$('#btnDeleteNonClassDate').jqxButton('disabled', edit);
 }
 
 function getNonClassDateSource(cdata) {
@@ -990,6 +1103,22 @@ function showClassStatusLabel(data) {
 	}
 }
 
+var allClassNameListInClassTab;
+function getAllClassNameListInClassTab() {
+	return allClassNameListInClassTab;
+}
+function setAllClassNameListInClassTab(data) {
+	allClassNameListInClassTab = data;
+}
+
+var activeClassNameListInClassTab;
+function getActiveClassNameListInClassTab() {
+	return activeClassNameListInClassTab;
+}
+function setActiveClassNameListInClassTab(data) {
+	activeClassNameListInClassTab = data;
+}
+
 var currentFunctionInClassTab;
 function setCurrentFunctionInClassTab(status) {
 	currentFunctionInClassTab = status;
@@ -1005,4 +1134,3 @@ function getCurrentClassInClassTab(){
 function setCurrentClassInClassTab(value) {
 	currentClassInClassTab = value;
 }
-

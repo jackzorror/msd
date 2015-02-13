@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.morningstardance.app.misc.MSDFileNameDto;
 import com.morningstardance.app.misc.MSDMiscFacade;
 import com.morningstardance.app.misc.MSDTypeDto;
-import com.morningstardance.domain.entity.MSDClassNonClassDate;
+import com.morningstardance.web.MSDTypeObject;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -45,13 +45,13 @@ public class MSDMiscController {
 	}
 
     @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
-    public @ResponseBody ResponseDto addMSDTypeDfltVer(@RequestBody MSDTypeDto type) {
+    public @ResponseBody ResponseDto addMSDTypeDfltVer(@RequestBody MSDTypeObject type) {
     	return addMSDTypeVer1(type);
     }
 
     @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
-	public@ResponseBody ResponseDto addMSDTypeVer1(@RequestBody MSDTypeDto type) {
-    	MSDTypeDto dto = msdMiscFacade.addMSDType(type);
+	public@ResponseBody ResponseDto addMSDTypeVer1(@RequestBody MSDTypeObject type) {
+    	MSDTypeDto dto = msdMiscFacade.addMSDType(new MSDTypeDto(type.getId(), type.getTypeName(), type.getTypeString()));
 		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "PUT", "OBJECT");
 		return responseDto;
 	}

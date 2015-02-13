@@ -16,7 +16,7 @@ public interface MSDClassFacade {
 
 	List<String> getClassUniqueName();
 
-	MSDClassDto getClassByClassName(String classname);
+//	MSDClassDto getClassByClassName(String classname);
 	
 	MSDClassSummaryDto getMSDClassSummaryById(Long msdClassId);
 
@@ -26,5 +26,10 @@ public interface MSDClassFacade {
 
 	List<MSDClassSummaryDto> getAllMSDClassByStatusAndSemesterId(
 			String classstatus, Long semesterid);
+
+	List<MSDClassSummaryDto> getMSDClassByStatusAndSemesterIdAndTypeId(
+			String classstatus, Long semesterid, Long typeid);
+
+	MSDClassDto saveClass(MSDAddClassDto msdclassdto);
 
 }

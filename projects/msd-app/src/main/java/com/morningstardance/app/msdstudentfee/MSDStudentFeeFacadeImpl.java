@@ -87,7 +87,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 			if (cfee.getIsActive() == (byte) 0)
 				continue;
 			
-			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, cfee.getId(), MSDClassFee.class.getSimpleName(), null, cfee.getCost().doubleValue(), new Long(c.getSemester()));
+			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, cfee.getId(), MSDClassFee.class.getSimpleName(), null, cfee.getCost().doubleValue(), new Long(c.getSemesterId()));
 		}
 	}
 
@@ -224,7 +224,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		List<MSDStudentClass> scs = msdStudentClassJPARepository.findByMsdClassIdAndIsActive(cfee.getMsdClassId(), (byte) 1);
 		for (MSDStudentClass cs : scs) {
 			MSDClass c = msdClassJPARepository.findOne(new Long(cs.getMsdClassId()));
-			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(new Long(cs.getMsdStudentId()), cfee.getId(), MSDClassFee.class.getSimpleName(), null, cfee.getCost().doubleValue(), new Long(c.getSemester()));
+			addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(new Long(cs.getMsdStudentId()), cfee.getId(), MSDClassFee.class.getSimpleName(), null, cfee.getCost().doubleValue(), new Long(c.getSemesterId()));
 		}
 	}
 

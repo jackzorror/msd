@@ -93,6 +93,7 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxbuttons.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxdropdownbutton.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxtree.js"></script>
+    <script type="text/javascript" src="jqwidgets/jqwidgets/jqxsplitter.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxmaskedinput.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxscrollbar.js"></script>
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxpanel.js"></script>
@@ -122,13 +123,18 @@
     <script type="text/javascript" src="jqwidgets/jqwidgets/jqxgrid.grouping.js"></script>
 
     <script type="text/javascript" src="js/msdjqwindow/loginjqwindowtabs.js"></script>
-    <script type="text/javascript" src="js/msdjqwindow/studentjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/classjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/adminjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/competition/competitionjqtabs.js"></script>
+
+	<!-- Student Tab files -->    
+    <script type="text/javascript" src="js/msdjqwindow/student/studentjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/student/studentCompetition.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/student/studentFinance.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/student/studentClass.js"></script>
+    <script type="text/javascript" src="js/msdjqwindow/student/studentInfo.js"></script>
+
+    <script type="text/javascript" src="js/msdjqwindow/admin/student/adminStudent.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/admin/competition/adminCompetitionjqtabs.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/admin/competition/YAGPCompetition.js"></script>
     <script type="text/javascript" src="js/msdjqwindow/admin/finance/adminFinancejqtabs.js"></script>
@@ -164,11 +170,8 @@
     	
         function addEventListeners(theme) {
         	setTheme(theme);
-			addStudentTabsEventListeners();      
 			addLoginWindowEventListeners();  
-			addClassTabsEventListeners();    
 			addCompetitionTabsEventListeners();    
-			addAdminTabsEventListeners();
 			addCompetitionAdminTabsEventListeners();
 			addFinanceTabsEventListeners();
         }
@@ -258,7 +261,7 @@
   				</div>
   				<div id="tabs-Class" style='background:#e0e9f5'>
   					<div id='classDockPanel'>
-					    <div id='classControlPanel' dock='top' style='height: 40px;'></div>
+					    <div id='classControlPanel' dock='top' style='height: 60px;'></div>
 					    <div id='classMainPanel'></div>
 					</div>
   				</div>

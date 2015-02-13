@@ -22,4 +22,6 @@ public interface MSDClassAssembler {
 	MSDClassDetailDto createClassDetailFromEntity(MSDClass msdclass,
 			List<MSDClassSchedular> msdclassschedulars, List<MSDClassFee> msdclassfees, List<MSDClassNonClassDate> msdnonclassdates, Long totalStudentCount, BigDecimal totalClassFee, int totalClassCount);
 
+	MSDClass createEntityFromDto(MSDAddClassDto msdclassdto);
+
 }

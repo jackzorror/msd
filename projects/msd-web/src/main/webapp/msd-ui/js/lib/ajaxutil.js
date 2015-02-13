@@ -1,3 +1,44 @@
+function ajaxGetStudentByName(firstname, lastname, fName) {
+	console.log(' get student by name ... ');
+	var ajaxcall = $.ajax({
+		type: "GET",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent",
+		data: { firstname: firstname, lastname: lastname },
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxUpdateStudentInformation(student, fName) {
+	var ajaxcall = $.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent",
+		data: JSON.stringify(student),
+		contentType: "application/json",
+		processData:false,
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+};
+
+function ajaxAddStudentInformation(student, fName) {
+	var ajaxcall = $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudent",
+		data: JSON.stringify(student),
+		contentType: "application/json",
+		processData:false,
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxGetUniqueName(fieldname, fName) {
 	console.log(" get unique name for : " + fieldname);
 	var ajaxcall = $.ajax({
@@ -26,14 +67,28 @@ function ajaxGetAllClass(fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxGetAllClassForCurrentSemester(sid, fName) {
-	console.log(" get all class for current Semester ... ");
+function ajaxGetClassBySemesterIdAndStatus(sid, status, fName) {
+	console.log(" get all class by Semester ... ");
 	var ajaxcall = $.ajax({
 		type: "GET",
 		url: "../msd-app/rs/msdclass",
 		dataType: "json",
 		contentType: "application/json",
-		data: { classstatus: "ALL", semesterid:sid}
+		data: { classstatus: status, semesterid:sid}
+	});
+	
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetClassBySemesterIdAndTypeIdAndStatus(sid, tid, status, fName) {
+	console.log(" get all class by Semester ... ");
+	var ajaxcall = $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdclass",
+		dataType: "json",
+		contentType: "application/json",
+		data: { classstatus: status, semesterid:sid, typeid:tid}
 	});
 	
 	ajaxcall.done(fName);
@@ -216,8 +271,8 @@ function ajaxAddGeneralFee(generalfee, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
-function ajaxSaveClassInformation(id, cname, clocation, sdate, edate, isactive, fName) {
-	var classInfo = {"id":id, "name":cname, "location":clocation, "classStartTime":sdate, "classEndTime":edate, "isactive":isactive};
+function ajaxSaveClassInformation(id, cname, sid, tid, sdate, edate, isactive, fName) {
+	var classInfo = {"id":id, "name":cname, "semesterId":sid, "classTypeId":tid, "classStartTime":sdate, "classEndTime":edate, "isActive":isactive};
 
 	var ajaxcall = $.ajax({
 		type: "PUT",

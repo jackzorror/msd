@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.morningstardance.app.misc.MSDMiscFacade;
 import com.morningstardance.app.misc.MSDSemesterDto;
+import com.morningstardance.web.MSDSemesterObject;
 import com.morningstardance.web.ResponseDto;
 
 @Controller
@@ -61,25 +62,25 @@ public class MSDSemesterController {
 	}
 
     @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
-    public @ResponseBody ResponseDto addSemesterDfltVer(@RequestBody MSDSemesterDto semesterDto) {
+    public @ResponseBody ResponseDto addSemesterDfltVer(@RequestBody MSDSemesterObject semesterDto) {
     	return addSemesterVer1(semesterDto);
     }
 
     @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
-	public@ResponseBody ResponseDto addSemesterVer1(@RequestBody MSDSemesterDto semesterDto) {
-    	MSDSemesterDto dto = msdMiscFacade.addSemester(semesterDto);
+	public@ResponseBody ResponseDto addSemesterVer1(@RequestBody MSDSemesterObject semesterDto) {
+    	MSDSemesterDto dto = msdMiscFacade.addSemester(new MSDSemesterDto(semesterDto.getId(), semesterDto.getSemesterName(), semesterDto.getStartDate()));
 		ResponseDto responseDto = ResponseDto.createResponseDto(dto, "PUT", "OBJECT");
 		return responseDto;
 	}
 
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version")
-    public @ResponseBody ResponseDto updateSemesterDfltVer(@RequestBody MSDSemesterDto semesterDto) {
+    public @ResponseBody ResponseDto updateSemesterDfltVer(@RequestBody MSDSemesterObject semesterDto) {
 		return updateSemesterVer1(semesterDto);
     }
 
     @RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
-	public @ResponseBody ResponseDto updateSemesterVer1(MSDSemesterDto semesterDto) {
-    	MSDSemesterDto newDto = msdMiscFacade.updateSemester(semesterDto);
+	public @ResponseBody ResponseDto updateSemesterVer1(MSDSemesterObject semesterDto) {
+    	MSDSemesterDto newDto = msdMiscFacade.updateSemester(new MSDSemesterDto(semesterDto.getId(), semesterDto.getSemesterName(), semesterDto.getStartDate()));
 		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
 		return responseDto;
 	}

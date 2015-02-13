@@ -111,7 +111,7 @@ function showSemesterGrid(data) {
                 }  else {
 					$("#popupAddSemesterWindow").jqxWindow('hide');
 
-					var semester = {"id":0, "name":name, "startDate":startdate};
+					var semester = {"id":0, "semesterName":name, "startDate":startdate};
 					ajaxAddSemester(semester, addSemester);
                 }
             });
@@ -122,16 +122,6 @@ function showSemesterGrid(data) {
 			{text: 'Start Date', datafield: 'startDate', width:300, editable: false}
 		]
 	});
-	/*
-    gfdiv.on('cellendedit', function (event) {
-	    var args = event.args;
-		var data = gfdiv.jqxGrid('getrowdata', args.rowindex);
-		
-		console.log(" update row id is : " + data.id + " old value : " + data.name + " new value : " + args.value);
-		var dto = {id:data.id, name:args.value, startDate:data.startDate}
-		ajaxUpdateSemester(dto, updateSemester);
-    });
-    */
 }
 
 function createAddSemesterPopupWindow() {
@@ -176,7 +166,7 @@ function addSemester(response, request, settings){
 		alert("error to add general fee ... ");
 	}
 }
-
+/*
 function updateSemester(response, request, settings){
 	console.log(" return from update semester ... ");
 	if (404 == response.code) {
@@ -188,7 +178,7 @@ function updateSemester(response, request, settings){
 		alert("error to update semester ... ");
 	}
 }
-
+*/
 function getAllSemesterListinAdminMisc(response, request, settings){
 	console.log(" get semester after update semseter... ");
 	if (404 == response.code) {
@@ -287,8 +277,8 @@ function showMSDTypeGrid(data) {
                 }  else {
 					$("#popupAddMSDTypeWindow").jqxWindow('hide');
 
-					var dto = {"id":0, "name":name, "type":type};
-					ajaxAddMSDType(dto, addSemester);
+					var dto = {"id":0, "typeName":name, "typeString":type};
+					ajaxAddMSDType(dto, AddMSDType);
                 }
             });
   	    },
@@ -338,7 +328,7 @@ function AddMSDType(response, request, settings) {
 		console.log(" Error to add type ... ");
 	} else if (302 == response.code) {
 		console.log("successfully add type ... ");
-		ajaxGetSemesterList(getAllMSDTypeListinAdminMisc);
+		ajaxGetAllMSDTypes(getAllMSDTypeListinAdminMisc);
 	} else {
 		alert("error to add general fee ... ");
 	}
@@ -346,15 +336,6 @@ function AddMSDType(response, request, settings) {
 }
 
 function getAllMSDTypeListinAdminMisc(response, request, settings){
-	console.log(" get semester after add/update type... ");
-	if (404 == response.code) {
-		console.log(" Can't get semester after add/update type ... ");
-	} else if (302 == response.code) {
-		var data = $.parseJSON(response.result);
-		console.log(" get all semseter list after add/update type ");
-		setSemesterList(data);
-	} else {
-		alert('error');
-	}
-	showSemesterGrid(getSemesterList());
+	getAllMSDTypes(response);
+	showMSDTypeGrid(getAllType());
 }

@@ -7,6 +7,8 @@ public class MSDClassSummaryDto {
 	private String schedule;
 	private boolean isactive;
 	private int semesterid;
+	private int typeid;
+	private String classTypeName;
 	
 	public int getId() {
 		return id;
@@ -37,6 +39,18 @@ public class MSDClassSummaryDto {
 	}
 	public void setSemesterid(int semesterid) {
 		this.semesterid = semesterid;
+	}
+	public int getTypeid() {
+		return typeid;
+	}
+	public void setTypeid(int typeid) {
+		this.typeid = typeid;
+	}
+	public String getClassTypeName() {
+		return classTypeName;
+	}
+	public void setClassTypeName(String classTypeName) {
+		this.classTypeName = classTypeName;
 	}
 
 }

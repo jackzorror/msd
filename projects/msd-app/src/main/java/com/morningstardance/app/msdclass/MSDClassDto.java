@@ -13,6 +13,8 @@ public class MSDClassDto {
 	protected boolean isactive;
 	protected int semester;
 	protected String semesterName;
+	protected int typeid;
+	protected String typeName;
 	
 	public int getId() {
 		return id;
@@ -73,5 +75,17 @@ public class MSDClassDto {
 	}
 	public void setSemesterName(String semesterName) {
 		this.semesterName = semesterName;
+	}
+	public int getTypeid() {
+		return typeid;
+	}
+	public void setTypeid(int typeid) {
+		this.typeid = typeid;
+	}
+	public String getTypeName() {
+		return typeName;
+	}
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 }

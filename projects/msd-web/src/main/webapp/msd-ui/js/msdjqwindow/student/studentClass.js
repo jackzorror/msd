@@ -235,7 +235,8 @@ function showStudentUnRegisteredClassesGridDiv(data) {
 		datafields:[
 			{ name: 'id', type:'int'},
 			{ name: 'schedule', type: 'string'},
-			{ name: 'name', type: 'string'}
+			{ name: 'name', type: 'string'},
+			{ name: 'classTypeName', type: 'string'}
 		],
 		datatype:'json',
 		localdata:data
@@ -247,6 +248,7 @@ function showStudentUnRegisteredClassesGridDiv(data) {
 		source:dataAdapter,
 		autoHeight: true,
 		pageable: false,
+		groupable: true,
 		showtoolbar:true,
 		rendertoolbar:function (toolbar) {
 			var container = $("<div style = 'float: right; margins: 0px;'></div>");
@@ -294,10 +296,13 @@ function showStudentUnRegisteredClassesGridDiv(data) {
     	    });
 		},
 		selectionmode: 'checkbox',
+		groups: ['classTypeName'],
+		showgroupsheader: false,
 		columns:[
 			{text: 'Class ID', datafield:'id', hidden:'true'},
+			{test: 'Type', datafield:'classTypeName', hidden:'true'},
 			{text: 'Class Name', datafield:'name', width:150},
-			{text: 'Class Scheduler', datafield:'schedule', width:360},
+			{text: 'Class Scheduler', datafield:'schedule'},
 			{text: '', datafield: 'Detail', width:60, columntype:'button', cellsrenderer:function(){
 					return "Detail";
 				}, buttonclick:function(row) {

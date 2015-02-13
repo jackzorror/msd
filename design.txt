@@ -1,0 +1,51 @@
+Class Billing Type:
+	General Billing;
+	Single Billing;
+	Multiple Billing;
+	
+General Billing Class: (L1, L2, ... );
+	1. No Class Fee;
+	2. Student can register more than one General Fee Class;
+	3. When student register first General Class, it will insert General Class Fee in Student Fee;
+	4. The General Class fee in Student Fee table, will have no fee value; the student fee should
+	   be edited before pay;
+	5. There is only one fee value in General Class fee;
+	6. Billing type one time;
+
+Single Billing Class: (Competition class, school break class ... );
+	1. There are Class Fees associate with class;
+	2. Student can register more than one Single Fee Class;
+	3. When Student register this class, it will insert all the fee associated with this class in
+	   Student Fee;
+	4. The fee in Student Fee table, will have fee value based on student type (internal, outside);
+	5. There are two fee value in Class fee (internal, outside);
+	6. Billing type one time;
+
+Multiple Billing Class:(Private Class, ... );
+	1. All class fees value will be one time class fee;
+	2. Billing type can be weekly, monthly;
+	3. when student register this class, it will based on class start/end, class schedule billing 
+	   cycle, calculate fee inserte to student Fee;
+	4. This fee can be internal and outside;
+	
+
+Class Fee Type:
+	General Class Fee:
+	Single Time Class Fee:
+	Multiple time Class Fee:
+
+General Class Fee:
+	no msd_class_id;
+	no outside fee;
+	not calculate by multiple times option;
+	
+Single Time Class Fee:
+	have msd_class_id;
+	have outside fee;
+	have pay by multiple times option;
+	
+Multiple time Class Fee:
+	have msd_class_id;
+	have outside fee; ???
+	Can calculate by multiple times or by one times;
+	

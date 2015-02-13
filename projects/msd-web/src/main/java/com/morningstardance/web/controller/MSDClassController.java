@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.morningstardance.app.msdclass.MSDAddClassDto;
 import com.morningstardance.app.msdclass.MSDClassDetailDto;
 import com.morningstardance.app.msdclass.MSDClassDto;
 import com.morningstardance.app.msdclass.MSDClassSummaryDto;
@@ -60,6 +61,18 @@ public class MSDClassController {
 			return responseDto;
 		}
 
+		@RequestMapping(params={"classstatus", "semesterid", "typeid"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
+		public @ResponseBody ResponseDto getAllMSDClassByStatusAndSemesterIdAndTypeIdDfltVer(String classstatus, Long semesterid, Long typeid) {
+			return getAllMSDClassByStatusAndSemesterIdAndTypeIdVer1(classstatus, semesterid, typeid);
+		}
+		
+		@RequestMapping(params={"classstatus", "semesterid", "typeid"}, method=RequestMethod.GET, headers="!X-Api-service-Version=1.0")
+		private ResponseDto getAllMSDClassByStatusAndSemesterIdAndTypeIdVer1(String classstatus, Long semesterid, Long typeid) {
+			List<MSDClassSummaryDto> dtos = msdClassFacade.getMSDClassByStatusAndSemesterIdAndTypeId(classstatus, semesterid, typeid);
+	        ResponseDto responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
+			return responseDto;
+		}
+
 		@RequestMapping(value="/{msdClassId}", method=RequestMethod.GET, headers="!X-Api-service-Version")
 		public @ResponseBody ResponseDto getMSDClassByIdDfltVer(@PathVariable("msdClassId") Long msdClassId) {
 			return getMSDClassByIdVer1(msdClassId);
@@ -71,7 +84,7 @@ public class MSDClassController {
 	        ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 			return responseDto;
 		}
-
+/*
 	    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
 	    public @ResponseBody ResponseDto addClassDfltVer(@RequestBody MSDClassDto msdclassdto) {
 	    	return addClassVer1(msdclassdto);
@@ -83,8 +96,20 @@ public class MSDClassController {
 			ResponseDto responseDto = ResponseDto.createResponseDto(addedDto, "PUT", "OBJECT");
 			return responseDto;
 		}
-	    
-		@RequestMapping(params={"type=classname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
+*/	    
+	    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
+	    public @ResponseBody ResponseDto addClassDfltVer(@RequestBody MSDAddClassDto msdclassdto) {
+	    	return addClassVer1(msdclassdto);
+	    }
+
+	    @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
+		public@ResponseBody ResponseDto addClassVer1(@RequestBody MSDAddClassDto msdclassdto) {
+	    	MSDClassDto addedDto = msdClassFacade.saveClass(msdclassdto);
+			ResponseDto responseDto = ResponseDto.createResponseDto(addedDto, "PUT", "OBJECT");
+			return responseDto;
+		}
+
+	    @RequestMapping(params={"type=classname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
 		public @ResponseBody ResponseDto getClassUniqueNameDfltVer() {
 			return getClassUniqueNameVer1();
 		}
@@ -95,7 +120,7 @@ public class MSDClassController {
 			ResponseDto responseDto = ResponseDto.createResponseDto(names, "GET", "ARRAY");
 			return responseDto;
 		}
-	    
+/*	    
 		@RequestMapping(params={"classname"}, method=RequestMethod.GET, headers="!X-Api-Service-Version")
 		public @ResponseBody ResponseDto getClassByClassNameDfltVer(String classname) {
 			return getClassByClassNameVer1(classname);
@@ -107,7 +132,7 @@ public class MSDClassController {
 			ResponseDto responseDto = ResponseDto.createResponseDto(dto, "GET", "OBJECT");
 			return responseDto;
 		}
-	    
+*/	    
 		@RequestMapping(value="/{msdClassId}", params={"type"}, method=RequestMethod.GET, headers="!X-Api-service-Version")
 		public @ResponseBody ResponseDto getMSDClassByIdAndTypeDfltVer(@PathVariable("msdClassId") Long msdClassId, String type) {
 			return getMSDClassByIdAndTypeVer1(msdClassId, type);

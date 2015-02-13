@@ -104,14 +104,14 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 	public List<String> getClassUniqueName() {
 		return msdClassJPARepository.findUniqueNames();
 	}
-
+/*
 	@Override
 	public MSDClassDto getClassByClassName(String cname) {
 		MSDClass msdc =  msdClassJPARepository.findByName(cname);
 		MSDClassDto dto = msdClassAssembler.createDtoFromEntity(msdc);
 		return dto;
 	}
-
+*/
 	@Override
 	public MSDClassSummaryDto getMSDClassSummaryById(Long msdClassId) {
 		MSDClass msdclass = msdClassJPARepository.findOne(msdClassId);
@@ -212,5 +212,40 @@ public class MSDClassFacadeImpl implements MSDClassFacade {
 			}
 		}
 		return dtos;
+	}
+
+	@Override
+	public List<MSDClassSummaryDto> getMSDClassByStatusAndSemesterIdAndTypeId(
+			String classstatus, Long semesterid, Long typeid) {
+		List<MSDClassSummaryDto> dtos = null;
+		List<MSDClassSummaryDto> tempdtos = getAllMSDClassByStatusAndSemesterId(classstatus, semesterid);
+		if (null != tempdtos && tempdtos.size() > 0) {
+			dtos = new ArrayList<MSDClassSummaryDto>();
+			for (MSDClassSummaryDto dto : tempdtos) {
+				if (dto.getTypeid() == typeid)
+					dtos.add(dto);
+			}
+		}
+		return dtos;
+	}
+
+	@Override
+	public MSDClassDto saveClass(MSDAddClassDto msdclassdto) {
+		MSDClass oentity = null;
+		String ovalue = null;
+		if (msdclassdto.getId() != 0) {
+			oentity = msdClassJPARepository.findOne(new Long(msdclassdto.getId()));
+			if (null != oentity) 
+				ovalue = oentity.toString();
+		}
+		MSDClass centity = msdClassAssembler.createEntityFromDto(msdclassdto);
+		msdClassJPARepository.save(centity);
+		MSDClassDto dto = msdClassAssembler.createDtoFromEntity(centity);
+		if (msdclassdto.getId() == 0) {
+			msdOperationService.msdClassOperation(centity.getId(), "Create New Class", centity.toString(), null, "DATABASE");
+		} else {
+			msdOperationService.msdClassOperation(centity.getId(), "Change Class", centity.toString(), ovalue, "DATABASE");
+		}
+		return dto;
 	}
 }
