@@ -16,8 +16,8 @@ public class MSDClassFeeAssemblerImpl implements MSDClassFeeAssembler {
 		dto.setId(entity.getId().intValue());
 		dto.setCost(entity.getCost().floatValue());
 		dto.setFeeName(entity.getName());
-		dto.setFeeTypeName(entity.getMsdCostType().getName());
-		dto.setMsdCostTypeId(entity.getMsdCostType().getId().intValue());
+		dto.setFeeTypeName(entity.getMsdType().getName());
+		dto.setMsdCostTypeId(entity.getMsdType().getId().intValue());
 		
 		return dto;
 	}

@@ -13,6 +13,14 @@ CREATE TABLE IF NOT EXISTS `msd`.`msd_general_fee` (
 
 ALTER TABLE `msd`.`msd_general_fee` CHANGE COLUMN `name` `name` VARCHAR(256) NOT NULL  , CHANGE COLUMN `cost` `cost` DECIMAL(8,2) NOT NULL  ;
 
+ALTER TABLE `msd`.`msd_general_fee` DROP FOREIGN KEY `fk_cost_type_id` ;
+ALTER TABLE `msd`.`msd_general_fee` CHANGE COLUMN `cost_type_id` `fee_type_id` INT(11) NOT NULL  , 
+  ADD CONSTRAINT `fk_fee_type_id`
+  FOREIGN KEY (`fee_type_id` )
+  REFERENCES `msd`.`msd_type` (`id` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
 INSERT INTO `msd`.`msd_general_fee` (`name`, `cost_type_id`, `is_active`, `cost`) VALUES ('1 Hour/Week', '2', '1', '253');
 INSERT INTO `msd`.`msd_general_fee` (`name`, `cost_type_id`, `is_active`, `cost`) VALUES ('1.5 Hour/Week', '2', '1', '379');
 INSERT INTO `msd`.`msd_general_fee` (`name`, `cost_type_id`, `is_active`, `cost`) VALUES ('2 Hour/Week', '2', '1', '505');

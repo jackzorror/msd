@@ -9,6 +9,10 @@ public class MSDClassFeeDto {
 	private String feeTypeName;
 	private float cost;
 	private int msdCostTypeId;
+	private float oneTimePay;
+	private float monthlyPay;
+	private float weeklyPay;
+	private float dailyPay;
 	
 	public int getId() {
 		return id;
@@ -45,5 +49,29 @@ public class MSDClassFeeDto {
 	}
 	public void setMsdCostTypeId(int msdCostTypeId) {
 		this.msdCostTypeId = msdCostTypeId;
+	}
+	public float getOneTimePay() {
+		return oneTimePay;
+	}
+	public void setOneTimePay(float oneTimePay) {
+		this.oneTimePay = oneTimePay;
+	}
+	public float getMonthlyPay() {
+		return monthlyPay;
+	}
+	public void setMonthlyPay(float monthlyPay) {
+		this.monthlyPay = monthlyPay;
+	}
+	public float getWeeklyPay() {
+		return weeklyPay;
+	}
+	public void setWeeklyPay(float weeklyPay) {
+		this.weeklyPay = weeklyPay;
+	}
+	public float getDailyPay() {
+		return dailyPay;
+	}
+	public void setDailyPay(float dailyPay) {
+		this.dailyPay = dailyPay;
 	}
 }

@@ -16,4 +16,6 @@ CREATE TABLE IF NOT EXISTS `msd`.`msd_class_fee` (
 
 ALTER TABLE `msd`.`msd_class_fee` CHANGE COLUMN `cost` `cost` DECIMAL(8,2) NOT NULL  ;
 ALTER TABLE `msd`.`msd_class_fee` CHANGE COLUMN `name` `name` VARCHAR(256) NOT NULL  ;
+ALTER TABLE `msd`.`msd_class_fee` ADD COLUMN `one_time_pay` DECIMAL(8,2) NULL  AFTER `is_active` , ADD COLUMN `monthly_pay` DECIMAL(8,2) NULL  AFTER `one_time_pay` , ADD COLUMN `weekly_pay` DECIMAL(8,2) NULL  AFTER `monthly_pay` , ADD COLUMN `daily_pay` DECIMAL(8,2) NULL  AFTER `weekly_pay` ;
+
 

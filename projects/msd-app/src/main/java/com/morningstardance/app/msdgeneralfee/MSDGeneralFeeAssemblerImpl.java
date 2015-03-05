@@ -27,9 +27,9 @@ public class MSDGeneralFeeAssemblerImpl implements MSDGeneralFeeAssembler {
 		dto.setId(entity.getId().intValue());
 		dto.setIsActive(entity.getIsActive() == (byte) 1);
 		dto.setCost(entity.getCost().floatValue());
-		dto.setCostTypeId(entity.getMsdCostType().getId().intValue());
+		dto.setCostTypeId(entity.getMsdFeeType().getId().intValue());
 		dto.setFeeName(entity.getName());
-		dto.setFeeTypeName(entity.getMsdCostType().getName());
+		dto.setFeeTypeName(entity.getMsdFeeType().getName());
 		return dto;
 	}
 

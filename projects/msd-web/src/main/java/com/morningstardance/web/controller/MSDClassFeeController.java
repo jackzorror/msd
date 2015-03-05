@@ -89,7 +89,15 @@ public class MSDClassFeeController {
 
     @RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version=1.0")
 	public@ResponseBody ResponseDto addClassFeeVer1(@RequestBody MSDClassFeeDto classFeeDto) {
-    	msdClassFeeFacade.addClassFee(new Long(classFeeDto.getId()), new Long(classFeeDto.getMsdClassId()), classFeeDto.getFeeName(), new Long(classFeeDto.getMsdCostTypeId()), classFeeDto.getCost());
+    	msdClassFeeFacade.addClassFee(new Long(classFeeDto.getId()), 
+    			new Long(classFeeDto.getMsdClassId()), 
+    			classFeeDto.getFeeName(), 
+    			new Long(classFeeDto.getMsdCostTypeId()), 
+    			classFeeDto.getCost(),
+    			classFeeDto.getOneTimePay(),
+    			classFeeDto.getMonthlyPay(),
+    			classFeeDto.getWeeklyPay(),
+    			classFeeDto.getDailyPay());
 		ResponseDto responseDto = ResponseDto.createResponseDto("Create Successfully", "PUT", "OBJECT");
 		return responseDto;
 	}

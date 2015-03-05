@@ -6,7 +6,6 @@ import javax.persistence.*;
 import com.morningstardance.domain.base.entity.MSDEntityBase;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 
 
 /**
@@ -27,8 +26,8 @@ public class MSDGeneralFee extends MSDEntityBase implements Serializable {
 
 	//bi-directional many-to-one association to MsdCostType
 	@ManyToOne
-	@JoinColumn(name="cost_type_id")
-	private MSDCostType msdCostType;
+	@JoinColumn(name="fee_type_id")
+	private MSDType msdFeeType;
 
 	@Column(name="is_active")
 	private byte isActive;
@@ -41,7 +40,7 @@ public class MSDGeneralFee extends MSDEntityBase implements Serializable {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("GeneralFee--> id: %d name: %s  cost: %f IsActive: %x Cost Type: %s");
-		return String.format(sb.toString(), id.intValue(), name, cost.floatValue(), isActive, msdCostType.toString());
+		return String.format(sb.toString(), id.intValue(), name, cost.floatValue(), isActive, msdFeeType.toString());
 	}
 	
 	public Long getId() {
@@ -76,12 +75,12 @@ public class MSDGeneralFee extends MSDEntityBase implements Serializable {
 		this.name = name;
 	}
 
-	public MSDCostType getMsdCostType() {
-		return this.msdCostType;
+	public MSDType getMsdFeeType() {
+		return this.msdFeeType;
 	}
 
-	public void setMsdCostType(MSDCostType msdCostType) {
-		this.msdCostType = msdCostType;
+	public void setMsdFeeType(MSDType msdFeeType) {
+		this.msdFeeType = msdFeeType;
 	}
 
 }

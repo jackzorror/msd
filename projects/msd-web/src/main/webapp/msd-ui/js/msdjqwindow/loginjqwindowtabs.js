@@ -264,21 +264,6 @@ function getAllMSDTypes(response) {
 		var data = $.parseJSON(response.result);
 		console.log(" get all type list ");
 		setAllType(data);
-		var feeType = [];
-		var classType = [];
-		var studentType = [];
-		for (index in data) {
-			if (data[index].type == 'FEE_TYPE') 
-				feeType.push(data[index]);
-			else if (data[index].type == 'CLASS_TYPE')
-				classType.push(data[index]);
-			else if (data[index].type == 'STUDENT_TYPE')
-				studentType.push(data[index]);
-		}
-		setAllFeeType(feeType);
-		setAllClassType(classType);
-		setAllStudentType(studentType);
-		loadClassTabTypeDropDownListDataSource(classType);
 	} else {
 		alert('error');
 	}
@@ -287,6 +272,22 @@ function getAllMSDTypes(response) {
 var allType;
 function setAllType(data) {
 	allType = data;
+
+	var feeType = [];
+	var classType = [];
+	var studentType = [];
+	for (index in data) {
+		if (data[index].type == 'FEE_TYPE') 
+			feeType.push(data[index]);
+		else if (data[index].type == 'CLASS_TYPE')
+		classType.push(data[index]);
+		else if (data[index].type == 'STUDENT_TYPE')
+			studentType.push(data[index]);
+	}
+	setAllFeeType(feeType);
+	setAllClassType(classType);
+	setAllStudentType(studentType);
+	loadClassTabTypeDropDownListDataSource(classType);
 }
 function getAllType() {
 	return allType;
@@ -404,10 +405,38 @@ function getLastNameList() {
 var allGeneralFee;
 function setAllGeneralFee(data) {
 	allGeneralFee = data;
+
+	var generalClassFee = [];
+	var privateClassFee = [];
+	for (index in data) {
+		if (data[index].feeTypeName == 'General Class Fee') 
+			generalClassFee.push(data[index]);
+		else if (data[index].feeTypeName == 'Private Class Fee')
+			privateClassFee.push(data[index]);
+	}
+	setAllGeneralClassFee(generalClassFee);
+	setAllPrivateClassFee(privateClassFee);
 }
 function getAllGeneralFee() {
 	return allGeneralFee;
 }
+var allGeneralClassFee;
+function setAllGeneralClassFee(data) {
+	allGeneralClassFee = data;
+}
+function getAllGeneralClassFee() {
+	return allGeneralClassFee;
+}
+var allPrivateClassFee;
+function setAllPrivateClassFee(data) {
+	allPrivateClassFee = data;
+}
+function getAllPrivateClassFee() {
+	return allPrivateClassFee;
+}
+
+
+
 
 var allCostType;
 function setAllCostType(data) {

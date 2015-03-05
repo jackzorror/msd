@@ -12,8 +12,10 @@ import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
 import com.morningstardance.domain.entity.MSDClassFee;
 import com.morningstardance.domain.entity.MSDCostType;
+import com.morningstardance.domain.entity.MSDType;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassFeeJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDCostTypeJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDTypeJPARepository;
 
 @Service("msdClassFeeFacade")
 public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
@@ -22,7 +24,7 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 	MSDClassFeeJPARepository msdClassFeeJPARepository;
 	
 	@Resource
-	MSDCostTypeJPARepository msdCostTypeJPARepository;
+	MSDTypeJPARepository msdTypeJPARepository;
 	
 	@Resource
 	MSDClassFeeAssembler msdClassFeeAssembler;
@@ -60,8 +62,8 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 	 */
 	public void addClassFee(Long id, Long msdClassId, String name, Long msdCostTypeId, float cost) {
 		MSDClassFee entity = null;
-		MSDCostType type = msdCostTypeJPARepository.findOne(msdCostTypeId);
-		if (null == type) type = msdCostTypeJPARepository.findOne(new Long(99));
+		MSDType type = msdTypeJPARepository.findOne(msdCostTypeId);
+		if (null == type) type = msdTypeJPARepository.findOne(new Long(99));
 		
 		if (id != null && id.intValue() != 0)
 			entity = msdClassFeeJPARepository.findOne(id);
@@ -70,9 +72,35 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 		
 		entity.setName(name);
 		entity.setMsdClassId(msdClassId.intValue());
-		entity.setMsdCostType(type);
+		entity.setMsdType(type);
 		entity.setCost(new BigDecimal(cost));
 		entity.setIsActive((byte) 1);
+		
+		msdClassFeeJPARepository.save(entity);
+
+		msdOperationService.msdClassOperation(msdClassId, "Add Class Fee", entity.toString(), null, "DATABASE");
+	}
+
+	public void addClassFee(Long id, Long msdClassId, String name, Long msdCostTypeId, float cost, float oneTimePay, float monthlyPay, float weeklyPay, float dailyPay) {
+		MSDClassFee entity = null;
+		MSDType type = msdTypeJPARepository.findOne(msdCostTypeId);
+		if (null == type) type = msdTypeJPARepository.findOne(new Long(99));
+		
+		if (id != null && id.intValue() != 0)
+			entity = msdClassFeeJPARepository.findOne(id);
+		if (null == entity)
+			entity = new MSDClassFee();
+		
+		entity.setName(name);
+		entity.setMsdClassId(msdClassId.intValue());
+		entity.setMsdType(type);
+		entity.setCost(new BigDecimal(cost));
+		entity.setIsActive((byte) 1);
+		entity.setOneTimePay(new BigDecimal(oneTimePay));
+		entity.setMonthlyPay(new BigDecimal(monthlyPay));
+		entity.setWeeklyPay(new BigDecimal(weeklyPay));
+		entity.setDailyPay(new BigDecimal(dailyPay));
+		
 		
 		msdClassFeeJPARepository.save(entity);
 

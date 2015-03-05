@@ -11,6 +11,10 @@ public interface MSDClassFeeFacade {
 	void addClassFee(Long id, Long intValue, String name, Long msdCostTypeId,
 			float cost);
 
+	void addClassFee(Long id, Long msdClassId, String name, Long msdCostTypeId,
+			float cost, float oneTimePay, float monthlyPay, float weeklyPay,
+			float dailyPay);
+
 	void deleteClassFeeById(Long msdClassFeeId);
 
 }

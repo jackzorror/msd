@@ -35,8 +35,20 @@ public class MSDClassFee extends MSDEntityBase implements Serializable {
 	//bi-directional many-to-one association to MsdCostType
 	@ManyToOne
 	@JoinColumn(name="cost_type_id")
-	private MSDCostType msdCostType;
+	private MSDType msdType;
+	
+	@Column(name="one_time_pay")
+	private BigDecimal oneTimePay;
 
+	@Column(name="monthly_pay")
+	private BigDecimal monthlyPay;
+	
+	@Column(name="weekly_pay")
+	private BigDecimal weeklyPay;
+	
+	@Column(name="daily_pay")
+	private BigDecimal dailyPay;
+	
 	public MSDClassFee() {
 	}
 
@@ -72,12 +84,12 @@ public class MSDClassFee extends MSDEntityBase implements Serializable {
 		this.name = name;
 	}
 
-	public MSDCostType getMsdCostType() {
-		return this.msdCostType;
+	public MSDType getMsdType() {
+		return this.msdType;
 	}
 
-	public void setMsdCostType(MSDCostType msdCostType) {
-		this.msdCostType = msdCostType;
+	public void setMsdType(MSDType msdType) {
+		this.msdType = msdType;
 	}
 
 	public byte getIsActive() {
@@ -88,7 +100,39 @@ public class MSDClassFee extends MSDEntityBase implements Serializable {
 		this.isActive = isActive;
 	}
 
+	public BigDecimal getOneTimePay() {
+		return oneTimePay;
+	}
+
+	public void setOneTimePay(BigDecimal oneTimePay) {
+		this.oneTimePay = oneTimePay;
+	}
+
+	public BigDecimal getMonthlyPay() {
+		return monthlyPay;
+	}
+
+	public void setMonthlyPay(BigDecimal monthlyPay) {
+		this.monthlyPay = monthlyPay;
+	}
+
+	public BigDecimal getWeeklyPay() {
+		return weeklyPay;
+	}
+
+	public void setWeeklyPay(BigDecimal weeklyPay) {
+		this.weeklyPay = weeklyPay;
+	}
+
+	public BigDecimal getDailyPay() {
+		return dailyPay;
+	}
+
+	public void setDailyPay(BigDecimal dailyPay) {
+		this.dailyPay = dailyPay;
+	}
+
 	public String toString() {
-		return "ID: " + getId() + " MSDClass ID: " + getMsdClassId() + " Name: " + getName() + " Cost: " + getCost() + " CostType Id: " + getMsdCostType().getId() + "is Active: " + getIsActive();
+		return "ID: " + getId() + " MSDClass ID: " + getMsdClassId() + " Name: " + getName() + " Cost: " + getCost() + " CostType Id: " + getMsdType().getId() + "is Active: " + getIsActive();
 	}
 }

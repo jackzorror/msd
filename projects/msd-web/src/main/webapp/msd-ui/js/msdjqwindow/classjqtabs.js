@@ -617,11 +617,11 @@ function showClassFeeInformation(data) {
 	fidiv.append(cfdiv);
 	var pdiv = $('<div/>').attr({id:'addClassFeePopupWindow'});
 	fidiv.append(pdiv);
-	$('#addClassFeePopupWindow').append('<div >Add Class Fee</div> <div style="height:230px; width:350px;" id="addClassFeediv"></div>');
+	$('#addClassFeePopupWindow').append('<div >Add Class Fee</div> <div style="height:280px; width:350px;" id="addClassFeediv"></div>');
 
     var offset = cfdiv.offset();
     $("#addClassFeePopupWindow").jqxWindow({
-    	width: 350, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
+    	width: 500, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01, theme:getTheme()
     });
 
 	var source = {
@@ -683,13 +683,17 @@ function showClassFeeInformation(data) {
 						$("#addClassFeePopupWindow").jqxWindow('hide');
                     });
                     $('#btnAddFee').on('click', function () {
-						console.log(" add new scheduler ...");
+						console.log(" add new class fee ...");
                         cfdiv.jqxDataTable('unselectRow', 0);
                         
                         var name = $('#txtFeeName').val();
                         var cost = $('#txtCost').val();
                         var type = $('#costType').jqxDropDownList('getSelectedItem').value;
-                        var typename = $('#costType').jqxDropDownList('getSelectedItem').label;
+                        var opay = $('#txtOneTimePay') != null ? $('#txtOneTimePay').val() : 0;
+                        var mpay = $('#txtMonthlyPay') != null ? $('#txtMonthlyPay').val() : 0;
+                        var wpay = $('#txtWeeklyPay') != null ? $('#txtWeeklyPay').val() : 0;
+                        var dpay = $('#txtDailyPay') != null ? $('#txtDailyPay').val() : 0;
+
                         var cid = getCurrentClassInClassTab().id;
                         
                         if (null == name || name.length < 1) {
@@ -702,7 +706,9 @@ function showClassFeeInformation(data) {
                             cfdiv.jqxDataTable('selectRow', 0);
 							$("#addClassFeePopupWindow").jqxWindow('hide');
 
-							var classfee = {"id":0, "msdClassId":getCurrentClassInClassTab().id, "feeName":name, "cost":cost, "feeTypeName":null, "msdCostTypeId":type};
+							var classfee = {"id":0, "msdClassId":getCurrentClassInClassTab().id, 
+								"feeName":name, "cost":cost, "feeTypeName":null, "msdCostTypeId":type, 
+								"oneTimePay":opay, "monthlyPay":mpay, "weeklyPay":wpay, "dailyPay": dpay};
 							ajaxAddNewFee(classfee, addNewFee);
                         }
                     });
@@ -809,14 +815,9 @@ function createAddClassSchedularDiv() {
 
 function createAddClassFeeDiv() {
 	$('#addClassFeediv').empty();
-	
-	if (getCurrentClassInClassTab().typeName == 'Private Class')
-		createAddPrivateClassFeeDiv();
-	else
-		createAddGroupClassFeeDiv();
+	createAddClassFeeDetailDiv();
 }
-
-function createAddPrivateClassFeeDiv() {
+function createAddClassFeeDetailDiv() {
 	var acfdiv = $('#addClassFeediv');
 	
 	var tdiv = $('<div style="float:right; margin-top:10px; border:0px solid;"/>');
@@ -824,24 +825,144 @@ function createAddPrivateClassFeeDiv() {
 	tdiv.append('<label style="margin-top:2px;">Class Fee Name :</label>');
 	var name = $('<input/>').attr({type:'text',id:'txtFeeName'});
 	tdiv.append(name);
-	$('#txtFeeName').jqxInput({placeHolder: "Enter Fee Name", height: 20, width: 180, minLength: 1, theme: getTheme() });
+	name.jqxInput({placeHolder: "Enter Fee Name", height: 20, width: 350, minLength: 1, theme: getTheme() });
 	
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
 	acfdiv.append(tdiv);
-	tdiv.append('<label style="float:left; margin-top:2px;">Private Class Fee:</label>');
+	tdiv.append('<label style="float:left; margin-top:2px;">Type :</label>');
+	var costType = $('<div/>').attr({id:'costType'});
+	tdiv.append(costType);
+	costType.jqxDropDownList({selectedIndex: 1, width: '350', height: '20', theme: getTheme(), source: getAllFeeType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
+
+	$('#addClassFeediv').append('<br/>');
+
+	if (getCurrentClassInClassTab().typeName == 'Private Class') {
+	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+	acfdiv.append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">Class Fee List:</label>');
 	var privateClassFee = $('<div/>').attr({id:'privateClassFee'});
 	tdiv.append(privateClassFee);
-	privateClassFee.jqxDropDownList({selectedIndex: 1, width: '180', height: '20', theme: getTheme(), source: getAllFeeType(), selectedIndex: -1, displayMember: "name", valueMember: "id"});
-
+	var source = {
+		datafields:[
+			{ name: 'id',   type: 'int'}, 
+			{ name: 'feeName',  type: 'string'},
+			{ name: 'cost', type: 'number'}
+		],
+		datatype:'json',
+		localdata:getAllPrivateClassFee()
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source, {
+	    autoBind: true,
+    	beforeLoadComplete: function (records) {
+        	var data = new Array();
+	        // update the loaded records. Dynamically add EmployeeName and EmployeeID fields. 
+    	    for (var i = 0; i < records.length; i++) {
+        	    var employee = records[i];
+            	employee.showItem = "$" + employee.cost + " - " + employee.feeName;
+    	        data.push(employee);
+        	}
+	        return data;
+    	}
+	});
+	privateClassFee.jqxDropDownList({selectedIndex: 1, width: '350', height: '20', theme: getTheme(), source: dataAdapter, selectedIndex: -1, displayMember: "showItem", valueMember: "id"});
+	}
+	
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
 	acfdiv.append(tdiv);
 	tdiv.append('<label style="float:left; margin-top:2px;">Fee :</label>');
 	var cost = $('<div/>').attr({id:'txtCost'});
 	tdiv.append(cost);
-	$('#txtCost').jqxNumberInput({ width: '180px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+	cost.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
-	acfdiv.append('<br/>');
+	if (getCurrentClassInClassTab().typeName == 'Private Class') {
+		var tdiv = $('<div style="float:right; width:500px; margin-top:5px; border:0px solid;"/>');
+		acfdiv.append(tdiv);
+	
+		var mdiv = $('<div style="margin-top: 0px; width: 200px; border:0px solid;" />');
+		var ldiv = $('<div style="margin-top: 0px; width: 150px; border:0px solid;" />');
+		var rdiv = $('<div style="margin-top: 0px; width: 150px; border:0px solid;" />');
+	
+		tdiv.append(mdiv);
+		tdiv.append(rdiv);
+		tdiv.append(ldiv);
 
+		var bsdiv = $('<div style="margin-top: 0px; border:0px solid;" id="paybysemester"> Pay By Semester </div>');
+		ldiv.append(bsdiv);
+		var bmdiv = $('<div style="margin-top: 0px; border:0px solid;" id="paybymonth"> Pay By Month </div>');
+		rdiv.append(bmdiv);
+	
+		tdiv.jqxDockPanel({height: 20});
+		ldiv.attr('dock', 'left');
+		mdiv.attr('dock', 'left');
+		rdiv.attr('dock', 'left');
+
+	    bsdiv.jqxRadioButton({ width: 150, height: 20, checked: true, theme: getTheme()});
+    	bmdiv.jqxRadioButton({ width: 100, height: 20, theme: getTheme()});
+	}
+	
+	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+	acfdiv.append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">One Time Pay :</label>');
+	var oneTimePay = $('<div/>').attr({id:'txtOneTimePay'});
+	tdiv.append(oneTimePay);
+	oneTimePay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+
+	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+	acfdiv.append(tdiv);
+	tdiv.append('<label style="float:left; margin-top:2px;">Monthly Pay :</label>');
+	var monthlyPay = $('<div/>').attr({id:'txtMonthlyPay'});
+	tdiv.append(monthlyPay);
+	monthlyPay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+
+	if (getCurrentClassInClassTab().typeName != 'Private Class') {
+		var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+		acfdiv.append(tdiv);
+		tdiv.append('<label style="float:left; margin-top:2px;">Weekly Pay :</label>');
+		var weeklyPay = $('<div/>').attr({id:'txtWeeklyPay'});
+		tdiv.append(weeklyPay);
+		weeklyPay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+
+		var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+		acfdiv.append(tdiv);
+		tdiv.append('<label style="float:left; margin-top:2px;">Daily Pay :</label>');
+		var dailypay = $('<div/>').attr({id:'txtDailyPay'});
+		tdiv.append(dailypay);
+		dailypay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+
+	} else {
+		privateClassFee.on('change', function (event){     
+		    var args = event.args;
+    		if (args) {
+		    	// index represents the item's index.                      
+	    		var index = args.index;
+		    	var item = args.item;
+	    		// get item's label and value.
+		    	var label = item.label;
+	    		var value = item.value;
+    			$('#txtCost').jqxNumberInput('val', item.originalItem.cost);
+    			$('#txtMonthlyPay').jqxNumberInput('val', item.originalItem.cost);
+			} 
+		});
+    	$('#paybysemester').on('checked', function (event) {
+			monthlyPay.jqxNumberInput({ disabled: true});
+			oneTimePay.jqxNumberInput({ disabled: false});
+    	}); 
+    	$('#paybymonth').on('checked', function (event) {
+			monthlyPay.jqxNumberInput({ disabled: false});
+			oneTimePay.jqxNumberInput({ disabled: true});
+    	}); 
+		$('#paybymonth').jqxRadioButton('check');
+	}
+/*	
+	if (getCurrentClassInClassTab().typeName != 'Private Class') {
+		privateClassFee.jqxDropDownList({disabled: true});
+		cost.jqxNumberInput({ disabled: true});
+	} else {
+		dailypay.jqxNumberInput({ disabled: true});
+		weeklyPay.jqxNumberInput({ disabled: true});
+	}
+*/
+	
 	// action button
 	var atdiv = $('<div style="float:right; margin-top:20px; border:0px solid;" />');
 	acfdiv.append(atdiv);
@@ -853,7 +974,10 @@ function createAddPrivateClassFeeDiv() {
 	$('#btnCancelAddFee').jqxButton({ width: '60', height: 20, theme: getTheme() });
 }
 
-function createAddGroupClassFeeDiv() {
+function creatAddSpecialClassFeeDiv() {
+}
+
+function createAddCampClassFeeDiv() {
 }
 
 function createAddNonClassDateDiv() {
