@@ -50,3 +50,5 @@ INSERT INTO `msd`.`msd_general_fee` (`name`, `cost_type_id`, `is_active`, `cost`
 INSERT INTO `msd`.`msd_general_fee` (`name`, `cost_type_id`, `is_active`, `cost`) VALUES ('1 Hour Two/Three/Four Student', '3', '1', '80.00');
 INSERT INTO `msd`.`msd_general_fee` (`name`, `cost_type_id`, `is_active`, `cost`) VALUES ('0.5 Hour One Student/Assist.', '3', '1', '15.00');
 INSERT INTO `msd`.`msd_general_fee` (`name`, `cost_type_id`, `is_active`, `cost`) VALUES ('1 Hour One Student/Assis.', '3', '1', '30.00');
+
+INSERT INTO `msd`.`msd_general_fee` (`name`, `fee_type_id`, `is_active`, `cost`) VALUES ('General Class Fee', '2', '1', '0');

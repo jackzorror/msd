@@ -40,16 +40,6 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 	@Column(name="msd_student_fee_object_name")
 	private String msdStudentFeeObjectName;
 
-	@Column(name="pay_note")
-	private String payNote;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="pay_time")
-	private Date payTime;
-
-	@Column(name="pay_type")
-	private String payType;
-
 	@Column(name="msd_student_id")
 	private int msdStudentId;
 	
@@ -59,9 +49,6 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 	private BigDecimal fee;
 
 	private int semester;
-	
-	@Column(name="paid_fee")
-	private BigDecimal paidFee;
 	
 	public MSDStudentFee() {
 	}
@@ -114,30 +101,6 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 		this.msdStudentFeeObjectName = msdStudentFeeObjectName;
 	}
 
-	public String getPayNote() {
-		return this.payNote;
-	}
-
-	public void setPayNote(String payNote) {
-		this.payNote = payNote;
-	}
-
-	public Date getPayTime() {
-		return this.payTime;
-	}
-
-	public void setPayTime(Date payTime) {
-		this.payTime = payTime;
-	}
-
-	public String getPayType() {
-		return this.payType;
-	}
-
-	public void setPayType(String payType) {
-		this.payType = payType;
-	}
-
 	public int getMsdStudentId() {
 		return msdStudentId;
 	}
@@ -170,20 +133,11 @@ public class MSDStudentFee extends MSDEntityBase implements Serializable {
 		this.semester = semester;
 	}
 
-	public BigDecimal getPaidFee() {
-		return paidFee;
-	}
-
-	public void setPaidFee(BigDecimal paidFee) {
-		this.paidFee = paidFee;
-	}
-
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("StudentFee--> id: %d Student id: %d Object Name: %s Object Id: %d");
-		sb.append(" IsActive: %x IsPaid: %x IsWaiver: %x PayTime: %s PayType: %s PayNot: %s FeeNot: %s Fee: %f Semester: %d PaidFee: %f");
+		sb.append(" IsActive: %x IsPaid: %x IsWaiver: %x FeeNot: %s Fee: %f Semester: %d");
 		return String.format(sb.toString(), id.intValue(), msdStudentId, msdStudentFeeObjectName, msdStudentFeeObjectId,
-				isActive, isPaid, isWaiver, null != payTime ? new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(payTime) : "n/a", 
-				payType, payNote, feeNote, fee, semester, paidFee);
+				isActive, isPaid, isWaiver, feeNote, fee, semester);
 	}
 }

@@ -1,6 +1,5 @@
 package com.morningstardance.web.controller;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.morningstardance.app.msdstudentfee.MSDPayStudentFeeDto;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeDetailDto;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeDto;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
@@ -95,6 +93,18 @@ public class MSDStudentFeeController {
 		return responseDto;
 	}
     
+    @RequestMapping(params={"studentfeeid", "feeid", "fee"}, method=RequestMethod.POST, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto updateStudentFeeForGeneralClassFeeDfltVer(Long studentfeeid, Long feeid, Double fee) {
+    	return updateStudentFeeForGeneralClassFeeVer1(studentfeeid, feeid, fee);
+    }
+
+    @RequestMapping(params={"studentfeeid", "feeid", "fee"}, method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto updateStudentFeeForGeneralClassFeeVer1(Long studentfeeid, Long feeid, Double fee) {
+		String newDto = msdStudentFeeFacade.updateStudentFeeForGeneralClassFee(studentfeeid, feeid, fee.doubleValue());
+		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
+		return responseDto; 
+	}
+
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(method=RequestMethod.PUT, headers="!X-Api-Service-Version")
     public @ResponseBody ResponseDto payStudentFeeDfltVer(@RequestBody List<LinkedHashMap> dtos) {

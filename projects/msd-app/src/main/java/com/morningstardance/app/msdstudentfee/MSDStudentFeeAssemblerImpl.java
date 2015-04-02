@@ -54,9 +54,6 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setMsdStudentFeeObjectId(sfee.getMsdStudentFeeObjectId());
 		dto.setMsdStudentFeeObjectName(sfee.getMsdStudentFeeObjectName());
 		dto.setMsdStudentId(sfee.getMsdStudentId());
-		dto.setPayNote(sfee.getPayNote());
-		dto.setPayTime(sfee.getPayTime());
-		dto.setPayType(sfee.getPayType());
 		dto.setFeeNote(sfee.getFeeNote());
 		dto.setFee(sfee.getFee().doubleValue());
 		
@@ -82,11 +79,8 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setId(sfee.getId().intValue());
 		dto.setIsPaid(sfee.getIsPaid() == (byte) 1);
 		dto.setIsWaiver(sfee.getIsWaiver() == (byte) 1);
-		dto.setPayTime(sfee.getPayTime());
-		dto.setPayType(sfee.getPayType());
 		dto.setFeeNote(sfee.getFeeNote());
 		dto.setFee(sfee.getFee().doubleValue());
-		dto.setPaidFee(null == sfee.getPaidFee() ? 0 : sfee.getPaidFee().doubleValue());
 		getStudentFeeGroupAndName(dto, sfee);
 		
 		return dto;
@@ -103,9 +97,10 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 			MSDClassFee cfee = msdClassFeeJPARepository.findOne(new Long(sfee.getMsdStudentFeeObjectId()));
 			if (null != cfee && cfee.getIsActive() == (byte) 1) {
 				dto.setFeeName(cfee.getName());
-				dto.setCost(cfee.getCost().floatValue());
 			}
-				
+			if (null != cfee && null != cfee.getMsdType()) {
+				dto.setFeeTypeName(cfee.getMsdType().getName());
+			}
 			
 			MSDClass c = msdClassJPARepository.findOne(new Long(cfee.getMsdClassId()));
 			if (null != c && c.getIsActive() == (byte) 1) 
@@ -114,7 +109,7 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 			MSDCompetitionFee cfee = msdCompetitionFeeJPARepository.findOne(new Long(sfee.getMsdStudentFeeObjectId()));
 			if (null != cfee && cfee.getIsActive() == (byte) 1) {
 				dto.setFeeName(cfee.getName());
-				dto.setCost(cfee.getCost().floatValue());
+				// there is problem for msdtype and msdcosttype in here
 			}
 			MSDCompetition c = msdCompetitionJPARepository.findOne(new Long(cfee.getMsdCompetitionId()));
 			if (null != c && c.getIsActive() == (byte) 1) 
@@ -123,8 +118,8 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 			MSDGeneralFee gfee = msdGeneralFeeJPARepositoryt.findOne(new Long(sfee.getMsdStudentFeeObjectId()));
 			if (null != gfee && gfee.getIsActive() == (byte) 1) {
 				dto.setFeeName(gfee.getName());
-				dto.setCost(gfee.getCost().floatValue());
 				dto.setFeeObjectName("Gernal Student Fee");
+				dto.setFeeTypeName(gfee.getMsdFeeType().getName());
 			}
 		}
 	}
@@ -150,12 +145,8 @@ public class MSDStudentFeeAssemblerImpl implements MSDStudentFeeAssembler {
 		dto.setId(sfee.getId().intValue());
 		dto.setIsPaid(sfee.getIsPaid() == (byte) 1);
 		dto.setIsWaiver(sfee.getIsWaiver() == (byte) 1);
-		dto.setPayTime(sfee.getPayTime());
-		dto.setPayNote(sfee.getPayNote());
-		dto.setPayType(sfee.getPayType());
 		dto.setFeeNote(sfee.getFeeNote());
 		dto.setFee(sfee.getFee().doubleValue());
-		dto.setPaidFee(null == sfee.getPaidFee() ? 0 : sfee.getPaidFee().doubleValue());
 		getStudentFeeGroupAndName(dto, sfee);
 		
 		return dto;

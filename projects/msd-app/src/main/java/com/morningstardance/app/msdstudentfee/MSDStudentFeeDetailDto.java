@@ -1,33 +1,19 @@
 package com.morningstardance.app.msdstudentfee;
 
+import java.util.List;
+
+import com.morningstardance.app.msdstudentfeepayment.MSDStudentFeePaymentDto;
+
 public class MSDStudentFeeDetailDto extends MSDStudentFeeSummaryDto {
 
-	private String payNote;
-	private String payType;
-	private String feeNote;
+	private List<MSDStudentFeePaymentDto> msdStudentFeePaymentDtoList;
 
-	public String getPayNote() {
-		return payNote;
+	public List<MSDStudentFeePaymentDto> getMsdStudentFeePaymentDtoList() {
+		return msdStudentFeePaymentDtoList;
 	}
 
-	public void setPayNote(String payNote) {
-		this.payNote = payNote;
+	public void setMsdStudentFeePaymentDtoList(
+			List<MSDStudentFeePaymentDto> msdStudentFeePaymentDtoList) {
+		this.msdStudentFeePaymentDtoList = msdStudentFeePaymentDtoList;
 	}
-
-	public String getPayType() {
-		return payType;
-	}
-
-	public void setPayType(String payType) {
-		this.payType = payType;
-	}
-
-	public String getFeeNote() {
-		return feeNote;
-	}
-
-	public void setFeeNote(String feeNote) {
-		this.feeNote = feeNote;
-	}
-
 }

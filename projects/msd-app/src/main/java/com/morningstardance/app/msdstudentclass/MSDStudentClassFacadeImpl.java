@@ -103,6 +103,9 @@ public class MSDStudentClassFacadeImpl implements MSDStudentClassFacade {
 		if (null == entity) {
 			entity = msdStudentClassJPARepository.save(studentClass);
 			msdOperationService.msdStudentClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid, "DATABASE");
+
+			msdStudentFeeFacade.addClassFeeToStudentFeeByStudentIdAndStudentClassId(sid, entity.getId());
+
 		} else {
 			String msg = "Student already register to this Class";
 			msdOperationService.msdStudentClassOperation(sid, cid, "Register Student : " + sid + " to Class : " + cid + " reason : " + msg +

@@ -24,3 +24,5 @@ ALTER TABLE `msd`.`msd_student_fee` ADD COLUMN `fee` DECIMAL(8,2) NOT NULL  AFTE
 ALTER TABLE `msd`.`msd_student_fee` ADD COLUMN `paid_fee` DECIMAL(8,2) NULL  AFTER `fee_note` ;
 
 ALTER TABLE `msd`.`msd_student_fee` ADD COLUMN `semester` INT(11) NOT NULL  AFTER `paid_fee` ;
+
+ALTER TABLE `msd`.`msd_student_fee` DROP COLUMN `paid_fee` , DROP COLUMN `pay_note` , DROP COLUMN `pay_type` , DROP COLUMN `pay_time` ;

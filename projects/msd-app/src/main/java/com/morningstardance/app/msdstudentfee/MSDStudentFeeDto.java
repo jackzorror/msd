@@ -10,12 +10,13 @@ public class MSDStudentFeeDto {
 	private boolean isWaiver;
 	private int msdStudentFeeObjectId;
 	private String msdStudentFeeObjectName;
-	private String payNote;
-	private Date payTime;
-	private String payType;
+//	private String payNote;
+//	private Date payTime;
+//	private String payType;
 	private int msdStudentId;
 	private String feeNote;
 	private double fee;
+	private int semesterId;
 	
 	public int getId() {
 		return id;
@@ -53,6 +54,7 @@ public class MSDStudentFeeDto {
 	public void setMsdStudentFeeObjectName(String msdStudentFeeObjectName) {
 		this.msdStudentFeeObjectName = msdStudentFeeObjectName;
 	}
+	/*
 	public String getPayNote() {
 		return payNote;
 	}
@@ -71,6 +73,7 @@ public class MSDStudentFeeDto {
 	public void setPayType(String payType) {
 		this.payType = payType;
 	}
+	*/
 	public int getMsdStudentId() {
 		return msdStudentId;
 	}
@@ -88,6 +91,12 @@ public class MSDStudentFeeDto {
 	}
 	public void setFee(double fee) {
 		this.fee = fee;
+	}
+	public int getSemesterId() {
+		return semesterId;
+	}
+	public void setSemesterId(int semesterId) {
+		this.semesterId = semesterId;
 	}
 	
 }

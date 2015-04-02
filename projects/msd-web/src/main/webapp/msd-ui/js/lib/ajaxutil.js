@@ -652,6 +652,18 @@ function ajaxAddGeneralFeeToStudentFee(sid, fid, fnote, tcost, semesterid, fName
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxUpdateGeneralClassFeeToStudentFee(sfid, feeid, fee, fName) {
+	var ajaxcall = $.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentfee",
+		data: {'studentfeeid':sfid, 'feeid':feeid, 'fee':fee},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxUpdateGeneralFeeNameByID(fid, fnote, fName) {
 	var ajaxcall = $.ajax({
 		type: "POST",
@@ -871,6 +883,19 @@ function ajaxCheckinClassByStudentIdListAndClassId (cid, checkintime, sidList, f
 		url: "../msd-app/msdstudentcheckin",
 		dataType: "json",
 		data:{"msdclassid":cid, "checkintime":checkintime, "msdstudentidlist":sidList},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxGetStudentFeePaymentInfo (sfid, fName) {
+	var ajaxcall =  $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdstudentfeepayment",
+		dataType: "json",
+		contentType: "application/json",
+		data:{studentfeeid:sfid},
 	});
 
 	ajaxcall.done(fName);

@@ -1,7 +1,5 @@
 package com.morningstardance.app.msdstudentfee;
 
-import java.util.Date;
-
 public class MSDStudentFeeSummaryDto {
 
 	private int id;
@@ -10,12 +8,10 @@ public class MSDStudentFeeSummaryDto {
 	private boolean isActive;
 	private String feeObjectName;
 	private String feeName;
-	private Date payTime;
-	private float cost;
 	private String feeNote;
-	private String payType;
 	private double fee;
-	private double paidFee;
+	private double totalPaidFee;
+	private String feeTypeName;
 	
 	public int getId() {
 		return id;
@@ -41,18 +37,6 @@ public class MSDStudentFeeSummaryDto {
 	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-	public Date getPayTime() {
-		return payTime;
-	}
-	public void setPayTime(Date payTime) {
-		this.payTime = payTime;
-	}
-	public float getCost() {
-		return cost;
-	}
-	public void setCost(float cost) {
-		this.cost = cost;
-	}
 	public String getFeeObjectName() {
 		return feeObjectName;
 	}
@@ -71,22 +55,22 @@ public class MSDStudentFeeSummaryDto {
 	public void setFeeNote(String feeNote) {
 		this.feeNote = feeNote;
 	}
-	public String getPayType() {
-		return payType;
-	}
-	public void setPayType(String payType) {
-		this.payType = payType;
-	}
 	public double getFee() {
 		return fee;
 	}
 	public void setFee(double fee) {
 		this.fee = fee;
 	}
-	public double getPaidFee() {
-		return paidFee;
+	public double getTotalPaidFee() {
+		return totalPaidFee;
 	}
-	public void setPaidFee(double paidFee) {
-		this.paidFee = paidFee;
+	public void setTotalPaidFee(double totalPaidFee) {
+		this.totalPaidFee = totalPaidFee;
+	}
+	public String getFeeTypeName() {
+		return feeTypeName;
+	}
+	public void setFeeTypeName(String feeTypeName) {
+		this.feeTypeName = feeTypeName;
 	}
 }

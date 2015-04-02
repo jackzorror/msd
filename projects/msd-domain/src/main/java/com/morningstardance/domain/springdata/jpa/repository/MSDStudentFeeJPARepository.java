@@ -21,4 +21,7 @@ public interface MSDStudentFeeJPARepository extends JpaRepository<MSDStudentFee,
 	List<MSDStudentFee> findByMsdStudentIdAndIsActive(int msdStudentId, byte isActive);
 
 	List<MSDStudentFee> findByMsdStudentIdAndSemesterAndIsActive(int msdStudentId, int semester, byte isActive);
+	
+//	@Query("select count(*) from MSDStudentFee msf join MSDGeneralFee mgf on msf.msdStudentFeeObjectId = mgf.id where msf.msdStudentFeeObjectName = 'MSDGeneralFee' and msf.isActive = 1 and msf.msdStudentId = :msdstudentid and msf.semester = :semesterid")
+//	public int getActiveGeneralClassFeeCountByStudentIdAndSemesterId(@Param("msdstudentid") Integer msdstudentid, @Param("semesterid") Integer semesterid);
 }

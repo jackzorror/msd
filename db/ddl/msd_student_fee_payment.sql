@@ -14,3 +14,7 @@ CREATE  TABLE IF NOT EXISTS `msd`.`msd_student_fee_payment` (
     REFERENCES `msd`.`msd_student_fee` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+ALTER TABLE `msd`.`msd_student_fee_payment` ADD COLUMN `fee_description` VARCHAR(512) NULL  AFTER `pay_fee` ;
+ALTER TABLE `msd`.`msd_student_fee_payment` ADD COLUMN `fee` DECIMAL(8,2) NULL  AFTER `fee_description` ;
+

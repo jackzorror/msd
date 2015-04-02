@@ -14,6 +14,7 @@ function showStudentRegisteredClassesInfo() {
 	smp.append(surcdiv);
 	
 	showStudentRegisteredClassesTitlePanel();
+    setCurrentSemesterForStudentClassId(getCurrentSemester().id);
 	showStudentRegisteredClassesInformationPanel(getCurrentSemester().id);
 	showStudentUnRegisteredClassesInformationPanel(getCurrentSemester().id);
 }
@@ -320,7 +321,7 @@ function studentRegisterClasses (response, request, settings) {
 		alert(" Can't register class ... ");
 	} else if (201 == response.code) {
 		var data = $.parseJSON(response.result);
-		$('#studentMainPanel').empty();
+//		$('#studentMainPanel').empty();
 	} else {
 		alert("error to register student ... ");
 	}

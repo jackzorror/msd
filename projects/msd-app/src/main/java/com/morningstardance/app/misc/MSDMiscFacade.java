@@ -3,8 +3,6 @@ package com.morningstardance.app.misc;
 import java.util.Date;
 import java.util.List;
 
-import com.morningstardance.domain.entity.MSDClassNonClassDate;
-
 public interface MSDMiscFacade {
 
 	List<MSDTypeDto> getCostType();
@@ -32,5 +30,7 @@ public interface MSDMiscFacade {
 	MSDSemesterDto addSemester(String name, Date startDate);
 
 	MSDTypeDto addMSDType(MSDTypeDto type);
+	
+	int getClassTypeIdByName(String name);
 
 }

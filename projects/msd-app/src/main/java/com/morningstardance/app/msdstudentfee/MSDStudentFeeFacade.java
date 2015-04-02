@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MSDStudentFeeFacade {
 
-//	void addClassFeeToStudentFeeByStudentIdAndStudentClassId(Long sid, Long cid);
+	void addClassFeeToStudentFeeByStudentIdAndStudentClassId(Long sid, Long cid);
 
 	void addCompetitionFeeToStudentFeeByStudentIdAndStudentCompetitionId(Long msdStudentId, Long id);
 
@@ -41,4 +41,7 @@ public interface MSDStudentFeeFacade {
 			Long studentid, Long semesterid);
 
 	String payStudentFees(List<LinkedHashMap> dtos);
+
+	String updateStudentFeeForGeneralClassFee(Long studentfeeid, Long feeid,
+			double fee);
 }

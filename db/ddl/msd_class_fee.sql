@@ -18,4 +18,10 @@ ALTER TABLE `msd`.`msd_class_fee` CHANGE COLUMN `cost` `cost` DECIMAL(8,2) NOT N
 ALTER TABLE `msd`.`msd_class_fee` CHANGE COLUMN `name` `name` VARCHAR(256) NOT NULL  ;
 ALTER TABLE `msd`.`msd_class_fee` ADD COLUMN `one_time_pay` DECIMAL(8,2) NULL  AFTER `is_active` , ADD COLUMN `monthly_pay` DECIMAL(8,2) NULL  AFTER `one_time_pay` , ADD COLUMN `weekly_pay` DECIMAL(8,2) NULL  AFTER `monthly_pay` , ADD COLUMN `daily_pay` DECIMAL(8,2) NULL  AFTER `weekly_pay` ;
 
-
+ALTER TABLE `msd`.`msd_class_fee` DROP FOREIGN KEY `fk_class_cost` ;
+ALTER TABLE `msd`.`msd_class_fee` 
+  ADD CONSTRAINT `fk_class_fee_type`
+  FOREIGN KEY (`cost_type_id` )
+  REFERENCES `msd`.`msd_type` (`id` )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;

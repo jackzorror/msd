@@ -23,9 +23,11 @@ import com.morningstardance.domain.entity.MSDStudent;
 import com.morningstardance.domain.entity.MSDStudentClass;
 import com.morningstardance.domain.entity.MSDStudentCompetition;
 import com.morningstardance.domain.entity.MSDStudentFee;
+import com.morningstardance.domain.repository.MSDStudentFeeRepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassFeeJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDCompetitionFeeJPARepository;
+import com.morningstardance.domain.springdata.jpa.repository.MSDGeneralFeeJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentClassJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentCompetitionJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDStudentFeeJPARepository;
@@ -38,7 +40,13 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 	MSDStudentFeeJPARepository msdStudentFeeJPARepository;
 	
 	@Resource
+	MSDStudentFeeRepository msdStudentFeeRepository;
+	
+	@Resource
 	MSDClassFeeJPARepository msdClassFeeJPARepository;
+	
+	@Resource
+	MSDGeneralFeeJPARepository msdGeneralFeeJPARepository;
 	
 	@Resource
 	private MSDOperationService msdOperationService;
@@ -72,6 +80,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 	 * the active class fee to this student fee table
 	 * 
 	 * 2015/01/06 remove class fee from system, this function will not be used
+	 * 2015/03/05 re add class fee to system
 	 */
 	public void addClassFeeToStudentFeeByStudentIdAndStudentClassId(Long sid, Long scid) {
 		if (null == sid || null == scid) return;
@@ -81,6 +90,16 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		
 		Long cid = new Long(sc.getMsdClassId());
 		MSDClass c = msdClassJPARepository.findOne(cid);
+		
+		if (c.getClassTypeId() == msdMiscFacade.getClassTypeIdByName("General Class")) {
+			if(msdStudentFeeRepository.getActiveGeneralClassFeeCountByStudentIdAndSemesterId(new Integer(sid.intValue()), new Integer(c.getSemesterId())) == 0) {
+				List<MSDGeneralFee> gfees = msdGeneralFeeJPARepository.findByName("General Class Fee");
+				if (null != gfees && gfees.size() > 0) {
+					MSDGeneralFee gf = gfees.get(0);
+					addFeeToStudentFeeByStudentIdAndObjectFeeIdAndObjectFeeName(sid, gf.getId(), MSDGeneralFee.class.getSimpleName(), "Create By Register to General Class : " + c.getName(), gf.getCost().doubleValue(), new Long(c.getSemesterId()));
+				}
+			}
+		}
 		
 		List<MSDClassFee> cfees = msdClassFeeJPARepository.findByMsdClassIdAndIsActive(cid.intValue(), (byte) 1);
 		for (MSDClassFee cfee : cfees) {
@@ -358,11 +377,7 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 			sfee.setIsWaiver((byte) 1);
 		} else {
 			sfee.setIsPaid((byte) 1);
-			sfee.setPayType(paytype);
 		}
-		sfee.setPayNote(paynote);
-		sfee.setPayTime(paytime);
-		sfee.setPaidFee(paidfee);
 		msdStudentFeeJPARepository.saveAndFlush(sfee);
 		
 		msdOperationService.msdStudentOperation(msdstudentid, "Paid Student Fee", sfee.toString(), null, "DATABASE");
@@ -460,5 +475,26 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		dto.setStudentFeeId(new Long(((Integer)map.get("studentFeeId")).intValue()));
 		
 		return dto;
+	}
+
+	@Override
+	public String updateStudentFeeForGeneralClassFee(Long studentfeeid,
+			Long feeid, double fee) {
+		if (null == studentfeeid || studentfeeid.intValue() == 0 || 
+			null == feeid || feeid.intValue() == 0 ||
+			fee == 0)
+			return null;
+		
+		MSDGeneralFee gf = msdGeneralFeeJPARepository.findOne(feeid);
+		if (null == gf) return null;
+		
+		MSDStudentFee sf = msdStudentFeeJPARepository.findOne(studentfeeid);
+		if (null == sf) return null;
+		
+		sf.setMsdStudentFeeObjectId(gf.getId().intValue());
+		sf.setFee(new BigDecimal(fee));
+		
+		msdStudentFeeJPARepository.saveAndFlush(sf);
+		return "Successfully update student fee for general class";
 	}
 }

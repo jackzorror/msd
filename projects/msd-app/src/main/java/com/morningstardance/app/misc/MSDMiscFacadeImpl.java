@@ -187,4 +187,12 @@ public class MSDMiscFacadeImpl implements MSDMiscFacade {
 		type.setId(t.getId().intValue());
 		return type;
 	}
+
+	@Override
+	public int getClassTypeIdByName(String name) {
+		List<MSDType> t = msdTypeJPARepository.findByName(name);
+		if (null != t && t.size() > 0)
+			return t.get(0).getId().intValue();
+		return 0;
+	}
 }
