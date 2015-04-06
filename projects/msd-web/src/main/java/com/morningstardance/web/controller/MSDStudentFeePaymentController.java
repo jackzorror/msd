@@ -5,10 +5,12 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.morningstardance.app.msdstudentfee.MSDStudentFeePayDto;
 import com.morningstardance.app.msdstudentfeepayment.MSDStudentFeePaymentDto;
 import com.morningstardance.app.msdstudentfeepayment.MSDStudentFeePaymentFacade;
 import com.morningstardance.web.ResponseDto;
@@ -33,5 +35,17 @@ public class MSDStudentFeePaymentController {
 		
 		return responseDto;
 	}
+	
+	@RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version")
+    public @ResponseBody ResponseDto addStudentFeePaymentByDtoDfltVer(@RequestBody MSDStudentFeePaymentDto msdStudentFeePaymentDto) {
+    	return addStudentFeePaymentByDtoVer1(msdStudentFeePaymentDto);
+    }
 
+    @RequestMapping(method=RequestMethod.POST, headers="!X-Api-Service-Version=1.0")
+	public @ResponseBody ResponseDto addStudentFeePaymentByDtoVer1(@RequestBody MSDStudentFeePaymentDto msdStudentFeePaymentDto) {
+    	MSDStudentFeePaymentDto newDto = msdStudentFeePaymentFacade.addStudentFeePaymentByDto(msdStudentFeePaymentDto);
+		ResponseDto responseDto = ResponseDto.createResponseDto(newDto, "POST", "OBJECT");
+		return responseDto;
+	}
+    
 }

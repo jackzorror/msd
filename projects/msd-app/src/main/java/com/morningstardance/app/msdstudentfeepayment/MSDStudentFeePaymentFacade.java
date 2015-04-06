@@ -7,4 +7,7 @@ public interface MSDStudentFeePaymentFacade {
 	List<MSDStudentFeePaymentDto> getStudentFeePaymentByStudentFeeId(
 			Long studentfeeid);
 
+	MSDStudentFeePaymentDto addStudentFeePaymentByDto(
+			MSDStudentFeePaymentDto msdStudentFeePaymentDto);
+
 }

@@ -10,4 +10,6 @@ public interface MSDStudentFeePaymentAssembler {
 			List<MSDStudentFeePayment> sfps);
 
 	MSDStudentFeePaymentDto createDtoFromEntity(MSDStudentFeePayment entity);
+
+	MSDStudentFeePayment createEntityFromDto(MSDStudentFeePaymentDto dto);
 }

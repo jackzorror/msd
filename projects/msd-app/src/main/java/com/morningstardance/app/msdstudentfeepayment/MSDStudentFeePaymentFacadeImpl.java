@@ -39,4 +39,19 @@ public class MSDStudentFeePaymentFacadeImpl implements
 		return dtos;
 	}
 
+	@Override
+	public MSDStudentFeePaymentDto addStudentFeePaymentByDto(
+			MSDStudentFeePaymentDto dto) {
+		if (null == dto) return null;
+		
+		MSDStudentFeePayment entity = msdStudentFeePaymentAssembler.createEntityFromDto(dto);
+		
+		if (null != entity)
+			msdStudentFeePaymentJPARepository.saveAndFlush(entity);
+		
+		MSDStudentFeePaymentDto newDto = msdStudentFeePaymentAssembler.createDtoFromEntity(entity);
+		
+		return newDto;
+	}
+
 }
