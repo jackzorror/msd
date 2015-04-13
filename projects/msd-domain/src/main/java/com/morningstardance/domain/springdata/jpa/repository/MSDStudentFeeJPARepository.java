@@ -3,6 +3,7 @@ package com.morningstardance.domain.springdata.jpa.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.morningstardance.domain.entity.MSDStudentFee;
 
@@ -24,4 +25,6 @@ public interface MSDStudentFeeJPARepository extends JpaRepository<MSDStudentFee,
 	
 //	@Query("select count(*) from MSDStudentFee msf join MSDGeneralFee mgf on msf.msdStudentFeeObjectId = mgf.id where msf.msdStudentFeeObjectName = 'MSDGeneralFee' and msf.isActive = 1 and msf.msdStudentId = :msdstudentid and msf.semester = :semesterid")
 //	public int getActiveGeneralClassFeeCountByStudentIdAndSemesterId(@Param("msdstudentid") Integer msdstudentid, @Param("semesterid") Integer semesterid);
+
+	List<MSDStudentFee> findByMsdStudentIdAndSemesterAndIsActiveOrderByIsPaidAscIdDesc(int msdStudentId, int semester, byte isActive);
 }

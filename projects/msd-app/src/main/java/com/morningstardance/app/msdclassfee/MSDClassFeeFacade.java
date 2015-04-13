@@ -13,7 +13,7 @@ public interface MSDClassFeeFacade {
 
 	void addClassFee(Long id, Long msdClassId, String name, Long msdCostTypeId,
 			float cost, float oneTimePay, float monthlyPay, float weeklyPay,
-			float dailyPay);
+			float dailyPay, float timesPay);
 
 	void deleteClassFeeById(Long msdClassFeeId);
 

@@ -693,6 +693,7 @@ function showClassFeeInformation(data) {
                         var mpay = $('#txtMonthlyPay') != null ? $('#txtMonthlyPay').val() : 0;
                         var wpay = $('#txtWeeklyPay') != null ? $('#txtWeeklyPay').val() : 0;
                         var dpay = $('#txtDailyPay') != null ? $('#txtDailyPay').val() : 0;
+                        var tpay = $('#txtTimesPay') != null ? $('#txtTimesPay').val() : 0;
 
                         var cid = getCurrentClassInClassTab().id;
                         
@@ -708,7 +709,7 @@ function showClassFeeInformation(data) {
 
 							var classfee = {"id":0, "msdClassId":getCurrentClassInClassTab().id, 
 								"feeName":name, "cost":cost, "feeTypeName":null, "msdCostTypeId":type, 
-								"oneTimePay":opay, "monthlyPay":mpay, "weeklyPay":wpay, "dailyPay": dpay};
+								"oneTimePay":opay, "monthlyPay":mpay, "weeklyPay":wpay, "dailyPay": dpay, "timesPay":tpay};
 							ajaxAddNewFee(classfee, addNewFee);
                         }
                     });
@@ -837,34 +838,34 @@ function createAddClassFeeDetailDiv() {
 	$('#addClassFeediv').append('<br/>');
 
 	if (getCurrentClassInClassTab().typeName == 'Private Class') {
-	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
-	acfdiv.append(tdiv);
-	tdiv.append('<label style="float:left; margin-top:2px;">Class Fee List:</label>');
-	var privateClassFee = $('<div/>').attr({id:'privateClassFee'});
-	tdiv.append(privateClassFee);
-	var source = {
-		datafields:[
-			{ name: 'id',   type: 'int'}, 
-			{ name: 'feeName',  type: 'string'},
-			{ name: 'cost', type: 'number'}
-		],
-		datatype:'json',
-		localdata:getAllPrivateClassFee()
-	}
-	var dataAdapter = new $.jqx.dataAdapter(source, {
-	    autoBind: true,
-    	beforeLoadComplete: function (records) {
-        	var data = new Array();
-	        // update the loaded records. Dynamically add EmployeeName and EmployeeID fields. 
-    	    for (var i = 0; i < records.length; i++) {
-        	    var employee = records[i];
-            	employee.showItem = "$" + employee.cost + " - " + employee.feeName;
-    	        data.push(employee);
-        	}
-	        return data;
-    	}
-	});
-	privateClassFee.jqxDropDownList({selectedIndex: 1, width: '350', height: '20', theme: getTheme(), source: dataAdapter, selectedIndex: -1, displayMember: "showItem", valueMember: "id"});
+		var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+		acfdiv.append(tdiv);
+		tdiv.append('<label style="float:left; margin-top:2px;">Class Fee List:</label>');
+		var privateClassFee = $('<div/>').attr({id:'privateClassFee'});
+		tdiv.append(privateClassFee);
+		var source = {
+			datafields:[
+				{ name: 'id',   type: 'int'}, 
+				{ name: 'feeName',  type: 'string'},
+				{ name: 'cost', type: 'number'}
+			],
+			datatype:'json',
+			localdata:getAllPrivateClassFee()
+		}
+		var dataAdapter = new $.jqx.dataAdapter(source, {
+	    	autoBind: true,
+	    	beforeLoadComplete: function (records) {
+    	    	var data = new Array();
+	    	    // update the loaded records. Dynamically add EmployeeName and EmployeeID fields. 
+    	    	for (var i = 0; i < records.length; i++) {
+        	    	var employee = records[i];
+	            	employee.showItem = "$" + employee.cost + " - " + employee.feeName;
+    		        data.push(employee);
+        		}
+	        	return data;
+	    	}
+		});
+		privateClassFee.jqxDropDownList({selectedIndex: 1, width: '350', height: '20', theme: getTheme(), source: dataAdapter, selectedIndex: -1, displayMember: "showItem", valueMember: "id"});
 	}
 	
 	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
@@ -907,14 +908,14 @@ function createAddClassFeeDetailDiv() {
 	tdiv.append(oneTimePay);
 	oneTimePay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
-	var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
-	acfdiv.append(tdiv);
-	tdiv.append('<label style="float:left; margin-top:2px;">Monthly Pay :</label>');
-	var monthlyPay = $('<div/>').attr({id:'txtMonthlyPay'});
-	tdiv.append(monthlyPay);
-	monthlyPay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
-
 	if (getCurrentClassInClassTab().typeName != 'Private Class') {
+		var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+		acfdiv.append(tdiv);
+		tdiv.append('<label style="float:left; margin-top:2px;">Monthly Pay :</label>');
+		var monthlyPay = $('<div/>').attr({id:'txtMonthlyPay'});
+		tdiv.append(monthlyPay);
+		monthlyPay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+
 		var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
 		acfdiv.append(tdiv);
 		tdiv.append('<label style="float:left; margin-top:2px;">Weekly Pay :</label>');
@@ -930,6 +931,13 @@ function createAddClassFeeDetailDiv() {
 		dailypay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
 
 	} else {
+		var tdiv = $('<div style="float:right; margin-top:5px; border:0px solid;"/>');
+		acfdiv.append(tdiv);
+		tdiv.append('<label style="float:left; margin-top:2px;">Times Pay :</label>');
+		var timesPay = $('<div/>').attr({id:'txtTimesPay'});
+		tdiv.append(timesPay);
+		timesPay.jqxNumberInput({ width: '350px', height: '20px', min: 0, max: 9999, digits:4, symbol: '$', theme: getTheme()});
+
 		privateClassFee.on('change', function (event){     
 		    var args = event.args;
     		if (args) {
@@ -940,16 +948,18 @@ function createAddClassFeeDetailDiv() {
 		    	var label = item.label;
 	    		var value = item.value;
     			$('#txtCost').jqxNumberInput('val', item.originalItem.cost);
-    			$('#txtMonthlyPay').jqxNumberInput('val', item.originalItem.cost);
+    			$('#txtTimesPay').jqxNumberInput('val', item.originalItem.cost);
 			} 
 		});
     	$('#paybysemester').on('checked', function (event) {
-			monthlyPay.jqxNumberInput({ disabled: true});
+			timesPay.jqxNumberInput({ disabled: true});
 			oneTimePay.jqxNumberInput({ disabled: false});
+			$('#txtTimesPay').jqxNumberInput('val', 0);
     	}); 
     	$('#paybymonth').on('checked', function (event) {
-			monthlyPay.jqxNumberInput({ disabled: false});
+			timesPay.jqxNumberInput({ disabled: false});
 			oneTimePay.jqxNumberInput({ disabled: true});
+			$('#txtTimesPay').jqxNumberInput('val', $('#txtCost').val());
     	}); 
 		$('#paybymonth').jqxRadioButton('check');
 	}

@@ -13,6 +13,7 @@ public class MSDClassFeeDto {
 	private float monthlyPay;
 	private float weeklyPay;
 	private float dailyPay;
+	private float timesPay;
 	
 	public int getId() {
 		return id;
@@ -73,5 +74,11 @@ public class MSDClassFeeDto {
 	}
 	public void setDailyPay(float dailyPay) {
 		this.dailyPay = dailyPay;
+	}
+	public float getTimesPay() {
+		return timesPay;
+	}
+	public void setTimesPay(float timesPay) {
+		this.timesPay = timesPay;
 	}
 }

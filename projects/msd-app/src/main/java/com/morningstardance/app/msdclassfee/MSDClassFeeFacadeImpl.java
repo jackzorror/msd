@@ -11,10 +11,8 @@ import org.springframework.stereotype.Service;
 import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.app.msdstudentfee.MSDStudentFeeFacade;
 import com.morningstardance.domain.entity.MSDClassFee;
-import com.morningstardance.domain.entity.MSDCostType;
 import com.morningstardance.domain.entity.MSDType;
 import com.morningstardance.domain.springdata.jpa.repository.MSDClassFeeJPARepository;
-import com.morningstardance.domain.springdata.jpa.repository.MSDCostTypeJPARepository;
 import com.morningstardance.domain.springdata.jpa.repository.MSDTypeJPARepository;
 
 @Service("msdClassFeeFacade")
@@ -81,7 +79,7 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 		msdOperationService.msdClassOperation(msdClassId, "Add Class Fee", entity.toString(), null, "DATABASE");
 	}
 
-	public void addClassFee(Long id, Long msdClassId, String name, Long msdCostTypeId, float cost, float oneTimePay, float monthlyPay, float weeklyPay, float dailyPay) {
+	public void addClassFee(Long id, Long msdClassId, String name, Long msdCostTypeId, float cost, float oneTimePay, float monthlyPay, float weeklyPay, float dailyPay, float timesPay) {
 		MSDClassFee entity = null;
 		MSDType type = msdTypeJPARepository.findOne(msdCostTypeId);
 		if (null == type) type = msdTypeJPARepository.findOne(new Long(99));
@@ -100,6 +98,7 @@ public class MSDClassFeeFacadeImpl implements MSDClassFeeFacade {
 		entity.setMonthlyPay(new BigDecimal(monthlyPay));
 		entity.setWeeklyPay(new BigDecimal(weeklyPay));
 		entity.setDailyPay(new BigDecimal(dailyPay));
+		entity.setTimesPay(new BigDecimal(timesPay));
 		
 		
 		msdClassFeeJPARepository.save(entity);

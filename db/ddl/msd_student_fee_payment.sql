@@ -17,4 +17,5 @@ CREATE  TABLE IF NOT EXISTS `msd`.`msd_student_fee_payment` (
 
 ALTER TABLE `msd`.`msd_student_fee_payment` ADD COLUMN `fee_description` VARCHAR(512) NULL  AFTER `pay_fee` ;
 ALTER TABLE `msd`.`msd_student_fee_payment` ADD COLUMN `fee` DECIMAL(8,2) NULL  AFTER `fee_description` ;
+ALTER TABLE `msd`.`msd_student_fee_payment` CHANGE COLUMN `fee_description` `payment_description` VARCHAR(512) NULL DEFAULT NULL  ;
 

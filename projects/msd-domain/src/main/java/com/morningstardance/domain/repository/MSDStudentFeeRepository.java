@@ -1,6 +1,7 @@
 package com.morningstardance.domain.repository;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.persistence.Query;
 
@@ -25,5 +26,19 @@ public class MSDStudentFeeRepository extends MSDBaseRepository<MSDStudentFee> {
 		query.setParameter("semesterid", semesterid);
 		Object result = query.getSingleResult();
 		return ((BigInteger)result).intValue();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MSDStudentFee> findByMsdStudentIdAndSemesterAndIsActiveWithOrder(int msdStudentId, int semester, byte isActive) {
+		
+		Query query = this.getEntityManager().createNativeQuery(
+				"select * From msd.msd_student_fee " +
+				"where semester = :semester and msd_student_id = :msdStudentId and is_active = :isActive " +
+				"order by is_paid, id desc",
+				MSDStudentFee.class);
+		query.setParameter("msdStudentId", msdStudentId);
+		query.setParameter("semester", semester);
+		query.setParameter("isActive", isActive);
+		return (List<MSDStudentFee>)query.getResultList();
 	}
 }

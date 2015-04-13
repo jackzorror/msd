@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.morningstardance.app.misc.MSDMiscFacade;
 import com.morningstardance.app.msdoperation.MSDOperationService;
 import com.morningstardance.app.msdstudentcredit.MSDStudentCreditFacade;
+import com.morningstardance.app.msdstudentfeepayment.MSDStudentFeePaymentFacade;
 import com.morningstardance.domain.entity.MSDClass;
 import com.morningstardance.domain.entity.MSDClassFee;
 import com.morningstardance.domain.entity.MSDCompetitionFee;
@@ -74,6 +75,9 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 	
 	@Resource
 	private MSDClassJPARepository msdClassJPARepository;
+	
+	@Resource
+	private MSDStudentFeePaymentFacade msdStudentFeePaymentFacade;
 	
 	/**
 	 * when user register student to class, the system will add all
@@ -435,9 +439,26 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		MSDStudent s = msdStudentJPARepository.findOne(studentid);
 		if (null == s) return null;
 		
-		List<MSDStudentFee> sfees = msdStudentFeeJPARepository.findByMsdStudentIdAndSemesterAndIsActive(studentid.intValue(), semesterid.intValue(), (byte) 1);
+		List<MSDStudentFee> sfees = msdStudentFeeJPARepository.findByMsdStudentIdAndSemesterAndIsActiveOrderByIsPaidAscIdDesc(studentid.intValue(), semesterid.intValue(), (byte) 1);
 		
 		List<MSDStudentFeeSummaryDto> dtos = msdStudentFeeAssembler.createSummaryDtoFromEntity(sfees);
+		
+		return dtos;
+	}
+
+	@Override
+	public List<MSDStudentFeeDetailDto> getStudentFeeDetailsByStudentIdAndSemesterId(
+			Long studentid, Long semesterid) {
+		if (null == studentid || studentid.intValue() == 0) return null;
+		if (null == semesterid || semesterid.intValue() == 0)
+			semesterid = new Long(msdMiscFacade.getCurrentSemester().getId());
+		
+		MSDStudent s = msdStudentJPARepository.findOne(studentid);
+		if (null == s) return null;
+		
+		List<MSDStudentFee> sfees = msdStudentFeeJPARepository.findByMsdStudentIdAndSemesterAndIsActive(studentid.intValue(), semesterid.intValue(), (byte) 1);
+		
+		List<MSDStudentFeeDetailDto> dtos = msdStudentFeeAssembler.createDetailDtoFromEntity(sfees);
 		
 		return dtos;
 	}
@@ -495,6 +516,9 @@ public class MSDStudentFeeFacadeImpl implements MSDStudentFeeFacade {
 		sf.setFee(new BigDecimal(fee));
 		
 		msdStudentFeeJPARepository.saveAndFlush(sf);
+		
+		msdStudentFeePaymentFacade.createStudentFeePaymentAfterUpdateStudentFeeForGeneralClassFee(sf);
+		
 		return "Successfully update student fee for general class";
 	}
 }

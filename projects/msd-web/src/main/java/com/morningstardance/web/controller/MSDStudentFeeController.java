@@ -64,6 +64,7 @@ public class MSDStudentFeeController {
 	public @ResponseBody ResponseDto getMSDStudentFeeByStudentIdAndSemesterIdVer1(Long studentid, Long semesterid) {
 		ResponseDto responseDto = null;
 		List<MSDStudentFeeSummaryDto> dtos = msdStudentFeeFacade.getStudentFeeSummarysByStudentIdAndSemesterId(studentid, semesterid);
+//		List<MSDStudentFeeDetailDto> dtos = msdStudentFeeFacade.getStudentFeeDetailsByStudentIdAndSemesterId(studentid, semesterid);
         responseDto = ResponseDto.createResponseDto(dtos, "GET", "ARRAY");
 		
 		return responseDto;

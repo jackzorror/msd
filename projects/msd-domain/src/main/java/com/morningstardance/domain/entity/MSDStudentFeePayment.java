@@ -39,8 +39,8 @@ public class MSDStudentFeePayment extends MSDEntityBase implements Serializable 
 	@Column(name="msd_student_fee_id")
 	private int msdStudentFeeId;
 	
-	@Column(name="fee_description")
-	private String feeDescription;
+	@Column(name="payment_description")
+	private String paymentDescription;
 	
 	private BigDecimal fee;
 
@@ -95,12 +95,12 @@ public class MSDStudentFeePayment extends MSDEntityBase implements Serializable 
 		this.msdStudentFeeId = msdStudentFeeId;
 	}
 
-	public String getFeeDescription() {
-		return feeDescription;
+	public String getPaymentDescription() {
+		return paymentDescription;
 	}
 
-	public void setFeeDescription(String feeDescription) {
-		this.feeDescription = feeDescription;
+	public void setPaymentDescription(String paymentDescription) {
+		this.paymentDescription = paymentDescription;
 	}
 
 	public BigDecimal getFee() {

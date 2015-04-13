@@ -11,7 +11,8 @@ public class MSDStudentFeePaymentDto {
 	private String payType;
 	private float payFee;
 	private float fee;
-	private String feeDescription;
+	private String paymentDescription;
+	private String operation;
 	
 	public int getId() {
 		return id;
@@ -55,10 +56,16 @@ public class MSDStudentFeePaymentDto {
 	public void setFee(float fee) {
 		this.fee = fee;
 	}
-	public String getFeeDescription() {
-		return feeDescription;
+	public String getPaymentDescription() {
+		return paymentDescription;
 	}
-	public void setFeeDescription(String feeDescription) {
-		this.feeDescription = feeDescription;
+	public void setPaymentDescription(String paymentDescription) {
+		this.paymentDescription = paymentDescription;
+	}
+	public String getOperation() {
+		return operation;
+	}
+	public void setOperation(String operation) {
+		this.operation = operation;
 	}
 }

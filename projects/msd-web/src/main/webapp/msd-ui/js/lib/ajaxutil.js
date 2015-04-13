@@ -731,6 +731,55 @@ function ajaxGetStudentFeeByStudentIdSemesterId(id, sid, fName) {
 	ajaxcall.error(handleAjaxError);
 }
 
+function ajaxGetStudentFeePaymentByStudentIdSemesterId(id, sid, fName) {
+	console.log(" get student fee payment in ajax ");
+	
+	var ajaxcall =  $.ajax({
+		type: "GET",
+		url: "../msd-app/rs/msdstudentfeepayment",
+		dataType: "json",
+		contentType: "application/json",
+		data: { "studentid": id, "semesterid": sid},
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxUpdateStudentFeePayments(rows, fName) {
+	console.log(" update student fee payment in ajax ");
+		
+	var ajaxcall =  $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentfeepayment",
+		contentType: "application/json",
+		data:JSON.stringify(rows),
+		processData:false
+
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
+function ajaxPayStudentFeePayments(rows, fName) {
+	console.log(" pay student fee payment in ajax ");
+		
+	var ajaxcall =  $.ajax({
+		type: "PUT",
+		dataType: "json",
+		url: "../msd-app/rs/msdstudentfeepayment",
+		contentType: "application/json",
+		data:JSON.stringify(rows),
+		processData:false
+
+	});
+
+	ajaxcall.done(fName);
+	ajaxcall.error(handleAjaxError);
+}
+
 function ajaxGetStudentCreditByStudentIdSemesterId(id, sid, fName) {
 	console.log(" get student credite in ajax ");
 	

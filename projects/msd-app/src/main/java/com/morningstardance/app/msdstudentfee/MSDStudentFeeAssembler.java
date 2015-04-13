@@ -16,4 +16,7 @@ public interface MSDStudentFeeAssembler {
 
 	MSDStudentFeeDetailDto createDetailDtoFromEntity(MSDStudentFee sfee);
 
+	List<MSDStudentFeeDetailDto> createDetailDtoFromEntity(
+			List<MSDStudentFee> sfees);
+
 }

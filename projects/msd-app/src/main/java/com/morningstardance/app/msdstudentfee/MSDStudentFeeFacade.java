@@ -40,6 +40,9 @@ public interface MSDStudentFeeFacade {
 	List<MSDStudentFeeSummaryDto> getStudentFeeSummarysByStudentIdAndSemesterId(
 			Long studentid, Long semesterid);
 
+	List<MSDStudentFeeDetailDto> getStudentFeeDetailsByStudentIdAndSemesterId(
+			Long studentid, Long semesterid);
+
 	String payStudentFees(List<LinkedHashMap> dtos);
 
 	String updateStudentFeeForGeneralClassFee(Long studentfeeid, Long feeid,

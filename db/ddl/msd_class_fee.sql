@@ -25,3 +25,4 @@ ALTER TABLE `msd`.`msd_class_fee`
   REFERENCES `msd`.`msd_type` (`id` )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+ALTER TABLE `msd`.`msd_class_fee` ADD COLUMN `times_pay` DECIMAL(8,2) NULL DEFAULT NULL  AFTER `daily_pay` ;

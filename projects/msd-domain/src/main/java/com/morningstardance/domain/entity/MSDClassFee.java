@@ -49,6 +49,9 @@ public class MSDClassFee extends MSDEntityBase implements Serializable {
 	@Column(name="daily_pay")
 	private BigDecimal dailyPay;
 	
+	@Column(name="times_pay")
+	private BigDecimal timesPay;
+	
 	public MSDClassFee() {
 	}
 
@@ -130,6 +133,14 @@ public class MSDClassFee extends MSDEntityBase implements Serializable {
 
 	public void setDailyPay(BigDecimal dailyPay) {
 		this.dailyPay = dailyPay;
+	}
+
+	public BigDecimal getTimesPay() {
+		return timesPay;
+	}
+
+	public void setTimesPay(BigDecimal timesPay) {
+		this.timesPay = timesPay;
 	}
 
 	public String toString() {

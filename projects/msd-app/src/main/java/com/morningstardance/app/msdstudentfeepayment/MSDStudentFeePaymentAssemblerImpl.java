@@ -32,12 +32,12 @@ public class MSDStudentFeePaymentAssemblerImpl implements
 		MSDStudentFeePaymentDto dto = new MSDStudentFeePaymentDto();
 		dto.setId(entity.getId().intValue());
 		dto.setMsdStudentFeeId(entity.getMsdStudentFeeId());
-		dto.setPayFee(entity.getPayFee().floatValue());
+		dto.setPayFee(null != entity.getPayFee() ? entity.getPayFee().floatValue() : 0);
 		dto.setPayNote(entity.getPayNote());
 		dto.setPayTime(entity.getPayTime());
 		dto.setPayType(entity.getPayType());
-		dto.setFee(entity.getFee().floatValue());
-		dto.setFeeDescription(entity.getFeeDescription());
+		dto.setFee(null != entity.getFee() ? entity.getFee().floatValue() : 0);
+		dto.setPaymentDescription(entity.getPaymentDescription());
 		
 		return dto;
 	}
@@ -51,13 +51,13 @@ public class MSDStudentFeePaymentAssemblerImpl implements
 		else 
 			entity.setId(new Long(dto.getId()));
 		entity.setFee(dto.getFee() != 0.0 ? new BigDecimal(dto.getFee()) : null);
-		entity.setFeeDescription(null);
+		entity.setPaymentDescription(null);
 		entity.setMsdStudentFeeId(dto.getMsdStudentFeeId());
 		entity.setPayFee(dto.getPayFee() != 0.0 ? new BigDecimal(dto.getPayFee()) : null);
 		entity.setPayNote(dto.getPayNote());
 		entity.setPayTime(dto.getPayTime());
 		entity.setPayType(dto.getPayType());
-		entity.setFeeDescription(dto.getFeeDescription());
+		entity.setPaymentDescription(dto.getPaymentDescription());
 		
 		return entity;
 	}

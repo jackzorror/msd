@@ -7,10 +7,12 @@ public class MSDStudentFeeSummaryDto {
 	private boolean isWaiver;
 	private boolean isActive;
 	private String feeObjectName;
-	private String feeName;
 	private String feeNote;
 	private double fee;
+	
 	private double totalPaidFee;
+
+	private String feeName;
 	private String feeTypeName;
 	
 	public int getId() {

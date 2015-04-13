@@ -8,6 +8,6 @@ import com.morningstardance.domain.entity.MSDStudentFeePayment;
 
 public interface MSDStudentFeePaymentJPARepository extends
 		JpaRepository<MSDStudentFeePayment, Long> {
-
 	List<MSDStudentFeePayment> findByMsdStudentFeeId (int msdStudentFeeId);
+	List<MSDStudentFeePayment> findByMsdStudentFeeIdOrderByPayTimeAsc (int msdStudentFeeId);
 }

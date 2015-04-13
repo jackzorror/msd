@@ -97,7 +97,8 @@ public class MSDClassFeeController {
     			classFeeDto.getOneTimePay(),
     			classFeeDto.getMonthlyPay(),
     			classFeeDto.getWeeklyPay(),
-    			classFeeDto.getDailyPay());
+    			classFeeDto.getDailyPay(),
+    			classFeeDto.getTimesPay());
 		ResponseDto responseDto = ResponseDto.createResponseDto("Create Successfully", "PUT", "OBJECT");
 		return responseDto;
 	}
